@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-
+using System.Linq;
 
 namespace Nez
 {
@@ -78,16 +78,18 @@ namespace Nez
 		private Vector2[] _horizontalSampleOffsets;
 		private EffectParameter _gaussTexParam;
 		private EffectParameter _gaussTexRowParam;
-		private EffectParameter _gaussTexWidthParam;
+        private EffectParameter _gaussTexOffsetMultiplierParam;
+        private EffectParameter _gaussTexWidthParam;
 		private EffectParameter _gaussTexWidthInvParam;
 		private Texture2D _gaussTexture;
 
 
 		public GaussianBlurEffect() : base(Core.GraphicsDevice, EffectResource.GaussianBlurBytes)
 		{
-			_gaussTexParam = Parameters["gaussTex"];
+			_gaussTexParam = Parameters["gaussTexture"];
 			_gaussTexRowParam = Parameters["texRow"];
-			_gaussTexWidthParam = Parameters["gausTexWidth"];
+            _gaussTexOffsetMultiplierParam = Parameters["offsetMultiplier"];
+            _gaussTexWidthParam = Parameters["gausTexWidth"];
 			_gaussTexWidthInvParam = Parameters["gausTexWidthInv"];
 
 			// Look up how many samples our gaussian blur effect supports.
@@ -98,7 +100,7 @@ namespace Nez
 			_sampleWeights = new float[_sampleCount];
 			_verticalSampleOffsets = new Vector2[_sampleCount];
 			_horizontalSampleOffsets = new Vector2[_sampleCount];
-			_gaussTexture = new Texture2D(GraphicsDevice, _sampleCount, 2);
+			_gaussTexture = new Texture2D(GraphicsDevice, _sampleCount, 2, false, SurfaceFormat.Color);
 
 			// The first sample always has a zero offset.
 			_verticalSampleOffsets[0] = Vector2.Zero;
@@ -175,8 +177,18 @@ namespace Nez
 
 		private void GenerateGaussTexture()
 		{
-			
-		}
+			var maxOffset = Mathf.Sqrt(_horizontalSampleOffsets.Union(_verticalSampleOffsets).Max(x => x.LengthSquared()));
+			var maxOffsetInv = 1 / maxOffset;
+			_gaussTexOffsetMultiplierParam.SetValue(maxOffset);
+
+            var data = new Color[_sampleCount * 2];
+			for (int i = 0; i < _sampleCount; i++) data[i] = new Color(_sampleWeights[i], _horizontalSampleOffsets[i].X * maxOffsetInv, _horizontalSampleOffsets[i].Y * maxOffsetInv, 1f);
+			for (int i = _sampleCount; i < _sampleCount * 2; i++) data[i] = new Color(_sampleWeights[i], _verticalSampleOffsets[i].X * maxOffsetInv, _verticalSampleOffsets[i].Y * maxOffsetInv, 1f);
+
+			_gaussTexture.SetData(data);
+			_gaussTexParam.SetValue(_gaussTexture);
+			_gaussTexture.SaveAsPng(System.IO.File.OpenWrite("lol.png"), _gaussTexture.Width, _gaussTexture.Height);
+        }
 
 		/// <summary>
 		/// Evaluates a single point on the gaussian falloff curve.
