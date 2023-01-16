@@ -24,29 +24,6 @@ namespace Nez
 			}
 		}
 
-		private float _offsetX;
-		public float OffsetX
-		{
-			get => _offsetX;
-			set
-			{
-				_offsetX = value;
-				Effect.Parameters["offsetX"].SetValue(_offsetX);
-			}
-		}
-
-
-		private float _offsetY;
-		public float OffsetY
-		{
-			get => _offsetY;
-			set
-			{
-				_offsetY = value;
-				Effect.Parameters["offsetY"].SetValue(_offsetY);
-			}
-		}
-
 		private float _renderTargetScale = 1f;
 
 
@@ -58,7 +35,6 @@ namespace Nez
 		{
 			base.OnAddedToScene(scene);
 			Effect = _scene.Content.LoadNezEffect<GaussianBlurEffect>();
-			Effect.Parameters["invRes"].SetValue(new Vector2(1 / 1920f, 1 / 1080f));
 		}
 
 		public override void Unload()

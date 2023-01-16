@@ -29,6 +29,7 @@ namespace Nez
 
 					_blurAmount = value;
 					CalculateSampleWeights();
+					GenerateGaussTexture();
 				}
 			}
 		}
@@ -47,7 +48,8 @@ namespace Nez
 				{
 					_horizontalBlurDelta = value;
 					SetBlurEffectParameters(_horizontalBlurDelta, 0, _horizontalSampleOffsets);
-				}
+                    GenerateGaussTexture();
+                }
 			}
 		}
 
@@ -65,20 +67,21 @@ namespace Nez
 				{
 					_verticalBlurDelta = value;
 					SetBlurEffectParameters(0, _verticalBlurDelta, _verticalSampleOffsets);
-				}
+					GenerateGaussTexture();
+
+                }
 			}
 		}
 
 		private float _blurAmount = 2f;
 		private float _horizontalBlurDelta = 0.01f;
 		private float _verticalBlurDelta = 0.01f;
-		private int _sampleCount = 16;
+		private int _sampleCount = 15;
 		private float[] _sampleWeights;
 		private Vector2[] _verticalSampleOffsets;
 		private Vector2[] _horizontalSampleOffsets;
 		private EffectParameter _gaussTexParam;
 		private EffectParameter _gaussTexRowParam;
-        private EffectParameter _gaussTexOffsetMultiplierParam;
         private EffectParameter _gaussTexWidthParam;
 		private EffectParameter _gaussTexWidthInvParam;
 		private Texture2D _gaussTexture;
@@ -88,19 +91,18 @@ namespace Nez
 		{
 			_gaussTexParam = Parameters["gaussTexture"];
 			_gaussTexRowParam = Parameters["texRow"];
-            _gaussTexOffsetMultiplierParam = Parameters["offsetMultiplier"];
-            _gaussTexWidthParam = Parameters["gausTexWidth"];
-			_gaussTexWidthInvParam = Parameters["gausTexWidthInv"];
+            _gaussTexWidthParam = Parameters["samples"];
+			_gaussTexWidthInvParam = Parameters["samplesInv"];
 
 			// Look up how many samples our gaussian blur effect supports.
-			_gaussTexWidthParam.SetValue((float)_sampleCount);
+			_gaussTexWidthParam.SetValue(_sampleCount);
 			_gaussTexWidthInvParam.SetValue(1f / _sampleCount);
 
 			// Create temporary arrays for computing our filter settings.
 			_sampleWeights = new float[_sampleCount];
 			_verticalSampleOffsets = new Vector2[_sampleCount];
 			_horizontalSampleOffsets = new Vector2[_sampleCount];
-			_gaussTexture = new Texture2D(GraphicsDevice, _sampleCount, 2, false, SurfaceFormat.Color);
+			_gaussTexture = new Texture2D(GraphicsDevice, _sampleCount, 2, false, SurfaceFormat.Vector4);
 
 			// The first sample always has a zero offset.
 			_verticalSampleOffsets[0] = Vector2.Zero;
@@ -110,7 +112,6 @@ namespace Nez
 			CalculateSampleWeights();
 
 			SetBlurEffectParameters(_horizontalBlurDelta, 0, _horizontalSampleOffsets);
-			SetBlurEffectParameters(_verticalBlurDelta, 0, _verticalSampleOffsets);
 			GenerateGaussTexture();
 			PrepareForHorizontalBlur();
 		}
@@ -118,12 +119,12 @@ namespace Nez
 		/// <summary>
 		/// prepares the Effect for performing a horizontal blur
 		/// </summary>
-		public void PrepareForHorizontalBlur() => _gaussTexRowParam.SetValue(0.25f);
+		public void PrepareForHorizontalBlur() => _gaussTexRowParam.SetValue(0f);
 
 		/// <summary>
 		/// prepares the Effect for performing a vertical blur
 		/// </summary>
-		public void PrepareForVerticalBlur() => _gaussTexRowParam.SetValue(0.75f);
+		public void PrepareForVerticalBlur() => _gaussTexRowParam.SetValue(1f);
 
 		/// <summary>
 		/// computes sample weightings and texture coordinate offsets for one pass of a separable gaussian blur filter.
@@ -177,17 +178,13 @@ namespace Nez
 
 		private void GenerateGaussTexture()
 		{
-			var maxOffset = Mathf.Sqrt(_horizontalSampleOffsets.Union(_verticalSampleOffsets).Max(x => x.LengthSquared()));
-			var maxOffsetInv = 1 / maxOffset;
-			_gaussTexOffsetMultiplierParam.SetValue(maxOffset);
 
-            var data = new Color[_sampleCount * 2];
-			for (int i = 0; i < _sampleCount; i++) data[i] = new Color(_sampleWeights[i], _horizontalSampleOffsets[i].X * maxOffsetInv, _horizontalSampleOffsets[i].Y * maxOffsetInv, 1f);
-			for (int i = _sampleCount; i < _sampleCount * 2; i++) data[i] = new Color(_sampleWeights[i], _verticalSampleOffsets[i].X * maxOffsetInv, _verticalSampleOffsets[i].Y * maxOffsetInv, 1f);
+            var data = new Vector4[_sampleCount * 2];
+			for (int i = 0; i < _sampleCount; i++) data[i] = new Vector4(_sampleWeights[i], _horizontalSampleOffsets[i].X, _horizontalSampleOffsets[i].Y, 100000f);
+			for (int i = 0; i < _sampleCount; i++) data[i + _sampleCount] = new Vector4(_sampleWeights[i], _verticalSampleOffsets[i].X, _verticalSampleOffsets[i].Y, 1000000f);
 
-			_gaussTexture.SetData(data);
+            _gaussTexture.SetData(data);
 			_gaussTexParam.SetValue(_gaussTexture);
-			_gaussTexture.SaveAsPng(System.IO.File.OpenWrite("lol.png"), _gaussTexture.Width, _gaussTexture.Height);
         }
 
 		/// <summary>
