@@ -72,26 +72,33 @@ namespace Nez
 		private float _blurAmount = 2f;
 		private float _horizontalBlurDelta = 0.01f;
 		private float _verticalBlurDelta = 0.01f;
-		private int _sampleCount;
+		private int _sampleCount = 16;
 		private float[] _sampleWeights;
 		private Vector2[] _verticalSampleOffsets;
 		private Vector2[] _horizontalSampleOffsets;
-		private EffectParameter _blurWeightsParam;
-		private EffectParameter _blurOffsetsParam;
+		private EffectParameter _gaussTexParam;
+		private EffectParameter _gaussTexRowParam;
+		private EffectParameter _gaussTexWidthParam;
+		private EffectParameter _gaussTexWidthInvParam;
+		private Texture2D _gaussTexture;
 
 
 		public GaussianBlurEffect() : base(Core.GraphicsDevice, EffectResource.GaussianBlurBytes)
 		{
-			_blurWeightsParam = Parameters["_sampleWeights"];
-			_blurOffsetsParam = Parameters["_sampleOffsets"];
+			_gaussTexParam = Parameters["gaussTex"];
+			_gaussTexRowParam = Parameters["texRow"];
+			_gaussTexWidthParam = Parameters["gausTexWidth"];
+			_gaussTexWidthInvParam = Parameters["gausTexWidthInv"];
 
 			// Look up how many samples our gaussian blur effect supports.
-			_sampleCount = _blurWeightsParam.Elements.Count;
+			_gaussTexWidthParam.SetValue((float)_sampleCount);
+			_gaussTexWidthInvParam.SetValue(1f / _sampleCount);
 
 			// Create temporary arrays for computing our filter settings.
 			_sampleWeights = new float[_sampleCount];
 			_verticalSampleOffsets = new Vector2[_sampleCount];
 			_horizontalSampleOffsets = new Vector2[_sampleCount];
+			_gaussTexture = new Texture2D(GraphicsDevice, _sampleCount, 2);
 
 			// The first sample always has a zero offset.
 			_verticalSampleOffsets[0] = Vector2.Zero;
@@ -101,18 +108,20 @@ namespace Nez
 			CalculateSampleWeights();
 
 			SetBlurEffectParameters(_horizontalBlurDelta, 0, _horizontalSampleOffsets);
+			SetBlurEffectParameters(_verticalBlurDelta, 0, _verticalSampleOffsets);
+			GenerateGaussTexture();
 			PrepareForHorizontalBlur();
 		}
 
 		/// <summary>
 		/// prepares the Effect for performing a horizontal blur
 		/// </summary>
-		public void PrepareForHorizontalBlur() => _blurOffsetsParam.SetValue(_horizontalSampleOffsets);
+		public void PrepareForHorizontalBlur() => _gaussTexRowParam.SetValue(0.25f);
 
 		/// <summary>
 		/// prepares the Effect for performing a vertical blur
 		/// </summary>
-		public void PrepareForVerticalBlur() => _blurOffsetsParam.SetValue(_verticalSampleOffsets);
+		public void PrepareForVerticalBlur() => _gaussTexRowParam.SetValue(0.75f);
 
 		/// <summary>
 		/// computes sample weightings and texture coordinate offsets for one pass of a separable gaussian blur filter.
@@ -162,9 +171,11 @@ namespace Nez
 			// Normalize the list of sample weightings, so they will always sum to one.
 			for (int i = 0; i < _sampleWeights.Length; i++)
 				_sampleWeights[i] /= totalWeights;
+		}
 
-			// Tell the effect about our new filter settings.
-			_blurWeightsParam.SetValue(_sampleWeights);
+		private void GenerateGaussTexture()
+		{
+			
 		}
 
 		/// <summary>

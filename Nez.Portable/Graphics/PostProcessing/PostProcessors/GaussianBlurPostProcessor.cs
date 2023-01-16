@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Nez.Textures;
 
 
@@ -14,11 +15,35 @@ namespace Nez
 			get => _renderTargetScale;
 			set
 			{
+				if (value <= 0) return;
 				if (_renderTargetScale != value)
 				{
 					_renderTargetScale = value;
 					UpdateEffectDeltas();
 				}
+			}
+		}
+
+		private float _offsetX;
+		public float OffsetX
+		{
+			get => _offsetX;
+			set
+			{
+				_offsetX = value;
+				Effect.Parameters["offsetX"].SetValue(_offsetX);
+			}
+		}
+
+
+		private float _offsetY;
+		public float OffsetY
+		{
+			get => _offsetY;
+			set
+			{
+				_offsetY = value;
+				Effect.Parameters["offsetY"].SetValue(_offsetY);
 			}
 		}
 
@@ -33,6 +58,7 @@ namespace Nez
 		{
 			base.OnAddedToScene(scene);
 			Effect = _scene.Content.LoadNezEffect<GaussianBlurEffect>();
+			Effect.Parameters["invRes"].SetValue(new Vector2(1 / 1920f, 1 / 1080f));
 		}
 
 		public override void Unload()
