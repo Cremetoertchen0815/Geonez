@@ -37,7 +37,7 @@ namespace Nez.GeonBit.UI.Utils
 		/// <summary>
 		/// Will block and fade background with this color while messages are opened.
 		/// </summary>
-		public static Color BackgroundFaderColor = new Color(0, 0, 0, 100);
+		public static Color BackgroundFaderColor = new Color(0, 0, 0, 180);
 
 		/// <summary>
 		/// Count currently opened message boxes.
@@ -164,7 +164,7 @@ namespace Nez.GeonBit.UI.Utils
 			{
 				fader = new Entities.ColoredRectangle(Vector2.Zero, Entities.Anchor.Center)
 				{
-					FillColor = new Color(0, 0, 0, 100),
+					FillColor = new Color(0, 0, 0, 180),
 					OutlineWidth = 0,
 					ClickThrough = false
 				};
@@ -267,7 +267,7 @@ namespace Nez.GeonBit.UI.Utils
 			{
 				fader = new Entities.ColoredRectangle(Vector2.Zero, Entities.Anchor.Center)
 				{
-					FillColor = new Color(0, 0, 0, 100),
+					FillColor = new Color(0, 0, 0, 180),
 					OutlineWidth = 0,
 					ClickThrough = false
 				};

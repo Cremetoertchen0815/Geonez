@@ -86,7 +86,6 @@ namespace Nez.GeonBit.UI.Entities
 			_skin = skin;
 
 			// update styles
-			MilkFactor = 0.4f;
 			UpdateStyle(DefaultStyle);
 
 			if (!UserInterface.Active._isDeserializing)

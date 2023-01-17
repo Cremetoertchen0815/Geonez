@@ -62,6 +62,8 @@ namespace Nez.GeonBit.UI.Entities
 		{
 			_skin = skin;
 			UpdateStyle(Panel.DefaultStyle);
+
+			if (_skin != PanelSkin.None) MilkFactor = 0.65f;
 		}
 
 		/// <summary>
