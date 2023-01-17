@@ -25,14 +25,14 @@ namespace Nez.GeonBit.ECS
 
 		private void OnSceneChanged()
 		{
-			UserInterface.Active.Clear();
+			UserInterface.Active.OnSceneChange();
 			if (Core.Scene is null) return;
 			Core.Scene.FinalRenderDelegate = this;
 		}
 
 		public void HandleFinalRender(RenderTarget2D finalRenderTarget, Color letterboxColor, RenderTarget2D source, Rectangle finalRenderDestinationRect, SamplerState samplerState)
 		{
-			_ui.Draw(_batch);
+			_ui.Draw(_batch, source);
 
 			_batch.Begin();
 			_batch.Draw(source, finalRenderDestinationRect, Color.White);

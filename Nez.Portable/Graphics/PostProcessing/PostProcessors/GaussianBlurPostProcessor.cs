@@ -54,8 +54,7 @@ namespace Nez
 
 		public override void Unload()
 		{
-			_scene.Content.UnloadEffect(Effect);
-			base.Unload();
+			_scene?.Content.UnloadEffect(Effect);
 		}
 
 		public override void OnSceneBackBufferSizeChanged(int newWidth, int newHeight) => UpdateEffectDeltas();

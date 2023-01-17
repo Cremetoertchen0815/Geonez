@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.UI.Entities;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using UIEntity = Nez.GeonBit.UI.Entities.Entity;
 
@@ -220,10 +221,10 @@ namespace Nez.GeonBit.UI
 		public float CursorScale = 1f;
 
 		/// <summary>Screen width.</summary>
-		public int ScreenWidth = 0;
+		public int ScreenWidth = Screen.Width;
 
 		/// <summary>Screen height.</summary>
-		public int ScreenHeight = 0;
+		public int ScreenHeight = Screen.Height;
 
 		/// <summary>Draw utils helper. Contain general drawing functionality and handle effects replacement.</summary>
 		public DrawUtils DrawUtils = null;
@@ -326,6 +327,9 @@ namespace Nez.GeonBit.UI
 
 		// current tooltip target entity (eg entity we point on with tooltip).
 		private UIEntity _tooltipTargetEntity;
+
+		internal Dictionary<int, PostProcessor> _stainedCanvasesPPFX = new();
+		internal Dictionary<int, RenderTarget2D> _stainedCanvasesTargets = new();
 
 		/// <summary>
 		/// How long to wait before showing tooltip texts.
@@ -440,6 +444,18 @@ namespace Nez.GeonBit.UI
 		/// <param name="theme">Which UI theme to use. This affect the appearance of all textures and effects.</param>
 		public static void Initialize(ContentManager contentManager, BuiltinThemes theme) => Initialize(contentManager, theme.ToString());
 
+		public void OnSceneChange()
+		{
+			Clear();
+			
+			foreach (var item in _stainedCanvasesPPFX)
+			{
+				item.Value.Unload();
+				if (Core.Scene is null) continue;
+				item.Value.OnAddedToScene(Core.Scene);
+			}
+		}
+
 		/// <summary>
 		/// Create the user interface instance.
 		/// </summary>
@@ -516,6 +532,17 @@ namespace Nez.GeonBit.UI
 
 			// end drawing
 			spriteBatch.End();
+		}
+
+		/// <summary>
+		/// Allows you to add a "stained canvas", a customly post-processed copy of the screen that can be used as background for entites.
+		/// </summary>
+		/// <param name="nr"></param>
+		/// <param name="postProcessor"></param>
+		public void AddStainedCanvas(int nr, PostProcessor postProcessor)
+		{
+			_stainedCanvasesPPFX.Add(nr, postProcessor);
+			_stainedCanvasesTargets.Add(nr, null);
 		}
 
 		/// <summary>
@@ -642,7 +669,7 @@ namespace Nez.GeonBit.UI
 		/// If UseRenderTarget is false, this function should be called LAST in your draw function.
 		/// </summary>
 		/// <param name="spriteBatch">SpriteBatch to draw on.</param>
-		public void Draw(SpriteBatch spriteBatch)
+		public void Draw(SpriteBatch spriteBatch, RenderTarget2D sourceTarget)
 		{
 			int newScreenWidth = spriteBatch.GraphicsDevice.Viewport.Width;
 			int newScreenHeight = spriteBatch.GraphicsDevice.Viewport.Height;
@@ -658,6 +685,29 @@ namespace Nez.GeonBit.UI
 			// if using rendering targets
 			if (UseRenderTarget)
 			{
+				//Process stained canvases
+				foreach (var item in _stainedCanvasesPPFX)
+				{
+					var rt = _stainedCanvasesTargets.ContainsKey(item.Key) ? _stainedCanvasesTargets[item.Key] : null;
+					if (rt == null ||
+					rt.Width != ScreenWidth ||
+					rt.Height != ScreenHeight)
+					{
+						// recreate render target
+						rt?.Dispose();
+						rt = _stainedCanvasesTargets[item.Key] = new RenderTarget2D(spriteBatch.GraphicsDevice,
+							ScreenWidth, ScreenHeight, false,
+							spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat,
+							spriteBatch.GraphicsDevice.PresentationParameters.DepthStencilFormat, 0,
+							RenderTargetUsage.PreserveContents);
+					}
+
+					spriteBatch.GraphicsDevice.SetRenderTarget(rt);
+					spriteBatch.GraphicsDevice.Clear(Color.Transparent);
+
+					item.Value.Process(sourceTarget, rt);
+				}
+				
 				// check if screen size changed or don't have a render target yet. if so, create the render target.
 				if (_renderTarget == null ||
 					_renderTarget.Width != ScreenWidth ||
@@ -671,12 +721,9 @@ namespace Nez.GeonBit.UI
 						spriteBatch.GraphicsDevice.PresentationParameters.DepthStencilFormat, 0,
 						RenderTargetUsage.PreserveContents);
 				}
-				// if didn't create a new render target, clear it
-				else
-				{
-					spriteBatch.GraphicsDevice.SetRenderTarget(_renderTarget);
-					spriteBatch.GraphicsDevice.Clear(Color.Transparent);
-				}
+				
+				spriteBatch.GraphicsDevice.SetRenderTarget(_renderTarget);
+				spriteBatch.GraphicsDevice.Clear(Color.Transparent);
 			}
 
 			// draw root panel
