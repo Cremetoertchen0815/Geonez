@@ -86,6 +86,7 @@ namespace Nez.GeonBit.UI.Entities
 			_skin = skin;
 
 			// update styles
+			MilkFactor = 0.4f;
 			UpdateStyle(DefaultStyle);
 
 			if (!UserInterface.Active._isDeserializing)
@@ -211,6 +212,8 @@ namespace Nez.GeonBit.UI.Entities
 				var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
 											nuSize.ToPoint());
 				UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, FillColor, 1, srcRect);
+
+				spriteBatch.DrawRect(_destRect, FillColor * MilkFactor);
 			}
 
 			// call base draw function

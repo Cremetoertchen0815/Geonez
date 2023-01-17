@@ -173,29 +173,29 @@ namespace Nez
 		#region Hollow Rect
 
 		public static void DrawHollowRect(this SpriteBatch spriteBatch, float x, float y, float width, float height,
-										  Color color)
+										  Color color, int thickness = 1)
 		{
 			_tempRect.X = (int)x;
 			_tempRect.Y = (int)y;
 			_tempRect.Width = (int)width;
-			_tempRect.Height = 1;
+			_tempRect.Height = thickness;
 
 			spriteBatch.Draw(Graphics.Instance.PixelTexture, _tempRect, Graphics.Instance.PixelTexture.SourceRect,
 				color);
 
-			_tempRect.Y += (int)height - 1;
+			_tempRect.Y += (int)height - thickness;
 
 			spriteBatch.Draw(Graphics.Instance.PixelTexture, _tempRect, Graphics.Instance.PixelTexture.SourceRect,
 				color);
 
-			_tempRect.Y -= (int)height - 1;
+			_tempRect.Y -= (int)height - thickness;
 			_tempRect.Width = 1;
 			_tempRect.Height = (int)height;
 
 			spriteBatch.Draw(Graphics.Instance.PixelTexture, _tempRect, Graphics.Instance.PixelTexture.SourceRect,
 				color);
 
-			_tempRect.X += (int)width - 1;
+			_tempRect.X += (int)width - thickness;
 
 			spriteBatch.Draw(Graphics.Instance.PixelTexture, _tempRect, Graphics.Instance.PixelTexture.SourceRect,
 				color);
@@ -203,13 +203,54 @@ namespace Nez
 
 
 		public static void DrawHollowRect(this SpriteBatch spriteBatch, Vector2 position, float width, float height,
-										  Color color) => DrawHollowRect(spriteBatch, position.X, position.Y, width, height, color);
+										  Color color, int thickness = 1) => DrawHollowRect(spriteBatch, position.X, position.Y, width, height, color, thickness);
 
 
-		public static void DrawHollowRect(this SpriteBatch spriteBatch, Rectangle rect, Color color) => DrawHollowRect(spriteBatch, rect.X, rect.Y, rect.Width, rect.Height, color);
+		public static void DrawHollowRect(this SpriteBatch spriteBatch, Rectangle rect, Color color, int thickness = 1) => DrawHollowRect(spriteBatch, rect.X, rect.Y, rect.Width, rect.Height, color, thickness);
 
 
-		public static void DrawHollowRect(this SpriteBatch spriteBatch, RectangleF rect, Color color) => DrawHollowRect(spriteBatch, rect.X, rect.Y, rect.Width, rect.Height, color);
+		public static void DrawHollowRect(this SpriteBatch spriteBatch, RectangleF rect, Color color, int thickness = 1) => DrawHollowRect(spriteBatch, rect.X, rect.Y, rect.Width, rect.Height, color, thickness);
+
+		#endregion
+
+		#region Outline
+		public static void DrawOutline(this SpriteBatch spriteBatch, float x, float y, float width, float height,
+										  Color color, int thickness = 1)
+		{
+			_tempRect.X = (int)x - thickness;
+			_tempRect.Y = (int)y - thickness;
+			_tempRect.Width = (int)width + 2 * thickness;
+			_tempRect.Height = thickness;
+
+			spriteBatch.Draw(Graphics.Instance.PixelTexture, _tempRect, Graphics.Instance.PixelTexture.SourceRect,
+				color);
+
+			_tempRect.Y += (int)height + thickness;
+
+			spriteBatch.Draw(Graphics.Instance.PixelTexture, _tempRect, Graphics.Instance.PixelTexture.SourceRect,
+				color);
+
+			_tempRect.Y = (int)y;
+			_tempRect.Width = thickness;
+			_tempRect.Height = (int)height;
+
+			spriteBatch.Draw(Graphics.Instance.PixelTexture, _tempRect, Graphics.Instance.PixelTexture.SourceRect,
+				color);
+
+			_tempRect.X += (int)width + thickness;
+
+			spriteBatch.Draw(Graphics.Instance.PixelTexture, _tempRect, Graphics.Instance.PixelTexture.SourceRect,
+				color);
+		}
+
+		public static void DrawOutline(this SpriteBatch spriteBatch, Vector2 position, float width, float height,
+										  Color color, int thickness = 1) => DrawOutline(spriteBatch, position.X, position.Y, width, height, color, thickness);
+
+
+		public static void DrawOutline(this SpriteBatch spriteBatch, Rectangle rect, Color color, int thickness = 1) => DrawOutline(spriteBatch, rect.X, rect.Y, rect.Width, rect.Height, color, thickness);
+
+
+		public static void DrawOutline(this SpriteBatch spriteBatch, RectangleF rect, Color color, int thickness = 1) => DrawOutline(spriteBatch, rect.X, rect.Y, rect.Width, rect.Height, color, thickness);
 
 		#endregion
 

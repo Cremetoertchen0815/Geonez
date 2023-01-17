@@ -591,6 +591,8 @@ namespace Nez.GeonBit.UI.Entities
 			if (_size.Y == -1) { _size.Y = defaultSize.Y; }
 		}
 
+		public float MilkFactor { get; set; } = 0f;
+
 		/// <summary>
 		/// Return the default size for this entity.
 		/// </summary>
@@ -1430,20 +1432,9 @@ namespace Nez.GeonBit.UI.Entities
 			// store entity previous state
 			var oldState = _entityState;
 
-			// set fill color
-			SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(outlineColor), oldState, markAsDirty: false);
-
-			// draw the entity outline
-			UserInterface.Active.DrawUtils.StartDrawSilhouette(spriteBatch);
-			_destRect.Location = originalDest.Location + new Point(-outlineWidth, 0);
-			DrawEntity(spriteBatch, DrawPhase.Outline);
-			_destRect.Location = originalDest.Location + new Point(0, -outlineWidth);
-			DrawEntity(spriteBatch, DrawPhase.Outline);
-			_destRect.Location = originalDest.Location + new Point(outlineWidth, 0);
-			DrawEntity(spriteBatch, DrawPhase.Outline);
-			_destRect.Location = originalDest.Location + new Point(0, outlineWidth);
-			DrawEntity(spriteBatch, DrawPhase.Outline);
-			UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
+			spriteBatch.Begin();
+			spriteBatch.DrawOutline(originalDest, OutlineColor, OutlineWidth);
+			spriteBatch.End();
 
 			// turn back to previous fill color
 			SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(oldFill), oldState, markAsDirty: false);

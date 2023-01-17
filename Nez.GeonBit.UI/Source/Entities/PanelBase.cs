@@ -99,12 +99,27 @@ namespace Nez.GeonBit.UI.Entities
 			if (_skin != PanelSkin.None)
 			{
 				// get texture based on skin
-				var texture = Resources.PanelTextures[_skin];
 				var data = Resources.PanelData[(int)_skin];
-				var frameSize = new Vector2(data.FrameWidth, data.FrameHeight);
 
-				// draw panel
-				UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1f, FillColor, Scale);
+				if (data.StainedCanvasID < 0)
+				{
+
+					var texture = Resources.PanelTextures[_skin];
+					var frameSize = new Vector2(data.FrameWidth, data.FrameHeight);
+
+					// draw panel
+					UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1f, FillColor, Scale);
+				}
+				else
+				{
+
+					var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
+					var nuSize = new Vector2(data.FrameWidth, data.FrameHeight) * _destRect.Size.ToVector2();
+					var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
+												nuSize.ToPoint());
+					UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, FillColor, 1, srcRect);
+					spriteBatch.DrawRect(_destRect, FillColor with { A = 255 } * MilkFactor);
+				}
 			}
 
 			// call base draw function
