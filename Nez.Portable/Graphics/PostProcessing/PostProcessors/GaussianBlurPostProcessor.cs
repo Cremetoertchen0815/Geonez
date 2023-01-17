@@ -19,12 +19,25 @@ namespace Nez
 				if (_renderTargetScale != value)
 				{
 					_renderTargetScale = value;
+					if (_scene is null) return;
 					UpdateEffectDeltas();
 				}
 			}
 		}
 
+		public float BlurAmount
+		{
+			get => Effect?.BlurAmount ?? _blurAmount;
+			set
+			{
+				_blurAmount = value;
+				if (Effect is null) return;
+				Effect.BlurAmount = value;
+			}
+		}
+
 		private float _renderTargetScale = 1f;
+		private float _blurAmount = 2f;
 
 
 		public GaussianBlurPostProcessor(int executionOrder) : base(executionOrder)
@@ -35,6 +48,8 @@ namespace Nez
 		{
 			base.OnAddedToScene(scene);
 			Effect = _scene.Content.LoadNezEffect<GaussianBlurEffect>();
+			Effect.BlurAmount = _blurAmount;
+			UpdateEffectDeltas();
 		}
 
 		public override void Unload()

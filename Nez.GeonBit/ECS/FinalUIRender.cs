@@ -6,19 +6,28 @@ using System.Text.RegularExpressions;
 
 namespace Nez.GeonBit.ECS
 {
-	public class FinalUIRender : GlobalManager, IFinalRenderDelegate
+	public class GeonBitUIManager : GlobalManager, IFinalRenderDelegate
 	{
 		private SpriteBatch _batch = new SpriteBatch(Core.GraphicsDevice);
 		private UserInterface _ui;
 		private GameTime _gt = new GameTime();
 
 		private static Regex _charFilter = new Regex(@"[^a-zÀ-ÿA-Z0-9!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/? \r\n\b\u007F]+", RegexOptions.Compiled);
-		public FinalUIRender()
+		public GeonBitUIManager()
 		{
 			if (UserInterface.Active == null) UserInterface.Initialize(Core.Content);
 			_ui = UserInterface.Active;
 			_ui.UseRenderTarget = true;
 			Core.Instance.Window.TextInput += (o, e) => UserInterface.Input.TextInput(_charFilter.Replace(e.Character.ToString(), "#")[0]);
+			//Let the 
+			Core.Emitter.AddObserver(CoreEvents.SceneChanged, () => Core.Stall(OnSceneChanged));
+		}
+
+		private void OnSceneChanged()
+		{
+			UserInterface.Active.Clear();
+			if (Core.Scene is null) return;
+			Core.Scene.FinalRenderDelegate = this;
 		}
 
 		public void HandleFinalRender(RenderTarget2D finalRenderTarget, Color letterboxColor, RenderTarget2D source, Rectangle finalRenderDestinationRect, SamplerState samplerState)

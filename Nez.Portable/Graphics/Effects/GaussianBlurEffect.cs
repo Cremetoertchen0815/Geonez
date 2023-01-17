@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Linq;
+
 
 namespace Nez
 {
@@ -29,7 +29,6 @@ namespace Nez
 
 					_blurAmount = value;
 					CalculateSampleWeights();
-					GenerateGaussTexture();
 				}
 			}
 		}
@@ -48,8 +47,7 @@ namespace Nez
 				{
 					_horizontalBlurDelta = value;
 					SetBlurEffectParameters(_horizontalBlurDelta, 0, _horizontalSampleOffsets);
-                    GenerateGaussTexture();
-                }
+				}
 			}
 		}
 
@@ -67,42 +65,33 @@ namespace Nez
 				{
 					_verticalBlurDelta = value;
 					SetBlurEffectParameters(0, _verticalBlurDelta, _verticalSampleOffsets);
-					GenerateGaussTexture();
-
-                }
+				}
 			}
 		}
 
 		private float _blurAmount = 2f;
 		private float _horizontalBlurDelta = 0.01f;
 		private float _verticalBlurDelta = 0.01f;
-		private int _sampleCount = 15;
+		private int _sampleCount;
 		private float[] _sampleWeights;
 		private Vector2[] _verticalSampleOffsets;
 		private Vector2[] _horizontalSampleOffsets;
-		private EffectParameter _gaussTexParam;
-		private EffectParameter _gaussTexRowParam;
-        private EffectParameter _gaussTexWidthParam;
-		private EffectParameter _gaussTexWidthInvParam;
-		private Texture2D _gaussTexture;
+		private EffectParameter _blurWeightsParam;
+		private EffectParameter _blurOffsetsParam;
 
 
 		public GaussianBlurEffect() : base(Core.GraphicsDevice, EffectResource.GaussianBlurBytes)
 		{
-			_gaussTexParam = Parameters["gaussTexture"];
-			_gaussTexRowParam = Parameters["texRow"];
-            _gaussTexWidthParam = Parameters["samples"];
-			_gaussTexWidthInvParam = Parameters["samplesInv"];
+			_blurWeightsParam = Parameters["_sampleWeights"];
+			_blurOffsetsParam = Parameters["_sampleOffsets"];
 
 			// Look up how many samples our gaussian blur effect supports.
-			_gaussTexWidthParam.SetValue(_sampleCount);
-			_gaussTexWidthInvParam.SetValue(1f / _sampleCount);
+			_sampleCount = _blurWeightsParam.Elements.Count;
 
 			// Create temporary arrays for computing our filter settings.
 			_sampleWeights = new float[_sampleCount];
 			_verticalSampleOffsets = new Vector2[_sampleCount];
 			_horizontalSampleOffsets = new Vector2[_sampleCount];
-			_gaussTexture = new Texture2D(GraphicsDevice, _sampleCount, 2, false, SurfaceFormat.Vector4);
 
 			// The first sample always has a zero offset.
 			_verticalSampleOffsets[0] = Vector2.Zero;
@@ -112,19 +101,18 @@ namespace Nez
 			CalculateSampleWeights();
 
 			SetBlurEffectParameters(_horizontalBlurDelta, 0, _horizontalSampleOffsets);
-			GenerateGaussTexture();
 			PrepareForHorizontalBlur();
 		}
 
 		/// <summary>
 		/// prepares the Effect for performing a horizontal blur
 		/// </summary>
-		public void PrepareForHorizontalBlur() => _gaussTexRowParam.SetValue(0f);
+		public void PrepareForHorizontalBlur() => _blurOffsetsParam.SetValue(_horizontalSampleOffsets);
 
 		/// <summary>
 		/// prepares the Effect for performing a vertical blur
 		/// </summary>
-		public void PrepareForVerticalBlur() => _gaussTexRowParam.SetValue(1f);
+		public void PrepareForVerticalBlur() => _blurOffsetsParam.SetValue(_verticalSampleOffsets);
 
 		/// <summary>
 		/// computes sample weightings and texture coordinate offsets for one pass of a separable gaussian blur filter.
@@ -174,18 +162,10 @@ namespace Nez
 			// Normalize the list of sample weightings, so they will always sum to one.
 			for (int i = 0; i < _sampleWeights.Length; i++)
 				_sampleWeights[i] /= totalWeights;
+
+			// Tell the effect about our new filter settings.
+			_blurWeightsParam.SetValue(_sampleWeights);
 		}
-
-		private void GenerateGaussTexture()
-		{
-
-            var data = new Vector4[_sampleCount * 2];
-			for (int i = 0; i < _sampleCount; i++) data[i] = new Vector4(_sampleWeights[i], _horizontalSampleOffsets[i].X, _horizontalSampleOffsets[i].Y, 100000f);
-			for (int i = 0; i < _sampleCount; i++) data[i + _sampleCount] = new Vector4(_sampleWeights[i], _verticalSampleOffsets[i].X, _verticalSampleOffsets[i].Y, 1000000f);
-
-            _gaussTexture.SetData(data);
-			_gaussTexParam.SetValue(_gaussTexture);
-        }
 
 		/// <summary>
 		/// Evaluates a single point on the gaussian falloff curve.
