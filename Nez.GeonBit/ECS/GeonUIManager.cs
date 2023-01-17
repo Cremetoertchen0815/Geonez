@@ -6,21 +6,21 @@ using System.Text.RegularExpressions;
 
 namespace Nez.GeonBit.ECS
 {
-	public class GeonBitUIManager : GlobalManager, IFinalRenderDelegate
+	public class GeonUIManager : GlobalManager, IFinalRenderDelegate
 	{
 		private SpriteBatch _batch = new SpriteBatch(Core.GraphicsDevice);
 		private UserInterface _ui;
 		private GameTime _gt = new GameTime();
 
 		private static Regex _charFilter = new Regex(@"[^a-zÀ-ÿA-Z0-9!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/? \r\n\b\u007F]+", RegexOptions.Compiled);
-		public GeonBitUIManager()
+		public GeonUIManager()
 		{
 			if (UserInterface.Active == null) UserInterface.Initialize(Core.Content);
 			_ui = UserInterface.Active;
 			_ui.UseRenderTarget = true;
 			Core.Instance.Window.TextInput += (o, e) => UserInterface.Input.TextInput(_charFilter.Replace(e.Character.ToString(), "#")[0]);
 			//Let the 
-			Core.Emitter.AddObserver(CoreEvents.SceneChanged, () => Core.Stall(OnSceneChanged));
+			Core.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);
 		}
 
 		private void OnSceneChanged()
