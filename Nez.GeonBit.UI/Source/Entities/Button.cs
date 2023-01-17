@@ -184,22 +184,33 @@ namespace Nez.GeonBit.UI.Entities
 			if (Checked) { state = EntityState.MouseDown; }
 
 			// get texture based on skin and state
-			var texture = _customSkin == null ? Resources.ButtonTextures[_skin, state] : _customSkin[(int)state];
-
-			// get frame width
 			var data = Resources.ButtonData[(int)_skin];
-			var frameSize = _customSkin == null ? new Vector2(data.FrameWidth, data.FrameHeight) : _customFrame;
+			
+			if (data.StainedCanvasID < 0)
+			{
+				var texture = _customSkin == null ? Resources.ButtonTextures[_skin, state] : _customSkin[(int)state];
 
-			// draw the button background with frame
-			if (frameSize.Length() > 0)
+				// get frame width
+				var frameSize = _customSkin == null ? new Vector2(data.FrameWidth, data.FrameHeight) : _customFrame;
+
+				// draw the button background with frame
+				if (frameSize.Length() > 0)
+				{
+					float scale = frameSize.Y > 0 ? Scale : 1f;
+					UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1, FillColor, scale);
+				}
+				// draw the button background without frame (just stretch texture)
+				else
+				{
+					UserInterface.Active.DrawUtils.DrawImage(spriteBatch, texture, _destRect, FillColor, 1);
+				}
+			} else
 			{
-				float scale = frameSize.Y > 0 ? Scale : 1f;
-				UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1, FillColor, scale);
-			}
-			// draw the button background without frame (just stretch texture)
-			else
-			{
-				UserInterface.Active.DrawUtils.DrawImage(spriteBatch, texture, _destRect, FillColor, 1);
+				var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
+				var nuSize = new Vector2(data.FrameWidth, data.FrameHeight) * _destRect.Size.ToVector2();
+				var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
+											nuSize.ToPoint());
+				UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, FillColor, 1, srcRect);
 			}
 
 			// call base draw function

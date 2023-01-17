@@ -328,8 +328,8 @@ namespace Nez.GeonBit.UI
 		// current tooltip target entity (eg entity we point on with tooltip).
 		private UIEntity _tooltipTargetEntity;
 
-		internal Dictionary<int, PostProcessor> _stainedCanvasesPPFX = new();
-		internal Dictionary<int, RenderTarget2D> _stainedCanvasesTargets = new();
+		internal List<PostProcessor> _stainedCanvasesPPFX = new();
+		internal List<RenderTarget2D> _stainedCanvasesTargets = new();
 
 		/// <summary>
 		/// How long to wait before showing tooltip texts.
@@ -450,9 +450,9 @@ namespace Nez.GeonBit.UI
 			
 			foreach (var item in _stainedCanvasesPPFX)
 			{
-				item.Value.Unload();
+				item.Unload();
 				if (Core.Scene is null) continue;
-				item.Value.OnAddedToScene(Core.Scene);
+				item.OnAddedToScene(Core.Scene);
 			}
 		}
 
@@ -539,11 +539,13 @@ namespace Nez.GeonBit.UI
 		/// </summary>
 		/// <param name="nr"></param>
 		/// <param name="postProcessor"></param>
-		public void AddStainedCanvas(int nr, PostProcessor postProcessor)
+		public void AddStainedCanvas(PostProcessor postProcessor)
 		{
-			_stainedCanvasesPPFX.Add(nr, postProcessor);
-			_stainedCanvasesTargets.Add(nr, null);
+			_stainedCanvasesPPFX.Add(postProcessor);
+			_stainedCanvasesTargets.Add(null);
 		}
+
+		public Texture2D GetCanvasTexture(int nr) => _stainedCanvasesTargets[nr];
 
 		/// <summary>
 		/// Add an entity to screen.
@@ -686,16 +688,17 @@ namespace Nez.GeonBit.UI
 			if (UseRenderTarget)
 			{
 				//Process stained canvases
-				foreach (var item in _stainedCanvasesPPFX)
+				for (int i = 0; i < _stainedCanvasesPPFX.Count; i++)
 				{
-					var rt = _stainedCanvasesTargets.ContainsKey(item.Key) ? _stainedCanvasesTargets[item.Key] : null;
+					var item = _stainedCanvasesPPFX[i];
+					var rt = _stainedCanvasesTargets[i];
 					if (rt == null ||
 					rt.Width != ScreenWidth ||
 					rt.Height != ScreenHeight)
 					{
 						// recreate render target
 						rt?.Dispose();
-						rt = _stainedCanvasesTargets[item.Key] = new RenderTarget2D(spriteBatch.GraphicsDevice,
+						rt = _stainedCanvasesTargets[i] = new RenderTarget2D(spriteBatch.GraphicsDevice,
 							ScreenWidth, ScreenHeight, false,
 							spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat,
 							spriteBatch.GraphicsDevice.PresentationParameters.DepthStencilFormat, 0,
@@ -705,7 +708,7 @@ namespace Nez.GeonBit.UI
 					spriteBatch.GraphicsDevice.SetRenderTarget(rt);
 					spriteBatch.GraphicsDevice.Clear(Color.Transparent);
 
-					item.Value.Process(sourceTarget, rt);
+					item.Process(sourceTarget, rt);
 				}
 				
 				// check if screen size changed or don't have a render target yet. if so, create the render target.

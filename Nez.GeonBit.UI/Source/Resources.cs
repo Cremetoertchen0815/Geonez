@@ -184,7 +184,7 @@ namespace Nez.GeonBit.UI
 		public static TexturesGetter<ButtonSkin> ButtonTextures = new TexturesGetter<ButtonSkin>("textures/button_");
 
 		/// <summary>Metadata about button textures.</summary>
-		public static TextureData[] ButtonData;
+		public static TextureData[] ButtonData { get; set; }
 
 		/// <summary>CheckBox textures.</summary>
 		public static TexturesGetter<EntityState> CheckBoxTextures = new TexturesGetter<EntityState>("textures/checkbox");
