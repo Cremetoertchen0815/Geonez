@@ -27,7 +27,7 @@ namespace Nez.Systems
 
 			public bool IsDone;
 			public CoroutineImpl WaitForCoroutine;
-			public bool UseUnscaledDeltaTime = false;
+			public bool UseUnscaledDeltaTime = true;
 
 
 			public void Stop() => IsDone = true;

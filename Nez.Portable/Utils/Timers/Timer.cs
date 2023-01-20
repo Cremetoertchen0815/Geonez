@@ -35,7 +35,7 @@ namespace Nez.Timers
 					_isDone = true;
 			}
 
-			_elapsedTime += Time.DeltaTime;
+			_elapsedTime += Time.UnscaledDeltaTime;
 
 			return _isDone;
 		}
