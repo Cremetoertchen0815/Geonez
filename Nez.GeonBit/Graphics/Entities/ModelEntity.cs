@@ -19,6 +19,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.GeonBit.ECS.Components.Graphics;
 using System.Collections.Generic;
 
 namespace Nez.GeonBit
@@ -299,5 +300,6 @@ namespace Nez.GeonBit
 			return new BoundingBox(min, max);
 
 		}
+		public override void RenderShadows(Matrix worldTransform) => Model.Draw(GeonDefaultRenderer.ActiveLightsManager.ShadowEffect, worldTransform);
 	}
 }

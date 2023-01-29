@@ -210,5 +210,14 @@ namespace Nez.GeonBit
 			// create and return transformed bounding box
 			return new BoundingBox(min, max);
 		}
+
+		public override void RenderShadows(Matrix worldTransform)
+		{
+
+			for (int i = 0; i < _meshAccess.Count; i++)
+			{
+				if (_meshAccess[i].ShadowDraw) _meshAccess[i].RenderShadows(worldTransform);
+			}
+		}
 	}
 }

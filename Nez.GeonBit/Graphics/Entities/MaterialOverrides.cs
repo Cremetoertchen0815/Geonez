@@ -125,7 +125,7 @@ namespace Nez.GeonBit
 		}
 
 		// dictionary of cached material clones for original materials replacement
-		private readonly Dictionary<Materials.MaterialAPI, Materials.MaterialAPI> _materialsCahce = new Dictionary<Materials.MaterialAPI, Materials.MaterialAPI>();
+		private readonly Dictionary<Materials.MaterialAPI, Materials.MaterialAPI> _materialsCache = new Dictionary<Materials.MaterialAPI, Materials.MaterialAPI>();
 
 		/// <summary>
 		/// Apply all custom render properties on a given material, and return either the given material or a clone of it, if needed.
@@ -138,16 +138,16 @@ namespace Nez.GeonBit
 			// if there's nothing to do just return the original material
 			if (!UsingOverrideProperties)
 			{
-				_materialsCahce.Clear();
+				_materialsCache.Clear();
 				return material;
 			}
 
 			// we need to apply custom properties. get the cached material with properties or create a new one
 			var original = material;
-			if (!_materialsCahce.TryGetValue(material, out material))
+			if (!_materialsCache.TryGetValue(material, out material))
 			{
 				material = original.Clone();
-				_materialsCahce[original] = material;
+				_materialsCache[original] = material;
 			}
 
 			// if got override diffuse color, set it

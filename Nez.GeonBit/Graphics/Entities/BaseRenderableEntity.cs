@@ -31,7 +31,7 @@ namespace Nez.GeonBit
 	/// <summary>
 	/// A basic renderable entity.
 	/// </summary>
-	public class BaseRenderableEntity : IEntity
+	public abstract class BaseRenderableEntity : IEntity
 	{
 		// is this entity currently visible.
 		private bool _visible = true;
@@ -59,6 +59,8 @@ namespace Nez.GeonBit
 		/// Blending state for this entity.
 		/// </summary>
 		public BlendState BlendingState = BlendState.AlphaBlend;
+
+		public bool CastsShadow = true;
 
 		/// <summary>
 		/// If true, will draw just the wireframe of the entity.
@@ -139,6 +141,8 @@ namespace Nez.GeonBit
 			// call to draw this entity - this will either add to the corresponding rendering queue, or draw immediately if have no drawing queue.
 			GeonDefaultRenderer.DrawEntity(this, worldTransformations);
 		}
+
+		public abstract void RenderShadows(Matrix worldTransform);
 
 		/// <summary>
 		/// The per-entity drawing function, must be implemented by child entities.

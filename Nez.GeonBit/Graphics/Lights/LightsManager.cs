@@ -18,6 +18,7 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Nez.Textures;
 using System.Collections.Generic;
 
@@ -99,6 +100,7 @@ namespace Nez.GeonBit.Lights
 
 		public RenderTexture ShadowMap { get; set; }
 		public Matrix ShadowViewMatrix { get; set; }
+		public Effect ShadowEffect { get; private set; }
 
 		/// <summary>
 		/// Add a light source to lights manager.

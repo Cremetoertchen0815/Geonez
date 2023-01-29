@@ -19,6 +19,7 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
+using BulletSharp.SoftBody;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -672,6 +673,27 @@ namespace Nez.GeonBit
 
 			// create and return transformed bounding box
 			return new BoundingBox(min, max);
+		}
+
+		public override void RenderShadows(Matrix worldTransform)
+		{
+
+			// get graphic device
+			var device = Core.GraphicsDevice;
+
+			// iterate combined parts
+			foreach (var combinedPart in _parts)
+			{
+				// get vertices and indexes
+				var buffers = combinedPart.Value;
+
+				// set vertex and indices buffers
+				device.SetVertexBuffer(buffers._VertexBuffer);
+				device.Indices = buffers._IndexBuffer;
+
+				// draw
+				device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, buffers.PrimitiveCount);
+			}
 		}
 	}
 }
