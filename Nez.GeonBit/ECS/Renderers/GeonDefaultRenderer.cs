@@ -153,7 +153,7 @@ namespace Nez.GeonBit
 		public void EndDrawFrame()
 		{
 			// draw rendering queues
-			RenderingQueues.DrawQueues(true, !ActiveLightsManager.ShadowsEnabed);
+			RenderingQueues.DrawQueues();
 
 			// notify nodes manager that a frame ended
 			NodesManager.EndFrame();
@@ -223,10 +223,6 @@ namespace Nez.GeonBit
 
 		public override void Render(Scene scene)
 		{
-			/*
-			var file = System.IO.File.OpenWrite("C:/Users/Creme/Desktop/laaals.png");
-			ActiveLightsManager.ShadowMap.RenderTarget.SaveAsPng(file, 1000, 1000);
-			file.Close();*/
 
 			StartDrawFrame();
 

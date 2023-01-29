@@ -34,93 +34,110 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Will not use rendering queue, but simply draw this entity the moment the draw function is called.
 		/// This does not guarantee any specific order and will use default device settings.
+		/// Is capable of casting shadows.
 		/// </summary>
 		NoQueue = -1,
 
 		/// <summary>
 		/// Draw solid entities without depth buffer and without any culling. 
 		/// Everything drawn in the other queues will cover entities in this queue.
+		/// Is not capable of casting shadows.
 		/// </summary>
 		SolidBackNoCull,
 
 		/// <summary>
 		/// Draw solid entities with depth buffer and no culling. 
 		/// This is the default queue for simple 3D meshes without alpha channels.
+		/// Is capable of casting shadows.
 		/// </summary>
 		SolidNoCull,
 
 		/// <summary>
 		/// Draw solid entities with depth buffer. 
 		/// This is the default queue for simple 3D meshes without alpha channels.
+		/// Is capable of casting shadows.
 		/// </summary>
 		Solid,
 
 		/// <summary>
 		/// Drawing settings for solid terrain meshes.
+		/// Is capable of casting shadows.
 		/// </summary>
 		Terrain,
 
 		/// <summary>
 		/// Drawing settings for billboards.
+		/// Is not capable of casting shadows.
 		/// </summary>
 		Billboards,
 
 		/// <summary>
 		/// Draw after all the solid queues, without affecting the depth buffer.
 		/// This means it draw things in the background that will not hide any other objects.
+		/// Is not capable of casting shadows.
 		/// </summary>
 		Background,
 
 		/// <summary>
 		/// Draw after all the solid queues, without affecting the depth buffer and without culling.
 		/// This means it draw things in the background that will not hide any other objects.
+		/// Is not capable of casting shadows.
 		/// </summary>
 		BackgroundNoCull,
 
 		/// <summary>
 		/// For entities with opacity, but does not order by distance from camera.
 		/// This means its a good queue for entities with alpha channels on top of solid items, but its not suitable if entities with alpha may cover each other.
+		/// Is capable of casting shadows.
 		/// </summary>
 		OpacityUnordered,
 
 		/// <summary>
 		/// For entities with opacity, order renderings by distance from camera.
 		/// This is the best queue to use for dynamic entities with alpha channels that might cover each other.
+		/// Is capable of casting shadows.
 		/// </summary>
 		Opacity,
 
 		/// <summary>
 		/// For entities that are mostly solid and opaque, but have some transparent elements in them.
+		/// Is capable of casting shadows.
 		/// </summary>
 		Mixed,
 
 		/// <summary>
 		/// Special queue that draws everything as wireframe.
+		/// Is not capable of casting shadows.
 		/// </summary>
 		Wireframe,
 
 		/// <summary>
 		/// For special effects and particles, but will still use depth buffer, and will not sort by distance from camera.
+		/// Is not capable of casting shadows.
 		/// </summary>
 		EffectsUnordered,
 
 		/// <summary>
 		/// For special effects and particles, but will still use depth buffer, and will sort by distance from camera.
+		/// Is not capable of casting shadows.
 		/// </summary>
 		Effects,
 
 		/// <summary>
 		/// For special effects and particles, does not use depth buffer (eg will always be rendered on top).
+		/// Is not capable of casting shadows.
 		/// </summary>
 		EffectsOverlay,
 
 		/// <summary>
 		/// Renders last, on top of everything, without using depth buffer.
+		/// Is not capable of casting shadows.
 		/// </summary>
 		Overlay,
 
 		/// <summary>
 		/// Render queue for debug purposes.
+		/// Is not capable of casting shadows.
 		/// Note: this queue only draws when in debug mode!
 		/// </summary>
 		Debug,
@@ -177,6 +194,11 @@ namespace Nez.GeonBit
 		/// If true, will sort entities by distance from camera.
 		/// </summary>
 		public bool SortByCamera = false;
+
+		/// <summary>
+		/// If true, shadows will be rendered in this queue. Is false by default.
+		/// </summary>
+		public bool CanCastShadow = false;
 	}
 
 	/// <summary>
@@ -186,6 +208,8 @@ namespace Nez.GeonBit
 	{
 		// List of built-in rendering queues.
 		private static readonly List<RenderingQueueInstance> _renderingQueues = new List<RenderingQueueInstance>();
+
+		private static bool _queueSorted = false;
 
 		/// <summary>
 		/// Init all built-in rendering queues.
@@ -215,6 +239,7 @@ namespace Nez.GeonBit
 				queue.RasterizerState.MultiSampleAntiAlias = true;
 				queue.DepthStencilState.DepthBufferEnable = true;
 				queue.DepthStencilState.DepthBufferWriteEnable = true;
+				queue.CanCastShadow = true;
 				_renderingQueues.Add(queue);
 			}
 
@@ -227,6 +252,7 @@ namespace Nez.GeonBit
 				queue.RasterizerState.MultiSampleAntiAlias = true;
 				queue.DepthStencilState.DepthBufferEnable = true;
 				queue.DepthStencilState.DepthBufferWriteEnable = true;
+				queue.CanCastShadow = true;
 				_renderingQueues.Add(queue);
 			}
 
@@ -239,6 +265,7 @@ namespace Nez.GeonBit
 				queue.RasterizerState.MultiSampleAntiAlias = true;
 				queue.DepthStencilState.DepthBufferEnable = true;
 				queue.DepthStencilState.DepthBufferWriteEnable = true;
+				queue.CanCastShadow = true;
 				_renderingQueues.Add(queue);
 			}
 
@@ -287,6 +314,7 @@ namespace Nez.GeonBit
 				queue.RasterizerState.MultiSampleAntiAlias = true;
 				queue.DepthStencilState.DepthBufferEnable = true;
 				queue.DepthStencilState.DepthBufferWriteEnable = false;
+				queue.CanCastShadow = true;
 				_renderingQueues.Add(queue);
 			}
 
@@ -300,6 +328,7 @@ namespace Nez.GeonBit
 				queue.DepthStencilState.DepthBufferEnable = true;
 				queue.DepthStencilState.DepthBufferWriteEnable = false;
 				queue.SortByCamera = true;
+				queue.CanCastShadow = true;
 				_renderingQueues.Add(queue);
 			}
 
@@ -313,6 +342,7 @@ namespace Nez.GeonBit
 				queue.DepthStencilState.DepthBufferEnable = true;
 				queue.DepthStencilState.DepthBufferWriteEnable = true;
 				queue.SortByCamera = true;
+				queue.CanCastShadow = true;
 				_renderingQueues.Add(queue);
 			}
 
@@ -400,7 +430,7 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Draw rendering queues.
 		/// </summary>
-		public static void DrawQueues(bool clearQueues = true, bool sortEntities = true, bool onlyDrawShadow = false)
+		public static void DrawQueues()
 		{
 			// iterate drawing queues
 			for (int i = 0; i < _renderingQueues.Count; i++)
@@ -417,7 +447,7 @@ namespace Nez.GeonBit
 				Core.GraphicsDevice.DepthStencilState = queue.DepthStencilState;
 
 				// if need to sort by distance from camera, do the sorting
-				if (sortEntities && queue.SortByCamera)
+				if (!_queueSorted && queue.SortByCamera)
 				{
 					var camPos = GeonDefaultRenderer.ActiveCamera.Position;
 					queue.Entities.Sort(delegate (EntityInQueue x, EntityInQueue y)
@@ -431,12 +461,60 @@ namespace Nez.GeonBit
 				for (int j = 0; j < queue.Entities.Count; j++)
 				{
 					var entityData = queue.Entities[j];
-					if (onlyDrawShadow && !entityData.Entity.ShadowDraw) continue;
-					entityData.Entity.DoEntityDraw(ref entityData.World);
+						entityData.Entity.DoEntityDraw(ref entityData.World);
 				}
 
 				// clear queue
-				if (clearQueues) queue.Entities.Clear();
+				queue.Entities.Clear();
+
+			}
+
+			_queueSorted = false;
+
+			// reset device states
+			Core.GraphicsDevice.RasterizerState = _defaultRasterizerState;
+			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+		}
+
+		public static void RenderShadows()
+		{
+			_queueSorted = true;
+
+			// iterate drawing queues
+			for (int i = 0; i < _renderingQueues.Count; i++)
+			{
+				var queue = _renderingQueues[i];
+				// if no entities in queue, skip
+				if (queue.Entities.Count == 0)
+				{
+					continue;
+				}
+
+				// apply queue states
+				Core.GraphicsDevice.RasterizerState = queue.RasterizerState;
+				Core.GraphicsDevice.DepthStencilState = queue.DepthStencilState;
+
+				// if need to sort by distance from camera, do the sorting
+				if (queue.SortByCamera)
+				{
+					var camPos = GeonDefaultRenderer.ActiveCamera.Position;
+					queue.Entities.Sort(delegate (EntityInQueue x, EntityInQueue y)
+					{
+						return (int)(Vector3.Distance(camPos, y.World.Translation) * 100f - System.Math.Floor(y.Entity.CameraDistanceBias)) -
+								(int)(Vector3.Distance(camPos, x.World.Translation) * 100f - System.Math.Floor(x.Entity.CameraDistanceBias));
+					});
+				}
+
+				// draw all entities in queue
+				for (int j = 0; j < queue.Entities.Count; j++)
+				{
+					var entityData = queue.Entities[j];
+					if (!entityData.Entity.ShadowDraw) continue;
+					entityData.Entity.RenderShadows(entityData.World);
+				}
+
+				// don't clear queues
+
 			}
 
 			// reset device states

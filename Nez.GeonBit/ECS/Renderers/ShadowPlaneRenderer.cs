@@ -41,7 +41,7 @@ namespace Nez.GeonBit
 			ListPool<GeonEntity>.Free(lst);
 
 			Materials.MaterialAPI.SetViewProjection(lightsManager.ShadowViewMatrix, _projection);
-			RenderingQueues.DrawQueues(false, true, true);
+			RenderingQueues.RenderShadows();
 
 			Core.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 1f, 0);
 
