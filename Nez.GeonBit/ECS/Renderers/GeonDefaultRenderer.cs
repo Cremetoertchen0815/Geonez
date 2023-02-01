@@ -19,6 +19,8 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.GeonBit.Lights;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Nez.GeonBit
 {
@@ -80,6 +82,8 @@ namespace Nez.GeonBit
 		/// </summary>
 		public bool IsDeferredLightingEnabled => _DeferredLighting != null;
 
+		private bool _renderingPrepared = false;
+
 		/// <summary>
 		/// Currently active camera.
 		/// </summary>
@@ -126,8 +130,12 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Start a drawing frame.
 		/// </summary>
-		public void StartDrawFrame(Matrix? viewMatrix = null, Matrix? projectionMatrix = null)
+		public void PrepareRendering(Scene scene, Matrix? viewMatrix = null, Matrix? projectionMatrix = null)
 		{
+			//Don't prepare rendering queues if we are already prepared them in the same frame
+			if (_renderingPrepared) return;
+			_renderingPrepared = true;
+			
 			// update culling nodes camera frustum
 			CullingNode.CurrentCameraFrustum = ActiveCamera != null ? ActiveCamera.ViewFrustum : null;
 
@@ -144,13 +152,18 @@ namespace Nez.GeonBit
 				_DeferredLighting.FrameStart();
 			}
 			// notify nodes manager that a frame started
-			if (!ActiveLightsManager.ShadowsEnabed) NodesManager.StartFrame();
+			NodesManager.StartFrame();
+
+			//Draw node(fill rendering queues)
+			var lst = scene.EntitiesOfType<GeonEntity>();
+			foreach (var item in lst) item.Node?.Draw();
+			ListPool<GeonEntity>.Free(lst);
 		}
 
 		/// <summary>
 		/// Finish a drawing frame and render everything in queues.
 		/// </summary>
-		public void EndDrawFrame()
+		public void FinishRendering()
 		{
 			// draw rendering queues
 			RenderingQueues.DrawQueues();
@@ -166,6 +179,8 @@ namespace Nez.GeonBit
 
 			// clear the last material applied
 			Materials.MaterialAPI._lastMaterialApplied = null;
+
+			_renderingPrepared = false;
 		}
 
 		/// <summary>
@@ -224,16 +239,9 @@ namespace Nez.GeonBit
 		public override void Render(Scene scene)
 		{
 
-			StartDrawFrame();
+			PrepareRendering(scene);
 
-			var lst = scene.EntitiesOfType<GeonEntity>();
-			foreach (var item in lst)
-			{
-				item.Node?.Draw();
-			}
-			ListPool<GeonEntity>.Free(lst);
-
-			EndDrawFrame();
+			FinishRendering();
 
 			if (ShouldDebugRender && Core.DebugRenderEnabled)
 			{
@@ -243,19 +251,29 @@ namespace Nez.GeonBit
 			// reset stencil state
 			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 		}
+		
+		public void RenderShadows(Scene scene)
+		{
+			PrepareRendering(scene);
+
+			foreach (var item in ActiveLightsManager.GetShadowCasters())
+			{
+				Core.GraphicsDevice.SetRenderTarget(item.ShadowMap);
+				Core.GraphicsDevice.Clear(Color.Black);
+
+				var matrices = ActiveLightsManager.ShadowEffect as IEffectMatrices;
+				matrices.View = item.ShadowViewMatrix;
+				matrices.Projection = item.ShadowProjectionMatrix;
+				RenderingQueues.RenderShadows();
+			}
+				
+		}
 
 		public void RenderFromPoint(Vector3 position, Vector3 direction, Vector3 up, Matrix projMatrix)
 		{
-			StartDrawFrame(Matrix.CreateLookAt(position, position + direction, up), projMatrix);
-
-			var lst = _scene.EntitiesOfType<GeonEntity>();
-			foreach (var item in lst)
-			{
-				item.Node?.Draw();
-			}
-			ListPool<GeonEntity>.Free(lst);
-
-			EndDrawFrame();
+			PrepareRendering(_scene, Matrix.CreateLookAt(position, position + direction, up), projMatrix);
+			
+			FinishRendering();
 
 			// reset stencil state
 			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;

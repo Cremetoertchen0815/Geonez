@@ -514,7 +514,6 @@ namespace Nez.GeonBit
 				}
 
 				// don't clear queues
-
 			}
 
 			// reset device states

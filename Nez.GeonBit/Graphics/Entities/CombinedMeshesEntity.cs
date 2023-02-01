@@ -691,6 +691,8 @@ namespace Nez.GeonBit
 				device.SetVertexBuffer(buffers._VertexBuffer);
 				device.Indices = buffers._IndexBuffer;
 
+				GeonDefaultRenderer.ActiveLightsManager.ShadowEffect.CurrentTechnique.Passes[0].Apply();
+
 				// draw
 				device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, buffers.PrimitiveCount);
 			}

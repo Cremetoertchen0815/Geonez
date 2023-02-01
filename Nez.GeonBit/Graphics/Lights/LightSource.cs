@@ -18,14 +18,15 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
-
+using Microsoft.Xna.Framework.Graphics;
+using Nez.GeonBit.Graphics.Lights;
 
 namespace Nez.GeonBit.Lights
 {
 	/// <summary>
 	/// Basic light source entity.
 	/// </summary>
-	public class LightSource
+	public class LightSource : IShadowCaster
 	{
 		/// <summary>
 		/// Is this light source currently visible?
@@ -87,6 +88,12 @@ namespace Nez.GeonBit.Lights
 		}
 
 		private Vector3 _position = Vector3.Zero;
+		
+		public bool CastsShadow { get; init; } = true;
+		public Matrix ShadowViewMatrix { get; internal set; } = Matrix.Identity;
+		public Matrix ShadowProjectionMatrix { get; internal set; } = Matrix.Identity;
+		public RenderTarget2D ShadowMap { get; internal set; } = null;
+		public static Vector2 ShadowMapSize { get; set; } = new Vector2(1024, 1024);
 
 		/// <summary>
 		/// Light color and strength (A field = light strength).
@@ -140,9 +147,13 @@ namespace Nez.GeonBit.Lights
 		/// <summary>
 		/// Create the light source.
 		/// </summary>
-		public LightSource() =>
+		public LightSource(bool castsShadows)
+		{
+			CastsShadow = castsShadows;
+			if (CastsShadow) ShadowMap = new RenderTarget2D(Core.GraphicsDevice, (int)ShadowMapSize.X, (int)ShadowMapSize.Y, false, SurfaceFormat.Single, DepthFormat.Depth24);
 			// count the object creation
 			CountAndAlert.Count(CountAndAlert.PredefAlertTypes.AddedOrCreated);
+		}
 
 		/// <summary>
 		/// Update light transformations.
@@ -167,7 +178,12 @@ namespace Nez.GeonBit.Lights
 		public virtual void RecalcBoundingSphere(bool updateInLightsManager = true)
 		{
 			// calc light bounding sphere
+			var size = ShadowMap.Bounds.Size.ToVector2();
 			BoundingSphere = new BoundingSphere(Position, _range);
+			ShadowViewMatrix = Matrix.CreateLookAt(Position, Position + Direction ?? Vector3.Down, Vector3.Forward);
+			ShadowProjectionMatrix = IsDirectionalLight ?
+										Matrix.CreateOrthographic(size.X, size.Y, 0f, 1f) :
+										Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, size.X / size.Y, 0.1f, _range);
 
 			// notify manager on update
 			if (updateInLightsManager && LightsManager != null)
