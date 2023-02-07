@@ -93,7 +93,7 @@ namespace Nez.GeonBit.Lights
 		public Matrix ShadowViewMatrix { get; internal set; } = Matrix.Identity;
 		public Matrix ShadowProjectionMatrix { get; internal set; } = Matrix.Identity;
 		public RenderTarget2D ShadowMap { get; internal set; } = null;
-		public static Vector2 ShadowMapSize { get; set; } = new Vector2(1024, 1024);
+		public static Vector2 ShadowMapSize { get; set; } = new Vector2(2048f, 2048f);
 
 		/// <summary>
 		/// Light color and strength (A field = light strength).
@@ -182,7 +182,7 @@ namespace Nez.GeonBit.Lights
 			BoundingSphere = new BoundingSphere(Position, _range);
 			ShadowViewMatrix = Matrix.CreateLookAt(Position, Position + Direction ?? Vector3.Down, Vector3.Forward);
 			ShadowProjectionMatrix = IsDirectionalLight ?
-										Matrix.CreateOrthographic(size.X, size.Y, 0f, 1f) :
+										Matrix.CreateOrthographic(ShadowMapSize.X, ShadowMapSize.Y, 0.001f, Range) :
 										Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, size.X / size.Y, 0.1f, _range);
 
 			// notify manager on update

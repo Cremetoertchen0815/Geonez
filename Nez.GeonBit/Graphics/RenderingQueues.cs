@@ -447,7 +447,7 @@ namespace Nez.GeonBit
 				Core.GraphicsDevice.DepthStencilState = queue.DepthStencilState;
 
 				// if need to sort by distance from camera, do the sorting
-				if (!_queueSorted && queue.SortByCamera)
+				if (queue.SortByCamera)
 				{
 					var camPos = GeonDefaultRenderer.ActiveCamera.Position;
 					queue.Entities.Sort(delegate (EntityInQueue x, EntityInQueue y)
@@ -478,31 +478,15 @@ namespace Nez.GeonBit
 
 		public static void RenderShadows()
 		{
-			_queueSorted = true;
 
 			// iterate drawing queues
 			for (int i = 0; i < _renderingQueues.Count; i++)
 			{
 				var queue = _renderingQueues[i];
 				// if no entities in queue, skip
-				if (queue.Entities.Count == 0)
+				if (queue.Entities.Count == 0 || !queue.CanCastShadow)
 				{
 					continue;
-				}
-
-				// apply queue states
-				Core.GraphicsDevice.RasterizerState = queue.RasterizerState;
-				Core.GraphicsDevice.DepthStencilState = queue.DepthStencilState;
-
-				// if need to sort by distance from camera, do the sorting
-				if (queue.SortByCamera)
-				{
-					var camPos = GeonDefaultRenderer.ActiveCamera.Position;
-					queue.Entities.Sort(delegate (EntityInQueue x, EntityInQueue y)
-					{
-						return (int)(Vector3.Distance(camPos, y.World.Translation) * 100f - System.Math.Floor(y.Entity.CameraDistanceBias)) -
-								(int)(Vector3.Distance(camPos, x.World.Translation) * 100f - System.Math.Floor(x.Entity.CameraDistanceBias));
-					});
 				}
 
 				// draw all entities in queue

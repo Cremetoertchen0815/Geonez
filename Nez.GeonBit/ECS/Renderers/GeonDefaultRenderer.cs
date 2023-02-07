@@ -130,7 +130,7 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Start a drawing frame.
 		/// </summary>
-		public void PrepareRendering(Scene scene, Matrix? viewMatrix = null, Matrix? projectionMatrix = null)
+		public void PrepareRendering(Scene scene, bool forceVisible, Matrix? viewMatrix = null, Matrix? projectionMatrix = null)
 		{
 			//Don't prepare rendering queues if we are already prepared them in the same frame
 			if (_renderingPrepared) return;
@@ -156,7 +156,7 @@ namespace Nez.GeonBit
 
 			//Draw node(fill rendering queues)
 			var lst = scene.EntitiesOfType<GeonEntity>();
-			foreach (var item in lst) item.Node?.Draw();
+			foreach (var item in lst) item.Node?.Draw(forceVisible, forceVisible);
 			ListPool<GeonEntity>.Free(lst);
 		}
 
@@ -239,7 +239,7 @@ namespace Nez.GeonBit
 		public override void Render(Scene scene)
 		{
 
-			PrepareRendering(scene);
+			PrepareRendering(scene, false);
 
 			FinishRendering();
 
@@ -251,10 +251,13 @@ namespace Nez.GeonBit
 			// reset stencil state
 			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 		}
-		
+		int ctr = -10;
 		public void RenderShadows(Scene scene)
 		{
-			PrepareRendering(scene);
+			PrepareRendering(scene, true);
+
+			Core.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
 			foreach (var item in ActiveLightsManager.GetShadowCasters())
 			{
@@ -265,13 +268,20 @@ namespace Nez.GeonBit
 				matrices.View = item.ShadowViewMatrix;
 				matrices.Projection = item.ShadowProjectionMatrix;
 				RenderingQueues.RenderShadows();
+
+				if (ctr++ != 10) continue;
+				var ff = System.IO.File.OpenWrite("soose.png");
+				item.ShadowMap.SaveAsPng(ff, item.ShadowMap.Width, item.ShadowMap.Height);
+				ff.Close(); 
 			}
-				
-		}
+
+            Core.GraphicsDevice.SetRenderTarget(scene.SceneRenderTarget);
+            Core.GraphicsDevice.Clear(Color.Black);
+        }
 
 		public void RenderFromPoint(Vector3 position, Vector3 direction, Vector3 up, Matrix projMatrix)
 		{
-			PrepareRendering(_scene, Matrix.CreateLookAt(position, position + direction, up), projMatrix);
+			PrepareRendering(_scene, true, Matrix.CreateLookAt(position, position + direction, up), projMatrix);
 			
 			FinishRendering();
 

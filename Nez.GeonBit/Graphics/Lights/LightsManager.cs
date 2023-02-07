@@ -101,7 +101,7 @@ namespace Nez.GeonBit.Lights
 
 		public RenderTexture ShadowMap { get; set; }
 		public Matrix ShadowViewMatrix { get; set; }
-		public Effect ShadowEffect { get; private set; } = Core.Content.Load<Effect>("GeonBit/Effects/ShadowMap");
+		public Effect ShadowEffect { get; private set; } = new DepthPlaneEffect(Core.GraphicsDevice);
 
 		/// <summary>
 		/// Add a light source to lights manager.

@@ -785,10 +785,10 @@ namespace Nez.GeonBit
 		/// Draw the node and its children.
 		/// </summary>
 		/// <param name="forceEvenIfAlreadyDrawn">If true, will draw this node even if it was already drawn in current frame.</param>
-		public void Draw(bool forceEvenIfAlreadyDrawn = false)
+		public void Draw(bool forceEvenIfAlreadyDrawn = false, bool forceDraw = false)
 		{
 			// check if we shouldn't draw at this frame
-			if (!ShouldDraw(forceEvenIfAlreadyDrawn))
+			if (!ShouldDraw(forceEvenIfAlreadyDrawn) && !forceDraw)
 			{
 				return;
 			}
