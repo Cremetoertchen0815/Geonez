@@ -177,6 +177,7 @@ namespace Nez.GeonBit.Lights
 		/// <param name="updateInLightsManager">If true, will also update light position in lights manager.</param>
 		public virtual void RecalcBoundingSphere(bool updateInLightsManager = true)
 		{
+			return;
 			// calc light bounding sphere
 			var size = ShadowMap.Bounds.Size.ToVector2();
 			BoundingSphere = new BoundingSphere(Position, _range);
