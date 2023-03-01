@@ -137,7 +137,7 @@ namespace Nez.Textures
 		/// <param name="preferredDepthFormat">Preferred depth format.</param>
 		public static RenderTarget2D Create(int width, int height, SurfaceFormat preferredFormat,
 											DepthFormat preferredDepthFormat) => new RenderTarget2D(Core.GraphicsDevice, width, height, false, preferredFormat, preferredDepthFormat,
-				Screen.AASamples, RenderTargetUsage.DiscardContents);
+				0, RenderTargetUsage.DiscardContents);
 
 		#endregion
 

@@ -268,11 +268,6 @@ namespace Nez.GeonBit
 				matrices.View = item.ShadowViewMatrix;
 				matrices.Projection = item.ShadowProjectionMatrix;
 				RenderingQueues.RenderShadows();
-
-				if (ctr++ != 10) continue;
-				var ff = System.IO.File.OpenWrite("soose.png");
-				item.ShadowMap.SaveAsPng(ff, item.ShadowMap.Width, item.ShadowMap.Height);
-				ff.Close(); 
 			}
 
             Core.GraphicsDevice.SetRenderTarget(scene.SceneRenderTarget);
