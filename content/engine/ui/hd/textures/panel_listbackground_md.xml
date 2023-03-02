@@ -3,8 +3,9 @@
 
   <!-- metadata about this texture. for more info, take a look at the TextureData class in code. -->
   <Asset Type="Nez.ExtendedContent.DataTypes.TextureData">
-    <FrameWidth>0.2</FrameWidth>
-    <FrameHeight>0.2</FrameHeight>
+    <FrameWidth>0.95</FrameWidth>
+    <FrameHeight>0.95</FrameHeight>
+	<StainedCanvasID>0</StainedCanvasID>
   </Asset>
 
 </XnaContent>
