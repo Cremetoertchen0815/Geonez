@@ -29,7 +29,7 @@ namespace Nez.GeonBit.Lights
 	/// <summary>
 	/// Implement a default, basic lights manager.
 	/// </summary>
-	public class LightsManager : ILightsManager
+	public class LightsManager
 	{
 		/// <summary>
 		/// Contains metadata about lights in this lights manager.
@@ -98,16 +98,13 @@ namespace Nez.GeonBit.Lights
 		}
 
 		public bool ShadowsEnabed { get; set; } = true;
+        public Effect ShadowEffect { get; init; } = new DepthPlaneEffect(Core.GraphicsDevice);
 
-		public RenderTexture ShadowMap { get; set; }
-		public Matrix ShadowViewMatrix { get; set; }
-		public Effect ShadowEffect { get; private set; } = new DepthPlaneEffect(Core.GraphicsDevice);
-
-		/// <summary>
-		/// Add a light source to lights manager.
-		/// </summary>
-		/// <param name="light">Light to add.</param>
-		public void AddLight(LightSource light)
+        /// <summary>
+        /// Add a light source to lights manager.
+        /// </summary>
+        /// <param name="light">Light to add.</param>
+        public void AddLight(LightSource light)
 		{
 			// if light already got parent, assert
 			if (light.LightsManager != null)
@@ -405,7 +402,5 @@ namespace Nez.GeonBit.Lights
 				_lightsData[light] = newMd;
 			}
 		}
-
-		public IEnumerable<IShadowCaster> GetShadowCasters() => _lights.Where(x => x.CastsShadow).Select(x => x as IShadowCaster);
 	}
 }

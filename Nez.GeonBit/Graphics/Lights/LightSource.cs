@@ -26,7 +26,7 @@ namespace Nez.GeonBit.Lights
 	/// <summary>
 	/// Basic light source entity.
 	/// </summary>
-	public class LightSource : IShadowCaster
+	public class LightSource
 	{
 		/// <summary>
 		/// Is this light source currently visible?
@@ -36,7 +36,7 @@ namespace Nez.GeonBit.Lights
 		/// <summary>
 		/// Parent lights manager.
 		/// </summary>
-		internal ILightsManager LightsManager = null;
+		internal LightsManager LightsManager = null;
 
 		/// <summary>
 		/// So we can cache lights and identify when they were changed.
@@ -88,12 +88,6 @@ namespace Nez.GeonBit.Lights
 		}
 
 		private Vector3 _position = Vector3.Zero;
-		
-		public bool CastsShadow { get; init; } = true;
-		public Matrix ShadowViewMatrix { get; internal set; } = Matrix.Identity;
-		public Matrix ShadowProjectionMatrix { get; internal set; } = Matrix.Identity;
-		public RenderTarget2D ShadowMap { get; internal set; } = null;
-		public static Vector2 ShadowMapSize { get; set; } = new Vector2(2048f, 2048f);
 
 		/// <summary>
 		/// Light color and strength (A field = light strength).
@@ -147,10 +141,8 @@ namespace Nez.GeonBit.Lights
 		/// <summary>
 		/// Create the light source.
 		/// </summary>
-		public LightSource(bool castsShadows)
+		public LightSource()
 		{
-			CastsShadow = castsShadows;
-			if (CastsShadow) ShadowMap = new RenderTarget2D(Core.GraphicsDevice, (int)ShadowMapSize.X, (int)ShadowMapSize.Y, false, SurfaceFormat.Single, DepthFormat.Depth24);
 			// count the object creation
 			CountAndAlert.Count(CountAndAlert.PredefAlertTypes.AddedOrCreated);
 		}
@@ -177,14 +169,8 @@ namespace Nez.GeonBit.Lights
 		/// <param name="updateInLightsManager">If true, will also update light position in lights manager.</param>
 		public virtual void RecalcBoundingSphere(bool updateInLightsManager = true)
 		{
-			return;
 			// calc light bounding sphere
-			var size = ShadowMap.Bounds.Size.ToVector2();
 			BoundingSphere = new BoundingSphere(Position, _range);
-			ShadowViewMatrix = Matrix.CreateLookAt(Position, Position + Direction ?? Vector3.Down, Vector3.Forward);
-			ShadowProjectionMatrix = IsDirectionalLight ?
-										Matrix.CreateOrthographic(ShadowMapSize.X, ShadowMapSize.Y, 0.001f, Range) :
-										Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver2, size.X / size.Y, 0.1f, _range);
 
 			// notify manager on update
 			if (updateInLightsManager && LightsManager != null)

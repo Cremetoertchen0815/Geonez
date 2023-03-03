@@ -87,9 +87,9 @@ namespace Nez.GeonBit
 		/// <summary>
 		/// Create the light component.
 		/// </summary>
-		public Light(bool castsShadows) =>
+		public Light() =>
 			// create the light source
-			_light = new Lights.LightSource(castsShadows);
+			_light = new Lights.LightSource();
 
 		/// <summary>
 		/// Clone this component.
@@ -97,7 +97,7 @@ namespace Nez.GeonBit
 		/// <returns>Cloned copy of this component.</returns>
 		public override Component Clone()
 		{
-			var ret = new Light(_light.CastsShadow)
+			var ret = new Light()
 			{
 				Intensity = Intensity,
 				Specular = Specular,

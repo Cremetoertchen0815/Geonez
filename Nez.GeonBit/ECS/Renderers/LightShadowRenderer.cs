@@ -19,6 +19,8 @@ namespace Nez.GeonBit.ECS.Renderers
 		
 		public override bool WantsToRenderToSceneRenderTarget => true;
 
-		public override void Render(Scene scene) => (renderer ?? (renderer = scene.GetRenderer<GeonDefaultRenderer>())).RenderShadows(scene);
-	}
+        public override void Render(Scene scene) => throw new NotImplementedException();
+
+        //public override void Render(Scene scene) => (renderer ?? (renderer = scene.GetRenderer<GeonDefaultRenderer>())).RenderShadows(scene);
+    }
 }

@@ -75,7 +75,7 @@ namespace Nez.GeonBit
 		/// Manage lights and serve them to materials.
 		/// This object holds the currently active lights manager, given by the scene.
 		/// </summary>
-		public static Lights.ILightsManager ActiveLightsManager { get; internal set; } = new Lights.LightsManager();
+		public static LightsManager ActiveLightsManager { get; internal set; } = new LightsManager();
 
 		/// <summary>
 		/// Return if deferred lighting is currently enabled.
@@ -251,28 +251,28 @@ namespace Nez.GeonBit
 			// reset stencil state
 			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 		}
-		int ctr = -10;
-		public void RenderShadows(Scene scene)
-		{
-			PrepareRendering(scene, true);
+		
+		//public void RenderShadows(Scene scene)
+		//{
+		//	PrepareRendering(scene, true);
 
-			Core.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
-			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+		//	Core.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+		//	Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-			foreach (var item in ActiveLightsManager.GetShadowCasters())
-			{
-				Core.GraphicsDevice.SetRenderTarget(item.ShadowMap);
-				Core.GraphicsDevice.Clear(Color.Black);
+		//	foreach (var item in ActiveLightsManager.GetShadowCasters())
+		//	{
+		//		Core.GraphicsDevice.SetRenderTarget(item.ShadowMap);
+		//		Core.GraphicsDevice.Clear(Color.Black);
 
-				var matrices = ActiveLightsManager.ShadowEffect as IEffectMatrices;
-				matrices.View = item.ShadowViewMatrix;
-				matrices.Projection = item.ShadowProjectionMatrix;
-				RenderingQueues.RenderShadows();
-			}
+		//		var matrices = ActiveLightsManager.ShadowEffect as IEffectMatrices;
+		//		matrices.View = item.ShadowViewMatrix;
+		//		matrices.Projection = item.ShadowProjectionMatrix;
+		//		RenderingQueues.RenderShadows();
+		//	}
 
-            Core.GraphicsDevice.SetRenderTarget(scene.SceneRenderTarget);
-            Core.GraphicsDevice.Clear(Color.Black);
-        }
+  //          Core.GraphicsDevice.SetRenderTarget(scene.SceneRenderTarget);
+  //          Core.GraphicsDevice.Clear(Color.Black);
+  //      }
 
 		public void RenderFromPoint(Vector3 position, Vector3 direction, Vector3 up, Matrix projMatrix)
 		{

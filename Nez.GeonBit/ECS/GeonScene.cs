@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
@@ -46,7 +47,16 @@ namespace Nez.GeonBit
 		/// </summary>
 		public static uint OctreeMaxDivisions = 5;
 
-		public GeonScene() : base(false)
+		public Color AmbientColor { get; set; } = Color.Black;
+
+		public float RefractiveIndex { get; set; } = 1.000293f;
+
+        internal Dictionary<int, PrimaryLightSource> LightSourcesPrimary { get; private set; } = new();
+
+        internal object[] LightSourcesAux { get; private set; } = new object[32];
+
+
+        public GeonScene() : base(false)
 		{
 			//Add camera
 			var cameraEntity = CreateGeonEntity("camera");
