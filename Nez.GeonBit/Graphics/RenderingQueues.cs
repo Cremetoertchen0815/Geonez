@@ -21,6 +21,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Nez.GeonBit
@@ -168,27 +169,54 @@ namespace Nez.GeonBit
 			Entity = entity;
 			World = world;
 		}
-	}
+    }
 
-	/// <summary>
-	/// Rendering queue settings and entities.
-	/// </summary>
-	internal class RenderingQueueInstance
+    /// <summary>
+    /// A single entity in the shadow list.
+    /// </summary>
+    internal struct ShadowElement
+    {
+        /// <summary>
+        /// The renderable entity.
+        /// </summary>
+        public IShadowCaster ShadowEntity;
+
+        /// <summary>
+        /// World transformations to draw with.
+        /// </summary>
+        public Matrix World;
+
+        /// <summary>
+        /// Create the entity-in-queue entry.
+        /// </summary>
+        /// <param name="entity">Entity to draw.</param>
+        /// <param name="world">World transformations.</param>
+        public ShadowElement(IShadowCaster shadowEntity, Matrix world)
+        {
+            ShadowEntity = shadowEntity;
+            World = world;
+        }
+    }
+
+    /// <summary>
+    /// Rendering queue settings and entities.
+    /// </summary>
+    internal class RenderingQueueInstance
 	{
 		/// <summary>
 		/// Current entities in queue.
 		/// </summary>
-		public List<EntityInQueue> Entities = new List<EntityInQueue>();
+		public List<EntityInQueue> Entities = new();
 
 		/// <summary>
 		/// Rasterizer settings of this queue.
 		/// </summary>
-		public RasterizerState RasterizerState = new RasterizerState();
+		public RasterizerState RasterizerState = new();
 
 		/// <summary>
 		/// Depth stencil settings for this queue.
 		/// </summary>
-		public DepthStencilState DepthStencilState = new DepthStencilState();
+		public DepthStencilState DepthStencilState = new();
 
 		/// <summary>
 		/// If true, will sort entities by distance from camera.
@@ -209,12 +237,12 @@ namespace Nez.GeonBit
 		// List of built-in rendering queues.
 		private static readonly List<RenderingQueueInstance> _renderingQueues = new List<RenderingQueueInstance>();
 
-		private static bool _queueSorted = false;
+        private static List<ShadowElement> _shadowEntities = new();
 
-		/// <summary>
-		/// Init all built-in rendering queues.
-		/// </summary>
-		public static void Initialize()
+        /// <summary>
+        /// Init all built-in rendering queues.
+        /// </summary>
+        public static void Initialize()
 		{
 			_renderingQueues.Clear();
 
@@ -431,9 +459,14 @@ namespace Nez.GeonBit
 		/// Draw rendering queues.
 		/// </summary>
 		public static void DrawQueues()
-		{
-			// iterate drawing queues
-			for (int i = 0; i < _renderingQueues.Count; i++)
+        {
+
+            // reset device states
+            Core.GraphicsDevice.RasterizerState = _defaultRasterizerState;
+            Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+            // iterate drawing queues
+            for (int i = 0; i < _renderingQueues.Count; i++)
 			{
 				var queue = _renderingQueues[i];
 				// if no entities in queue, skip
@@ -466,44 +499,25 @@ namespace Nez.GeonBit
 
 				// clear queue
 				queue.Entities.Clear();
+				_shadowEntities.Clear();
 
 			}
-
-			_queueSorted = false;
 
 			// reset device states
 			Core.GraphicsDevice.RasterizerState = _defaultRasterizerState;
 			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 		}
 
-		public static void RenderShadows()
-		{
-
-			// iterate drawing queues
-			for (int i = 0; i < _renderingQueues.Count; i++)
-			{
-				var queue = _renderingQueues[i];
-				// if no entities in queue, skip
-				if (queue.Entities.Count == 0 || !queue.CanCastShadow)
-				{
-					continue;
-				}
-
-				// draw all entities in queue
-				for (int j = 0; j < queue.Entities.Count; j++)
-				{
-					var entityData = queue.Entities[j];
-					if (!entityData.Entity.ShadowDraw) continue;
-					entityData.Entity.RenderShadows(entityData.World);
-				}
-
-				// don't clear queues
-			}
-
-			// reset device states
-			Core.GraphicsDevice.RasterizerState = _defaultRasterizerState;
-			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-		}
+		public static void RenderShadows(int key, PrimaryLightSource light)
+        {
+			// draw all entities in queue
+            for (int j = 0; j < _shadowEntities.Count; j++)
+            {
+                var entityData = _shadowEntities[j];
+                if (entityData.ShadowEntity.PrimaryLight != key) continue;
+				entityData.ShadowEntity.RenderShadows(entityData.World);
+            }
+        }
 
 		/// <summary>
 		/// Add entity to its rendering queue.
@@ -513,13 +527,14 @@ namespace Nez.GeonBit
 		public static void AddEntity(BaseRenderableEntity entity, Matrix world)
 		{
 			// special case - skip debug if not in debug mode
-			if (entity.RenderingQueue == RenderingQueue.Debug && !Core.DebugRenderEnabled)
-			{
-				return;
-			}
+			if (entity.RenderingQueue == RenderingQueue.Debug && !Core.DebugRenderEnabled) return;
 
 			// add to the rendering queue
 			_renderingQueues[(int)entity.RenderingQueue].Entities.Add(new EntityInQueue(entity, world));
-		}
+
+			// Skip rendering shadows if disabled or not implemented
+			if (!GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed || entity is not IShadowCaster se || !se.CastsShadow) return;
+			_shadowEntities.Add(new ShadowElement(se, world));
+        }
 	}
 }

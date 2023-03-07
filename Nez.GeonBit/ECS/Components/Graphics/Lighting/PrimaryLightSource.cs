@@ -11,8 +11,9 @@ public abstract class PrimaryLightSource : GeonComponent, IUpdatable
     //Shadow Fields
     protected readonly float _aspectRatio;
     protected Vector3 _direction;
-    protected float _nearDistance;
-    protected float _farDistance;
+    protected float _nearDistance = 0.01f;
+    protected float _farDistance = 100f;
+    private Vector3 _forward = Vector3.Up;
 
     //Shadow Properties
     public RenderTarget2D ShadowMap { get; private set; }
@@ -42,6 +43,16 @@ public abstract class PrimaryLightSource : GeonComponent, IUpdatable
         set
         {
             _farDistance = value;
+            _shadowMatricesModified = true;
+        }
+    }
+
+    public Vector3 Forward
+    {
+        get => _forward;
+        set
+        {
+            _forward = value;
             _shadowMatricesModified = true;
         }
     }

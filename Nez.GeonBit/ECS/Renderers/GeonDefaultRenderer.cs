@@ -237,9 +237,11 @@ namespace Nez.GeonBit
 		public static Point ViewportSize => new Point(Core.GraphicsDevice.Viewport.Width, Core.GraphicsDevice.Viewport.Height);
 
 		public override void Render(Scene scene)
-		{
+        {
+            Core.GraphicsDevice.SetRenderTarget(scene.SceneRenderTarget);
+            Core.GraphicsDevice.Clear(Color.Black);
 
-			PrepareRendering(scene, false);
+            PrepareRendering(scene, false);
 
 			FinishRendering();
 
@@ -252,27 +254,24 @@ namespace Nez.GeonBit
 			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 		}
 		
-		//public void RenderShadows(Scene scene)
-		//{
-		//	PrepareRendering(scene, true);
+		public void RenderShadows(GeonScene scene)
+		{
+			PrepareRendering(scene, true);
 
-		//	Core.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
-		//	Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+			Core.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
 
-		//	foreach (var item in ActiveLightsManager.GetShadowCasters())
-		//	{
-		//		Core.GraphicsDevice.SetRenderTarget(item.ShadowMap);
-		//		Core.GraphicsDevice.Clear(Color.Black);
+			foreach (var item in scene.LightSourcesPrimary)
+			{
+				Core.GraphicsDevice.SetRenderTarget(item.Value.ShadowMap);
+				Core.GraphicsDevice.Clear(Color.White);
 
-		//		var matrices = ActiveLightsManager.ShadowEffect as IEffectMatrices;
-		//		matrices.View = item.ShadowViewMatrix;
-		//		matrices.Projection = item.ShadowProjectionMatrix;
-		//		RenderingQueues.RenderShadows();
-		//	}
+				var matrices = ActiveLightsManager.ShadowEffect as IEffectMatrices;
+				matrices.View = item.Value.ShadowView;
+				matrices.Projection = item.Value.ShadowProjection;
+				RenderingQueues.RenderShadows(item.Key, item.Value);
+			}
 
-  //          Core.GraphicsDevice.SetRenderTarget(scene.SceneRenderTarget);
-  //          Core.GraphicsDevice.Clear(Color.Black);
-  //      }
+        }
 
 		public void RenderFromPoint(Vector3 position, Vector3 direction, Vector3 up, Matrix projMatrix)
 		{

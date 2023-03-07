@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Nez.GeonBit.ECS.Components.Graphics.Lighting;
+namespace Nez.GeonBit;
 public class PrimarySpotLight : PrimaryLightSource
 {
-    public PrimarySpotLight(int id) : base(id)
+    public PrimarySpotLight(int id, Point shadowMapResolution = default) : base(id, shadowMapResolution)
     {
     }
 
@@ -21,7 +21,7 @@ public class PrimarySpotLight : PrimaryLightSource
 
     internal override void CalculateMatrix()
     {
-        ShadowView = Matrix.CreateLookAt(Entity.Node.Position, Entity.Node.Position + Direction, Vector3.Up);
+        ShadowView = Matrix.CreateLookAt(Entity.Node.Position, Entity.Node.Position + Direction, Forward);
         ShadowProjection = Matrix.CreatePerspectiveFieldOfView(FOV, _aspectRatio, NearDistance, FarDistance);
     }
 }

@@ -11,16 +11,18 @@ namespace Nez.GeonBit.ECS.Renderers
 	/// Renders the shadow maps for all GeonBit light sources.
 	/// Needs to be rendered before the main GeonDefaultRenderer!
 	/// </summary>
-	public class LightShadowRenderer : Renderer
+	public class GeonShadowMapRenderer : Renderer
 	{
 		private GeonDefaultRenderer renderer = null;
-		public LightShadowRenderer(int layer) : base(layer)
+        public GeonShadowMapRenderer(int layer) : base(layer)
 		{ }
 		
 		public override bool WantsToRenderToSceneRenderTarget => true;
 
-        public override void Render(Scene scene) => throw new NotImplementedException();
-
-        //public override void Render(Scene scene) => (renderer ?? (renderer = scene.GetRenderer<GeonDefaultRenderer>())).RenderShadows(scene);
+        public override void Render(Scene scene)
+        {
+            if (scene is not GeonScene gs) return;
+            (renderer ?? (renderer = scene.GetRenderer<GeonDefaultRenderer>())).RenderShadows(gs);
+        }
     }
 }

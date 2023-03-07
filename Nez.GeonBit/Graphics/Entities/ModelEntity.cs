@@ -19,19 +19,18 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.GeonBit.ECS.Components.Graphics;
 using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
 
-	/// <summary>
-	/// A basic renderable model.
-	/// This type of model renderer renders the entire model as a single unit, and not as multiple meshes, but still
-	/// provide some control over materials etc.
-	/// </summary>
-	public class ModelEntity : BaseRenderableEntity
-	{
+    /// <summary>
+    /// A basic renderable model.
+    /// This type of model renderer renders the entire model as a single unit, and not as multiple meshes, but still
+    /// provide some control over materials etc.
+    /// </summary>
+    public class ModelEntity : BaseRenderableEntity, IShadowCaster
+    {
 		/// <summary>
 		/// Model to render.
 		/// </summary>
@@ -54,11 +53,15 @@ namespace Nez.GeonBit
 		// store last rendering radius (based on bounding sphere)
 		private float _lastRadius = 0f;
 
-		/// <summary>
-		/// Dictionary with materials to use per meshes.
-		/// Key is mesh name, value is material to use for this mesh.
-		/// </summary>
-		private readonly Dictionary<string, Materials.MaterialAPI[]> _materials = new Dictionary<string, Materials.MaterialAPI[]>();
+        public int PrimaryLight { get; set; }
+        public bool CastsShadow { get; set; }
+        public int ShadowCasterLOD { get; set; }
+
+        /// <summary>
+        /// Dictionary with materials to use per meshes.
+        /// Key is mesh name, value is material to use for this mesh.
+        /// </summary>
+        private readonly Dictionary<string, Materials.MaterialAPI[]> _materials = new Dictionary<string, Materials.MaterialAPI[]>();
 
 		/// <summary>
 		/// Get materials dictionary.
@@ -300,6 +303,6 @@ namespace Nez.GeonBit
 			return new BoundingBox(min, max);
 
 		}
-		public override void RenderShadows(Matrix worldTransform) => Model.Draw(GeonDefaultRenderer.ActiveLightsManager.ShadowEffect, worldTransform);
+		void IShadowCaster.RenderShadows(Matrix worldTransform) => Model.Draw(GeonDefaultRenderer.ActiveLightsManager.ShadowEffect, worldTransform);
 	}
 }

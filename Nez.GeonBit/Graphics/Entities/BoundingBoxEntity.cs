@@ -132,7 +132,5 @@ namespace Nez.GeonBit
 					_bBoxIndices, 0, 12);
 			}
 		}
-
-		public override void RenderShadows(Matrix worldTransform) { } 
 	}
 }

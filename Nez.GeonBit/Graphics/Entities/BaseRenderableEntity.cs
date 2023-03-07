@@ -60,15 +60,6 @@ namespace Nez.GeonBit
 		/// </summary>
 		public BlendState BlendingState = BlendState.AlphaBlend;
 
-		public bool CastsShadow = true;
-
-		/// <summary>
-		/// If true, will draw just the wireframe of the entity.
-		/// Note: settings this property will change the rendering queue property.
-		/// </summary>
-		/// 
-		public bool ShadowDraw { get; set; } = true;
-
 		public bool WireFrame
 		{
 			get => RenderingQueue == RenderingQueue.Wireframe;
@@ -141,8 +132,6 @@ namespace Nez.GeonBit
 			// call to draw this entity - this will either add to the corresponding rendering queue, or draw immediately if have no drawing queue.
 			GeonDefaultRenderer.DrawEntity(this, worldTransformations);
 		}
-
-		public abstract void RenderShadows(Matrix worldTransform);
 
 		/// <summary>
 		/// The per-entity drawing function, must be implemented by child entities.

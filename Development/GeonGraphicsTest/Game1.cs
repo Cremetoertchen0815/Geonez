@@ -7,6 +7,6 @@ public class TestGame : Core
     {
         base.Initialize();
 
-        Scene = new Scene();
+        Scene = new GraphicsTestScene();
     }
 }

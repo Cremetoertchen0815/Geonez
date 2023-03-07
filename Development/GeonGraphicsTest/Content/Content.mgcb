@@ -16,7 +16,7 @@
 
 #begin engine/fx/geon/depth_plane.fx
 /importer:EffectImporter
-/processor:EffectProcessor
+/processor:BinaryEffectsProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/geon/depth_plane.fx
 

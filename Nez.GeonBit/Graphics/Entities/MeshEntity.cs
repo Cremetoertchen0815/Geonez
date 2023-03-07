@@ -19,16 +19,14 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.GeonBit.ECS.Components.Graphics;
-using Nez.GeonBit.Lights;
 
 namespace Nez.GeonBit
 {
 
-	/// <summary>
-	/// A basic renderable mesh (part of a model).
-	/// </summary>
-	public class MeshEntity : BaseRenderableEntity
+    /// <summary>
+    /// A basic renderable mesh (part of a model).
+    /// </summary>
+    public class MeshEntity : BaseRenderableEntity, IShadowCaster
 	{
 		/// <summary>
 		/// Mesh to render.
@@ -46,10 +44,14 @@ namespace Nez.GeonBit
 			get; protected set;
 		}
 
-		/// <summary>
-		/// Add bias to distance from camera when sorting by distance from camera.
-		/// </summary>
-		public override float CameraDistanceBias => _lastRadius * 100f;
+        public int PrimaryLight { get; set; }
+        public bool CastsShadow { get; set; }
+        public int ShadowCasterLOD { get; set; }
+
+        /// <summary>
+        /// Add bias to distance from camera when sorting by distance from camera.
+        /// </summary>
+        public override float CameraDistanceBias => _lastRadius * 100f;
 
 		// store last rendering radius (based on bounding sphere)
 		private float _lastRadius = 0f;
@@ -199,11 +201,6 @@ namespace Nez.GeonBit
 		/// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
 		/// <returns>Bounding box of the entity.</returns>
 		protected override BoundingBox CalcBoundingBox(Node parent, ref Matrix localTransformations, ref Matrix worldTransformations) => BoundingBox.CreateFromSphere(GetBoundingSphere(parent, ref localTransformations, ref worldTransformations));
-		public override void RenderShadows(Matrix worldTransform)
-		{
-			if (GeonDefaultRenderer.ActiveLightsManager.ShadowEffect is not IEffectMatrices fx) return;
-			fx.World = worldTransform;
-			Mesh.Draw(GeonDefaultRenderer.ActiveLightsManager.ShadowEffect);
-		}
+		void IShadowCaster.RenderShadows(Matrix worldTransform) => Mesh.Draw(GeonDefaultRenderer.ActiveLightsManager.ShadowEffect, worldTransform);
 	}
 }

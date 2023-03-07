@@ -310,10 +310,5 @@ namespace Nez.GeonBit
 			// get bounding sphere
 			return new BoundingSphere(position, System.Math.Max(scale.X, scale.Y));
 		}
-
-		public override void RenderShadows(Matrix worldTransform)
-		{
-			
-		}
 	}
 }

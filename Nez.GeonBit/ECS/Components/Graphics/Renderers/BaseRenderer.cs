@@ -55,14 +55,42 @@ namespace Nez.GeonBit
 			set => RenderableEntity.RenderingQueue = value;
 		}
 
-		public virtual bool ShadowsEnabled { get => RenderableEntity.ShadowDraw; set => RenderableEntity.ShadowDraw = value; }
+		public virtual bool CastsShadows 
+		{
+			get => (RenderableEntity as IShadowCaster)?.CastsShadow ?? false;
+			set
+			{
+				if (RenderableEntity is not IShadowCaster shadowEntity) return;
+				shadowEntity.CastsShadow = value;
+			}
+        }
 
-		/// <summary>
-		/// Copy basic properties to another component (helper function to help with Cloning).
-		/// </summary>
-		/// <param name="copyTo">Other component to copy values to.</param>
-		/// <returns>The object we are copying properties to.</returns>
-		public virtual Component CopyBasics(Component copyTo)
+        public virtual int ShadowCasterLOD
+        {
+            get => (RenderableEntity as IShadowCaster)?.ShadowCasterLOD ?? 0;
+            set
+            {
+                if (RenderableEntity is not IShadowCaster shadowEntity) return;
+                shadowEntity.ShadowCasterLOD = value;
+            }
+        }
+
+        public virtual int PrimaryLight
+        {
+            get => (RenderableEntity as IShadowCaster)?.PrimaryLight ?? -1;
+            set
+            {
+                if (RenderableEntity is not IShadowCaster shadowEntity) return;
+                shadowEntity.PrimaryLight = value;
+            }
+        }
+
+        /// <summary>
+        /// Copy basic properties to another component (helper function to help with Cloning).
+        /// </summary>
+        /// <param name="copyTo">Other component to copy values to.</param>
+        /// <returns>The object we are copying properties to.</returns>
+        public virtual Component CopyBasics(Component copyTo)
 		{
 			var otherRenderer = copyTo as BaseRendererComponent;
 			otherRenderer.RenderingQueue = RenderingQueue;

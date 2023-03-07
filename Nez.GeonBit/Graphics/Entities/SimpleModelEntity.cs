@@ -19,17 +19,16 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nez.GeonBit.ECS.Components.Graphics;
 
 namespace Nez.GeonBit
 {
 
-	/// <summary>
-	/// A basic renderable model with minimum control over materials and meshes, but with best performance compared to other
-	/// model renderer types.
-	/// Use this class if you want lots of models of the same type that don't require any special properties.
-	/// </summary>
-	public class SimpleModelEntity : BaseRenderableEntity
+    /// <summary>
+    /// A basic renderable model with minimum control over materials and meshes, but with best performance compared to other
+    /// model renderer types.
+    /// Use this class if you want lots of models of the same type that don't require any special properties.
+    /// </summary>
+    public class SimpleModelEntity : BaseRenderableEntity, IShadowCaster
 	{
 		/// <summary>
 		/// Model to render.
@@ -44,8 +43,13 @@ namespace Nez.GeonBit
 		/// </summary>
 		public override float CameraDistanceBias => _lastRadius * 100f;
 
-		// store last rendering radius (based on bounding sphere)
-		private float _lastRadius = 0f;
+        public int PrimaryLight { get; set; }
+        public bool CastsShadow { get; set; }
+        public int ShadowCasterLOD { get; set; }
+
+
+        // store last rendering radius (based on bounding sphere)
+        private float _lastRadius = 0f;
 
 		/// <summary>
 		/// Create the model entity from model instance.
@@ -150,6 +154,6 @@ namespace Nez.GeonBit
 			return new BoundingBox(min, max);
 		}
 
-		public override void RenderShadows(Matrix worldTransform) => Model.Draw(GeonDefaultRenderer.ActiveLightsManager.ShadowEffect, worldTransform);
-	}
+        void IShadowCaster.RenderShadows(Matrix worldTransform) => Model.Draw(GeonDefaultRenderer.ActiveLightsManager.ShadowEffect, worldTransform);
+    }
 }

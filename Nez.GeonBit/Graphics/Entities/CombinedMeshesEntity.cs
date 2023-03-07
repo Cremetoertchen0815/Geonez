@@ -65,7 +65,7 @@ namespace Nez.GeonBit
 	/// 
 	/// Note: While its a good way to reduce draw calls, don't create combined meshes too big or else you'll lose some culling optimizations.
 	/// </summary>
-	public class CombinedMeshesEntity<VertexType> : BaseRenderableEntity where VertexType : struct, IVertexType
+	public class CombinedMeshesEntity<VertexType> : BaseRenderableEntity, IShadowCaster where VertexType : struct, IVertexType
 	{
 		/// <summary>
 		/// Represent the vertices and indexes of a combined mesh part.
@@ -174,10 +174,14 @@ namespace Nez.GeonBit
 		// vertex type we use in this combined mesh.
 		private readonly VertexTypes _vtype;
 
-		/// <summary>
-		/// Create the combined mesh entity.
-		/// </summary>
-		public CombinedMeshesEntity()
+        public int PrimaryLight { get; set; }
+        public bool CastsShadow { get; set; }
+        public int ShadowCasterLOD { get; set; }
+
+        /// <summary>
+        /// Create the combined mesh entity.
+        /// </summary>
+        public CombinedMeshesEntity()
 		{
 			if (typeof(VertexType) == typeof(VertexPosition))
 			{
@@ -675,7 +679,7 @@ namespace Nez.GeonBit
 			return new BoundingBox(min, max);
 		}
 
-		public override void RenderShadows(Matrix worldTransform)
+        void IShadowCaster.RenderShadows(Matrix worldTransform)
 		{
 
 			// get graphic device

@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Diagnostics;
 
-namespace Nez.GeonBit.ECS.Components.Graphics
+namespace Nez.GeonBit
 {
-	public static class ModelDrawHelpers
+    public static class ModelDrawHelpers
 	{
 
 		private static Matrix[] sharedDrawBoneMatrices;
@@ -23,7 +22,7 @@ namespace Nez.GeonBit.ECS.Components.Graphics
 			foreach (ModelMesh mesh in m.Meshes)
 			{
 				IEffectMatrices obj = (effect as IEffectMatrices) ?? throw new InvalidOperationException();
-				obj.World = sharedDrawBoneMatrices[mesh.ParentBone.Index] * world;
+				obj.World = world;
 
 				mesh.Draw(effect);
 			}
@@ -33,9 +32,15 @@ namespace Nez.GeonBit.ECS.Components.Graphics
 		public static void Draw(this ModelMesh mesh, Effect effect)
 		{
 			for (int i = 0; i < mesh.MeshParts.Count; i++) mesh.MeshParts[i].Draw(effect);
-		}
+        }
 
-		public static void Draw(this ModelMeshPart modelMeshPart, Effect effect)
+        public static void Draw(this ModelMesh mesh, Effect effect, Matrix world)
+        {
+			if (effect is IEffectMatrices ff) ff.World = world;
+            for (int i = 0; i < mesh.MeshParts.Count; i++) mesh.MeshParts[i].Draw(effect);
+        }
+
+        public static void Draw(this ModelMeshPart modelMeshPart, Effect effect)
 		{
 			if (modelMeshPart.PrimitiveCount > 0)
 			{

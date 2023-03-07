@@ -31,7 +31,7 @@ namespace Nez.GeonBit
 	/// 1. finer-grain control over parts of the model.
 	/// 2. proper camera-distance sorting if the model contains both opaque and transparent parts.
 	/// </summary>
-	public class CompositeModelEntity : BaseRenderableEntity
+	public class CompositeModelEntity : BaseRenderableEntity, IShadowCaster
 	{
 		/// <summary>
 		/// Model to render.
@@ -72,12 +72,16 @@ namespace Nez.GeonBit
 		/// </summary>
 		public int MeshesCount => _meshes.Count;
 
-		/// <summary>
-		/// Get mesh entity by index.
-		/// </summary>
-		/// <param name="index">Mesh index to get.</param>
-		/// <returns>MeshEntity instance for this mesh.</returns>
-		public MeshEntity GetMesh(int index) => _meshes[index] as MeshEntity;
+        public int PrimaryLight { get; set; }
+        public bool CastsShadow { get; set; }
+        public int ShadowCasterLOD { get; set; }
+
+        /// <summary>
+        /// Get mesh entity by index.
+        /// </summary>
+        /// <param name="index">Mesh index to get.</param>
+        /// <returns>MeshEntity instance for this mesh.</returns>
+        public MeshEntity GetMesh(int index) => _meshes[index] as MeshEntity;
 
 		/// <summary>
 		/// Get mesh entity by name.
@@ -211,13 +215,13 @@ namespace Nez.GeonBit
 			return new BoundingBox(min, max);
 		}
 
-		public override void RenderShadows(Matrix worldTransform)
+        void IShadowCaster.RenderShadows(Matrix worldTransform)
 		{
 
-			for (int i = 0; i < _meshAccess.Count; i++)
-			{
-				if (_meshAccess[i].ShadowDraw) _meshAccess[i].RenderShadows(worldTransform);
-			}
-		}
-	}
+            for (int i = 0; i < _meshAccess.Count; i++)
+            {
+                if (_meshAccess[i] is IShadowCaster se && se.CastsShadow) se.RenderShadows(worldTransform);
+            }
+        }
+    }
 }
