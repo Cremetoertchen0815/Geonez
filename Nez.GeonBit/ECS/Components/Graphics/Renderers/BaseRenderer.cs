@@ -85,6 +85,16 @@ namespace Nez.GeonBit
             }
         }
 
+        public virtual RasterizerState ShadowCasterRasterizerState
+        {
+            get => (RenderableEntity as IShadowCaster)?.ShadowRasterizerState ?? null;
+            set
+            {
+                if (RenderableEntity is not IShadowCaster shadowEntity) return;
+                shadowEntity.ShadowRasterizerState = value;
+            }
+        }
+
         /// <summary>
         /// Copy basic properties to another component (helper function to help with Cloning).
         /// </summary>

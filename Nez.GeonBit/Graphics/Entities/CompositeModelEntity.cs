@@ -75,6 +75,7 @@ namespace Nez.GeonBit
         public int PrimaryLight { get; set; }
         public bool CastsShadow { get; set; }
         public int ShadowCasterLOD { get; set; }
+        public RasterizerState ShadowRasterizerState { get; set; }
 
         /// <summary>
         /// Get mesh entity by index.

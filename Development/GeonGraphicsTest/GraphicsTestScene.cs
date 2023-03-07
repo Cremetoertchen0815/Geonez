@@ -34,17 +34,25 @@ public class GraphicsTestScene : GeonScene
         var lightSrc = CreateGeonEntity("light", new Vector3(-3f, 0f, -8f), NodeType.Simple);
         lightSrc.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Sphere) { CastsShadows = true, PrimaryLight = 0,
                                                                             MaterialOverride = new MaterialOverrides() { DiffuseColor = Color.Lime }});
-        //lightSrc.AddComponent(new Light(true) { Range = 500f, Color = Color.White, Specular = 1f });
-        //lightSrc.AddComponent(new Light(true) { Range = 500f, Color = Color.Red, Specular = 1f });
 
         var lightDst = CreateGeonEntity("cube", new Vector3(3f, -1.5f, -6f), NodeType.Simple);
         lightDst.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Sphere) {
             CastsShadows = true,
-            PrimaryLight = 0,
+            PrimaryLight = 0, 
         });
         lightDst.Node.Rotation = new Vector3(120f, 5f, 10f);
         lightDst.Node.Tween("Position", new Vector3(3f, -50f, -6f), 2f).SetLoops(Nez.Tweens.LoopType.PingPong, -1).Start();
-        //lightDst.Node.Tween("Rotation", new Vector3(50f, 2f, 45f),5f).SetLoops(Nez.Tweens.LoopType.PingPong, -1).Start();
+
+
+        var projectionPlane = CreateGeonEntity("projPlane", new Vector3(0f, -10f, -4f), NodeType.Simple);
+        projectionPlane.Node.Scale = 10f * Vector3.One;
+        projectionPlane.Node.RotationX = -MathHelper.PiOver2;
+        projectionPlane.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Plane)
+        {
+            CastsShadows = true,
+            PrimaryLight = 0,
+            ShadowCasterRasterizerState = Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone
+        });
 
         AddSceneComponent(new DebugCamMover());
     }

@@ -46,6 +46,7 @@ namespace Nez.GeonBit
         public int PrimaryLight { get; set; }
         public bool CastsShadow { get; set; }
         public int ShadowCasterLOD { get; set; }
+        public RasterizerState ShadowRasterizerState { get; set; }
 
 
         // store last rendering radius (based on bounding sphere)

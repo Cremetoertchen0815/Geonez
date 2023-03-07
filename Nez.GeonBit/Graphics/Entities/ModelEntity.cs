@@ -56,6 +56,7 @@ namespace Nez.GeonBit
         public int PrimaryLight { get; set; }
         public bool CastsShadow { get; set; }
         public int ShadowCasterLOD { get; set; }
+        public RasterizerState ShadowRasterizerState { get; set; }
 
         /// <summary>
         /// Dictionary with materials to use per meshes.
@@ -68,11 +69,12 @@ namespace Nez.GeonBit
 		/// </summary>
 		internal Dictionary<string, Materials.MaterialAPI[]> OverrideMaterialsDictionary => _materials;
 
-		/// <summary>
-		/// Optional custom render settings for this specific instance.
-		/// Note: this method is much less efficient than materials override.
-		/// </summary>
-		public MaterialOverrides MaterialOverride = new MaterialOverrides();
+
+        /// <summary>
+        /// Optional custom render settings for this specific instance.
+        /// Note: this method is much less efficient than materials override.
+        /// </summary>
+        public MaterialOverrides MaterialOverride = new MaterialOverrides();
 
 		/// <summary>
 		/// Create the model entity from model instance.

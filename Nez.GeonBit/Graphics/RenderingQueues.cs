@@ -510,11 +510,15 @@ namespace Nez.GeonBit
 
 		public static void RenderShadows(int key, PrimaryLightSource light)
         {
+			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
 			// draw all entities in queue
             for (int j = 0; j < _shadowEntities.Count; j++)
             {
                 var entityData = _shadowEntities[j];
                 if (entityData.ShadowEntity.PrimaryLight != key) continue;
+
+				Core.GraphicsDevice.RasterizerState = entityData.ShadowEntity.ShadowRasterizerState ?? RasterizerState.CullClockwise;
 				entityData.ShadowEntity.RenderShadows(entityData.World);
             }
         }
