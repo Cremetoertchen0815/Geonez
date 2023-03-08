@@ -510,7 +510,7 @@ namespace Nez.GeonBit
 			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 		}
 
-		public static void RenderShadows(int key, PrimaryLightSource light)
+		public static void RenderShadows(int key, ShadowLight light)
         {
 			Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez.GeonBit.ECS.Components.Graphics.Lighting;
+using Nez.GeonBit.Lights;
 using System.Collections.Generic;
 
 namespace Nez.GeonBit
@@ -52,9 +53,7 @@ namespace Nez.GeonBit
 
 		public float RefractiveIndex { get; set; } = 1.000293f;
 
-        internal Dictionary<int, PrimaryLightSource> LightSourcesPrimary { get; private set; } = new();
-
-        internal object[] LightSourcesAux { get; private set; } = new object[32];
+        internal LightsManager Lighting { get; private set; } = new();
 
 
         public GeonScene() : base(false)
