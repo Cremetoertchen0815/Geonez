@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Nez.GeonBit;
+namespace Nez.GeonBit.Graphics.Lights;
 public interface IShadowCaster
 {
     /// <summary>

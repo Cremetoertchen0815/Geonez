@@ -21,16 +21,18 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.GeonBit.ECS.Components.Graphics.Lighting;
+using Nez.GeonBit.Graphics.Lights;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
-	/// <summary>
-	/// Pre-defined rendering queue.
-	/// Every rendering queue have drawing settings and their order determine the order in which object batches will be drawn.
-	/// </summary>
-	public enum RenderingQueue
+    /// <summary>
+    /// Pre-defined rendering queue.
+    /// Every rendering queue have drawing settings and their order determine the order in which object batches will be drawn.
+    /// </summary>
+    public enum RenderingQueue
 	{
 		/// <summary>
 		/// Will not use rendering queue, but simply draw this entity the moment the draw function is called.

@@ -20,7 +20,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
-using Nez.Textures;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -131,8 +130,13 @@ namespace Nez.GeonBit.Lights
 			light.LightsManager = null;
 
 			// remove from list of lights
-			RemoveLightFromItsRegions(light);
-			_allLights.Remove(light);
+			if (light is IRangedLight rl)
+			{
+				RemoveLightFromItsRegions(rl);
+				_rangedLights.Remove(rl);
+			}
+			else if (light is IShadowedLight sl) _shadowLights.Remove(sl);
+			else _allLights.Remove(light);
 		}
 
 		/// <summary>
@@ -172,7 +176,7 @@ namespace Nez.GeonBit.Lights
 		/// <param name="boundingSphere">Rendering bounding sphere.</param>
 		/// <param name="maxLights">Maximum lights count to return.</param>
 		/// <returns>Array of lights to apply on this material and drawing. Note: directional lights must always come first!</returns>
-		public LightSource[] GetLights(Materials.MaterialAPI material, ref BoundingSphere boundingSphere, int maxLights)
+		public ILightSource[] GetLights(Materials.MaterialAPI material, ref BoundingSphere boundingSphere, int maxLights)
 		{
 			// if disabled return empty lights array
 			if (!Enabled)
@@ -188,13 +192,15 @@ namespace Nez.GeonBit.Lights
 			var max = GetMaxRegionIndex(ref boundingSphere);
 
 			// build array to return
-			var retLights = new ResizableArray<LightSource>();
+			var retLights = new ResizableArray<ILightSource>();
+
+			// Note: For now only one shadowable light is supported anyway, so any other shadow-projecting lights get ignored.
+			//		 Should be changed later, once I actually get how to combine/efficiently store multiple shadowed lights
+			var firstEnabledShadowLight = _shadowLights.FirstOrDefault(x => x.Enabled);
+			if (firstEnabledShadowLight is not null) retLights.Add(firstEnabledShadowLight);
 
 			// add all infinite lights first (directional lights etc)
-			foreach (var light in _infiniteLights)
-			{
-				retLights.Add(light);
-			}
+			foreach (var light in _infiniteLights) if (light.Enabled) retLights.Add(light);
 
 			// iterate regions and add lights
 			bool isFirstRegionWeCheck = true;
@@ -216,7 +222,7 @@ namespace Nez.GeonBit.Lights
 							foreach (var light in _regions[index])
 							{
 								// if light not visible, skip
-								if (!light.Visible)
+								if (!light.Enabled)
 								{
 									continue;
 								}
@@ -270,10 +276,7 @@ namespace Nez.GeonBit.Lights
 			_regions.Clear();
 
 			// re-add all lights
-			foreach (var light in _lights)
-			{
-				UpdateLightTransform(light);
-			}
+			foreach (var light in _rangedLights) UpdateLightTransform(light);
 		}
 
 		/// <summary>

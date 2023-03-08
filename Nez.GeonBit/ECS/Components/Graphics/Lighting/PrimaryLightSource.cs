@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.GeonBit.Graphics.Lights;
+using Nez.GeonBit.Lights;
 using System;
 
-namespace Nez.GeonBit;
-public abstract class PrimaryLightSource : GeonComponent, IUpdatable
+namespace Nez.GeonBit.ECS.Components.Graphics.Lighting;
+public abstract class PrimaryLightSource : GeonComponent, IUpdatable, IShadowedLight
 {
     public int LightSourceId { get; private set; }
     protected bool _shadowMatricesModified = true;
@@ -17,14 +19,14 @@ public abstract class PrimaryLightSource : GeonComponent, IUpdatable
 
     //Shadow Properties
     public RenderTarget2D ShadowMap { get; private set; }
-    public Matrix ShadowView { get; protected set; }
-    public Matrix ShadowProjection { get; protected set; }
-    public Vector3 Direction
+    public Matrix ShadowViewMatrix { get; protected set; }
+    public Matrix ShadowProjectionMatrix { get; protected set; }
+    public Vector3? Direction
     {
-        get => _direction; 
+        get => _direction;
         set
         {
-            _direction = value;
+            _direction = value ?? Vector3.Zero;
             _shadowMatricesModified = true;
         }
     }
@@ -58,11 +60,13 @@ public abstract class PrimaryLightSource : GeonComponent, IUpdatable
     }
 
     //Lighting Properties
-    public Color DiffuseColor { get; set; }
-    public Color SpecularColor { get; set; }
+    public Color Diffuse { get; set; }
+    public Color Specular { get; set; }
+	public uint ParamsVersion { get; set; }
 
+	public Vector3 Position => Entity?.Node?.Position ?? Vector3.Zero;
 
-    public PrimaryLightSource(int id, Point shadowMapResolution = default)
+	public PrimaryLightSource(int id, Point shadowMapResolution = default)
     {
         LightSourceId = id;
         if (shadowMapResolution == default) return;
@@ -86,4 +90,7 @@ public abstract class PrimaryLightSource : GeonComponent, IUpdatable
     {
         if (_shadowMatricesModified) CalculateMatrix();
     }
+
+	public void Remove() => throw new NotImplementedException();
+	public void UpdateTransforms(ref Matrix worldTransformations) => throw new NotImplementedException();
 }

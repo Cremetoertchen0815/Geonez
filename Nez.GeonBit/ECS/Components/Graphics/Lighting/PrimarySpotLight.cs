@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Nez.GeonBit;
+namespace Nez.GeonBit.ECS.Components.Graphics.Lighting;
 public class PrimarySpotLight : PrimaryLightSource
 {
     public PrimarySpotLight(int id, Point shadowMapResolution = default) : base(id, shadowMapResolution)
@@ -11,7 +11,7 @@ public class PrimarySpotLight : PrimaryLightSource
 
     public float FOV
     {
-        get => _fov; 
+        get => _fov;
         set
         {
             _fov = value;

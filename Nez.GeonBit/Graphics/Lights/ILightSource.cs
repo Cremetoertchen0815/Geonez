@@ -15,8 +15,6 @@ namespace Nez.GeonBit.Graphics.Lights
 		/// </summary>
 		bool Enabled { get; set; }
 
-		LightsManager LightsManager { get; set; }
-
 		/// <summary>
 		/// So we can cache lights and identify when they were changed.
 		/// </summary>
@@ -30,22 +28,22 @@ namespace Nez.GeonBit.Graphics.Lights
 		/// <summary>
 		/// Light position in world space.
 		/// </summary>
-		public Vector3 Position { get; set; }
+		public Vector3 Position { get; }
 
 		/// <summary>
 		/// Light direction, if its a directional light.
 		/// </summary>
-		public Vector3? Direction { get; set; }
+		public Vector3? Direction { get; }
 
 		/// <summary>
 		/// Light color and strength (A field = light strength).
 		/// </summary>
-		public Color Diffuse { get; set; }
+		public Color Diffuse { get; }
 
 		/// <summary>
 		/// Specular factor.
 		/// </summary>
-		public Color Specular { get; set; }
+		public Color Specular { get; }
 
 		/// <summary>
 		/// Remove self from parent lights manager.

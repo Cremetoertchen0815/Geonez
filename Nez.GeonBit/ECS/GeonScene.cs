@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Nez.GeonBit.ECS.Components.Graphics.Lighting;
 using System.Collections.Generic;
 
 namespace Nez.GeonBit
 {
-	public enum NodeType
+    public enum NodeType
 	{
 		/// <summary>
 		/// A simple node without any culling (will always draw, unless parent is culled).
