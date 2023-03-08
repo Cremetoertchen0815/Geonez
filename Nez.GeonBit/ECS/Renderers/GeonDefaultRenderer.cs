@@ -260,15 +260,15 @@ namespace Nez.GeonBit
 
 			Core.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
 
-			foreach (var item in scene.LightSourcesPrimary)
+			foreach (var item in scene.Lighting.GetShadowedLights())
 			{
-				Core.GraphicsDevice.SetRenderTarget(item.Value.ShadowMap);
+				Core.GraphicsDevice.SetRenderTarget(item.ShadowMap);
 				Core.GraphicsDevice.Clear(Color.White);
 
 				var matrices = ActiveLightsManager.ShadowEffect as IEffectMatrices;
-				matrices.View = item.Value.ShadowView;
-				matrices.Projection = item.Value.ShadowProjection;
-				RenderingQueues.RenderShadows(item.Key, item.Value);
+				matrices.View = item.ShadowViewMatrix;
+				matrices.Projection = item.ShadowProjectionMatrix;
+				RenderingQueues.RenderShadows(item.ShadowSourceID);
 			}
 
         }

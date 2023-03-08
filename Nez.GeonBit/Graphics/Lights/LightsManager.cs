@@ -88,15 +88,6 @@ namespace Nez.GeonBit.Lights
         /// <param name="light">Light to add.</param>
         public void AddLight(ILightSource light)
 		{
-			// if light already got parent, assert
-			if (light.LightsManager != null)
-			{
-				throw new System.InvalidOperationException("Light to add is already inside a lights manager!");
-			}
-
-			// set light's manager to self
-			light.LightsManager = this;
-
 			// add to list of lights
 			_allLights.Add(light);
 
@@ -120,15 +111,6 @@ namespace Nez.GeonBit.Lights
 		/// <param name="light">Light to remove.</param>
 		public void RemoveLight(ILightSource light)
 		{
-			// if lights don't belong to this manager, assert
-			if (light.LightsManager != this)
-			{
-				throw new System.InvalidOperationException("Light to remove is not inside this lights manager!");
-			}
-
-			// remove light's manager pointer
-			light.LightsManager = null;
-
 			// remove from list of lights
 			if (light is IRangedLight rl)
 			{
@@ -138,6 +120,8 @@ namespace Nez.GeonBit.Lights
 			else if (light is IShadowedLight sl) _shadowLights.Remove(sl);
 			else _allLights.Remove(light);
 		}
+
+		public IEnumerable<IShadowedLight> GetShadowedLights() => _shadowLights.Where(x => x.Enabled);
 
 		/// <summary>
 		/// Get min region index for a given bounding sphere.

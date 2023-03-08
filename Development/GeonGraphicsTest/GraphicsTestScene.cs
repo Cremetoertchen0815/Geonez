@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.GeonBit;
+using Nez.GeonBit.ECS.Components.Graphics.Lighting;
 using Nez.GeonBit.ECS.Renderers;
 using Nez.GeonBit.Materials;
 using Nez.Sprites;
@@ -23,7 +24,7 @@ public class GraphicsTestScene : GeonScene
         AddRenderer(new DefaultRenderer(2));
 
         var lightEntity = CreateGeonEntity("MainLight", new Vector3(0, 10, -4f));
-        var spotLight = lightEntity.AddComponent(new PrimarySpotLight(MAIN_SHADOW_PLANE, new Point(1024)) { Direction = Vector3.Down, Forward = Vector3.Backward, FarDistance = 40f, NearDistance = 5f });
+        var spotLight = lightEntity.AddComponent(new ShadowSpotLight(MAIN_SHADOW_PLANE, new Point(1024)) { Direction = Vector3.Down, Forward = Vector3.Backward, FarDistance = 40f, NearDistance = 5f });
         lightEntity.AddComponent(new ShapeRenderer(ShapeMeshes.SphereLowPoly));
 
 

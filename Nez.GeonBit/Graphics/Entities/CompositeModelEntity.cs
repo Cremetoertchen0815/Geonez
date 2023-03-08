@@ -19,6 +19,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.GeonBit.Graphics.Lights;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 

@@ -21,6 +21,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.GeonBit.Graphics.Lights;
 
 namespace Nez.GeonBit.Materials
 {
@@ -490,7 +491,7 @@ namespace Nez.GeonBit.Materials
 		/// <param name="lights">Array of light sources to apply.</param>
 		/// <param name="worldMatrix">World transforms of the rendering object.</param>
 		/// <param name="boundingSphere">Bounding sphere (after world transformation applied) of the rendering object.</param>
-		protected virtual void ApplyLights(Lights.LightSource[] lights, ref Matrix worldMatrix, ref BoundingSphere boundingSphere)
+		protected virtual void ApplyLights(ILightSource[] lights, ref Matrix worldMatrix, ref BoundingSphere boundingSphere)
 		{
 		}
 

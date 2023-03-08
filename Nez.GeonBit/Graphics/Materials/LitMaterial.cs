@@ -19,6 +19,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.GeonBit.Graphics.Lights;
 using System;
 
 namespace Nez.GeonBit.Materials
@@ -106,7 +107,7 @@ namespace Nez.GeonBit.Materials
 		private static readonly int MaxLightsCount = 7;
 
 		// cache of lights we applied
-		private readonly Lights.LightSource[] _lastLights = new Lights.LightSource[MaxLightsCount];
+		private readonly ILightSource[] _lastLights = new ILightSource[MaxLightsCount];
 
 		// cache of lights last known params version
 		private readonly uint[] _lastLightVersions = new uint[MaxLightsCount];
@@ -319,7 +320,7 @@ namespace Nez.GeonBit.Materials
 		/// <param name="lights">Array of light sources to apply.</param>
 		/// <param name="worldMatrix">World transforms of the rendering object.</param>
 		/// <param name="boundingSphere">Bounding sphere (after world transformation applied) of the rendering object.</param>
-		protected override void ApplyLights(Lights.LightSource[] lights, ref Matrix worldMatrix, ref BoundingSphere boundingSphere)
+		protected override void ApplyLights(ILightSource[] lights, ref Matrix worldMatrix, ref BoundingSphere boundingSphere)
 		{
 			// set global light params
 			if (IsDirty(MaterialDirtyFlags.EmissiveLight))
@@ -352,11 +353,11 @@ namespace Nez.GeonBit.Materials
 					var light = lights[i];
 
 					// set lights data
-					_lightsColArr[i] = light.Color.ToVector3();
-					_lightsPosArr[i] = light.IsDirectionalLight ? Vector3.Normalize(light.Direction.Value) : light.Position;
-					_lightsIntensArr[i] = light.Intensity;
-					_lightsRangeArr[i] = light.IsInfinite ? 0f : light.Range;
-					_lightsSpecArr[i] = light.Specular;
+					//_lightsColArr[i] = light.Color.ToVector3();
+					//_lightsPosArr[i] = light.IsDirectionalLight ? Vector3.Normalize(light.Direction.Value) : light.Position;
+					//_lightsIntensArr[i] = light.Intensity;
+					//_lightsRangeArr[i] = light.IsInfinite ? 0f : light.Range;
+					//_lightsSpecArr[i] = light.Specular;
 
 					// store light in cache so we won't copy it next time if it haven't changed
 					_lastLights[i] = lights[i];

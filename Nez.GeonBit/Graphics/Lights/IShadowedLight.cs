@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit.Graphics.Lights
 {
-	internal interface IShadowedLight : ILightSource
+	public interface IShadowedLight : ILightSource
 	{
 		int ShadowSourceID { get; }
 		Matrix ShadowViewMatrix { get; }
