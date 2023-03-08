@@ -20,6 +20,12 @@ namespace Nez.GeonBit.Graphics.Lights
 		public float Range { get; set; }
 
 		/// <summary>
+		/// Recalculate light bounding sphere after transformations or radius change.
+		/// </summary>
+		/// <param name="updateInLightsManager">If true, will also update light position in lights manager.</param>
+		void RecalcBoundingSphere(bool updateInLightsManager = true);
+
+		/// <summary>
 		/// Min lights region index this light is currently in.
 		/// </summary>
 		Vector3 MinRegionIndex { get; set; }

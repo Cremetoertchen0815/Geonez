@@ -110,24 +110,16 @@ namespace Nez.GeonBit.Lights
 
 				rl.RecalcBoundingSphere(false);
 				UpdateLightTransform(rl);
-				return;
 			}
-
-			if (light is IShadowedLight sl)
-			{
-				_shadowLights.Add(sl);
-				return;
-			}
-			
-				// add to infinite lights
-				_infiniteLights.Add(light);
+			else if (light is IShadowedLight sl) _shadowLights.Add(sl);
+			else _infiniteLights.Add(light);
 		}
 
 		/// <summary>
 		/// Remove a light source from lights manager.
 		/// </summary>
 		/// <param name="light">Light to remove.</param>
-		public void RemoveLight(LightSource light)
+		public void RemoveLight(ILightSource light)
 		{
 			// if lights don't belong to this manager, assert
 			if (light.LightsManager != this)
@@ -140,8 +132,7 @@ namespace Nez.GeonBit.Lights
 
 			// remove from list of lights
 			RemoveLightFromItsRegions(light);
-			_lights.Remove(light);
-			_lightsData.Remove(light);
+			_allLights.Remove(light);
 		}
 
 		/// <summary>
@@ -289,25 +280,11 @@ namespace Nez.GeonBit.Lights
 		/// Remove a light from all the regions its in (assuming light is inside this lights manager).
 		/// </summary>
 		/// <param name="light">Light to remove from regions.</param>
-		protected void RemoveLightFromItsRegions(LightSource light)
+		protected void RemoveLightFromItsRegions(IRangedLight light)
 		{
-			// if we don't have any metadata on this light it means its probably a new light. do nothing.
-			if (!_lightsData.ContainsKey(light))
-			{
-				return;
-			}
-
 			// get light metadata
-			var lightMd = _lightsData[light];
-			var min = lightMd.MinRegionIndex;
-			var max = lightMd.MaxRegionIndex;
-
-			// if infinite light remove from infinite lights list and stop here
-			if (lightMd.Infinite)
-			{
-				_infiniteLights.Remove(light);
-				return;
-			}
+			var min = light.MinRegionIndex;
+			var max = light.MaxRegionIndex;
 
 			// remove light from previous regions
 			var index = new Vector3();
@@ -366,7 +343,7 @@ namespace Nez.GeonBit.Lights
 						// if region don't exist, create it
 						if (!_regions.ContainsKey(index))
 						{
-							_regions[index] = new List<LightSource>();
+							_regions[index] = new();
 						}
 
 						// add light to region
@@ -376,14 +353,8 @@ namespace Nez.GeonBit.Lights
 			}
 
 			// update light's metadata
-			{
-				var newMd = new LightSourceMD
-				{
-					MinRegionIndex = min,
-					MaxRegionIndex = max
-				};
-				_lightsData[light] = newMd;
-			}
+			light.MinRegionIndex = min;
+			light.MaxRegionIndex = max;
 		}
 	}
 }
