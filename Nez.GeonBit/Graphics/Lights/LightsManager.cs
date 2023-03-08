@@ -31,26 +31,6 @@ namespace Nez.GeonBit.Lights
 	/// </summary>
 	public class LightsManager
 	{
-		/// <summary>
-		/// Contains metadata about lights in this lights manager.
-		/// </summary>
-		private struct LightSourceMD
-		{
-			/// <summary>
-			/// Min lights region index this light is currently in.
-			/// </summary>
-			public Vector3 MinRegionIndex;
-
-			/// <summary>
-			/// Max lights region index this light is currently in.
-			/// </summary>
-			public Vector3 MaxRegionIndex;
-
-			/// <summary>
-			/// If true, it means the light is infinite (eg have no range).
-			/// </summary>
-			public bool Infinite;
-		}
 
 		// ambient light value
 		private Color _ambient = Color.Gray;
@@ -68,19 +48,22 @@ namespace Nez.GeonBit.Lights
 		private Vector3 _regionSize = new Vector3(250, 250, 250);
 
 		// dictionary of regions and the lights they contain.
-		private readonly Dictionary<Vector3, List<LightSource>> _regions = new Dictionary<Vector3, List<LightSource>>();
+		private readonly Dictionary<Vector3, List<IRangedLight>> _regions = new Dictionary<Vector3, List<IRangedLight>>();
 
 		// list of lights that are infinite, eg have no range limit.
-		private readonly List<LightSource> _infiniteLights = new List<LightSource>();
+		private readonly List<ILightSource> _infiniteLights = new();
 
-		// data about lights in this lights manager
-		private readonly Dictionary<LightSource, LightSourceMD> _lightsData = new Dictionary<LightSource, LightSourceMD>();
+		// list of lights that are infinite, eg have no range limit.
+		private readonly List<IRangedLight> _rangedLights = new();
+
+		// list of lights that throw shadows
+		private readonly List<IShadowedLight> _shadowLights = new();
 
 		// list with all lights currently in manager.
-		private readonly List<LightSource> _lights = new List<LightSource>();
+		private readonly List<ILightSource> _allLights = new List<ILightSource>();
 
 		// to return empty lights array.
-		private static readonly LightSource[] EmptyLightsArray = new LightSource[0];
+		private static readonly ILightSource[] EmptyLightsArray = new ILightSource[0];
 
 		/// <summary>
 		/// Enable / disable all lights.
@@ -104,7 +87,7 @@ namespace Nez.GeonBit.Lights
         /// Add a light source to lights manager.
         /// </summary>
         /// <param name="light">Light to add.</param>
-        public void AddLight(LightSource light)
+        public void AddLight(ILightSource light)
 		{
 			// if light already got parent, assert
 			if (light.LightsManager != null)
@@ -116,11 +99,28 @@ namespace Nez.GeonBit.Lights
 			light.LightsManager = this;
 
 			// add to list of lights
-			_lights.Add(light);
+			_allLights.Add(light);
 
 			// add light to lights map
-			light.RecalcBoundingSphere(false);
-			UpdateLightTransform(light);
+
+
+			// if its infinite light add to infinite list
+			if (light is IRangedLight rl)
+			{
+
+				rl.RecalcBoundingSphere(false);
+				UpdateLightTransform(rl);
+				return;
+			}
+
+			if (light is IShadowedLight sl)
+			{
+				_shadowLights.Add(sl);
+				return;
+			}
+			
+				// add to infinite lights
+				_infiniteLights.Add(light);
 		}
 
 		/// <summary>
@@ -341,27 +341,10 @@ namespace Nez.GeonBit.Lights
 		/// Update the transformations of a light inside this manager.
 		/// </summary>
 		/// <param name="light">Light to update.</param>
-		public void UpdateLightTransform(LightSource light)
+		public void UpdateLightTransform(IRangedLight light)
 		{
 			// remove light from previous regions
 			RemoveLightFromItsRegions(light);
-
-			// if its infinite light add to infinite list
-			if (light.IsInfinite)
-			{
-				// add to infinite lights
-				_infiniteLights.Add(light);
-
-				// update light's metadata
-				var newMd = new LightSourceMD
-				{
-					Infinite = true
-				};
-				_lightsData[light] = newMd;
-
-				// stop here
-				return;
-			}
 
 			// calc new min and max for the light
 			var boundingSphere = light.BoundingSphere;

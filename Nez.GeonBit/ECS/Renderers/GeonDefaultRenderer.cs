@@ -75,7 +75,7 @@ namespace Nez.GeonBit
 		/// Manage lights and serve them to materials.
 		/// This object holds the currently active lights manager, given by the scene.
 		/// </summary>
-		public static LightsManager ActiveLightsManager { get; internal set; } = new LightsManager();
+		internal static LightsManager ActiveLightsManager { get; set; }
 
 		/// <summary>
 		/// Return if deferred lighting is currently enabled.

@@ -17,7 +17,7 @@ public class GraphicsTestScene : GeonScene
         base.Initialize();
 
         ClearColor = Color.Black;
-        GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = true;
+
         AddRenderer(new GeonShadowMapRenderer(0));
         AddRenderer(new GeonDefaultRenderer(1, this));
         AddRenderer(new DefaultRenderer(2));
