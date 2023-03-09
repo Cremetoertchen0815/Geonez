@@ -26,23 +26,11 @@
 /processorParam:DebugMode=Auto
 /build:engine/fx/geon/gbuff_clear.fx
 
-#begin engine/fx/geon/lit_normal.fx
+#begin engine/fx/geon/lighting_regular.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:engine/fx/geon/lit_normal.fx
-
-#begin engine/fx/geon/lit_regular.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:engine/fx/geon/lit_regular.fx
-
-#begin engine/fx/geon/shadow_plane.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:engine/fx/geon/shadow_plane.fx
+/build:engine/fx/geon/lighting_regular.fx
 
 #begin engine/fx/light/deferred_sprite.fx
 /importer:EffectImporter

@@ -30,7 +30,7 @@ namespace Nez.GeonBit.Materials
 	public class LitMaterial : MaterialAPI
 	{
 		// effect path
-		private static readonly string _effectPath = EffectsPath + "lit_regular";
+		private static readonly string _effectPath = EffectsPath + "lighting_regular";
 
 		// the effect instance of this material.
 		private readonly Effect _effect;
@@ -46,16 +46,34 @@ namespace Nez.GeonBit.Materials
 		protected override bool UseDefaultLightsManager => true;
 
 		// caching of lights-related params from shader
-		private EffectParameter _lightsCol;
-		private EffectParameter _lightsPos;
-		private EffectParameter _lightsIntens;
-		private EffectParameter _lightsRange;
-		private EffectParameter _lightsSpec;
+		private EffectParameter _lightsDiffuseA;
+		private EffectParameter _lightsDiffuseB;
+		private EffectParameter _lightsDiffuseC;
+		private EffectParameter _lightsDirA;
+		private EffectParameter _lightsDirB;
+		private EffectParameter _lightsDirC;
+		private EffectParameter _lightsSpecularA;
+		private EffectParameter _lightsSpecularB;
+		private EffectParameter _lightsSpecularC;
 		private EffectParameter _fogColorParam;
 		private EffectParameter _fogVectorParam;
+		private EffectParameter _paramActiveLights;
 
 		// effect parameters
 		private EffectParameterCollection _effectParams;
+		private EffectParameter _paramWorld;
+		private EffectParameter _paramWorldViewProjection;
+		private EffectParameter _paramWorldInverseTranspose;
+		private EffectParameter _paramEyePosition;
+		private EffectParameter _paramDiffuseColor;
+		private EffectParameter _paramEmissiveColor;
+		private EffectParameter _paramSpecularPower;
+		private EffectParameter _paramAlbedoMap;
+		private EffectParameter _paramAlbedoEnabled;
+		private EffectParameter _paramNormalMap;
+		private EffectParameter _paramShadowViewProjection;
+		private EffectParameter _paramDepthBias;
+		private EffectParameter _paramShadowMap;
 
 		// current active lights counter
 		private int _activeLightsCount = 0;
@@ -196,15 +214,33 @@ namespace Nez.GeonBit.Materials
 		private void InitLightParams()
 		{
 			_effectParams = _effect.Parameters;
-			_lightsCol = _effectParams["LightColor"];
-			_lightsPos = _effectParams["LightPosition"];
-			_lightsIntens = _effectParams["LightIntensity"];
-			_lightsRange = _effectParams["LightRange"];
-			_lightsSpec = _effectParams["LightSpecular"];
-			_transposeParam = _effectParams["WorldInverseTranspose"];
-			_worldParam = _effectParams["World"];
-			_fogColorParam = _effectParams["FogColor"];
-			_fogVectorParam = _effectParams["FogVector"];
+			_lightsDiffuseA = _effectParams["LightDiffuseA"];
+			_lightsDiffuseB = _effectParams["LightDiffuseB"];
+			_lightsDiffuseC = _effectParams["LightDiffuseC"];
+			_lightsDirA = _effectParams["LightDirectionA"];
+			_lightsDirB = _effectParams["LightDirectionB"];
+			_lightsDirC = _effectParams["LightDirectionC"];
+			_lightsSpecularA = _effectParams["LightSpecularA"];
+			_lightsSpecularB = _effectParams["LightSpecularB"];
+			_lightsSpecularC = _effectParams["LightSpecularC"];
+			_fogColorParam = _effectParams["LightsDiffuseA"];
+			_fogVectorParam = _effectParams["LightsDiffuseA"];
+			_paramActiveLights = _effectParams["ActiveLightsCount"];
+
+			// effect parameters
+			_paramWorld = _effectParams["World"];
+			_paramWorldViewProjection = _effectParams["WorldViewProjection"];
+			_paramWorldInverseTranspose = _effectParams["WorldInverseTranspose"];
+			_paramEyePosition = _effectParams["EyePosition"];
+			_paramDiffuseColor = _effectParams["DiffuseColor"];
+			_paramEmissiveColor = _effectParams["EmissiveColor"];
+			_paramSpecularPower = _effectParams["SpecularPower"];
+			_paramAlbedoMap = _effectParams["AlbedoMap"];
+			_paramAlbedoEnabled = _effectParams["AlbedoEnabled"];
+			_paramNormalMap = _effectParams["NormalMap"];
+			_paramShadowViewProjection = _effectParams["ShadowViewProjection"];
+			_paramDepthBias = _effectParams["DepthBias"];
+			_paramShadowMap = _effectParams["ShadowMap"];
 		}
 
 		/// <summary>
@@ -267,7 +303,7 @@ namespace Nez.GeonBit.Materials
 				_effect.CurrentTechnique = _effect.Techniques[_fogEnabled ? "Fog" : "NoFog"];
 			}
 		}
-		
+
 		/// <summary>
 		/// Sets a vector which can be dotted with the object space vertex position to compute fog amount.
 		/// </summary>

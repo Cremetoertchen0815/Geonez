@@ -94,6 +94,11 @@ namespace Nez.GeonBit.Materials
 		EmissiveLight = 1 << 10,
 
 		/// <summary>
+		/// Change in the normal map (enabled/disabled, 
+		/// </summary>
+		NormalMap = 1 << 11,
+
+		/// <summary>
 		/// All dirty flags.
 		/// </summary>
 		All = int.MaxValue
