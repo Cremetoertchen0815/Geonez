@@ -262,6 +262,7 @@ namespace Nez.GeonBit.Materials
 				SetAsDirty(MaterialDirtyFlags.Fog);
 			}
 
+			
 			// set all effect params
 			if (IsDirty(MaterialDirtyFlags.TextureParams))
 			{
