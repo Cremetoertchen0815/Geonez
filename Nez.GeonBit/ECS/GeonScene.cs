@@ -49,10 +49,6 @@ namespace Nez.GeonBit
 		/// </summary>
 		public static uint OctreeMaxDivisions = 5;
 
-		public Color AmbientColor { get; set; } = Color.Black;
-
-		public float RefractiveIndex { get; set; } = 1.000293f;
-
         internal LightsManager Lighting { get; private set; } = new();
 
 
@@ -63,10 +59,15 @@ namespace Nez.GeonBit
 			base.Camera = cameraEntity.AddComponent<Camera>();
 			Camera = cameraEntity.AddComponent(new Camera3D());
 			GeonDefaultRenderer.ActiveCamera = Camera;
-			GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed = false;
 			ClearTelegrams();
 
 			Initialize();
+		}
+
+		public override void Begin()
+		{
+			base.Begin();
+			GeonDefaultRenderer.ActiveLightsManager = Lighting;
 		}
 
 

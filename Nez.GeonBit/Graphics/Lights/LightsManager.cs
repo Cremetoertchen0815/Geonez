@@ -43,6 +43,8 @@ namespace Nez.GeonBit.Lights
 			set => _ambient = value;
 		}
 
+		public float RefractiveIndex { get; set; } = 1.000293f;
+
 		// the size of a batch / region containing lights.
 		private Vector3 _regionSize = new Vector3(250, 250, 250);
 
@@ -80,13 +82,14 @@ namespace Nez.GeonBit.Lights
 		}
 
 		public bool ShadowsEnabed { get; set; } = true;
-        public Effect ShadowEffect { get; init; } = new DepthPlaneEffect(Core.GraphicsDevice);
+		
+        internal readonly static Effect ShadowEffect = new DepthPlaneEffect(Core.GraphicsDevice);
 
         /// <summary>
         /// Add a light source to lights manager.
         /// </summary>
         /// <param name="light">Light to add.</param>
-        public void AddLight(ILightSource light)
+        internal void AddLight(ILightSource light)
 		{
 			// add to list of lights
 			_allLights.Add(light);
@@ -104,12 +107,12 @@ namespace Nez.GeonBit.Lights
 			else if (light is IShadowedLight sl) _shadowLights.Add(sl);
 			else _infiniteLights.Add(light);
 		}
-
+		
 		/// <summary>
 		/// Remove a light source from lights manager.
 		/// </summary>
 		/// <param name="light">Light to remove.</param>
-		public void RemoveLight(ILightSource light)
+		internal void RemoveLight(ILightSource light)
 		{
 			// remove from list of lights
 			if (light is IRangedLight rl)
@@ -305,7 +308,7 @@ namespace Nez.GeonBit.Lights
 		/// Update the transformations of a light inside this manager.
 		/// </summary>
 		/// <param name="light">Light to update.</param>
-		public void UpdateLightTransform(IRangedLight light)
+		internal void UpdateLightTransform(IRangedLight light)
 		{
 			// remove light from previous regions
 			RemoveLightFromItsRegions(light);
