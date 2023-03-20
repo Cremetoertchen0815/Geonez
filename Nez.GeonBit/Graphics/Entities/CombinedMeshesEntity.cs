@@ -22,6 +22,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
+using Nez.GeonBit.Lights;
 using System.Collections.Generic;
 
 
@@ -696,7 +697,7 @@ namespace Nez.GeonBit
 				device.SetVertexBuffer(buffers._VertexBuffer);
 				device.Indices = buffers._IndexBuffer;
 
-				GeonDefaultRenderer.ActiveLightsManager.ShadowEffect.CurrentTechnique.Passes[0].Apply();
+				LightsManager.ShadowEffect.CurrentTechnique.Passes[0].Apply();
 
 				// draw
 				device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, buffers.PrimitiveCount);

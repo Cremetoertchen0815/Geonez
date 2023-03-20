@@ -20,6 +20,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
+using Nez.GeonBit.Lights;
 
 namespace Nez.GeonBit
 {
@@ -203,6 +204,6 @@ namespace Nez.GeonBit
 		/// <param name="worldTransformations">World transformations to apply on this entity (this is what you should use to draw this entity).</param>
 		/// <returns>Bounding box of the entity.</returns>
 		protected override BoundingBox CalcBoundingBox(Node parent, ref Matrix localTransformations, ref Matrix worldTransformations) => BoundingBox.CreateFromSphere(GetBoundingSphere(parent, ref localTransformations, ref worldTransformations));
-		void IShadowCaster.RenderShadows(Matrix worldTransform) => Mesh.Draw(GeonDefaultRenderer.ActiveLightsManager.ShadowEffect, worldTransform);
+		void IShadowCaster.RenderShadows(Matrix worldTransform) => Mesh.Draw(LightsManager.ShadowEffect, worldTransform);
 	}
 }

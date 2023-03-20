@@ -94,14 +94,19 @@ namespace Nez.GeonBit.Materials
 		EmissiveLight = 1 << 10,
 
 		/// <summary>
-		/// Change in the normal map (enabled/disabled, 
+		/// Change in the normal map (enabled/disabled, map)
 		/// </summary>
 		NormalMap = 1 << 11,
 
-		/// <summary>
-		/// All dirty flags.
-		/// </summary>
-		All = int.MaxValue
+        /// <summary>
+        /// Change in the shadow map (enabled/disabled, depth bias)
+        /// </summary>
+        ShadowMap = 1 << 12,
+
+        /// <summary>
+        /// All dirty flags.
+        /// </summary>
+        All = int.MaxValue
 	}
 
 	/// <summary>
@@ -202,10 +207,10 @@ namespace Nez.GeonBit.Materials
 
 		private Color _diffuseColor;
 
-		/// <summary>
-		/// Specular color.
-		/// </summary>
-		public virtual Color SpecularColor
+        /// <summary>
+        /// Specular color.
+        /// </summary>
+        public virtual Color SpecularColor
 		{
 			get => _specularColor;
 			set { _specularColor = value; SetAsDirty(MaterialDirtyFlags.MaterialColors); }
@@ -219,8 +224,8 @@ namespace Nez.GeonBit.Materials
 		public virtual Color AmbientLight
 		{
 			get => _ambientLight;
-			set { _ambientLight = value; SetAsDirty(MaterialDirtyFlags.AmbientLight); }
-		}
+			internal set { _specularColor = value; SetAsDirty(MaterialDirtyFlags.AmbientLight); }
+        }
 
 		private Color _ambientLight;
 
@@ -323,8 +328,11 @@ namespace Nez.GeonBit.Materials
 		// current view matrix (shared by all materials)
 		private static Matrix _view;
 
-		// current projection matrix (shared by all materials)
-		private static Matrix _projection;
+        // current camera position (shared by all materials)
+        private static Vector3 _eyePosition;
+
+        // current projection matrix (shared by all materials)
+        private static Matrix _projection;
 
 		// view-projection matrix (multiply of view and projection)
 		private static Matrix _viewProjection;
@@ -343,6 +351,8 @@ namespace Nez.GeonBit.Materials
 		/// Current view-projection matrix.
 		/// </summary>
 		public virtual Matrix ViewProjection => _viewProjection;
+
+		public virtual Vector3 EyePosition => _eyePosition;
 
 		// current view matrix version, used so we'll only update materials view when needed.
 		private static uint _globalViewMatrixVersion = 1;
@@ -407,6 +417,7 @@ namespace Nez.GeonBit.Materials
 			{
 				_view = view;
 				_globalViewMatrixVersion++;
+				_eyePosition = Matrix.Invert(_view).Translation;
 			}
 
 			// update projection

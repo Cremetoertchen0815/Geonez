@@ -20,6 +20,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
+using Nez.GeonBit.Lights;
 using System.Collections.Generic;
 
 namespace Nez.GeonBit
@@ -306,6 +307,6 @@ namespace Nez.GeonBit
 			return new BoundingBox(min, max);
 
 		}
-		void IShadowCaster.RenderShadows(Matrix worldTransform) => Model.Draw(GeonDefaultRenderer.ActiveLightsManager.ShadowEffect, worldTransform);
+		void IShadowCaster.RenderShadows(Matrix worldTransform) => Model.Draw(LightsManager.ShadowEffect, worldTransform);
 	}
 }

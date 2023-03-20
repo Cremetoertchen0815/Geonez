@@ -265,7 +265,7 @@ namespace Nez.GeonBit
 				Core.GraphicsDevice.SetRenderTarget(item.ShadowMap);
 				Core.GraphicsDevice.Clear(Color.White);
 
-				var matrices = ActiveLightsManager.ShadowEffect as IEffectMatrices;
+				var matrices = LightsManager.ShadowEffect as IEffectMatrices;
 				matrices.View = item.ShadowViewMatrix;
 				matrices.Projection = item.ShadowProjectionMatrix;
 				RenderingQueues.RenderShadows(item.ShadowSourceID);
