@@ -39,7 +39,7 @@ public class GraphicsTestScene : GeonScene
                                                                             MaterialOverride = new MaterialOverrides() { DiffuseColor = Color.Lime }});
 
         var lightDst = CreateGeonEntity("cube", new Vector3(3f, -1.5f, -6f), NodeType.Simple);
-        lightDst.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Sphere) {
+        lightDst.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.SphereSmooth) {
             CastsShadows = true,
             PrimaryLight = MAIN_SHADOW_PLANE, 
         });
