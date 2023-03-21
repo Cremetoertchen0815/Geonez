@@ -194,7 +194,7 @@ namespace Nez.GeonBit.Materials
 		/// <summary>
 		/// Get how many lights this material support on the same render pass.
 		/// </summary>
-		protected virtual int MaxLights => 7;
+		protected virtual int MaxLights => 3;
 
 		/// <summary>
 		/// Diffuse color.
@@ -224,7 +224,7 @@ namespace Nez.GeonBit.Materials
 		public virtual Color AmbientLight
 		{
 			get => _ambientLight;
-			internal set { _specularColor = value; SetAsDirty(MaterialDirtyFlags.AmbientLight); }
+			internal set { _ambientLight = value; SetAsDirty(MaterialDirtyFlags.AmbientLight); }
         }
 
 		private Color _ambientLight;
@@ -296,7 +296,7 @@ namespace Nez.GeonBit.Materials
 			set { _fogRange = value; SetAsDirty(MaterialDirtyFlags.Fog); }
 		}
 
-		private (float start, float end) _fogRange = (0, 1000);
+		private (float start, float end) _fogRange;
 
 		public virtual Color FogColor
 		{
@@ -304,7 +304,7 @@ namespace Nez.GeonBit.Materials
 			set { _fogColor = value; SetAsDirty(MaterialDirtyFlags.Fog); }
 		}
 
-		private Color _fogColor = Color.White;
+		private Color _fogColor;
 
 		public virtual bool FogEnabled
 		{
@@ -458,7 +458,7 @@ namespace Nez.GeonBit.Materials
 		/// </summary>
 		/// <param name="worldMatrix">The world transformations of the currently rendered entity.</param>
 		/// <param name="boundingSphere">The bounding sphere (should be already transformed) of the rendered entity.</param>
-		public void Apply(ref Matrix worldMatrix, ref BoundingSphere boundingSphere)
+		public void Apply(ref Matrix worldMatrix, ref BoundingSphere boundingSphere, int ShadowID)
 		{
 			// set world matrix
 			World = worldMatrix;
@@ -485,7 +485,7 @@ namespace Nez.GeonBit.Materials
 			{
 				// get lights in rendering range
 				var lightsManager = GeonDefaultRenderer.ActiveLightsManager;
-				var lights = lightsManager.GetLights(this, ref boundingSphere, MaxLights);
+				var lights = lightsManager.GetLights(this, ShadowID, ref boundingSphere, MaxLights);
 				AmbientLight = lightsManager.AmbientLight;
 				ApplyLights(lights, ref worldMatrix, ref boundingSphere);
 			}

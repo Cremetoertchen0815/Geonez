@@ -49,7 +49,7 @@ namespace Nez.GeonBit
 		/// </summary>
 		public static uint OctreeMaxDivisions = 5;
 
-        internal LightsManager Lighting { get; private set; } = new();
+        public LightsManager Lighting { get; private set; } = new();
 
 
         public GeonScene() : base(false)

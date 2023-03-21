@@ -30,9 +30,6 @@ float SpecularPower;
 float4 FogVector;
 float3 FogColor;
 
-// max intensity, eg allowing lights to overflow original color
-float MaxLightIntensity = 1.0f;
-
 // main texture
 texture AlbedoMap;
 
@@ -41,6 +38,8 @@ texture NormalMap;
 
 // are we using texture?
 bool AlbedoEnabled = false;
+
+#define ShadowFilterSamples 8
 
 // max lights count
 #define MAX_LIGHTS_COUNT 3
@@ -188,7 +187,7 @@ VertexShaderOutputN VSVc(in VertexShaderInputVc input)
 	output.Position = mul(input.Position, WorldViewProjection);
 	output.Color = float4(input.Color.rgb, input.Color.a * DiffuseColor.a);
 
-	output.TextureCoordinate = float3(0, 0, saturate(dot(input.Position, FogVector)));
+	output.TextureCoordinate = float3(0, 0, saturate(dot(output.Position, FogVector)));
 	output.WorldPos = mul(input.Position, World);
 	output.ShadowPos = mul(output.WorldPos, ShadowViewProjection);
 	output.Normal = normalize(mul(input.Normal, WorldInverseTranspose));
@@ -389,7 +388,7 @@ float4 PS_S(VertexShaderOutputN input) : COLOR
 	// Get the current depth stored in the shadow map
     float ourdepth = (input.ShadowPos.z / input.ShadowPos.w);
 
-	float shadowContribution = CalcShadowTermSoftPCF(ourdepth, dot(input.Normal, LightDirectionA), ShadowTexCoord, 3);	
+	float shadowContribution = CalcShadowTermSoftPCF(ourdepth, dot(input.Normal, LightDirectionA), ShadowTexCoord, ShadowFilterSamples);	
 
 	// process directional lights
     ColorPair lightResult = ComputeLights(EyePosition - input.WorldPos.xyz, input.Normal, shadowContribution);
@@ -467,7 +466,7 @@ float4 PSTBN_S(VertexShaderOutputTBN input) : COLOR
 	// Get the current depth stored in the shadow map
     float ourdepth = (input.ShadowPos.z / input.ShadowPos.w);
 
-	float shadowContribution = CalcShadowTermSoftPCF(ourdepth, dot(N, LightDirectionA), ShadowTexCoord, 3);	
+	float shadowContribution = CalcShadowTermSoftPCF(ourdepth, dot(N, LightDirectionA), ShadowTexCoord, ShadowFilterSamples);	
 
 	// process directional lights
     ColorPair lightResult = ComputeLights( EyePosition - input.WorldPos.xyz, N, shadowContribution);

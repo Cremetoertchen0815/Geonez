@@ -151,7 +151,7 @@ namespace Nez.GeonBit
 				// if we don't have shared effects, eg every mesh part has its own effect, update material transformations
 				if (!gotSharedEffects)
 				{
-					material.Apply(ref worldTransformations, ref _lastBoundingSphere);
+					material.Apply(ref worldTransformations, ref _lastBoundingSphere, PrimaryLight);
 				}
 
 				// apply material effect on the mesh part. note: we first store original effect in mesh part's tag.
@@ -169,7 +169,7 @@ namespace Nez.GeonBit
 				for (int i = 0; i < Mesh.Effects.Count; i++)
 				{
 					var effect = Mesh.Effects[i];
-					effect.GetMaterial().Apply(ref worldTransformations, ref _lastBoundingSphere);
+					effect.GetMaterial().Apply(ref worldTransformations, ref _lastBoundingSphere, PrimaryLight);
 				}
 			}
 

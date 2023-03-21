@@ -20,6 +20,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
+using Nez.GeonBit.Graphics.Misc;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,19 +32,23 @@ namespace Nez.GeonBit.Lights
 	public class LightsManager
 	{
 
-		// ambient light value
-		private Color _ambient = Color.Gray;
+
+        public static PCFQuality ShadowQuality = PCFQuality.MidPCF;
+
+        // ambient light value
+        private Color _ambient = Color.Gray;
 
 		/// <summary>
 		/// Ambient light.
 		/// </summary>
 		public Color AmbientLight
 		{
-			get => Enabled ? _ambient : Color.White;
+			get => Enabled ? _ambient : Color.Black;
 			set => _ambient = value;
-		}
-
-		public float RefractiveIndex { get; set; } = 1.000293f;
+        }
+		public Color FogColor { get; set; } = Color.Black;
+		public (float start, float end) FogRange { get; set; } = (0f, 100f);
+        public float RefractiveIndex { get; set; } = 1.000293f;
 
 		// the size of a batch / region containing lights.
 		private Vector3 _regionSize = new Vector3(250, 250, 250);
@@ -124,7 +129,7 @@ namespace Nez.GeonBit.Lights
 			else _allLights.Remove(light);
 		}
 
-		public IEnumerable<IShadowedLight> GetShadowedLights() => _shadowLights.Where(x => x.Enabled);
+		internal IEnumerable<IShadowedLight> GetShadowedLights() => _shadowLights.Where(x => x.Enabled);
 
 		/// <summary>
 		/// Get min region index for a given bounding sphere.
@@ -163,7 +168,7 @@ namespace Nez.GeonBit.Lights
 		/// <param name="boundingSphere">Rendering bounding sphere.</param>
 		/// <param name="maxLights">Maximum lights count to return.</param>
 		/// <returns>Array of lights to apply on this material and drawing. Note: directional lights must always come first!</returns>
-		public ILightSource[] GetLights(Materials.MaterialAPI material, ref BoundingSphere boundingSphere, int maxLights)
+		internal ILightSource[] GetLights(Materials.MaterialAPI material, int ShadowID, ref BoundingSphere boundingSphere, int maxLights)
 		{
 			// if disabled return empty lights array
 			if (!Enabled)
@@ -172,7 +177,7 @@ namespace Nez.GeonBit.Lights
 			}
 
 			// if no lights at all, skip
-			if (_regions.Count == 0 && _infiniteLights.Count == 0) { return EmptyLightsArray; }
+			if (_regions.Count == 0 && _infiniteLights.Count == 0 && _shadowLights.Count == 0 ) { return EmptyLightsArray; }
 
 			// get min and max points of this bounding sphere
 			var min = GetMinRegionIndex(ref boundingSphere);
@@ -183,7 +188,7 @@ namespace Nez.GeonBit.Lights
 
 			// Note: For now only one shadowable light is supported anyway, so any other shadow-projecting lights get ignored.
 			//		 Should be changed later, once I actually get how to combine/efficiently store multiple shadowed lights
-			var firstEnabledShadowLight = _shadowLights.FirstOrDefault(x => x.Enabled);
+			var firstEnabledShadowLight = _shadowLights.FirstOrDefault(x => x.Enabled && x.ShadowSourceID == ShadowID);
 			if (firstEnabledShadowLight is not null) retLights.Add(firstEnabledShadowLight);
 
 			// add all infinite lights first (directional lights etc)

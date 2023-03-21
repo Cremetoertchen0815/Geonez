@@ -16,7 +16,17 @@ public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
     private Vector3 _forward = Vector3.Up;
 
     //Shadow Properties
-    public RenderTarget2D ShadowMap { get; private set; }
+    public RenderTarget2D ShadowMap
+    {
+        get => _shadowMap;
+        private set
+        {
+            _shadowMap = value;
+            ParamsVersion++;
+        }
+    }
+    private RenderTarget2D _shadowMap = null;
+
     public Matrix ShadowViewMatrix { get; protected set; }
     public Matrix ShadowProjectionMatrix { get; protected set; }
     public Vector3? Direction
@@ -58,9 +68,28 @@ public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
     }
 
     //Lighting Properties
-    public Color Diffuse { get; set; }
-    public Color Specular { get; set; }
-	public uint ParamsVersion { get; set; }
+    public Color Diffuse
+    {
+        get => _diffuse;
+        set
+        {
+            _diffuse = value;
+            ParamsVersion++;
+        }
+    }
+    private Color _diffuse = Color.White;
+
+    public Color Specular
+    {
+        get => _specular;
+        set
+        {
+            _specular = value;
+            ParamsVersion++;
+        }
+    }
+    private Color _specular = Color.White;
+    public uint ParamsVersion { get; set; }
 
 	public Vector3 Position => Entity?.Node?.Position ?? Vector3.Zero;
 

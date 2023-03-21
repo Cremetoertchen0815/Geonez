@@ -18,6 +18,7 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework.Graphics;
+using Nez.GeonBit.Graphics.Misc;
 
 namespace Nez.GeonBit.Materials
 {
@@ -39,7 +40,7 @@ namespace Nez.GeonBit.Materials
 		/// <summary>
 		/// Create the lit material from an empty effect.
 		/// </summary>
-		public LitMaterialAlphaTest() : base()
+		public LitMaterialAlphaTest(PCFQuality? shadowQuality = null) : base(shadowQuality)
 		{
 		}
 
@@ -64,7 +65,7 @@ namespace Nez.GeonBit.Materials
 		/// </summary>
 		/// <param name="fromEffect">Effect to create material from.</param>
 		/// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-		public LitMaterialAlphaTest(BasicEffect fromEffect, bool copyEffectProperties = true) : base(fromEffect, copyEffectProperties)
+		public LitMaterialAlphaTest(BasicEffect fromEffect, PCFQuality? shadowQuality = null, bool copyEffectProperties = true) : base(fromEffect, shadowQuality, copyEffectProperties)
 		{
 		}
 

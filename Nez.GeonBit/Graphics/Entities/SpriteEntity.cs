@@ -259,7 +259,7 @@ namespace Nez.GeonBit
 			var material = MaterialOverride.Apply(Material);
 
 			// setup material
-			material.Apply(ref newWorld, ref _lastBoundingSphere);
+			material.Apply(ref newWorld, ref _lastBoundingSphere, -1);
 
 			// draw sprite
 			// draw the cube vertices

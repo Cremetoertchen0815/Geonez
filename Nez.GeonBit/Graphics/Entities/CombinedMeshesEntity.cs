@@ -596,7 +596,7 @@ namespace Nez.GeonBit
 			{
 				// get and setup material
 				var material = combinedPart.Key;
-				material.Apply(ref worldTransformations, ref _lastBoundingSphere);
+				material.Apply(ref worldTransformations, ref _lastBoundingSphere, PrimaryLight);
 
 				// get vertices and indexes
 				var buffers = combinedPart.Value;

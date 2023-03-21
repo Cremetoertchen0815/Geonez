@@ -1,11 +1,12 @@
 ﻿using BV.Game.Components.Debug;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.ECS.Components.Graphics.Lighting;
 using Nez.GeonBit.ECS.Renderers;
+using Nez.GeonBit.Lights;
 using Nez.GeonBit.Materials;
-using Nez.Sprites;
 
 namespace GeonGraphicsTest;
 public class GraphicsTestScene : GeonScene
@@ -18,13 +19,14 @@ public class GraphicsTestScene : GeonScene
         base.Initialize();
 
         ClearColor = Color.Black;
+        LightsManager.ShadowQuality = Nez.GeonBit.Graphics.Misc.PCFQuality.LoPCF;
 
         AddRenderer(new GeonShadowMapRenderer(0));
         AddRenderer(new GeonDefaultRenderer(1, this));
         AddRenderer(new DefaultRenderer(2));
 
         var lightEntity = CreateGeonEntity("MainLight", new Vector3(0, 10, -4f));
-        var spotLight = lightEntity.AddComponent(new ShadowSpotLight(MAIN_SHADOW_PLANE, new Point(1024)) { Direction = Vector3.Down, Forward = Vector3.Backward, FarDistance = 40f, NearDistance = 5f });
+        var spotLight = lightEntity.AddComponent(new ShadowSpotLight(MAIN_SHADOW_PLANE, new Point(1024)) { Direction = Vector3.Down, Forward = Vector3.Backward, FarDistance = 40f, NearDistance = 5f, Diffuse = Color.White });
         lightEntity.AddComponent(new ShapeRenderer(ShapeMeshes.SphereLowPoly));
 
 
@@ -39,21 +41,31 @@ public class GraphicsTestScene : GeonScene
         var lightDst = CreateGeonEntity("cube", new Vector3(3f, -1.5f, -6f), NodeType.Simple);
         lightDst.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Sphere) {
             CastsShadows = true,
-            PrimaryLight = 0, 
+            PrimaryLight = MAIN_SHADOW_PLANE, 
         });
         lightDst.Node.Rotation = new Vector3(120f, 5f, 10f);
         lightDst.Node.Tween("Position", new Vector3(3f, -50f, -6f), 2f).SetLoops(Nez.Tweens.LoopType.PingPong, -1).Start();
 
-
+        
+        var planeMaterial = new LitMaterial()
+        {
+            DiffuseColor = Color.Lime,
+            ShadowBias = 0f,
+            SpecularPower = 160f,
+            FogEnabled = true
+        };
         var projectionPlane = CreateGeonEntity("projPlane", new Vector3(0f, -10f, -4f), NodeType.Simple);
         projectionPlane.Node.Scale = 10f * Vector3.One;
         projectionPlane.Node.RotationX = -MathHelper.PiOver2;
         projectionPlane.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Plane)
         {
             CastsShadows = true,
-            PrimaryLight = 0,
-            ShadowCasterRasterizerState = Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone
-        });
+            PrimaryLight = MAIN_SHADOW_PLANE,
+            ShadowCasterRasterizerState = RasterizerState.CullClockwise
+        }).SetMaterial(planeMaterial);
+
+        Lighting.AmbientLight = Color.Black;
+        Core.Schedule(5f, _ => LightsManager.ShadowQuality = Nez.GeonBit.Graphics.Misc.PCFQuality.HiPCF);
 
         AddSceneComponent(new DebugCamMover());
     }

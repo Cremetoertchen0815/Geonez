@@ -20,6 +20,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
+using Nez.GeonBit.Graphics.Misc;
+using Nez.GeonBit.Lights;
 using System;
 
 namespace Nez.GeonBit.Materials
@@ -30,10 +32,10 @@ namespace Nez.GeonBit.Materials
     public class LitMaterial : MaterialAPI
     {
         // effect path
-        private static readonly string _effectPath = EffectsPath + "lighting_regular";
+        private static readonly string _effectPath = EffectsPath + "lighting_regular_";
 
         // the effect instance of this material.
-        private readonly Effect _effect;
+        private Effect _effect;
 
         /// <summary>
         /// Get the effect instance.
@@ -69,10 +71,10 @@ namespace Nez.GeonBit.Materials
         private EffectParameter _paramDepthBias;
         private EffectParameter _paramShadowMap;
 
-        // current active lights counter
         private int _activeLightsCount = 0;
-        private LitFXModes _shaderConfig = 0;
-        private LitFXModes _oldShaderConfig = 0;
+        private LitFXModes _shaderConfig = LitFXModes.UVCoords;
+        private LitFXModes _oldShaderConfig;
+        private PCFQuality _oldShadowQuality;
 
         /// <summary>
         /// Shadow depth bias to prevent shadow acne.
@@ -96,6 +98,9 @@ namespace Nez.GeonBit.Materials
 
         private bool _shadowEnabled = true;
 
+
+        public virtual PCFQuality? ShadowQuality { get; set; }
+
         /// <summary>
         /// Normal map texture.
         /// </summary>
@@ -107,7 +112,8 @@ namespace Nez.GeonBit.Materials
 
         private Texture2D _normalTexture;
 
-        private bool _fogEnabled = false;
+        public override (float start, float end) FogRange { get => base.FogRange == default ? GeonDefaultRenderer.ActiveLightsManager.FogRange : base.FogRange; set => base.FogRange = value; }
+        public override Color FogColor { get => base.FogColor == default ? GeonDefaultRenderer.ActiveLightsManager.FogColor : base.FogColor; set => base.FogColor = value; }
 
         /// <summary>
         /// Get how many samplers this material uses.
@@ -133,13 +139,15 @@ namespace Nez.GeonBit.Materials
         /// Create new lit effect instance.
         /// </summary>
         /// <returns>New lit effect instance.</returns>
-        public virtual Effect CreateEffect() => Core.Content.Load<Effect>(_effectPath).Clone();
+        public virtual Effect CreateEffect() => Core.Content.Load<Effect>(_effectPath + _oldShadowQuality.ToString().ToLower()).Clone();
 
         /// <summary>
         /// Create the lit material from an empty effect.
         /// </summary>
-        public LitMaterial()
+        public LitMaterial(PCFQuality? shadowQuality = null)
         {
+            ShadowQuality = shadowQuality;
+            _oldShadowQuality = ShadowQuality ?? LightsManager.ShadowQuality;
             _effect = CreateEffect();
             SetDefaults();
             InitLightParams();
@@ -179,9 +187,11 @@ namespace Nez.GeonBit.Materials
         /// </summary>
         /// <param name="fromEffect">Effect to create material from.</param>
         /// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-        public LitMaterial(BasicEffect fromEffect, bool copyEffectProperties = true)
+        public LitMaterial(BasicEffect fromEffect, PCFQuality? shadowQuality = null, bool copyEffectProperties = true)
         {
             // store effect and set default properties
+            ShadowQuality = shadowQuality;
+            _oldShadowQuality = ShadowQuality ?? LightsManager.ShadowQuality;
             _effect = CreateEffect();
             SetDefaults();
 
@@ -200,6 +210,20 @@ namespace Nez.GeonBit.Materials
 
             // init light params
             InitLightParams();
+        }
+
+        private void ReloadEffect()
+        {
+            //Load new effect
+            _effect = CreateEffect();
+            InitLightParams();
+
+            //Mark every parameter as dirty
+            SetAsDirty(MaterialDirtyFlags.All);
+            for (int i = 0; i < MaxLights; i++) _lastLightVersions[i] = 0;
+            _activeLightsCount = 0;
+            _lastShadowVersion = 0;
+            _oldShaderConfig = 0;
         }
 
         /// <summary>
@@ -242,6 +266,14 @@ namespace Nez.GeonBit.Materials
         /// </summary>
         protected override void MaterialSpecificApply(bool wasLastMaterial)
         {
+            // check for changing effect
+            var currSQuality = ShadowQuality ?? LightsManager.ShadowQuality;
+            if (currSQuality != _oldShadowQuality)
+            {
+                _oldShadowQuality = currSQuality;
+                ReloadEffect();
+            }
+
             // set world matrix
             _paramWorldViewProjection.SetValue(World * ViewProjection);
             _paramEyePosition.SetValue(EyePosition);
@@ -278,7 +310,7 @@ namespace Nez.GeonBit.Materials
             if (IsDirty(MaterialDirtyFlags.Fog))
             {
                 _fogColorParam.SetValue(FogColor.ToVector3());
-                SetFogVector(World, FogRange.start, FogRange.end, FogEnabled, _fogVectorParam);
+                SetFogVector(World * View, FogRange.start, FogRange.end, FogEnabled, _fogVectorParam);
             }
 
             if (IsDirty(MaterialDirtyFlags.ShadowMap))
@@ -301,7 +333,7 @@ namespace Nez.GeonBit.Materials
                 // Degenerate case: force everything to 0% fogged if fog is not enabled.
                 fogVectorParam.SetValue(new Vector4(0, 0, 0, 0));
             }
-            if (fogStart == fogEnd)
+            else if (fogStart == fogEnd)
             {
                 // Degenerate case: force everything to 100% fogged if start and end are the same.
                 fogVectorParam.SetValue(new Vector4(0, 0, 0, 1));
@@ -382,10 +414,10 @@ namespace Nez.GeonBit.Materials
                 _lastLightVersions[i] = lights[i].ParamsVersion;
             }
 
-            if (shadowedLight is not null && shadowedLight.ParamsVersion != _lastShadowVersion)
+            if (shadowedLight is not null)
             {
                 _paramShadowViewProjection.SetValue(shadowedLight.ShadowViewMatrix * shadowedLight.ShadowProjectionMatrix);
-                _paramShadowMap.SetValue(shadowedLight.ShadowMap);
+                if (shadowedLight.ParamsVersion != _lastShadowVersion) _paramShadowMap.SetValue(shadowedLight.ShadowMap);
                 _lastShadowVersion = shadowedLight.ParamsVersion;
             }
             if (shadowedLight is not null && ShadowsEnabled) _shaderConfig |= LitFXModes.ShadowMap; else _shaderConfig &= ~LitFXModes.ShadowMap;

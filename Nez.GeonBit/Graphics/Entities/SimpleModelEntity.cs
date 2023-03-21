@@ -90,7 +90,7 @@ namespace Nez.GeonBit
 				{
 					var effect = mesh.Effects[j];
 					var material = effect.GetMaterial();
-					material.Apply(ref worldTransformations, ref _lastBoundingSphere);
+					material.Apply(ref worldTransformations, ref _lastBoundingSphere, PrimaryLight);
 				}
 
 				// update last radius
