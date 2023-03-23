@@ -7,6 +7,7 @@ public class TestGame : Core
     {
         base.Initialize();
         Screen.AASamples = 0;
-        Scene = new GraphicsTestScene();
+        Scene = new ComplexShadowTest();
+        DebugRenderEnabled = true;
     }
 }

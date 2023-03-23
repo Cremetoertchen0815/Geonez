@@ -32,7 +32,6 @@ public class GraphicsTestScene : GeonScene
 
         CreateEntity("ShadowMapLooki", Screen.Center + new Vector2(0, 200f)).AddComponent(new Nez.Sprites.SpriteRenderer(spotLight.ShadowMap) { Size = new Vector2(1024f) * 0.25f});
 
-        var backdrop = CreateGeonEntity("backdrop").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.BackgroundNoCull });
 
         var lightSrc = CreateGeonEntity("light", new Vector3(-3f, 0f, -8f), NodeType.Simple);
         lightSrc.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Sphere) { CastsShadows = true, PrimaryLight = 0,
@@ -54,6 +53,8 @@ public class GraphicsTestScene : GeonScene
             SpecularPower = 160f,
             FogEnabled = true
         };
+
+        var backdrop = CreateGeonEntity("backdrop").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.BackgroundNoCull });
         var projectionPlane = CreateGeonEntity("projPlane", new Vector3(0f, -10f, -4f), NodeType.Simple);
         projectionPlane.Node.Scale = 10f * Vector3.One;
         projectionPlane.Node.RotationX = -MathHelper.PiOver2;
