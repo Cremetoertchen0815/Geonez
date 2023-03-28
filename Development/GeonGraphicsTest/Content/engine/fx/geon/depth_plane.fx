@@ -12,6 +12,7 @@ matrix LightViewProjection;
 struct VertexShaderOutput
 {
 	float4 Position : SV_POSITION;
+	
 	float Depth : TEXCOORD0;
 };
 

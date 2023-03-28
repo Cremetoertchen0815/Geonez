@@ -22,13 +22,13 @@ public class ComplexShadowTest : GeonScene
         AddRenderer(new GeonShadowMapRenderer(0));
         AddRenderer(new GeonDefaultRenderer(1, this));
         AddRenderer(new DefaultRenderer(2));
-
+        
         Lighting.AmbientLight = Color.White * 0.1f;
         var world = AddSceneComponent(new Nez.GeonBit.Physics.PhysicsWorld());
         AddSceneComponent(new DebugCamMover());
 
         var lightEntity = CreateGeonEntity("MainLight", new Vector3(0, 50, -4f));
-        var spotLight = lightEntity.AddComponent(new ShadowSpotLight(DebugCube.SHADOW_LEVEL, new Point(1024)) { Direction = Vector3.Down, Forward = Vector3.Backward, FarDistance = 60f, NearDistance = 5f, Diffuse = Color.White, Specular = Color.Black });
+        var spotLight = lightEntity.AddComponent(new ShadowSpotLight(DebugCube.SHADOW_LEVEL, new Point(1024 * 4)) { Direction = Vector3.Down, Forward = Vector3.Backward, FarDistance = 60f, NearDistance = 5f, Diffuse = Color.White, Specular = Color.DarkGray });
         lightEntity.AddComponent(new ShapeRenderer(ShapeMeshes.SphereLowPoly));
 
 
@@ -46,7 +46,8 @@ public class ComplexShadowTest : GeonScene
         projRend.SetMaterial(new LitMaterial()
         {
             Alpha = 1f,
-            ShadowsEnabled = true
+            ShadowsEnabled = true,
+            SpecularColor = Color.Black
         });
 
         projectionPlane.AddComponent(new RigidBody(new EndlessPlaneInfo()));

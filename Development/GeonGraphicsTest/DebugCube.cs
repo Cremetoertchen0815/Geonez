@@ -17,25 +17,28 @@ public class DebugCube : GeonComponent
             DiffuseColor = Nez.Random.NextColor(),
             FogEnabled = false,
             ShadowsEnabled = true,
-            ShadowBias = 0.001f,
+            ShadowBias = 0.0001f,
             SpecularColor = Color.Black,
-            SpecularPower = 40f,
-            TextureEnabled = false
+            SpecularPower = 10f,
+            TextureEnabled = false,
+            //NormalTexture = Entity.Scene.Content.LoadTexture("test_normal")
         };
 
         //Generate renderer
-        var rend = new ShapeRenderer(ShapeMeshes.Cube)
+        var rend = new ShapeRenderer(ShapeMeshes.SphereSmooth)
         {
             CastsShadows = true,
             PrimaryLight = SHADOW_LEVEL,
-            RenderingQueue = RenderingQueue.Solid
+            RenderingQueue = RenderingQueue.Solid,
+            ShadowCasterRasterizerState = Microsoft.Xna.Framework.Graphics.RasterizerState.CullClockwise
         };
         rend.SetMaterial(mat);
         Entity.AddComponentAsChild(rend);
         rend.Node.Scale = new Vector3(2.5f);
 
         //Add rigid body
-        var rb = new RigidBody(new BoxInfo(new Vector3(5f)), 20f);
+        var rb = new RigidBody(new BoxInfo(new Vector3(5f)), 20f, 1f, 0f);
+        rb.Restitution = 1f;
         Entity.AddComponent(rb);
     }
 }

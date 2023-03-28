@@ -60,7 +60,7 @@ float3 LightDirectionC;
 float3 LightSpecularC;
 
 matrix ShadowViewProjection;
-float DepthBias = 2;
+float DepthBias = 0;
 
 // how many active lights we have
 int ActiveLightsCount = 0;
@@ -187,10 +187,10 @@ VertexShaderOutputN VSVc(in VertexShaderInputVc input)
 	output.Position = mul(input.Position, WorldViewProjection);
 	output.Color = float4(input.Color.rgb, input.Color.a * DiffuseColor.a);
 
-	output.TextureCoordinate = float3(0, 0, saturate(dot(output.Position, FogVector)));
+	output.TextureCoordinate = float3(0, 0, saturate(dot(input.Position, FogVector)));
 	output.WorldPos = mul(input.Position, World);
 	output.ShadowPos = mul(output.WorldPos, ShadowViewProjection);
-	output.Normal = normalize(mul(input.Normal, WorldInverseTranspose));
+	output.Normal = mul(input.Normal, WorldInverseTranspose);
 	return output;
 }
 
@@ -204,7 +204,7 @@ VertexShaderOutputN VSUv(in VertexShaderInputUv input)
 	output.TextureCoordinate = float3(input.TextureCoordinate, saturate(dot(input.Position, FogVector)));
 	output.WorldPos = mul(input.Position, World);
 	output.ShadowPos = mul(output.WorldPos, ShadowViewProjection);
-	output.Normal = normalize(mul(input.Normal, WorldInverseTranspose));
+	output.Normal = mul(input.Normal, WorldInverseTranspose);
 	return output;
 }
 
@@ -218,7 +218,7 @@ VertexShaderOutputN VSVcUv(in VertexShaderInputVcUv input)
 	output.TextureCoordinate = float3(input.TextureCoordinate, saturate(dot(input.Position, FogVector)));
 	output.WorldPos = mul(input.Position, World);
 	output.ShadowPos = mul(output.WorldPos, ShadowViewProjection);
-	output.Normal = normalize(mul(input.Normal, WorldInverseTranspose));
+	output.Normal = mul(input.Normal, WorldInverseTranspose);
 	return output;
 }
 
@@ -265,27 +265,21 @@ struct ColorPair
 
 ColorPair ComputeLights(float3 eyePos, float3 worldNormal, float3 shadowContribution)
 {
-	float3x3 lightDirections = 0;
     float3x3 lightDiffuse = 0;
     float3x3 lightSpecular = 0;
-    float3x3 halfVectors = 0;
+	float3 V = normalize(eyePos);
+    float3 diffuse = 0;
+    float3 specular = 0;
 
     for (int i = 0; i < ActiveLightsCount; i++)
     {
-		lightDirections[i] = float3x3(LightDirectionA, LightDirectionB, LightDirectionC)[i];
         lightDiffuse[i] = float3x3(LightDiffuseA * shadowContribution, LightDiffuseB, LightDiffuseC)[i];
         lightSpecular[i] = float3x3(LightSpecularA * shadowContribution, LightSpecularB, LightSpecularC)[i];
-        halfVectors[i] = normalize(eyePos - lightDirections[i]);
+
+		float3 L = -normalize(float3x3(LightDirectionA, LightDirectionB, LightDirectionC)[i]);
+		diffuse[i] = saturate(dot(L, worldNormal));
+        specular[i] = pow(saturate(dot(worldNormal, normalize(L + V))), SpecularPower);
     }
-	
-
-    float3 dotL = mul(-lightDirections, worldNormal);
-    float3 dotH = mul(halfVectors, worldNormal);
-    
-    float3 zeroL = step(0, dotL);
-
-    float3 diffuse  = zeroL * dotL;
-    float3 specular = pow(max(dotH, 0) * zeroL, SpecularPower);
 
     ColorPair result;
     
@@ -306,6 +300,8 @@ float CalcShadowTermSoftPCF(float fLightDepth, float ndotl, float2 vTexCoord, in
     float shadowMapSize = 2048;
 
     float fRadius = iSqrtSamples - 1; //mad(iSqrtSamples, 0.5, -0.5);//(iSqrtSamples - 1.0f) / 2;
+
+	if (vTexCoord.x < 0 || vTexCoord.x > 1 || vTexCoord.y < 0 || vTexCoord.y > 1) return 1;
 
     for (float y = -fRadius; y <= fRadius; y++)
     {
@@ -350,12 +346,13 @@ float4 PS(VertexShaderOutputN input) : COLOR
 {
 	// pixel color to return
 	float4 retColor = AlbedoEnabled ? tex2D(MainTextureSampler, input.TextureCoordinate.xy) : 1.0f;
+	float3 N = normalize(input.Normal);
 
 	// apply vertex lighting
 	retColor *= input.Color;
 
 	// process directional lights
-    ColorPair lightResult = ComputeLights(EyePosition - input.WorldPos.xyz, input.Normal, 1);
+    ColorPair lightResult = ComputeLights(EyePosition - input.WorldPos.xyz, N, 1);
 
 	// apply diffuse
 	retColor.rgb *= lightResult.Diffuse;
@@ -378,6 +375,7 @@ float4 PS_S(VertexShaderOutputN input) : COLOR
 {
 	// pixel color to return
 	float4 retColor = AlbedoEnabled ? tex2D(MainTextureSampler, input.TextureCoordinate.xy) : 1.0f;
+	float3 N = normalize(input.Normal);
 
 	// apply vertex lighting
 	retColor *= input.Color;
@@ -388,10 +386,10 @@ float4 PS_S(VertexShaderOutputN input) : COLOR
 	// Get the current depth stored in the shadow map
     float ourdepth = (input.ShadowPos.z / input.ShadowPos.w);
 
-	float shadowContribution = CalcShadowTermSoftPCF(ourdepth, dot(input.Normal, LightDirectionA), ShadowTexCoord, ShadowFilterSamples);	
+	float shadowContribution = CalcShadowTermSoftPCF(ourdepth, dot(N, LightDirectionA), ShadowTexCoord, ShadowFilterSamples);	
 
 	// process directional lights
-    ColorPair lightResult = ComputeLights(EyePosition - input.WorldPos.xyz, input.Normal, shadowContribution);
+    ColorPair lightResult = ComputeLights(EyePosition - input.WorldPos.xyz, N, shadowContribution);
 
 	// apply diffuse
 	retColor.rgb *= lightResult.Diffuse;

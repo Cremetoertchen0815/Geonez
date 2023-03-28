@@ -282,7 +282,8 @@ namespace Nez.GeonBit.Materials
             if (IsDirty(MaterialDirtyFlags.World))
             {
                 _paramWorld.SetValue(World);
-                _paramWorldInverseTranspose.SetValue(Matrix.Invert(Matrix.Transpose(World)));
+                var eyePos = Matrix.Invert(Matrix.Transpose(World));
+                _paramWorldInverseTranspose.SetValue(eyePos);
                 SetAsDirty(MaterialDirtyFlags.Fog);
             }
 
@@ -297,7 +298,7 @@ namespace Nez.GeonBit.Materials
                 }
 
                 // set normal texture
-                if (TextureEnabled && NormalTexture != null) _shaderConfig |= LitFXModes.NormalMap; else _shaderConfig &= ~LitFXModes.NormalMap;
+                if (NormalTexture != null) _shaderConfig |= LitFXModes.NormalMap; else _shaderConfig &= ~LitFXModes.NormalMap;
                 _paramNormalMap?.SetValue(NormalTexture);
             }
 
@@ -305,6 +306,7 @@ namespace Nez.GeonBit.Materials
             {
                 _paramDiffuseColor.SetValue(DiffuseColor.ToVector4() * new Vector4(1f, 1f, 1f, Alpha));
                 _paramSpecularPower.SetValue(SpecularPower);
+                SetAsDirty(MaterialDirtyFlags.AmbientLight);
             }
 
             if (IsDirty(MaterialDirtyFlags.Fog))
@@ -388,7 +390,7 @@ namespace Nez.GeonBit.Materials
 
             if (IsDirty(MaterialDirtyFlags.EmissiveLight) || IsDirty(MaterialDirtyFlags.AmbientLight))
             {
-                _paramEmissiveColor.SetValue(AmbientLight.ToVector3() + EmissiveLight.ToVector3());
+                _paramEmissiveColor.SetValue(AmbientLight.ToVector3() * DiffuseColor.ToVector3() + EmissiveLight.ToVector3());
             }
 
             // iterate on lights and apply only the changed ones
