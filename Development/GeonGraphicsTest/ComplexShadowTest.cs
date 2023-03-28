@@ -26,6 +26,7 @@ public class ComplexShadowTest : GeonScene
         Lighting.AmbientLight = Color.White * 0.1f;
         var world = AddSceneComponent(new Nez.GeonBit.Physics.PhysicsWorld());
         AddSceneComponent(new DebugCamMover());
+        Camera.Node.Position = new Vector3(0, 20, 30);
 
         var lightEntity = CreateGeonEntity("MainLight", new Vector3(0, 50, -4f));
         var spotLight = lightEntity.AddComponent(new ShadowSpotLight(DebugCube.SHADOW_LEVEL, new Point(1024 * 4)) { Direction = Vector3.Down, Forward = Vector3.Backward, FarDistance = 60f, NearDistance = 5f, Diffuse = Color.White, Specular = Color.DarkGray });

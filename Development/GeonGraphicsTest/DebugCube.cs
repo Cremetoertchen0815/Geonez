@@ -25,7 +25,7 @@ public class DebugCube : GeonComponent
         };
 
         //Generate renderer
-        var rend = new ShapeRenderer(ShapeMeshes.SphereSmooth)
+        var rend = new ShapeRenderer(ShapeMeshes.Cube)
         {
             CastsShadows = true,
             PrimaryLight = SHADOW_LEVEL,
