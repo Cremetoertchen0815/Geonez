@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
+using Nez.AI.GOAP;
 using Nez.GeonBit;
+using Nez.GeonBit.Materials;
 using RigidBody = Nez.GeonBit.RigidBody;
 
 namespace GeonGraphicsTest;
@@ -10,6 +12,7 @@ public class DebugCube : GeonComponent
     private static TextureCube _cubeMap = GenCubeMap();
 
     public const int SHADOW_LEVEL = 0;
+    
     public override void OnAddedToEntity()
     {
         //Generate material
