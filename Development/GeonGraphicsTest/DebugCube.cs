@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.GeonBit;
+using Nez.GeonBit.Materials;
 using RigidBody = Nez.GeonBit.RigidBody;
 
 namespace GeonGraphicsTest;
