@@ -1982,6 +1982,18 @@
 /processor:PassThroughProcessor
 /build:engine/ui/hd/ThemeData.xml
 
+#begin Normal.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Normal.jpg
+
 #begin skybox.png
 /importer:TextureImporter
 /processor:TextureProcessor

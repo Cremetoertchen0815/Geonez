@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Misc;
 using Nez.GeonBit.Lights;
-using Nez.GeonBit.Materials;
 
 namespace Nez.GeonBit.Materials
 {
@@ -75,7 +74,7 @@ namespace Nez.GeonBit.Materials
                 SetAsDirty(MaterialDirtyFlags.EnvironmentMap);
             }
         }
-        
+
 
         /// <summary>
         /// Create new lit effect instance.

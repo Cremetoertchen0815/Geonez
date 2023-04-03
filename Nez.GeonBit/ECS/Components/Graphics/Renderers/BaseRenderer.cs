@@ -22,48 +22,48 @@ using Nez.GeonBit.Graphics.Lights;
 
 namespace Nez.GeonBit
 {
-	/// <summary>
-	/// Base implementation for most graphics-related components.
-	/// </summary>
-	public abstract class BaseRendererComponent : GeonComponent
-	{
-		/// <summary>
-		/// Get the main entity instance of this renderer.
-		/// </summary>
-		protected abstract BaseRenderableEntity RenderableEntity { get; }
+    /// <summary>
+    /// Base implementation for most graphics-related components.
+    /// </summary>
+    public abstract class BaseRendererComponent : GeonComponent
+    {
+        /// <summary>
+        /// Get the main entity instance of this renderer.
+        /// </summary>
+        protected abstract BaseRenderableEntity RenderableEntity { get; }
 
-		public override void OnAddedToEntity()
-		{
-			base.OnAddedToEntity();
-			Node.AddEntity(RenderableEntity);
-		}
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+            Node.AddEntity(RenderableEntity);
+        }
 
-		/// <summary>
-		/// Set / get Entity blending state.
-		/// </summary>
-		public BlendState BlendingState
-		{
-			set => RenderableEntity.BlendingState = value;
-			get => RenderableEntity.BlendingState;
-		}
+        /// <summary>
+        /// Set / get Entity blending state.
+        /// </summary>
+        public BlendState BlendingState
+        {
+            set => RenderableEntity.BlendingState = value;
+            get => RenderableEntity.BlendingState;
+        }
 
-		/// <summary>
-		/// Set / get the rendering queue of this entity.
-		/// </summary>
-		public virtual RenderingQueue RenderingQueue
-		{
-			get => RenderableEntity.RenderingQueue;
-			set => RenderableEntity.RenderingQueue = value;
-		}
+        /// <summary>
+        /// Set / get the rendering queue of this entity.
+        /// </summary>
+        public virtual RenderingQueue RenderingQueue
+        {
+            get => RenderableEntity.RenderingQueue;
+            set => RenderableEntity.RenderingQueue = value;
+        }
 
-		public virtual bool CastsShadows 
-		{
-			get => (RenderableEntity as IShadowCaster)?.CastsShadow ?? false;
-			set
-			{
-				if (RenderableEntity is not IShadowCaster shadowEntity) return;
-				shadowEntity.CastsShadow = value;
-			}
+        public virtual bool CastsShadows
+        {
+            get => (RenderableEntity as IShadowCaster)?.CastsShadow ?? false;
+            set
+            {
+                if (RenderableEntity is not IShadowCaster shadowEntity) return;
+                shadowEntity.CastsShadow = value;
+            }
         }
 
         public virtual int ShadowCasterLOD
@@ -102,21 +102,21 @@ namespace Nez.GeonBit
         /// <param name="copyTo">Other component to copy values to.</param>
         /// <returns>The object we are copying properties to.</returns>
         public virtual Component CopyBasics(Component copyTo)
-		{
-			var otherRenderer = copyTo as BaseRendererComponent;
-			otherRenderer.RenderingQueue = RenderingQueue;
-			otherRenderer.BlendingState = BlendingState;
-			return copyTo;
-		}
+        {
+            var otherRenderer = copyTo as BaseRendererComponent;
+            otherRenderer.RenderingQueue = RenderingQueue;
+            otherRenderer.BlendingState = BlendingState;
+            return copyTo;
+        }
 
-		/// <summary>
-		/// Called when GameObject turned disabled.
-		/// </summary>
-		public override void OnDisabled() => RenderableEntity.Visible = false;
+        /// <summary>
+        /// Called when GameObject turned disabled.
+        /// </summary>
+        public override void OnDisabled() => RenderableEntity.Visible = false;
 
-		/// <summary>
-		/// Called when GameObject is enabled.
-		/// </summary>
-		public override void OnEnabled() => RenderableEntity.Visible = true;
-	}
+        /// <summary>
+        /// Called when GameObject is enabled.
+        /// </summary>
+        public override void OnEnabled() => RenderableEntity.Visible = true;
+    }
 }

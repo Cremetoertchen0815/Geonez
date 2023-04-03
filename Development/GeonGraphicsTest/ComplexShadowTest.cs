@@ -1,16 +1,10 @@
 ﻿using BV.Game.Components.Debug;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.GeonBit;
 using Nez.GeonBit.ECS.Components.Graphics.Lighting;
 using Nez.GeonBit.ECS.Renderers;
 using Nez.GeonBit.Materials;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GeonGraphicsTest;
 public class ComplexShadowTest : GeonScene
@@ -22,8 +16,8 @@ public class ComplexShadowTest : GeonScene
         AddRenderer(new GeonShadowMapRenderer(0));
         AddRenderer(new GeonDefaultRenderer(1, this));
         AddRenderer(new DefaultRenderer(2));
-        
-        Lighting.AmbientLight = Color.White * 0.25f;
+
+        Lighting.AmbientLight = Color.White * 0.4f;
         var world = AddSceneComponent(new Nez.GeonBit.Physics.PhysicsWorld());
         AddSceneComponent(new DebugCamMover());
         Camera.Node.Position = new Vector3(0, 20, 30);
@@ -42,6 +36,7 @@ public class ComplexShadowTest : GeonScene
         });
         projRend.Node.Scale = 100f * Vector3.One;
         projRend.Node.RotationX = -MathHelper.PiOver2;
+        projRend.Node.PositionY += 1f;
         projRend.PrimaryLight = DebugCube.SHADOW_LEVEL;
         projRend.CastsShadows = false;
         projRend.SetMaterial(new BasicLitMaterial()

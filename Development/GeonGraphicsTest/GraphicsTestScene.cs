@@ -30,22 +30,27 @@ public class GraphicsTestScene : GeonScene
         lightEntity.AddComponent(new ShapeRenderer(ShapeMeshes.SphereLowPoly));
 
 
-        CreateEntity("ShadowMapLooki", Screen.Center + new Vector2(0, 200f)).AddComponent(new Nez.Sprites.SpriteRenderer(spotLight.ShadowMap) { Size = new Vector2(1024f) * 0.25f});
+        CreateEntity("ShadowMapLooki", Screen.Center + new Vector2(0, 200f)).AddComponent(new Nez.Sprites.SpriteRenderer(spotLight.ShadowMap) { Size = new Vector2(1024f) * 0.25f });
 
 
         var lightSrc = CreateGeonEntity("light", new Vector3(-3f, 0f, -8f), NodeType.Simple);
-        lightSrc.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Sphere) { CastsShadows = true, PrimaryLight = 0,
-                                                                            MaterialOverride = new MaterialOverrides() { DiffuseColor = Color.Lime }});
+        lightSrc.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Sphere)
+        {
+            CastsShadows = true,
+            PrimaryLight = 0,
+            MaterialOverride = new MaterialOverrides() { DiffuseColor = Color.Lime }
+        });
 
         var lightDst = CreateGeonEntity("cube", new Vector3(3f, -1.5f, -6f), NodeType.Simple);
-        lightDst.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.SphereSmooth) {
+        lightDst.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.SphereSmooth)
+        {
             CastsShadows = true,
-            PrimaryLight = MAIN_SHADOW_PLANE, 
+            PrimaryLight = MAIN_SHADOW_PLANE,
         });
         lightDst.Node.Rotation = new Vector3(120f, 5f, 10f);
         lightDst.Node.Tween("Position", new Vector3(3f, -50f, -6f), 2f).SetLoops(Nez.Tweens.LoopType.PingPong, -1).Start();
 
-        
+
         var planeMaterial = new BasicLitMaterial()
         {
             DiffuseColor = Color.Lime,

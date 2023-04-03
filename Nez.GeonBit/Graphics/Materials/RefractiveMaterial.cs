@@ -1,17 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics.PackedVector;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
 using Nez.GeonBit.Graphics.Lights;
-using Nez.GeonBit.Graphics.Misc;
-using Nez.GeonBit.Lights;
-using Nez.GeonBit.Materials;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Nez.GeonBit.Graphics.Materials
+namespace Nez.GeonBit.Materials
 {
     public class RefractiveMaterial : MaterialAPI
     {

@@ -2,16 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.GeonBit;
-using Nez.GeonBit.Graphics.Materials;
-using Nez.GeonBit.Graphics.Misc;
-using Nez.GeonBit.Materials;
 using RigidBody = Nez.GeonBit.RigidBody;
 
 namespace GeonGraphicsTest;
 public class DebugCube : GeonComponent
 {
     private static TextureCube _cubeMap = GenCubeMap();
-    
+
     public const int SHADOW_LEVEL = 0;
     public override void OnAddedToEntity()
     {
@@ -24,10 +21,11 @@ public class DebugCube : GeonComponent
             SpecularColor = Color.Black,
             SpecularPower = 10f,
             TextureEnabled = false,
-             EnvironmentMap = _cubeMap,
-             EnvironmentSpecular = Color.Black,
-             FresnelFactor = 5f,
-             RefractionIndex = 2f
+            EnvironmentMap = _cubeMap,
+            EnvironmentSpecular = Color.Black,
+            FresnelFactor = 3f,
+            RefractionIndex = 2f,
+            NormalTexture = Core.Content.LoadTexture("Normal")
         };
 
         //Generate renderer
