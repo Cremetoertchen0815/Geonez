@@ -21,7 +21,7 @@ public class DebugCube : GeonComponent
             SpecularColor = Color.Black,
             SpecularPower = 10f,
             TextureEnabled = false,
-            //NormalTexture = Entity.Scene.Content.LoadTexture("test_normal")
+            NormalTexture = Entity.Scene.Content.LoadTexture("test_normal")
         };
 
         //Generate renderer

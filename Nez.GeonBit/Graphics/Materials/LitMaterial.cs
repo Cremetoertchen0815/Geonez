@@ -35,7 +35,7 @@ namespace Nez.GeonBit.Materials
         private static readonly string _effectPath = EffectsPath + "lighting_regular_";
 
         // the effect instance of this material.
-        private Effect _effect;
+        protected Effect _effect;
 
         /// <summary>
         /// Get the effect instance.
@@ -48,28 +48,28 @@ namespace Nez.GeonBit.Materials
         protected override bool UseDefaultLightsManager => true;
 
         // caching of lights-related params from shader
-        private EffectParameter[] _lightsDiffuse = new EffectParameter[MaxLightsCount];
-        private EffectParameter[] _lightsDirections = new EffectParameter[MaxLightsCount];
-        private EffectParameter[] _lightsSpecular = new EffectParameter[MaxLightsCount];
-        private EffectParameter _fogColorParam;
-        private EffectParameter _fogVectorParam;
-        private EffectParameter _paramActiveLights;
+        protected EffectParameter[] _lightsDiffuse = new EffectParameter[MaxLightsCount];
+        protected EffectParameter[] _lightsDirections = new EffectParameter[MaxLightsCount];
+        protected EffectParameter[] _lightsSpecular = new EffectParameter[MaxLightsCount];
+        protected EffectParameter _fogColorParam;
+        protected EffectParameter _fogVectorParam;
+        protected EffectParameter _paramActiveLights;
 
         // effect parameters
-        private EffectParameterCollection _effectParams;
-        private EffectParameter _paramWorld;
-        private EffectParameter _paramWorldViewProjection;
-        private EffectParameter _paramWorldInverseTranspose;
-        private EffectParameter _paramEyePosition;
-        private EffectParameter _paramDiffuseColor;
-        private EffectParameter _paramEmissiveColor;
-        private EffectParameter _paramSpecularPower;
-        private EffectParameter _paramAlbedoMap;
-        private EffectParameter _paramAlbedoEnabled;
-        private EffectParameter _paramNormalMap;
-        private EffectParameter _paramShadowViewProjection;
-        private EffectParameter _paramDepthBias;
-        private EffectParameter _paramShadowMap;
+        protected EffectParameterCollection _effectParams;
+        protected EffectParameter _paramWorld;
+        protected EffectParameter _paramWorldViewProjection;
+        protected EffectParameter _paramWorldInverseTranspose;
+        protected EffectParameter _paramEyePosition;
+        protected EffectParameter _paramDiffuseColor;
+        protected EffectParameter _paramEmissiveColor;
+        protected EffectParameter _paramSpecularPower;
+        protected EffectParameter _paramAlbedoMap;
+        protected EffectParameter _paramAlbedoEnabled;
+        protected EffectParameter _paramNormalMap;
+        protected EffectParameter _paramShadowViewProjection;
+        protected EffectParameter _paramDepthBias;
+        protected EffectParameter _paramShadowMap;
 
         private int _activeLightsCount = 0;
         private LitFXModes _shaderConfig = LitFXModes.UVCoords;
@@ -212,7 +212,7 @@ namespace Nez.GeonBit.Materials
             InitLightParams();
         }
 
-        private void ReloadEffect()
+        protected void ReloadEffect()
         {
             //Load new effect
             _effect = CreateEffect();
@@ -229,36 +229,36 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Init light-related params from shader.
         /// </summary>
-        private void InitLightParams()
+        protected void InitLightParams()
         {
             _effectParams = _effect.Parameters;
-            _lightsDiffuse[0] = _effectParams["LightDiffuseA"]; //Implemented
-            _lightsDiffuse[1] = _effectParams["LightDiffuseB"]; //Implemented
-            _lightsDiffuse[2] = _effectParams["LightDiffuseC"]; //Implemented
-            _lightsDirections[0] = _effectParams["LightDirectionA"]; //Implemented
-            _lightsDirections[1] = _effectParams["LightDirectionB"]; //Implemented
-            _lightsDirections[2] = _effectParams["LightDirectionC"]; //Implemented
-            _lightsSpecular[0] = _effectParams["LightSpecularA"]; //Implemented
-            _lightsSpecular[1] = _effectParams["LightSpecularB"]; //Implemented
-            _lightsSpecular[2] = _effectParams["LightSpecularC"]; //Implemented
-            _fogColorParam = _effectParams["FogColor"]; //Implemented
-            _fogVectorParam = _effectParams["FogVector"]; //Implemented
-            _paramActiveLights = _effectParams["ActiveLightsCount"]; //Implemented
+            _lightsDiffuse[0] = _effectParams["LightDiffuseA"];
+            _lightsDiffuse[1] = _effectParams["LightDiffuseB"];
+            _lightsDiffuse[2] = _effectParams["LightDiffuseC"];
+            _lightsDirections[0] = _effectParams["LightDirectionA"];
+            _lightsDirections[1] = _effectParams["LightDirectionB"];
+            _lightsDirections[2] = _effectParams["LightDirectionC"];
+            _lightsSpecular[0] = _effectParams["LightSpecularA"];
+            _lightsSpecular[1] = _effectParams["LightSpecularB"];
+            _lightsSpecular[2] = _effectParams["LightSpecularC"];
+            _fogColorParam = _effectParams["FogColor"];
+            _fogVectorParam = _effectParams["FogVector"];
+            _paramActiveLights = _effectParams["ActiveLightsCount"];
 
             // effect parameters
-            _paramWorld = _effectParams["World"]; //Implemented
-            _paramWorldViewProjection = _effectParams["WorldViewProjection"]; //Implemented
-            _paramWorldInverseTranspose = _effectParams["WorldInverseTranspose"]; //Implemented
-            _paramEyePosition = _effectParams["EyePosition"]; //Implemented
-            _paramDiffuseColor = _effectParams["DiffuseColor"]; //Implemented
-            _paramEmissiveColor = _effectParams["EmissiveColor"]; //Implemented
-            _paramSpecularPower = _effectParams["SpecularPower"]; //Implemented
-            _paramAlbedoMap = _effectParams["AlbedoMap"]; //Implemented
-            _paramAlbedoEnabled = _effectParams["AlbedoEnabled"]; //Implemented
-            _paramNormalMap = _effectParams["NormalMap"]; //Implemented
-            _paramShadowViewProjection = _effectParams["ShadowViewProjection"]; //Implemented
-            _paramDepthBias = _effectParams["DepthBias"]; //Implemented
-            _paramShadowMap = _effectParams["ShadowMap"]; //Implemented
+            _paramWorld = _effectParams["World"];
+            _paramWorldViewProjection = _effectParams["WorldViewProjection"];
+            _paramWorldInverseTranspose = _effectParams["WorldInverseTranspose"];
+            _paramEyePosition = _effectParams["EyePosition"];
+            _paramDiffuseColor = _effectParams["DiffuseColor"];
+            _paramEmissiveColor = _effectParams["EmissiveColor"];
+            _paramSpecularPower = _effectParams["SpecularPower"];
+            _paramAlbedoMap = _effectParams["AlbedoMap"];
+            _paramAlbedoEnabled = _effectParams["AlbedoEnabled"];
+            _paramNormalMap = _effectParams["NormalMap"];
+            _paramShadowViewProjection = _effectParams["ShadowViewProjection"];
+            _paramDepthBias = _effectParams["DepthBias"];
+            _paramShadowMap = _effectParams["ShadowMap"];
         }
 
         /// <summary>
@@ -328,7 +328,7 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Sets a vector which can be dotted with the object space vertex position to compute fog amount.
         /// </summary>
-        static void SetFogVector(Matrix worldView, float fogStart, float fogEnd, bool enabled, EffectParameter fogVectorParam)
+        internal static void SetFogVector(Matrix worldView, float fogStart, float fogEnd, bool enabled, EffectParameter fogVectorParam)
         {
             if (!enabled)
             {

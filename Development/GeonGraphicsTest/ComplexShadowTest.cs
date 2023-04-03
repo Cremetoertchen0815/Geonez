@@ -23,7 +23,7 @@ public class ComplexShadowTest : GeonScene
         AddRenderer(new GeonDefaultRenderer(1, this));
         AddRenderer(new DefaultRenderer(2));
         
-        Lighting.AmbientLight = Color.White * 0.1f;
+        Lighting.AmbientLight = Color.White * 0.25f;
         var world = AddSceneComponent(new Nez.GeonBit.Physics.PhysicsWorld());
         AddSceneComponent(new DebugCamMover());
         Camera.Node.Position = new Vector3(0, 20, 30);
@@ -54,7 +54,7 @@ public class ComplexShadowTest : GeonScene
         projectionPlane.AddComponent(new RigidBody(new EndlessPlaneInfo()));
 
 
-        //CreateEntity("ShadowMapLooki", Screen.Center + new Vector2(0, 200f)).AddComponent(new Nez.Sprites.SpriteRenderer(spotLight.ShadowMap) { Size = new Vector2(1024f) * 0.25f });
+        CreateEntity("ShadowMapLooki", Screen.Center + new Vector2(0, 200f)).AddComponent(new Nez.Sprites.SpriteRenderer(spotLight.ShadowMap) { Size = new Vector2(1024f) * 0.25f });
 
 
         for (int i = 0; i < 40; i++)
