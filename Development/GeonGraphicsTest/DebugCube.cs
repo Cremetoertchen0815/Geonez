@@ -11,7 +11,7 @@ public class DebugCube : GeonComponent
     public override void OnAddedToEntity()
     {
         //Generate material
-        var mat = new LitMaterial(PCFQuality.MidPCF)
+        var mat = new BasicLitMaterial(PCFQuality.MidPCF)
         {
             Alpha = 1f,
             DiffuseColor = Nez.Random.NextColor(),

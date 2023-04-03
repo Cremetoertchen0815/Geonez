@@ -44,7 +44,7 @@ public class ComplexShadowTest : GeonScene
         projRend.Node.RotationX = -MathHelper.PiOver2;
         projRend.PrimaryLight = DebugCube.SHADOW_LEVEL;
         projRend.CastsShadows = false;
-        projRend.SetMaterial(new LitMaterial()
+        projRend.SetMaterial(new BasicLitMaterial()
         {
             Alpha = 1f,
             ShadowsEnabled = true,

@@ -46,7 +46,7 @@ public class GraphicsTestScene : GeonScene
         lightDst.Node.Tween("Position", new Vector3(3f, -50f, -6f), 2f).SetLoops(Nez.Tweens.LoopType.PingPong, -1).Start();
 
         
-        var planeMaterial = new LitMaterial()
+        var planeMaterial = new BasicLitMaterial()
         {
             DiffuseColor = Color.Lime,
             ShadowBias = 0f,

@@ -3,15 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Misc;
 using Nez.GeonBit.Lights;
 using Nez.GeonBit.Materials;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nez.GeonBit.Graphics.Materials
 {
-    public class MetalMaterial : LitMaterial
+    public class MetallicLitMaterial : BasicLitMaterial
     {
         // effect path
         private static readonly string _effectPath = EffectsPath + "lighting_metal_";
@@ -31,7 +26,7 @@ namespace Nez.GeonBit.Graphics.Materials
         /// <summary>
         /// Create the lit material from an empty effect.
         /// </summary>
-        public MetalMaterial(PCFQuality? shadowQuality = null)
+        public MetallicLitMaterial(PCFQuality? shadowQuality = null)
         {
             ShadowQuality = shadowQuality;
             _oldShadowQuality = ShadowQuality ?? LightsManager.ShadowQuality;
@@ -44,7 +39,7 @@ namespace Nez.GeonBit.Graphics.Materials
         /// Create the material from another material instance.
         /// </summary>
         /// <param name="other">Other material to clone.</param>
-        public MetalMaterial(MetalMaterial other)
+        public MetallicLitMaterial(MetallicLitMaterial other)
         {
             // clone effect and set defaults
             _effect = other._effect.Clone();
@@ -59,7 +54,7 @@ namespace Nez.GeonBit.Graphics.Materials
         /// Create the lit material.
         /// </summary>
         /// <param name="fromEffect">Effect to create material from.</param>
-        public MetalMaterial(Effect fromEffect)
+        public MetallicLitMaterial(Effect fromEffect)
         {
             // clone effect and set defaults
             _effect = fromEffect.Clone();
@@ -74,7 +69,7 @@ namespace Nez.GeonBit.Graphics.Materials
         /// </summary>
         /// <param name="fromEffect">Effect to create material from.</param>
         /// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-        public MetalMaterial(BasicEffect fromEffect, PCFQuality? shadowQuality = null, bool copyEffectProperties = true)
+        public MetallicLitMaterial(BasicEffect fromEffect, PCFQuality? shadowQuality = null, bool copyEffectProperties = true)
         {
             // store effect and set default properties
             ShadowQuality = shadowQuality;

@@ -27,9 +27,9 @@ using System;
 namespace Nez.GeonBit.Materials
 {
     /// <summary>
-    /// A material that support ambient + several point / directional lights.
+    /// A material that supports ambient + several directional lights, with shadows and normal mapping.
     /// </summary>
-    public class LitMaterial : MaterialAPI
+    public class BasicLitMaterial : MaterialAPI
     {
         // effect path
         private static readonly string _effectPath = EffectsPath + "lighting_regular_";
@@ -144,7 +144,7 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Create the lit material from an empty effect.
         /// </summary>
-        public LitMaterial(PCFQuality? shadowQuality = null)
+        public BasicLitMaterial(PCFQuality? shadowQuality = null)
         {
             ShadowQuality = shadowQuality;
             _oldShadowQuality = ShadowQuality ?? LightsManager.ShadowQuality;
@@ -157,7 +157,7 @@ namespace Nez.GeonBit.Materials
         /// Create the material from another material instance.
         /// </summary>
         /// <param name="other">Other material to clone.</param>
-        public LitMaterial(LitMaterial other)
+        public BasicLitMaterial(BasicLitMaterial other)
         {
             // clone effect and set defaults
             _effect = other._effect.Clone();
@@ -172,7 +172,7 @@ namespace Nez.GeonBit.Materials
         /// Create the lit material.
         /// </summary>
         /// <param name="fromEffect">Effect to create material from.</param>
-        public LitMaterial(Effect fromEffect)
+        public BasicLitMaterial(Effect fromEffect)
         {
             // clone effect and set defaults
             _effect = fromEffect.Clone();
@@ -187,7 +187,7 @@ namespace Nez.GeonBit.Materials
         /// </summary>
         /// <param name="fromEffect">Effect to create material from.</param>
         /// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-        public LitMaterial(BasicEffect fromEffect, PCFQuality? shadowQuality = null, bool copyEffectProperties = true)
+        public BasicLitMaterial(BasicEffect fromEffect, PCFQuality? shadowQuality = null, bool copyEffectProperties = true)
         {
             // store effect and set default properties
             ShadowQuality = shadowQuality;
@@ -436,7 +436,7 @@ namespace Nez.GeonBit.Materials
         /// Clone this material.
         /// </summary>
         /// <returns>Copy of this material.</returns>
-        public override MaterialAPI Clone() => new LitMaterial(this);
+        public override MaterialAPI Clone() => new BasicLitMaterial(this);
     }
 
 
