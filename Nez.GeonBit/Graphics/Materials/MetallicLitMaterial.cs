@@ -4,17 +4,78 @@ using Nez.GeonBit.Graphics.Misc;
 using Nez.GeonBit.Lights;
 using Nez.GeonBit.Materials;
 
-namespace Nez.GeonBit.Graphics.Materials
+namespace Nez.GeonBit.Materials
 {
     public class MetallicLitMaterial : BasicLitMaterial
     {
         // effect path
         private static readonly string _effectPath = EffectsPath + "lighting_metal_";
 
+        protected EffectParameter _paramEnvMap;
+        protected EffectParameter _paramEnvMapAmount;
+        protected EffectParameter _paramEnvMapSpecular;
+        protected EffectParameter _paramFresnel;
+        protected EffectParameter _paramRoughness;
 
-        private LitFXModes _shaderConfig = LitFXModes.UVCoords;
-        private LitFXModes _oldShaderConfig;
+        private FXModes _shaderConfig = FXModes.UVCoords;
+        private FXModes _oldShaderConfig;
         private PCFQuality _oldShadowQuality;
+
+        private TextureCube _environmentMap;
+        public TextureCube EnvironmentMap
+        {
+            get => _environmentMap;
+            set
+            {
+                _environmentMap = value;
+                SetAsDirty(MaterialDirtyFlags.EnvironmentMap);
+            }
+        }
+
+        private float _environmentAmount;
+        public float EnvironmentAmount
+        {
+            get => _environmentAmount;
+            set
+            {
+                _environmentAmount = value;
+                SetAsDirty(MaterialDirtyFlags.EnvironmentMap);
+            }
+        }
+
+        private Color _environmentSpecular;
+        public Color EnvironmentSpecular
+        {
+            get => _environmentSpecular;
+            set
+            {
+                _environmentSpecular = value;
+                SetAsDirty(MaterialDirtyFlags.EnvironmentMap);
+            }
+        }
+
+        private float _fresnelFactor;
+        public float FresnelFactor
+        {
+            get => _fresnelFactor;
+            set
+            {
+                _fresnelFactor = value;
+                SetAsDirty(MaterialDirtyFlags.EnvironmentMap);
+            }
+        }
+
+        private float _roughness;
+        public float Roughness
+        {
+            get => _roughness;
+            set
+            {
+                _roughness = value;
+                SetAsDirty(MaterialDirtyFlags.EnvironmentMap);
+            }
+        }
+        
 
         /// <summary>
         /// Create new lit effect instance.
@@ -94,6 +155,17 @@ namespace Nez.GeonBit.Graphics.Materials
             InitLightParams();
         }
 
+        protected override void InitLightParams()
+        {
+            base.InitLightParams();
+
+            _paramEnvMap = _effectParams["ReflectionCubeMap"];
+            _paramEnvMapAmount = _effectParams["EnvironmentMapAmount"];
+            _paramEnvMapSpecular = _effectParams["EnvironmentMapSpecular"];
+            _paramFresnel = _effectParams["FresnelFactor"];
+            _paramRoughness = _effectParams["ReflectionBlur"];
+        }
+
         protected override void MaterialSpecificApply(bool wasLastMaterial)
         {
             // check for changing effect
@@ -128,8 +200,18 @@ namespace Nez.GeonBit.Graphics.Materials
                 }
 
                 // set normal texture
-                if (NormalTexture != null) _shaderConfig |= LitFXModes.NormalMap; else _shaderConfig &= ~LitFXModes.NormalMap;
+                if (NormalTexture != null) _shaderConfig |= FXModes.NormalMap; else _shaderConfig &= ~FXModes.NormalMap;
                 _paramNormalMap?.SetValue(NormalTexture);
+            }
+
+            if (IsDirty(MaterialDirtyFlags.EnvironmentMap))
+            {
+                // set environment map
+                _paramEnvMap.SetValue(EnvironmentMap);
+                _paramEnvMapAmount.SetValue(EnvironmentAmount);
+                _paramEnvMapSpecular.SetValue(EnvironmentSpecular.ToVector3());
+                _paramFresnel.SetValue(FresnelFactor);
+                _paramRoughness.SetValue(Roughness);
             }
 
             if (IsDirty(MaterialDirtyFlags.MaterialColors) || IsDirty(MaterialDirtyFlags.Alpha))
@@ -151,7 +233,7 @@ namespace Nez.GeonBit.Graphics.Materials
             }
 
             //Set active technique
-            if (_oldShaderConfig != _shaderConfig) _effect.CurrentTechnique = _effect.Techniques[((LitFXTechniques)_shaderConfig).ToString()];
+            if (_oldShaderConfig != _shaderConfig) _effect.CurrentTechnique = _effect.Techniques[((FXTechniques)_shaderConfig).ToString()];
             _oldShaderConfig = _shaderConfig;
         }
     }

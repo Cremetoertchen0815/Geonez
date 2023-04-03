@@ -48,7 +48,7 @@ namespace Nez.GeonBit.Lights
         }
 		public Color FogColor { get; set; } = Color.Black;
 		public (float start, float end) FogRange { get; set; } = (0f, 100f);
-        public float RefractiveIndex { get; set; } = 1.000293f;
+        public float RefractionIndex { get; set; } = 1.000293f;
 
 		// the size of a batch / region containing lights.
 		private Vector3 _regionSize = new Vector3(250, 250, 250);

@@ -241,8 +241,7 @@ float4 ReflectAndRefract(float3 Position, float3 Normal, float Fresnel) {
 
 	// Calculate reflection vector
 	float3 Reflect = reflect(V, Normal);
-	float3 Refract = -refract(V, Normal, RefractionIndex).xzy;
-	Refract.z = -Refract.z;
+	float3 Refract = refract(V, Normal, RefractionIndex);
 	float4 ReflectColor = texCUBE(ReflectionCubeMapSampler, Reflect);
 	float4 RefractColor = texCUBE(ReflectionCubeMapSampler, Refract);
 

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.GeonBit.Materials
 {
-	public class ReflectiveMaterial : MaterialAPI
+	public class MetallicMaterial : MaterialAPI
 	{
 		// the effect instance of this material.
 		private readonly EnvironmentMapEffect _effect;
@@ -23,7 +23,7 @@ namespace Nez.GeonBit.Materials
 			set
 			{
 				_environmentMap = value;
-				SetAsDirty(MaterialDirtyFlags.TextureParams);
+				SetAsDirty(MaterialDirtyFlags.EnvironmentMap);
 			}
 		}
 
@@ -34,7 +34,7 @@ namespace Nez.GeonBit.Materials
 			set
 			{
 				_environmentAmount = value;
-				SetAsDirty(MaterialDirtyFlags.TextureParams);
+				SetAsDirty(MaterialDirtyFlags.EnvironmentMap);
 			}
 		}
 
@@ -45,7 +45,7 @@ namespace Nez.GeonBit.Materials
 			set
 			{
 				_environmentSpecular = value;
-				SetAsDirty(MaterialDirtyFlags.TextureParams);
+				SetAsDirty(MaterialDirtyFlags.EnvironmentMap);
 			}
 		}
 
@@ -56,14 +56,14 @@ namespace Nez.GeonBit.Materials
 			set
 			{
 				_fresnelFactor = value;
-				SetAsDirty(MaterialDirtyFlags.TextureParams);
+				SetAsDirty(MaterialDirtyFlags.EnvironmentMap);
 			}
 		}
 
 		/// <summary>
 		/// Create the default material from empty effect.
 		/// </summary>
-		public ReflectiveMaterial() : this(_emptyEffect, true)
+		public MetallicMaterial() : this(_emptyEffect, true)
 		{
 		}
 
@@ -71,7 +71,7 @@ namespace Nez.GeonBit.Materials
 		/// Create the material from another material instance.
 		/// </summary>
 		/// <param name="other">Other material to clone.</param>
-		public ReflectiveMaterial(ReflectiveMaterial other)
+		public MetallicMaterial(MetallicMaterial other)
 		{
 			_effect = other._effect.Clone() as EnvironmentMapEffect;
 			MaterialAPI asBase = this;
@@ -83,7 +83,7 @@ namespace Nez.GeonBit.Materials
 		/// </summary>
 		/// <param name="fromEffect">Effect to create material from.</param>
 		/// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-		public ReflectiveMaterial(EnvironmentMapEffect fromEffect, bool copyEffectProperties = true)
+		public MetallicMaterial(EnvironmentMapEffect fromEffect, bool copyEffectProperties = true)
 		{
 			// store effect and set default properties
 			_effect = fromEffect.Clone() as EnvironmentMapEffect;
@@ -118,7 +118,7 @@ namespace Nez.GeonBit.Materials
 			if (wasLastMaterial) { return; }
 
 			// set all effect params
-			if (IsDirty(MaterialDirtyFlags.TextureParams))
+			if (IsDirty(MaterialDirtyFlags.EnvironmentMap))
 			{
 				_effect.Texture = Texture;
 				_effect.EnvironmentMap = EnvironmentMap;
@@ -160,6 +160,6 @@ namespace Nez.GeonBit.Materials
 		/// Clone this material.
 		/// </summary>
 		/// <returns>Copy of this material.</returns>
-		public override MaterialAPI Clone() => new ReflectiveMaterial(this);
+		public override MaterialAPI Clone() => new MetallicMaterial(this);
 	}
 }

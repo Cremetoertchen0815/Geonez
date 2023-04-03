@@ -14,6 +14,78 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin cubemap/negx.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:cubemap/negx.jpg
+
+#begin cubemap/negy.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:cubemap/negy.jpg
+
+#begin cubemap/negz.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:cubemap/negz.jpg
+
+#begin cubemap/posx.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:cubemap/posx.jpg
+
+#begin cubemap/posy.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:cubemap/posy.jpg
+
+#begin cubemap/posz.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:cubemap/posz.jpg
+
 #begin engine/fx/geon/depth_plane.fx
 /importer:EffectImporter
 /processor:BinaryEffectsProcessor
@@ -56,29 +128,11 @@
 /processorParam:DebugMode=Auto
 /build:engine/fx/geon/lighting_regular_hipcf.fx
 
-#begin engine/fx/geon/lighting_regular_hipcf.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:engine/fx/geon/lighting_regular_hipcf.fx
-
 #begin engine/fx/geon/lighting_regular_lopcf.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:engine/fx/geon/lighting_regular_lopcf.fx
-
-#begin engine/fx/geon/lighting_regular_lopcf.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:engine/fx/geon/lighting_regular_lopcf.fx
-
-#begin engine/fx/geon/lighting_regular_midpcf.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:engine/fx/geon/lighting_regular_midpcf.fx
 
 #begin engine/fx/geon/lighting_regular_midpcf.fx
 /importer:EffectImporter
@@ -1927,6 +1981,18 @@
 /importer:XmlImporter
 /processor:PassThroughProcessor
 /build:engine/ui/hd/ThemeData.xml
+
+#begin skybox.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:skybox.png
 
 #begin test_normal.jpeg
 /importer:TextureImporter

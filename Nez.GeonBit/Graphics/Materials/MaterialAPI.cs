@@ -103,6 +103,11 @@ namespace Nez.GeonBit.Materials
         /// </summary>
         ShadowMap = 1 << 12,
 
+		/// <summary>
+		/// Change in the  environment map settings.
+		/// </summary>
+		EnvironmentMap = 1 << 13,
+
         /// <summary>
         /// All dirty flags.
         /// </summary>

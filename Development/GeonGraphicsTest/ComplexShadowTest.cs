@@ -33,7 +33,7 @@ public class ComplexShadowTest : GeonScene
         lightEntity.AddComponent(new ShapeRenderer(ShapeMeshes.SphereLowPoly));
 
 
-        var backdrop = CreateGeonEntity("backdrop").AddComponent(new SkyBox() { RenderingQueue = RenderingQueue.BackgroundNoCull });
+        var backdrop = CreateGeonEntity("backdrop").AddComponent(new SkyBox(Content.LoadTexture("skybox")) { RenderingQueue = RenderingQueue.BackgroundNoCull });
         var projectionPlane = CreateGeonEntity("projPlane", new Vector3(0f, 0f, 0f), NodeType.Simple);
         var projRend = projectionPlane.AddComponentAsChild(new ShapeRenderer(ShapeMeshes.Plane)
         {
@@ -54,7 +54,7 @@ public class ComplexShadowTest : GeonScene
         projectionPlane.AddComponent(new RigidBody(new EndlessPlaneInfo()));
 
 
-        CreateEntity("ShadowMapLooki", Screen.Center + new Vector2(0, 200f)).AddComponent(new Nez.Sprites.SpriteRenderer(spotLight.ShadowMap) { Size = new Vector2(1024f) * 0.25f });
+        //CreateEntity("ShadowMapLooki", Screen.Center + new Vector2(0, 200f)).AddComponent(new Nez.Sprites.SpriteRenderer(spotLight.ShadowMap) { Size = new Vector2(1024f) * 0.25f });
 
 
         for (int i = 0; i < 40; i++)

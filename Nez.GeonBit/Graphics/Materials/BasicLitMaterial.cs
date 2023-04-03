@@ -72,8 +72,8 @@ namespace Nez.GeonBit.Materials
         protected EffectParameter _paramShadowMap;
 
         private int _activeLightsCount = 0;
-        private LitFXModes _shaderConfig = LitFXModes.UVCoords;
-        private LitFXModes _oldShaderConfig;
+        private FXModes _shaderConfig = FXModes.UVCoords;
+        private FXModes _oldShaderConfig;
         private PCFQuality _oldShadowQuality;
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Init light-related params from shader.
         /// </summary>
-        protected void InitLightParams()
+        protected virtual void InitLightParams()
         {
             _effectParams = _effect.Parameters;
             _lightsDiffuse[0] = _effectParams["LightDiffuseA"];
@@ -298,7 +298,7 @@ namespace Nez.GeonBit.Materials
                 }
 
                 // set normal texture
-                if (NormalTexture != null) _shaderConfig |= LitFXModes.NormalMap; else _shaderConfig &= ~LitFXModes.NormalMap;
+                if (NormalTexture != null) _shaderConfig |= FXModes.NormalMap; else _shaderConfig &= ~FXModes.NormalMap;
                 _paramNormalMap?.SetValue(NormalTexture);
             }
 
@@ -321,7 +321,7 @@ namespace Nez.GeonBit.Materials
             }
 
             //Set active technique
-            if (_oldShaderConfig != _shaderConfig) _effect.CurrentTechnique = _effect.Techniques[((LitFXTechniques)_shaderConfig).ToString()];
+            if (_oldShaderConfig != _shaderConfig) _effect.CurrentTechnique = _effect.Techniques[((FXTechniques)_shaderConfig).ToString()];
             _oldShaderConfig = _shaderConfig;
         }
 
@@ -422,7 +422,7 @@ namespace Nez.GeonBit.Materials
                 if (shadowedLight.ParamsVersion != _lastShadowVersion) _paramShadowMap.SetValue(shadowedLight.ShadowMap);
                 _lastShadowVersion = shadowedLight.ParamsVersion;
             }
-            if (shadowedLight is not null && ShadowsEnabled) _shaderConfig |= LitFXModes.ShadowMap; else _shaderConfig &= ~LitFXModes.ShadowMap;
+            if (shadowedLight is not null && ShadowsEnabled) _shaderConfig |= FXModes.ShadowMap; else _shaderConfig &= ~FXModes.ShadowMap;
 
             // update active lights count
             if (_activeLightsCount != lightsCount)
@@ -437,31 +437,31 @@ namespace Nez.GeonBit.Materials
         /// </summary>
         /// <returns>Copy of this material.</returns>
         public override MaterialAPI Clone() => new BasicLitMaterial(this);
+
+        [Flags]
+        public enum FXModes
+        {
+            NormalMap = 0b1000,
+            ShadowMap = 0b0100,
+            VertexColors = 0b0010,
+            UVCoords = 0b0001
+        }
+
+        [Flags]
+        public enum FXTechniques
+        {
+            FlatNoShadowVc = FXModes.VertexColors,
+            FlatNoShadowUv = FXModes.UVCoords,
+            FlatNoShadowVcUv = FXModes.VertexColors | FXModes.UVCoords,
+            FlatShadowVc = FXModes.ShadowMap | FXModes.VertexColors,
+            FlatShadowUv = FXModes.ShadowMap | FXModes.UVCoords,
+            FlatShadowVcUv = FXModes.ShadowMap | FXModes.VertexColors | FXModes.UVCoords,
+            NormalNoShadowUv = FXModes.NormalMap | FXModes.UVCoords,
+            NormalNoShadowVcUv = FXModes.NormalMap | FXModes.VertexColors | FXModes.UVCoords,
+            NormalShadowUv = FXModes.NormalMap | FXModes.ShadowMap | FXModes.UVCoords,
+            NormalShadowVcUv = FXModes.NormalMap | FXModes.ShadowMap | FXModes.VertexColors | FXModes.UVCoords
+        }
     }
 
-
-    [Flags]
-    public enum LitFXModes
-    {
-        NormalMap = 0b1000,
-        ShadowMap = 0b0100,
-        VertexColors = 0b0010,
-        UVCoords = 0b0001
-    }
-
-    [Flags]
-    public enum LitFXTechniques
-    {
-        FlatNoShadowVc = LitFXModes.VertexColors,
-        FlatNoShadowUv = LitFXModes.UVCoords,
-        FlatNoShadowVcUv = LitFXModes.VertexColors | LitFXModes.UVCoords,
-        FlatShadowVc = LitFXModes.ShadowMap | LitFXModes.VertexColors,
-        FlatShadowUv = LitFXModes.ShadowMap | LitFXModes.UVCoords,
-        FlatShadowVcUv = LitFXModes.ShadowMap | LitFXModes.VertexColors | LitFXModes.UVCoords,
-        NormalNoShadowUv = LitFXModes.NormalMap | LitFXModes.UVCoords,
-        NormalNoShadowVcUv = LitFXModes.NormalMap | LitFXModes.VertexColors | LitFXModes.UVCoords,
-        NormalShadowUv = LitFXModes.NormalMap | LitFXModes.ShadowMap | LitFXModes.UVCoords,
-        NormalShadowVcUv = LitFXModes.NormalMap | LitFXModes.ShadowMap | LitFXModes.VertexColors | LitFXModes.UVCoords
-    }
 
 }
