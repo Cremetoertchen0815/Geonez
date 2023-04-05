@@ -62,6 +62,7 @@ namespace Nez.GeonBit.Materials
         protected EffectParameter _paramWorldInverseTranspose;
         protected EffectParameter _paramEyePosition;
         protected EffectParameter _paramDiffuseColor;
+        protected EffectParameter _paramSpecularColor;
         protected EffectParameter _paramEmissiveColor;
         protected EffectParameter _paramSpecularPower;
         protected EffectParameter _paramAlbedoMap;
@@ -252,6 +253,7 @@ namespace Nez.GeonBit.Materials
             _paramEyePosition = _effectParams["EyePosition"];
             _paramDiffuseColor = _effectParams["DiffuseColor"];
             _paramEmissiveColor = _effectParams["EmissiveColor"];
+            _paramSpecularColor = _effectParams["SpecularColor"];
             _paramSpecularPower = _effectParams["SpecularPower"];
             _paramAlbedoMap = _effectParams["AlbedoMap"];
             _paramAlbedoEnabled = _effectParams["AlbedoEnabled"];
@@ -305,6 +307,7 @@ namespace Nez.GeonBit.Materials
             if (IsDirty(MaterialDirtyFlags.MaterialColors) || IsDirty(MaterialDirtyFlags.Alpha))
             {
                 _paramDiffuseColor.SetValue(DiffuseColor.ToVector4() * new Vector4(1f, 1f, 1f, Alpha));
+                _paramSpecularColor.SetValue(SpecularColor.ToVector3());
                 _paramSpecularPower.SetValue(SpecularPower);
                 SetAsDirty(MaterialDirtyFlags.AmbientLight);
             }

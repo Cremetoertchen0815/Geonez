@@ -216,6 +216,7 @@ namespace Nez.GeonBit.Materials
             if (IsDirty(MaterialDirtyFlags.MaterialColors) || IsDirty(MaterialDirtyFlags.Alpha))
             {
                 _paramDiffuseColor.SetValue(DiffuseColor.ToVector4() * new Vector4(1f, 1f, 1f, Alpha));
+                _paramSpecularColor.SetValue(SpecularColor.ToVector3());
                 _paramSpecularPower.SetValue(SpecularPower);
                 SetAsDirty(MaterialDirtyFlags.AmbientLight);
             }
