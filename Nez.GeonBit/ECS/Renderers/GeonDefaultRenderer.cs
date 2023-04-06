@@ -267,6 +267,7 @@ namespace Nez.GeonBit
             PrepareRendering(scene, true);
 
             Core.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+            Core.GraphicsDevice.BlendState = BlendState.Opaque;
 
             foreach (var item in scene.Lighting.GetShadowedLights())
             {
@@ -277,7 +278,9 @@ namespace Nez.GeonBit
                 matrices.View = item.ShadowViewMatrix;
                 matrices.Projection = item.ShadowProjectionMatrix;
                 RenderingQueues.RenderShadows(item.ShadowSourceID);
+                //item.ShadowMap.SaveAsPng(System.IO.File.OpenWrite("lolz.png"), 2048, 2048);
             }
+
 
         }
 
