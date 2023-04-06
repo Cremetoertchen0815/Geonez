@@ -12,17 +12,10 @@ namespace Nez.GeonBit
         public static void Draw(this Model m, Effect effect, Matrix world)
         {
             var fx = effect as IEffectMatrices;
-            int count = m.Bones.Count;
-            if (sharedDrawBoneMatrices == null || sharedDrawBoneMatrices.Length < count)
-            {
-                sharedDrawBoneMatrices = new Matrix[count];
-            }
-
-            m.CopyAbsoluteBoneTransformsTo(sharedDrawBoneMatrices);
             foreach (ModelMesh mesh in m.Meshes)
             {
                 IEffectMatrices obj = (effect as IEffectMatrices) ?? throw new InvalidOperationException();
-                obj.World = world;
+                obj.World = mesh.ParentBone.Transform * world;
 
                 mesh.Draw(effect);
             }

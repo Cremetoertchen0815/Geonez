@@ -32,7 +32,7 @@ public class DebugCube : GeonComponent
         };
 
         //Generate renderer
-        var rend = new ShapeRenderer(ShapeMeshes.SphereSmooth)
+        var rend = new ShapeRenderer(ShapeMeshes.Cube)
         {
             CastsShadows = true,
             PrimaryLight = SHADOW_LEVEL,
@@ -41,7 +41,7 @@ public class DebugCube : GeonComponent
         };
         rend.SetMaterial(mat);
         Entity.AddComponentAsChild(rend);
-        rend.Node.Scale = new Vector3(2.5f);
+        rend.Node.Scale = new Vector3(0.025f);
 
         //Add rigid body
         var rb = new RigidBody(new BoxInfo(new Vector3(5f)), 20f, 1f, 0f);

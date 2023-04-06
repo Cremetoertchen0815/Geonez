@@ -188,6 +188,8 @@ namespace Nez.GeonBit
             {
                 var mesh = Model.Meshes[k];
 
+                var world = mesh.ParentBone.Transform * worldTransformations;
+
                 // check if in this mesh we have shared materials, eg same effects used for several mesh parts
                 bool gotSharedEffects = mesh.Effects.Count != mesh.MeshParts.Count;
 
@@ -210,7 +212,7 @@ namespace Nez.GeonBit
                     // if we don't have shared effects, eg every mesh part has its own effect, update material transformations
                     if (!gotSharedEffects)
                     {
-                        material.Apply(ref worldTransformations, ref _lastBoundingSphere, PrimaryLight);
+                        material.Apply(ref world, ref _lastBoundingSphere, PrimaryLight);
                     }
 
                     //Only change effect if really necessairy(every setting of the effect causes Monogame to internally generate enumerator objects)
@@ -227,7 +229,7 @@ namespace Nez.GeonBit
                 {
                     for (int i = 0; i < mesh.Effects.Count; i++)
                     {
-                        mesh.Effects[i].GetMaterial().Apply(ref worldTransformations, ref _lastBoundingSphere, PrimaryLight);
+                        mesh.Effects[i].GetMaterial().Apply(ref world, ref _lastBoundingSphere, PrimaryLight);
                     }
                 }
 

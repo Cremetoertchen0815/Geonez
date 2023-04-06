@@ -25,6 +25,7 @@ public class ComplexShadowTest : GeonScene
         var lightEntity = CreateGeonEntity("MainLight", new Vector3(0, 50, -4f));
         var spotLight = lightEntity.AddComponent(new ShadowSpotLight(DebugCube.SHADOW_LEVEL, new Point(1024 * 4)) { Direction = Vector3.Down, Forward = Vector3.Backward, FarDistance = 60f, NearDistance = 5f, Diffuse = Color.White, Specular = Color.DarkGray });
         lightEntity.AddComponent(new ShapeRenderer(ShapeMeshes.SphereLowPoly));
+        lightEntity.Node.Scale = new Vector3(0.01f);
 
 
         var backdrop = CreateGeonEntity("backdrop").AddComponent(new SkyBox(Content.LoadTexture("skybox")) { RenderingQueue = RenderingQueue.BackgroundNoCull });
@@ -34,8 +35,7 @@ public class ComplexShadowTest : GeonScene
             CastsShadows = true,
             PrimaryLight = DebugCube.SHADOW_LEVEL
         });
-        projRend.Node.Scale = 100f * Vector3.One;
-        projRend.Node.RotationX = -MathHelper.PiOver2;
+        projRend.Node.Scale = Vector3.One;
         projRend.Node.PositionY += 1f;
         projRend.PrimaryLight = DebugCube.SHADOW_LEVEL;
         projRend.CastsShadows = false;
