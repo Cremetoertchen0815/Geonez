@@ -14,7 +14,7 @@ public class ComplexShadowTest : GeonScene
         base.Initialize();
 
         AddRenderer(new GeonShadowMapRenderer(0));
-        AddRenderer(new GeonDefaultRenderer(1, this));
+        AddRenderer(new GeonDefaultRenderer(1, this) { ForceDrawingToSceneTarget = true });
         AddRenderer(new DefaultRenderer(2));
 
         Lighting.AmbientLight = Color.White * 0.4f;

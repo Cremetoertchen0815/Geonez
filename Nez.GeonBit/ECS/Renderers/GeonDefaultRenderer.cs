@@ -92,7 +92,7 @@ namespace Nez.GeonBit
 
         internal static Systems.NezContentManager CurrentContentManager = Core.Content;
 
-        public bool PreventSettingRenderTarget { get; set; } = false;
+        public bool ForceDrawingToSceneTarget { get; set; } = false;
 
         /// <summary>
         /// Enable deferred lighting.
@@ -240,6 +240,10 @@ namespace Nez.GeonBit
         public override void Render(Scene scene)
         {
             if (RenderTexture is not null)
+            {
+                Core.GraphicsDevice.SetRenderTarget(RenderTexture);
+                Core.GraphicsDevice.Clear(RenderTargetClearColor);
+            } else if (ForceDrawingToSceneTarget)
             {
                 Core.GraphicsDevice.SetRenderTarget(scene.SceneRenderTarget);
                 Core.GraphicsDevice.Clear(RenderTargetClearColor);
