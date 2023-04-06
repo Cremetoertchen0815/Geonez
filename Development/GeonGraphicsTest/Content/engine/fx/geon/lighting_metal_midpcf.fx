@@ -24,7 +24,9 @@ float4 DiffuseColor = float4(1, 1, 1, 1);
 // emissive
 float3 EmissiveColor = float3(0, 0, 0);
 
+// specular
 float SpecularPower;
+float3 SpecularColor = float3(1, 1, 1);
 
 //Environment mapping
 float EnvironmentMapAmount = 1;
@@ -324,7 +326,7 @@ ColorPair ComputeLights(float3 eyePos, float3 worldNormal, float3 shadowContribu
     ColorPair result;
     
     result.Diffuse  = mul(diffuse,  lightDiffuse)  * DiffuseColor.rgb + EmissiveColor;
-    result.Specular = mul(specular,  lightSpecular);
+    result.Specular = mul(specular,  lightSpecular) * SpecularColor;
 
     return result;
 }
@@ -403,9 +405,9 @@ float4 PS(VertexShaderOutputN input) : COLOR
 	retColor.rgb += lightResult.Specular * retColor.a;
 
 	// apply reflection
-	float metalness = AlbedoEnabled ? albedo.a : 1;
+	float metalness = AlbedoEnabled ? albedo.a : 0;
 	float4 envmap = ReflectAlongSurface(input.WorldPos.xyz, N, metalness);
-	retColor.rgb = lerp(retColor.rgb, envmap.rgb, input.TextureCoordinate.w * metalness * EnvironmentMapAmount);
+	retColor.rgb = lerp(retColor.rgb, envmap.rgb, input.TextureCoordinate.w * metalness);
     retColor.rgb += EnvironmentMapSpecular * envmap.a;
 
 	// apply fog
@@ -448,9 +450,9 @@ float4 PS_S(VertexShaderOutputN input) : COLOR
 	retColor.rgb += lightResult.Specular * retColor.a;
 
 	// apply reflection
-	float metalness = AlbedoEnabled ? albedo.a : 1;
+	float metalness = AlbedoEnabled ? albedo.a : 0;
 	float4 envmap = ReflectAlongSurface(input.WorldPos.xyz, N, metalness);
-	retColor.rgb = lerp(retColor.rgb, envmap.rgb, input.TextureCoordinate.w * metalness * EnvironmentMapAmount);
+	retColor.rgb = lerp(retColor.rgb, envmap.rgb, input.TextureCoordinate.w * metalness);
     retColor.rgb += EnvironmentMapSpecular * envmap.a;
 
 	// apply fog
@@ -492,9 +494,9 @@ float4 PSTBN(VertexShaderOutputTBN input) : COLOR
 
 	// apply reflection
 	float fresnel = ComputeFresnelFactor(EyePosition - input.WorldPos.xyz, N);
-	float metalness = AlbedoEnabled ? albedo.a : 1;
+	float metalness = AlbedoEnabled ? albedo.a : 0;
 	float4 envmap = ReflectAlongSurface(input.WorldPos.xyz, N, metalness);
-	retColor.rgb = lerp(retColor.rgb, envmap.rgb, fresnel * metalness * EnvironmentMapAmount);
+	retColor.rgb = lerp(retColor.rgb, envmap.rgb, fresnel * metalness);
     retColor.rgb += EnvironmentMapSpecular * envmap.a;
 
 	// apply fog
@@ -544,9 +546,9 @@ float4 PSTBN_S(VertexShaderOutputTBN input) : COLOR
 
 	// apply reflection
 	float fresnel = ComputeFresnelFactor(EyePosition - input.WorldPos.xyz, N);
-	float metalness = AlbedoEnabled ? albedo.a : 1;
+	float metalness = AlbedoEnabled ? albedo.a : 0;
 	float4 envmap = ReflectAlongSurface(input.WorldPos.xyz, N, metalness);
-	retColor.rgb = lerp(retColor.rgb, envmap.rgb, fresnel * metalness * EnvironmentMapAmount);
+	retColor.rgb = lerp(retColor.rgb, envmap.rgb, fresnel * metalness);
     retColor.rgb += EnvironmentMapSpecular * envmap.a;
 
 	// apply fog

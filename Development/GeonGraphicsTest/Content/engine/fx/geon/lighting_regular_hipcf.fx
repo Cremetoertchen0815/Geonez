@@ -24,7 +24,9 @@ float4 DiffuseColor = float4(1, 1, 1, 1);
 // emissive
 float3 EmissiveColor = float3(0, 0, 0);
 
+// specular
 float SpecularPower;
+float3 SpecularColor = float3(1, 1, 1);
 
 // fog
 float4 FogVector;
@@ -283,8 +285,8 @@ ColorPair ComputeLights(float3 eyePos, float3 worldNormal, float3 shadowContribu
 
     ColorPair result;
     
-    result.Diffuse  = mul(diffuse,  lightDiffuse)  * DiffuseColor.rgb + EmissiveColor;
-    result.Specular = mul(specular,  lightSpecular);
+    result.Diffuse  = mul(diffuse,  lightDiffuse) * DiffuseColor.rgb + EmissiveColor;
+    result.Specular = mul(specular,  lightSpecular) * SpecularColor;
 
     return result;
 }
