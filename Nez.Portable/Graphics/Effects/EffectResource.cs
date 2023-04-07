@@ -34,7 +34,9 @@ namespace Nez
 
 		internal static byte[] LUTColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade");
 
-		internal static byte[] GaussianBlurBytes => GetFileResourceBytes("engine/fx/ppfx/gauss_blur");
+        internal static byte[] FXAntiAliasing => GetFileResourceBytes("engine/fx/ppfx/fxaa");
+
+        internal static byte[] GaussianBlurBytes => GetFileResourceBytes("engine/fx/ppfx/gauss_blur");
 
 		internal static byte[] VignetteBytes => GetFileResourceBytes("engine/fx/ppfx/vignette");
 

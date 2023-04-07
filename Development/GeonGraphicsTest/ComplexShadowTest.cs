@@ -16,6 +16,7 @@ public class ComplexShadowTest : GeonScene
         AddRenderer(new GeonShadowMapRenderer(0));
         AddRenderer(new GeonDefaultRenderer(1, this) { ForceDrawingToSceneTarget = true });
         AddRenderer(new DefaultRenderer(2));
+        AddPostProcessor<FXAAPostProcessor>(new(0));
 
         Lighting.AmbientLight = Color.White * 0.4f;
         var world = AddSceneComponent(new Nez.GeonBit.Physics.PhysicsWorld());

@@ -24,6 +24,7 @@ public class GraphicsTestScene : GeonScene
         AddRenderer(new GeonShadowMapRenderer(0));
         AddRenderer(new GeonDefaultRenderer(1, this));
         AddRenderer(new DefaultRenderer(2));
+        AddPostProcessor<FXAAPostProcessor>(new(0));
 
         var lightEntity = CreateGeonEntity("MainLight", new Vector3(0, 10, -4f));
         var spotLight = lightEntity.AddComponent(new ShadowSpotLight(MAIN_SHADOW_PLANE, new Point(1024)) { Direction = Vector3.Down, Forward = Vector3.Backward, FarDistance = 40f, NearDistance = 5f, Diffuse = Color.White });

@@ -200,6 +200,12 @@
 /processorParam:DebugMode=Auto
 /build:engine/fx/ppfx/crt.fx
 
+#begin engine/fx/ppfx/fxaa.fx
+/importer:EffectImporter
+/processor:BinaryEffectsProcessor
+/processorParam:DebugMode=Auto
+/build:engine/fx/ppfx/fxaa.fx
+
 #begin engine/fx/ppfx/gauss_blur.fx
 /importer:EffectImporter
 /processor:EffectProcessor
