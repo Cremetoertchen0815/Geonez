@@ -4,7 +4,7 @@ using System;
 
 namespace Nez
 {
-	public class QualityBloomPostProcessor : PostProcessor, IDisposable
+	public class BloomPostProcessor : PostProcessor, IDisposable
 	{
 		#region fields & properties
 
@@ -174,17 +174,17 @@ namespace Nez
 		private float _bloomThreshold;
 
 
-		public QualityBloomPostProcessor SetThreshold(float val)
+		public BloomPostProcessor SetThreshold(float val)
 		{
 			BloomThreshold = val;
 			return this;
 		}
-		public QualityBloomPostProcessor SetStrengthMultiplayer(float val)
+		public BloomPostProcessor SetStrengthMultiplayer(float val)
 		{
 			BloomStrengthMultiplier = val;
 			return this;
 		}
-		public QualityBloomPostProcessor SetPreset(BloomPresets val)
+		public BloomPostProcessor SetPreset(BloomPresets val)
 		{
 			SetBloomPreset(val);
 			return this;
@@ -195,7 +195,7 @@ namespace Nez
 		#endregion
 
 		#region initialize
-		public QualityBloomPostProcessor(int executionOrder) : base(executionOrder)
+		public BloomPostProcessor(int executionOrder) : base(executionOrder)
 		{
 			//Temporaty fields
 			var content = Core.Content;

@@ -2,7 +2,7 @@
 
 namespace Nez
 {
-	public class ColorGradePostProcessor : PostProcessor
+	public class LUTColorGradePostProcessor : PostProcessor
 	{
 		private EffectParameter _LUT;
 		private EffectParameter _SizeParameter;
@@ -12,7 +12,7 @@ namespace Nez
 		private float _Size;
 		private float _SizeRoot;
 
-		public ColorGradePostProcessor(int execOrder) : base(execOrder)
+		public LUTColorGradePostProcessor(int execOrder) : base(execOrder)
 		{
 
 			Effect = Core.Content.LoadEffect<Effect>("LUTColorGrade", EffectResource.LUTColorGrade);

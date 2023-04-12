@@ -30,6 +30,7 @@ namespace Nez
 		internal static byte[] Mosaic => GetFileResourceBytes("engine/fx/ppfx/mosaic");
 
 		internal static byte[] SimpleColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade_simple");
+		
 		internal static byte[] LUTColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade_lut");
 
         internal static byte[] FXAntiAliasing => GetFileResourceBytes("engine/fx/ppfx/fxaa");
