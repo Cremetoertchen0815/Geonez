@@ -24,15 +24,13 @@ namespace Nez
 		internal static byte[] DissolveBytes => GetFileResourceBytes("engine/fx/sprite/dissolve");
 
 		// post processor effects
-		internal static byte[] BloomCombineBytes => GetFileResourceBytes("engine/fx/ppfx/bloom_combine");
 
-		internal static byte[] BloomExtractBytes => GetFileResourceBytes("engine/fx/ppfx/bloom_extract");
-
-		internal static byte[] QualityBloom => GetFileResourceBytes("engine/fx/ppfx/bloom_hq");
+		internal static byte[] QualityBloom => GetFileResourceBytes("engine/fx/ppfx/bloom");
 
 		internal static byte[] Mosaic => GetFileResourceBytes("engine/fx/ppfx/mosaic");
 
-		internal static byte[] LUTColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade");
+		internal static byte[] SimpleColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade_simple");
+		internal static byte[] LUTColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade_lut");
 
         internal static byte[] FXAntiAliasing => GetFileResourceBytes("engine/fx/ppfx/fxaa");
 
