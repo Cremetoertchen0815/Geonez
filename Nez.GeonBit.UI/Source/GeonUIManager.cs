@@ -4,7 +4,7 @@ using Nez.GeonBit.UI;
 using System;
 using System.Text.RegularExpressions;
 
-namespace Nez.GeonBit.ECS
+namespace Nez.GeonBit.UI
 {
     public class GeonUIManager : GlobalManager, IFinalRenderDelegate
     {
@@ -32,6 +32,10 @@ namespace Nez.GeonBit.ECS
 
         public void HandleFinalRender(RenderTarget2D finalRenderTarget, Color letterboxColor, RenderTarget2D source, Rectangle finalRenderDestinationRect, SamplerState samplerState)
         {
+
+#if TRACE
+            var seg = DeltaAnalyzer.MeasureSegment("GeonUIManager", null, DeltaAnalyzer.DeltaSegmentType.Draw);
+#endif
             _ui.Draw(_batch, source);
 
             _batch.Begin();
@@ -40,6 +44,9 @@ namespace Nez.GeonBit.ECS
 
             _ui.DrawMainRenderTarget(_batch, finalRenderDestinationRect);
 
+#if TRACE
+            seg.Stop();
+#endif
         }
 
         public void OnAddedToScene(Scene scene) { }
