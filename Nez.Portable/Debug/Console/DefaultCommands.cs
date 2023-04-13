@@ -127,10 +127,6 @@ namespace Nez.Console
 				case "analyzer":
 					bool b;
 					if (!bool.TryParse(param, out b)) b = false;
-					if (Core.Scene == null) return;
-
-					if (b && Core.Scene.Entities.FindEntity("delta_analyzer") == null) Core.Scene.CreateEntity("delta_analyzer").AddComponent<DeltaAnalyzer>();
-					else if (!b) Core.Scene.Entities.FindEntity("delta_analyzer")?.Destroy();
 					DeltaAnalyzer.Active = b;
 
 					break;

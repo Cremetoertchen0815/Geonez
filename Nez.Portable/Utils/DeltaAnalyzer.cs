@@ -7,24 +7,26 @@ using System.Linq;
 namespace Nez
 {
 #if TRACE
-	public class DeltaAnalyzer : RenderableComponent
+	public class DeltaAnalyzer
 	{
-		//Component functions
-		public override RectangleF Bounds => new RectangleF(0, 0, 1, 1);
-		public override bool IsVisibleFromCamera(Camera camera) => true;
-		public override void OnAddedToEntity()
+        private static DeltaAnalyzer Instance { get; } = new DeltaAnalyzer();
+        public static DeltaAnalyzer GetInstance() => Instance;
+		
+        public DeltaAnalyzer()
 		{
-			Active = true;
-			SetRenderLayer(-3);
-			_s.Restart();
-		}
+            Active = true;
+			
+			_s = new Stopwatch();
+            _s.Restart();
+        }
 
 
 		private Dictionary<string, Color> _colors = new Dictionary<string, Color>();
 
-		public override void Render(Batcher batcher, Camera camera)
+		public void Render()
 		{
-
+			var batcher = Graphics.Instance.Batcher;
+			
 			//Draw background
 			int offsetX = 1920 - 500;
 			int offsetY = 50;
@@ -105,7 +107,7 @@ namespace Nez
 		}
 
 		//Static functions
-		private static Stopwatch _s = new Stopwatch();
+		private static Stopwatch _s;
 		private static float _oldUpdateTotalTime;
 		private static float _oldDrawTotalTime;
 		private static DeltaDict _oldEntitiesUpdateList = new DeltaDict();
@@ -232,8 +234,8 @@ namespace Nez
 
 				if (Type == DeltaSegmentType.Update)
 				{
-					var ComponLst = DeltaAnalyzer.UpdateDeltas.ContainsKey(Entity) ? DeltaAnalyzer.UpdateDeltas[Entity] : null;
-					if (ComponLst == null) { ComponLst = new List<(string, double)>(); DeltaAnalyzer.UpdateDeltas.Add(Entity, ComponLst); }
+					var ComponLst = UpdateDeltas.ContainsKey(Entity) ? UpdateDeltas[Entity] : null;
+					if (ComponLst == null) { ComponLst = new List<(string, double)>(); UpdateDeltas.Add(Entity, ComponLst); }
 					ComponLst.Add((Component, Delta));
 				}
 				else

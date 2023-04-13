@@ -310,11 +310,6 @@ namespace Nez
 			RenderableComponents = new RenderableComponentList();
 			Content = new NezContentManager();
 
-#if TRACE
-			//Implement debug delta analyzer
-			if (DeltaAnalyzer.Active) CreateEntity("delta_analyzer").AddComponent<DeltaAnalyzer>();
-#endif
-
 			//Release mouse
 			Input.EndlessMouseMode = false;
 			ClearTelegrams();
@@ -475,9 +470,14 @@ namespace Nez
 						_renderers.Buffer[i].Camera.ForceMatrixUpdate();
 					Camera.ForceMatrixUpdate();
 				}
-
-				_renderers.Buffer[i].Render(this);
-				lastRendererHadRenderTarget = _renderers.Buffer[i].RenderTexture != null;
+#if TRACE
+                var timer = DeltaAnalyzer.MeasureSegment(_renderers.Buffer[i].GetType().Name, null, DeltaAnalyzer.DeltaSegmentType.Draw);
+                _renderers.Buffer[i].Render(this);
+				timer.Stop();
+#else
+                _renderers.Buffer[i].Render(this);
+#endif
+                lastRendererHadRenderTarget = _renderers.Buffer[i].RenderTexture != null;
 			}
 		}
 
@@ -561,12 +561,18 @@ namespace Nez
 				Graphics.Instance.Batcher.Draw(currentRenderTarget, _finalRenderDestinationRect, Color.White);
 				Graphics.Instance.Batcher.End();
 			}
-		}
+
+#if TRACE
+            Graphics.Instance.Batcher.Begin(ScreenTransformMatrix);
+            if (DeltaAnalyzer.Active) DeltaAnalyzer.GetInstance().Render();
+            Graphics.Instance.Batcher.End();
+#endif
+        }
 
 		private void OnGraphicsDeviceReset() => UpdateResolutionScaler();
 		private void OnOrientationChanged() => UpdateResolutionScaler();
 
-		#endregion
+#endregion
 
 
 		#region Resolution Policy
