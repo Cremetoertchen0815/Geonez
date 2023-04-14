@@ -18,6 +18,7 @@ namespace Nez.GeonBit
                 mesh.Draw(effect);
             }
         }
+        
 
 
         public static void Draw(this ModelMesh mesh, Effect effect)
