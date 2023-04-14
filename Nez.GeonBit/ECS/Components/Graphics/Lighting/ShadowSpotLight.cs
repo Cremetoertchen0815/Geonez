@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Nez.GeonBit.ECS.Components.Graphics.Lighting;
+namespace Nez.GeonBit;
 public class ShadowSpotLight : ShadowLight
 {
     public ShadowSpotLight(int id, Point shadowMapResolution = default) : base(id, shadowMapResolution)

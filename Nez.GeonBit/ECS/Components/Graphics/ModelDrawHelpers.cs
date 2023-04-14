@@ -7,8 +7,6 @@ namespace Nez.GeonBit
     public static class ModelDrawHelpers
     {
 
-        private static Matrix[] sharedDrawBoneMatrices;
-
         public static void Draw(this Model m, Effect effect, Matrix world)
         {
             var fx = effect as IEffectMatrices;

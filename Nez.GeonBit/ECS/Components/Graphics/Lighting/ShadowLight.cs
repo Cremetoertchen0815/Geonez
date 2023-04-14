@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
 
-namespace Nez.GeonBit.ECS.Components.Graphics.Lighting;
+namespace Nez.GeonBit;
 public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
 {
     public int ShadowSourceID { get; private set; }
