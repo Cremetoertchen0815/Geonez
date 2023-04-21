@@ -313,6 +313,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Alias to access rotation X directly.
         /// </summary>
+        [NotInspectable]
         public float RotationX
         {
             get => Transformations.Rotation.X;
@@ -322,6 +323,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Alias to access rotation Y directly.
         /// </summary>
+        [NotInspectable]
         public float RotationY
         {
             get => Transformations.Rotation.Y;
@@ -331,6 +333,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Alias to access rotation Z directly.
         /// </summary>
+        [NotInspectable]
         public float RotationZ
         {
             get => Transformations.Rotation.Z;
@@ -340,6 +343,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Alias to access scale X directly.
         /// </summary>
+        [NotInspectable]
         public float ScaleX
         {
             get => Transformations.Scale.X;
@@ -349,6 +353,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Alias to access scale Y directly.
         /// </summary>
+        [NotInspectable]
         public float ScaleY
         {
             get => Transformations.Scale.Y;
@@ -358,6 +363,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Alias to access scale Z directly.
         /// </summary>
+        [NotInspectable]
         public float ScaleZ
         {
             get => Transformations.Scale.Z;
@@ -368,6 +374,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Alias to access position X directly.
         /// </summary>
+        [NotInspectable]
         public float PositionX
         {
             get => Transformations.Position.X;
@@ -377,6 +384,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Alias to access position Y directly.
         /// </summary>
+        [NotInspectable]
         public float PositionY
         {
             get => Transformations.Position.Y;
@@ -386,6 +394,7 @@ namespace Nez.GeonBit
         /// <summary>
         /// Alias to access position Z directly.
         /// </summary>
+        [NotInspectable]
         public float PositionZ
         {
             get => Transformations.Position.Z;

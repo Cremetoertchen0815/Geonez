@@ -6,7 +6,18 @@ namespace Nez.GeonBit
     public class GeonEntity : Entity
     {
         public new GeonScene Scene;
-        public Node Node { get; set; }
+
+        private Node _node;
+        public Node Node
+        {
+            get => _node;
+            set
+            {
+                if (_node != null) _additionalInspectables.Remove(_node);
+                if (value != null) _additionalInspectables.Add(value);
+                _node = value;
+            }
+        }
 
         public GeonEntity(string Name) : base(Name) { }
 
@@ -23,7 +34,7 @@ namespace Nez.GeonBit
             component.Node.Entity = this;
             Components.Add(component);
             component.Initialize();
-
+            
             return component;
         }
 

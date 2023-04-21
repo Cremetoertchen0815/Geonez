@@ -10,12 +10,14 @@ namespace Nez
 	{
 		private static uint _idGenerator;
 
-		#region properties and fields
+        #region properties and fields
 
-		/// <summary>
-		/// the scene this entity belongs to
-		/// </summary>
-		public Scene Scene;
+        protected internal List<object> _additionalInspectables = new();
+		
+        /// <summary>
+        /// the scene this entity belongs to
+        /// </summary>
+        public Scene Scene;
 
 		/// <summary>
 		/// entity name. useful for doing scene-wide searches for an entity
@@ -37,10 +39,10 @@ namespace Nez
 		/// </summary>
 		public readonly ComponentList Components;
 
-		/// <summary>
-		/// use this however you want to. It can later be used to query the scene for all Entities with a specific tag
-		/// </summary>
-		public int Tag
+        /// <summary>
+        /// use this however you want to. It can later be used to query the scene for all Entities with a specific tag
+        /// </summary>
+        public int Tag
 		{
 			get => _tag;
 			set => SetTag(value);
