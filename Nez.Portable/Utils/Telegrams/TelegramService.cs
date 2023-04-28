@@ -48,7 +48,7 @@ namespace Nez
 			if (receivers.ContainsKey(message.Receiver))
 			{
 				foreach (var cp in receivers[message.Receiver]) cp.MessageReceived(message);
-				DebugConsole.Instance.Log("Telegram transmitted: " + message.Sender + " -> " + message.Receiver + "; " + message.Head + message.Body != string.Empty ? " | " + message.Body : string.Empty);
+				DebugConsole.Instance.Log("Telegram transmitted: " + message.Sender + " -> " + message.Receiver + "; " + message.Head + (message.Body is not null ? " | " + message.Body.ToString() : string.Empty));
 				return true;
 			}
 			else if (message.Receiver == internalTelegramReceiverName)
