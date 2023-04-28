@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.Console;
 using Nez.GeonBit.UI;
 using System;
 using System.Text.RegularExpressions;
@@ -28,6 +29,13 @@ namespace Nez.GeonBit.UI
             UserInterface.Active.OnSceneChange();
             if (Core.Scene is null) return;
             Core.Scene.FinalRenderDelegate = this;
+        }
+
+
+        [Command("disable-geon", "Exits the game.")]
+        public static void Disable()
+        {
+            Core.Scene.FinalRenderDelegate = null;
         }
 
         public void HandleFinalRender(RenderTarget2D finalRenderTarget, Color letterboxColor, RenderTarget2D source, Rectangle finalRenderDestinationRect, SamplerState samplerState)
