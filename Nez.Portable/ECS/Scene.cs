@@ -427,8 +427,16 @@ namespace Nez
 					_sceneComponents.Buffer[i].Update();
 			}
 
-			// update our Entities
-			Entities.Update();
+
+            // update our SceneComponents
+            for (int i = _renderers.Length - 1; i >= 0; i--)
+            {
+                if (_renderers.Buffer[i] is IUpdatable up && up.Enabled)
+                    up.Update();
+            }
+
+            // update our Entities
+            Entities.Update();
 
 			// we update our renderables after entity.update in case any new Renderables were added
 			RenderableComponents.UpdateLists();

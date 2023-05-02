@@ -195,8 +195,7 @@ namespace Nez.Tweens
 				HandleLooping(elapsedTimeExcess);
 
 			float deltaTime = _isTimeScaleIndependent ? Time.UnscaledDeltaTime : Time.DeltaTime;
-			deltaTime *= _timeScale;
-
+			
 			// running in reverse? then we need to subtract deltaTime
 			if (_isRunningInReverse)
 				_elapsedTime -= deltaTime;

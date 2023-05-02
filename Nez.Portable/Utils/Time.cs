@@ -47,10 +47,15 @@ namespace Nez
 		/// </summary>
 		public static float UnscaledDeltaTime;
 
-		/// <summary>
-		/// total time since the Scene was loaded
-		/// </summary>
-		public static float TimeSinceSceneLoad;
+        /// <summary>
+        /// unscaled version of deltaTime. Not affected by timeScale
+        /// </summary>
+        public static float OriginalDeltaTime;
+
+        /// <summary>
+        /// total time since the Scene was loaded
+        /// </summary>
+        public static float TimeSinceSceneLoad;
 
 		/// <summary>
 		/// time scale of deltaTime/TargetTimeStep
@@ -85,7 +90,7 @@ namespace Nez
 		internal static void Prepare(GameTime gt)
 		{
 			TotalTime = (float)gt.TotalGameTime.TotalSeconds;
-			UnscaledDeltaTime = (float)gt.ElapsedGameTime.TotalSeconds;
+            OriginalDeltaTime = UnscaledDeltaTime = (float)gt.ElapsedGameTime.TotalSeconds;
 			lastTotalGameTime = TotalTime;
 			DeltaTime = UnscaledDeltaTime * TimeScale;
 			Alpha = 1;
@@ -107,10 +112,11 @@ namespace Nez
 					varUpdate();
 					break;
 				case TimeMode.LockedTimestep:
-					DeltaTime = _TargetTimeStep * TimeScale;
+                    DeltaTime = _TargetTimeStep * TimeScale;
 					ScaledTimeStep = TargetTimeStep * TimeScale;
 					accumulator += Math.Min(UnscaledDeltaTime, MaxDeltaTime);
-					FirstUpdateInFrame = true;
+                    UnscaledDeltaTime = _TargetTimeStep;
+                    FirstUpdateInFrame = true;
 
 					varSingle();
 
