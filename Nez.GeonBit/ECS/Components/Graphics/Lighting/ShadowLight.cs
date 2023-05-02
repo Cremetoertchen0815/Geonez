@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
+using Nez.GeonBit.Lights;
 
 namespace Nez.GeonBit;
 public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
@@ -96,7 +97,7 @@ public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
     public ShadowLight(int id, Point shadowMapResolution = default)
     {
         ShadowSourceID = id;
-        if (shadowMapResolution == default) return;
+        if (shadowMapResolution == default) shadowMapResolution = LightsManager.DefaultShadowMapResolution;
         _aspectRatio = (float)shadowMapResolution.X / shadowMapResolution.Y;
         ShadowMap = new RenderTarget2D(Core.GraphicsDevice, shadowMapResolution.X, shadowMapResolution.Y, false, SurfaceFormat.Single, DepthFormat.Depth24);
     }

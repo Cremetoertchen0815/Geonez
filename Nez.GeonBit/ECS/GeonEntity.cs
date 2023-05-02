@@ -34,6 +34,8 @@ namespace Nez.GeonBit
             component.Node.Entity = this;
             Components.Add(component);
             component.Initialize();
+
+            _additionalInspectables.Add(component.Node);
             
             return component;
         }

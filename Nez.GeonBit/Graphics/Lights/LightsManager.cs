@@ -35,6 +35,9 @@ namespace Nez.GeonBit.Lights
 
         public static PCFQuality ShadowQuality = PCFQuality.MidPCF;
 
+        public static Point DefaultShadowMapResolution = new Point(1024);
+
+
         // ambient light value
         private Color _ambient = Color.Gray;
 
