@@ -89,7 +89,7 @@ namespace Nez.GeonBit.Materials
         private float _shadowBias = 0f;
 
         /// <summary>
-        /// Shadow depth bias to prevent shadow acne.
+        /// Are shadows enables
         /// </summary>
         public virtual bool ShadowsEnabled
         {
@@ -425,7 +425,7 @@ namespace Nez.GeonBit.Materials
                 if (shadowedLight.ParamsVersion != _lastShadowVersion) _paramShadowMap.SetValue(shadowedLight.ShadowMap);
                 _lastShadowVersion = shadowedLight.ParamsVersion;
             }
-            if (shadowedLight is not null && ShadowsEnabled) _shaderConfig |= FXModes.ShadowMap; else _shaderConfig &= ~FXModes.ShadowMap;
+            if (shadowedLight is not null && ShadowsEnabled && LightsManager.ShadowsEnabed) _shaderConfig |= FXModes.ShadowMap; else _shaderConfig &= ~FXModes.ShadowMap;
 
             // update active lights count
             if (_activeLightsCount != lightsCount)

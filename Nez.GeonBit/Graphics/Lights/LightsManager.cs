@@ -33,11 +33,6 @@ namespace Nez.GeonBit.Lights
     {
 
 
-        public static PCFQuality ShadowQuality = PCFQuality.MidPCF;
-
-        public static Point DefaultShadowMapResolution = new Point(1024);
-
-
         // ambient light value
         private Color _ambient = Color.Gray;
 
@@ -89,7 +84,11 @@ namespace Nez.GeonBit.Lights
             set { _regionSize = value; UpdateLightsRegionSize(); }
         }
 
-        public bool ShadowsEnabed { get; set; } = true;
+        public static bool ShadowsEnabed = true;
+
+        public static PCFQuality ShadowQuality = PCFQuality.MidPCF;
+
+        public static Point DefaultShadowMapResolution = new Point(1024);
 
         internal readonly static Effect ShadowEffect = new DepthPlaneEffect(Core.GraphicsDevice);
 

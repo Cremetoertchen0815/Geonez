@@ -22,6 +22,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
+using Nez.GeonBit.Lights;
 using System.Collections.Generic;
 
 namespace Nez.GeonBit
@@ -537,7 +538,7 @@ namespace Nez.GeonBit
             _renderingQueues[(int)entity.RenderingQueue].Entities.Add(new EntityInQueue(entity, world));
 
             // Skip rendering shadows if disabled or not implemented
-            if (!GeonDefaultRenderer.ActiveLightsManager.ShadowsEnabed || entity is not IShadowCaster se || !se.CastsShadow) return;
+            if (!LightsManager.ShadowsEnabed || entity is not IShadowCaster se || !se.CastsShadow) return;
             _shadowEntities.Add(new ShadowElement(se, world));
         }
     }
