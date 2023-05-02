@@ -115,12 +115,19 @@ namespace Nez.GeonBit.UI.Entities
 				else
 				{
 
-					var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
-					var nuSize = new Vector2(data.FrameWidth, data.FrameHeight) * _destRect.Size.ToVector2();
-					var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
-												nuSize.ToPoint());
-					UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, FillColor, 1, srcRect);
-					spriteBatch.DrawRect(_destRect, FillColor with { A = 255 } * MilkFactor);
+                    if (UserInterface.StainedCanvasEnabled)
+                    {
+                        var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
+                        var nuSize = new Vector2(data.FrameWidth, data.FrameHeight) * _destRect.Size.ToVector2();
+                        var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
+                                                    nuSize.ToPoint());
+                        UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, FillColor, 1, srcRect);
+                        spriteBatch.DrawRect(_destRect, FillColor with { A = 255 } * MilkFactor);
+                    } else
+                    {
+                        spriteBatch.DrawRect(_destRect, FillColor with { A = 255 });
+                    }
+
 				}
 			}
 
