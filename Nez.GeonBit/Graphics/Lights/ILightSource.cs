@@ -32,12 +32,12 @@ namespace Nez.GeonBit.Graphics.Lights
         /// <summary>
         /// Light color and strength (A field = light strength).
         /// </summary>
-        public Color Diffuse { get; }
+        public Vector3 Diffuse { get; }
 
         /// <summary>
         /// Specular factor.
         /// </summary>
-        public Color Specular { get; }
+        public Vector3 Specular { get; }
 
         /// <summary>
         /// Remove self from parent lights manager.

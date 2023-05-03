@@ -12,7 +12,7 @@ namespace Nez.GeonBit
             set => _direction = value ?? Vector3.Zero;
         }
         //Lighting Properties
-        public Color Diffuse
+        public Vector3 Diffuse
         {
             get => _diffuse;
             set
@@ -21,9 +21,9 @@ namespace Nez.GeonBit
                 ParamsVersion++;
             }
         }
-        private Color _diffuse = Color.White;
+        private Vector3 _diffuse = Vector3.One;
 
-        public Color Specular
+        public Vector3 Specular
         {
             get => _specular;
             set
@@ -32,7 +32,7 @@ namespace Nez.GeonBit
                 ParamsVersion++;
             }
         }
-        private Color _specular = Color.White;
+        private Vector3 _specular = Vector3.One;
         public uint ParamsVersion { get; set; }
 
         public Vector3 Position => Vector3.Zero;

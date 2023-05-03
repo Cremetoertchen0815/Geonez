@@ -69,7 +69,7 @@ public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
     }
 
     //Lighting Properties
-    public Color Diffuse
+    public Vector3 Diffuse
     {
         get => _diffuse;
         set
@@ -78,9 +78,9 @@ public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
             ParamsVersion++;
         }
     }
-    private Color _diffuse = Color.White;
+    private Vector3 _diffuse = Vector3.One;
 
-    public Color Specular
+    public Vector3 Specular
     {
         get => _specular;
         set
@@ -89,10 +89,12 @@ public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
             ParamsVersion++;
         }
     }
-    private Color _specular = Color.White;
+    private Vector3 _specular = Vector3.One;
     public uint ParamsVersion { get; set; }
 
-    public Vector3 Position => Entity?.Node?.Position ?? Vector3.Zero;
+    public Vector3 Position => Node?.WorldPosition ?? Vector3.Zero;
+
+    public abstract Texture2D ShadowStencil { get; set;}
 
     public ShadowLight(int id, Point shadowMapResolution = default)
     {
@@ -131,7 +133,7 @@ public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
         worldTransformations.Decompose(out var scale, out var rotation, out var position);
 
         // set world position. this will also recalc bounding sphere and update lights manager, if needed.
-        Entity.Node.Position = position;
+        Node.Position = position;
     }
 
     ///// <summary>

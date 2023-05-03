@@ -9,5 +9,6 @@ namespace Nez.GeonBit.Graphics.Lights
         Matrix ShadowViewMatrix { get; }
         Matrix ShadowProjectionMatrix { get; }
         RenderTarget2D ShadowMap { get; }
+        Texture2D ShadowStencil { get; }
     }
 }

@@ -312,7 +312,7 @@ namespace Nez
 
 			//Release mouse
 			Input.EndlessMouseMode = false;
-			ClearTelegrams();
+			Telegram.ClearTelegrams();
 
 
 			SetupResolutionPolicy();
@@ -325,8 +325,6 @@ namespace Nez
 				Initialize();
 			}
 		}
-
-		protected void ClearTelegrams() => TelegramService.DeregisterAll();
 
 		protected void SetupResolutionPolicy()
 		{

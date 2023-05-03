@@ -57,7 +57,7 @@ namespace Nez.GeonBit
             base.Camera = cameraEntity.AddComponent<Camera>();
             Camera = cameraEntity.AddComponent(new Camera3D());
             GeonDefaultRenderer.ActiveCamera = Camera;
-            ClearTelegrams();
+            Telegram.ClearTelegrams();
 
             Initialize();
         }

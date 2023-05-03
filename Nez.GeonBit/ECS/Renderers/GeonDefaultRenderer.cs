@@ -278,6 +278,12 @@ namespace Nez.GeonBit
                 matrices.View = item.ShadowViewMatrix;
                 matrices.Projection = item.ShadowProjectionMatrix;
                 RenderingQueues.RenderShadows(item.ShadowSourceID);
+                if (item.ShadowStencil is not null) 
+                {
+                    Nez.Graphics.Instance.Batcher.Begin();
+                    Nez.Graphics.Instance.Batcher.Draw(item.ShadowStencil, new Rectangle(0, 0, item.ShadowMap.Width, item.ShadowMap.Height), Color.Black);
+                    Nez.Graphics.Instance.Batcher.End();
+                }
                 //item.ShadowMap.SaveAsPng(System.IO.File.OpenWrite("lolz.png"), 2048, 2048);
             }
 

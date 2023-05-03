@@ -15,9 +15,11 @@ namespace Nez
 			this.Receiver = Receiver;
 			this.Head = Head;
 			this.Body = Body;
-		}
+        }
 
-		public static Telegram Empty => new Telegram();
+        public static void ClearTelegrams() => TelegramService.DeregisterAll();
+
+        public static Telegram Empty => new Telegram();
 
 		public string Serialize(Telegram t) => JsonConvert.SerializeObject(t);
 		public static Telegram? Deserialize(string s) => JsonConvert.DeserializeObject<Telegram?>(s);

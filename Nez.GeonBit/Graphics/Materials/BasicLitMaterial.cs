@@ -71,6 +71,7 @@ namespace Nez.GeonBit.Materials
         protected EffectParameter _paramShadowViewProjection;
         protected EffectParameter _paramDepthBias;
         protected EffectParameter _paramShadowMap;
+        protected EffectParameter _paramStencilShadow;
 
         private int _activeLightsCount = 0;
         private FXModes _shaderConfig = FXModes.UVCoords;
@@ -261,6 +262,7 @@ namespace Nez.GeonBit.Materials
             _paramShadowViewProjection = _effectParams["ShadowViewProjection"];
             _paramDepthBias = _effectParams["DepthBias"];
             _paramShadowMap = _effectParams["ShadowMap"];
+            _paramStencilShadow = _effectParams["IsStencilShadow"];
         }
 
         /// <summary>
@@ -410,9 +412,9 @@ namespace Nez.GeonBit.Materials
                 if (_lastLights[i] == light && _lastLightVersions[i] == light.ParamsVersion) continue;
 
                 // set lights data
-                _lightsDiffuse[i].SetValue(light.Diffuse.ToVector3());
+                _lightsDiffuse[i].SetValue(light.Diffuse);
                 _lightsDirections[i].SetValue(light.IsDirectionalLight ? Vector3.Normalize(light.Direction.Value) : Vector3.Zero); //Non-directional lights currently not supported by shader
-                _lightsSpecular[i].SetValue(light.Specular.ToVector3());
+                _lightsSpecular[i].SetValue(light.Specular);
 
                 // store light in cache so we won't copy it next time if it haven't changed
                 _lastLights[i] = lights[i];
@@ -421,6 +423,7 @@ namespace Nez.GeonBit.Materials
 
             if (shadowedLight is not null)
             {
+                _paramStencilShadow.SetValue(shadowedLight.ShadowStencil is not null);
                 _paramShadowViewProjection.SetValue(shadowedLight.ShadowViewMatrix * shadowedLight.ShadowProjectionMatrix);
                 if (shadowedLight.ParamsVersion != _lastShadowVersion) _paramShadowMap.SetValue(shadowedLight.ShadowMap);
                 _lastShadowVersion = shadowedLight.ParamsVersion;
