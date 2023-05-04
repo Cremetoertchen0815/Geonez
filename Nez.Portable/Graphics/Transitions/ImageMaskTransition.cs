@@ -102,7 +102,7 @@ namespace Nez
 		public ImageMaskTransition(Texture2D maskTexture) : this(null, maskTexture)
 		{
 		}
-
+		
 
 		public override IEnumerator OnBeginTransition()
 		{
@@ -111,11 +111,12 @@ namespace Nez
 			float elapsed = 0f;
 			while (elapsed < Duration)
 			{
-				elapsed += Time.DeltaTime;
+				elapsed += Time.UnscaledDeltaTime;
 				_renderScale = Lerps.Ease(ScaleEaseType, MaxScale, MinScale, elapsed, Duration);
 				_renderRotation = Lerps.Ease(RotationEaseType, MinRotation, MaxRotation, elapsed, Duration);
+                SetVolume(elapsed / Duration * 0.5f);
 
-				yield return null;
+                yield return null;
 			}
 
 			// load up the new Scene
@@ -135,8 +136,9 @@ namespace Nez
 					Duration);
 				_renderRotation = Lerps.Ease(EaseHelper.OppositeEaseType(RotationEaseType), MaxRotation, MinRotation,
 					elapsed, Duration);
+                SetVolume(0.5f + elapsed / Duration * 0.5f);
 
-				yield return null;
+                yield return null;
 			}
 
 			TransitionComplete();

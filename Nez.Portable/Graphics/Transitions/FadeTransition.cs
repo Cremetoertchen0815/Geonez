@@ -58,8 +58,9 @@ namespace Nez
 			{
 				elapsed += Time.UnscaledDeltaTime;
 				_color = Lerps.Ease(FadeEaseType, ref _toColor, ref _fromColor, elapsed, FadeOutDuration);
+                SetVolume(elapsed / (FadeOutDuration + FadeInDuration));
 
-				yield return null;
+                yield return null;
 			}
 
 			// load up the new Scene
@@ -76,8 +77,9 @@ namespace Nez
 			{
 				elapsed += Time.UnscaledDeltaTime;
 				_color = Lerps.Ease(EaseHelper.OppositeEaseType(FadeEaseType), ref _fromColor, ref _toColor, elapsed, FadeInDuration);
+                SetVolume((elapsed + FadeOutDuration) / (FadeOutDuration + FadeInDuration));
 
-				yield return null;
+                yield return null;
 			}
 
 			TransitionComplete();

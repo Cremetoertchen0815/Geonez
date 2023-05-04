@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using Nez.Tweens;
 using System;
 using System.Collections;
@@ -36,10 +37,14 @@ namespace Nez
 		/// </summary>
 		public bool LoadSceneOnBackgroundThread;
 
-		/// <summary>
-		/// function that should return the newly loaded scene
-		/// </summary>
-		protected Func<Scene> sceneLoadAction;
+        public bool FadeMusic = false;
+
+		protected float _originalVolume;
+
+        /// <summary>
+        /// function that should return the newly loaded scene
+        /// </summary>
+        protected Func<Scene> sceneLoadAction;
 
 		/// <summary>
 		/// used internally to decide if the previous Scene should render into previousSceneRender. Does double duty to ensure that the
@@ -92,9 +97,10 @@ namespace Nez
 			this.sceneLoadAction = sceneLoadAction;
 			WantsPreviousSceneRender = wantsPreviousSceneRender;
 			_loadsNewScene = sceneLoadAction != null;
+            _originalVolume = MediaPlayer.Volume;
 
-			// create a RenderTarget if we need to for later
-			if (wantsPreviousSceneRender)
+            // create a RenderTarget if we need to for later
+            if (wantsPreviousSceneRender)
 			{
 				PreviousSceneRender = new RenderTarget2D(Core.GraphicsDevice, Screen.BackbufferWidth, Screen.BackbufferHeight, false,
 					Screen.BackBufferFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
@@ -190,6 +196,11 @@ namespace Nez
 				OnTransitionCompleted();
 		}
 
+		protected void SetVolume(float progress)
+		{
+            if (FadeMusic) MediaPlayer.Volume = Mathf.Clamp01(MathF.Pow(1 - 2f * progress, 2)) * _originalVolume;
+        }
+
 		/// <summary>
 		/// the most common type of transition seems to be one that ticks progress from 0 - 1. This method takes care of that for you
 		/// if your transition needs to have a _progress property ticked after the scene loads.
@@ -207,11 +218,12 @@ namespace Nez
 			float elapsed = 0f;
 			while (elapsed < duration)
 			{
-				elapsed += Time.DeltaTime;
+				elapsed += Time.UnscaledDeltaTime;
 				float step = Lerps.Ease(easeType, start, end, elapsed, duration);
 				progressParam.SetValue(step);
+                SetVolume(step * 0.5f);
 
-				yield return null;
+                yield return null;
 			}
 		}
 	}

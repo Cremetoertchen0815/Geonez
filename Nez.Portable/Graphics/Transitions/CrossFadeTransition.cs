@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using Nez.Tweens;
 using System;
 using System.Collections;
@@ -46,8 +47,9 @@ namespace Nez
 			{
 				elapsed += Time.UnscaledDeltaTime;
 				_color = Lerps.Ease(FadeEaseType, ref _fromColor, ref _toColor, elapsed, FadeDuration);
+				SetVolume(elapsed / FadeDuration);
 
-				yield return null;
+                yield return null;
 			}
 
 			TransitionComplete();
