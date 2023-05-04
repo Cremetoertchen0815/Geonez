@@ -39,7 +39,7 @@ namespace Nez
 
         public bool FadeMusic = false;
 
-		protected float _originalVolume;
+		public float OriginalVolume;
 
         /// <summary>
         /// function that should return the newly loaded scene
@@ -97,7 +97,7 @@ namespace Nez
 			this.sceneLoadAction = sceneLoadAction;
 			WantsPreviousSceneRender = wantsPreviousSceneRender;
 			_loadsNewScene = sceneLoadAction != null;
-            _originalVolume = MediaPlayer.Volume;
+            OriginalVolume = MediaPlayer.Volume;
 
             // create a RenderTarget if we need to for later
             if (wantsPreviousSceneRender)
@@ -198,7 +198,7 @@ namespace Nez
 
 		protected void SetVolume(float progress)
 		{
-            if (FadeMusic) MediaPlayer.Volume = Mathf.Clamp01(MathF.Pow(1 - 2f * progress, 2)) * _originalVolume;
+            if (FadeMusic) MediaPlayer.Volume = Mathf.Clamp01(MathF.Pow(1 - 2f * progress, 2)) * OriginalVolume;
         }
 
 		/// <summary>
