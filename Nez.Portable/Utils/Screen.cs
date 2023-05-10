@@ -113,6 +113,7 @@ namespace Nez
 			set => _graphicsManager.PreferMultiSampling = value;
 		}
 
+		//MSAA currently not supported by MonoGame Desktop GL
 		public static int AASamples { get; set; } = 0;
 
 		public static void ApplyChanges() => _graphicsManager.ApplyChanges();

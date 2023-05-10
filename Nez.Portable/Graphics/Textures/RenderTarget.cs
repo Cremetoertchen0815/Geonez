@@ -15,8 +15,8 @@ namespace Nez.Textures
 
 
 			public TrackedRenderTarget2D(int width, int height, SurfaceFormat preferredFormat,
-										 DepthFormat preferredDepthFormat) : base(Core.GraphicsDevice, width, height,
-				false, preferredFormat, preferredDepthFormat, Screen.AASamples, RenderTargetUsage.PreserveContents)
+										 DepthFormat preferredDepthFormat, bool supportAA) : base(Core.GraphicsDevice, width, height,
+				false, preferredFormat, preferredDepthFormat, supportAA ? Screen.AASamples : 0, RenderTargetUsage.PlatformContents)
 			{
 
 			}
@@ -52,7 +52,7 @@ namespace Nez.Textures
 		/// <param name="width">Width.</param>
 		/// <param name="height">Height.</param>
 		/// <param name="depthFormat">Depth format.</param>
-		public static RenderTarget2D GetTemporary(int width, int height, DepthFormat depthFormat)
+		public static RenderTarget2D GetTemporary(int width, int height, DepthFormat depthFormat, bool supportAA = false)
 		{
 			RenderTarget2D tempRenderTarget = null;
 			int tempRenderTargetIndex = -1;
@@ -75,7 +75,7 @@ namespace Nez.Textures
 			}
 
 			// if we get here, we need to create a fresh RenderTarget2D
-			return new TrackedRenderTarget2D(width, height, SurfaceFormat.Color, depthFormat);
+			return new TrackedRenderTarget2D(width, height, SurfaceFormat.Color, depthFormat, supportAA);
 		}
 
 
@@ -101,14 +101,14 @@ namespace Nez.Textures
 		/// <summary>
 		/// helper for creating a full screen RenderTarget2D
 		/// </summary>
-		public static RenderTarget2D Create() => Create(Screen.BackbufferWidth, Screen.BackbufferHeight, Screen.BackBufferFormat, Screen.PreferredDepthStencilFormat);
+		public static RenderTarget2D Create(bool supportAA = false) => Create(Screen.BackbufferWidth, Screen.BackbufferHeight, Screen.BackBufferFormat, Screen.PreferredDepthStencilFormat, supportAA);
 
 
 		/// <summary>
 		/// helper for creating a full screen RenderTarget2D with a specific DepthFormat
 		/// </summary>
 		/// <param name="preferredDepthFormat">Preferred depth format.</param>
-		public static RenderTarget2D Create(DepthFormat preferredDepthFormat) => Create(Screen.BackbufferWidth, Screen.BackbufferHeight, Screen.BackBufferFormat, preferredDepthFormat);
+		public static RenderTarget2D Create(DepthFormat preferredDepthFormat, bool supportAA = false) => Create(Screen.BackbufferWidth, Screen.BackbufferHeight, Screen.BackBufferFormat, preferredDepthFormat, supportAA);
 
 
 		/// <summary>
@@ -116,7 +116,7 @@ namespace Nez.Textures
 		/// </summary>
 		/// <param name="width">Width.</param>
 		/// <param name="height">Height.</param>
-		public static RenderTarget2D Create(int width, int height) => Create(width, height, Screen.BackBufferFormat, Screen.PreferredDepthStencilFormat);
+		public static RenderTarget2D Create(int width, int height, bool supportAA = false) => Create(width, height, Screen.BackBufferFormat, Screen.PreferredDepthStencilFormat, supportAA);
 
 
 		/// <summary>
@@ -125,7 +125,7 @@ namespace Nez.Textures
 		/// <param name="width">Width.</param>
 		/// <param name="height">Height.</param>
 		/// <param name="preferredDepthFormat">Preferred depth format.</param>
-		public static RenderTarget2D Create(int width, int height, DepthFormat preferredDepthFormat) => Create(width, height, Screen.BackBufferFormat, preferredDepthFormat);
+		public static RenderTarget2D Create(int width, int height, DepthFormat preferredDepthFormat, bool supportAA = false) => Create(width, height, Screen.BackBufferFormat, preferredDepthFormat, supportAA);
 
 
 		/// <summary>
@@ -136,8 +136,8 @@ namespace Nez.Textures
 		/// <param name="preferredFormat">Preferred format.</param>
 		/// <param name="preferredDepthFormat">Preferred depth format.</param>
 		public static RenderTarget2D Create(int width, int height, SurfaceFormat preferredFormat,
-											DepthFormat preferredDepthFormat) => new RenderTarget2D(Core.GraphicsDevice, width, height, false, preferredFormat, preferredDepthFormat,
-				Screen.AASamples, RenderTargetUsage.DiscardContents);
+											DepthFormat preferredDepthFormat, bool supportAA = false) => new RenderTarget2D(Core.GraphicsDevice, width, height, false, preferredFormat, preferredDepthFormat,
+				Screen.AASamples, RenderTargetUsage.DiscardContents, supportAA);
 
 		#endregion
 
