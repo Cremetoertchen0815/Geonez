@@ -497,7 +497,9 @@ namespace Nez.GeonBit.UI.Entities
 			}
 
 			// get main paragraph actual size
-			var textSize = TextParagraph.GetActualDestRect();
+			TextParagraph.Text = newVal;
+			TextParagraph.CalcTextActualRectWithWrap();
+            var textSize = TextParagraph.GetActualDestRect();
 
 			// if set to limit by size make sure we don't exceed it
 			if (LimitBySize)
