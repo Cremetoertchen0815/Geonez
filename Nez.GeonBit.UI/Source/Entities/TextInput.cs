@@ -133,7 +133,7 @@ namespace Nez.GeonBit.UI.Entities
 				TextParagraph.UpdateStyle(DefaultParagraphStyle);
 				TextParagraph._hiddenInternalEntity = true;
 				TextParagraph.Identifier = "_TextParagraph";
-				TextParagraph.TextModifier = x => _maxLen < 0 || x.Length < _maxLen ? x : "..." + x.Substring(x.Length - _maxLen + 3, _maxLen - 3);
+				TextParagraph.TextModifier = x => MaxCharsPerLine < 0 || x.Length < MaxCharsPerLine ? x : "..." + x.Substring(x.Length - MaxCharsPerLine + 3, MaxCharsPerLine - 3);
 				(TextParagraph as MulticolorParagraph).EnableColorInstructions = false;
 				AddChild(TextParagraph, true);
 
@@ -374,7 +374,7 @@ namespace Nez.GeonBit.UI.Entities
 				// calc caret position
 				var charSize = TextParagraph.GetCharacterActualSize();
 				int x = (int)(relativeOffset.X / charSize.X);
-				_caret = x + (_maxLen < 0 || _value.Length < _maxLen ? 0 : (_value.Length - _maxLen + 3));
+				_caret = x + (MaxCharsPerLine < 0 || _value.Length < MaxCharsPerLine ? 0 : (_value.Length - MaxCharsPerLine + 3));
 
 				// if multiline, take line into the formula
 				if (_multiLine)
@@ -471,7 +471,7 @@ namespace Nez.GeonBit.UI.Entities
 			PlaceholderParagraph.Visible = showPlaceholder;
 		}
 
-		private int _maxLen = -1;
+		public int MaxCharsPerLine = -1;
 
 		/// <summary>
 		/// Validate current text input after change (usually addition of text).
@@ -521,7 +521,7 @@ namespace Nez.GeonBit.UI.Entities
 				}
 			}
 
-			if (_maxLen == -1 && textSize.Width >= _destRectInternal.Width) _maxLen = oldVal.Length;
+			if (MaxCharsPerLine == -1 && textSize.Width >= _destRectInternal.Width) MaxCharsPerLine = oldVal.Length;
 
 			// if got here we iterate over additional validators
 			foreach (var validator in Validators)
