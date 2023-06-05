@@ -361,6 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/Nez.GeonBit/GC analysis before optimization.diagsession
-/Nez.GeonBit/GC analysis after optimization.diagsession
-/Nez.GeonBit/GC analysis after foreach.diagsession
+*.diagsession
