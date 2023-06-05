@@ -263,7 +263,7 @@ namespace Nez
 					return;
 				}
 
-				Time.Update(FixedUpdate, VariableUpdate, Input.Update);
+				Time.Update();
 
 #if FNA
 			// MonoGame only updates old-school XNA Components in Update which we dont care about. FNA's core FrameworkDispatcher needs
@@ -281,7 +281,7 @@ namespace Nez
 			}
 		}
 
-		protected void FixedUpdate()
+		internal void FixedUpdate()
 		{
 
 #if TRACE
@@ -334,7 +334,7 @@ namespace Nez
 
 		}
 
-		protected void VariableUpdate()
+        internal void VariableUpdate()
 		{
 			EndDebugUpdate();
 			if (SceneTransition == null || (SceneTransition != null && (!SceneTransition._loadsNewScene || SceneTransition._isNewSceneLoaded)))

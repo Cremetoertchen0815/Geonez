@@ -166,73 +166,73 @@ namespace Nez.GeonBit.UI
 	public static class Resources
 	{
 		/// <summary>Just a plain white texture, used internally.</summary>
-		public static Texture2D WhiteTexture => _content.Load<Texture2D>(_root + "textures/white_texture");
+		public static Texture2D WhiteTexture;
 
 		/// <summary>Cursor textures.</summary>
-		public static TexturesGetter<CursorType> Cursors = new TexturesGetter<CursorType>("textures/cursor_");
+		public static TexturesGetter<CursorType> Cursors;
 
 		/// <summary>Metadata about cursor textures.</summary>
 		public static CursorTextureData[] CursorsData;
 
 		/// <summary>All panel skin textures.</summary>
-		public static TexturesGetter<PanelSkin> PanelTextures = new TexturesGetter<PanelSkin>("textures/panel_");
+		public static TexturesGetter<PanelSkin> PanelTextures;
 
 		/// <summary>Metadata about panel textures.</summary>
 		public static TextureData[] PanelData;
 
 		/// <summary>Button textures (accessed as [skin, state]).</summary>
-		public static TexturesGetter<ButtonSkin> ButtonTextures = new TexturesGetter<ButtonSkin>("textures/button_");
+		public static TexturesGetter<ButtonSkin> ButtonTextures;
 
 		/// <summary>Metadata about button textures.</summary>
 		public static TextureData[] ButtonData { get; set; }
 
 		/// <summary>CheckBox textures.</summary>
-		public static TexturesGetter<EntityState> CheckBoxTextures = new TexturesGetter<EntityState>("textures/checkbox");
+		public static TexturesGetter<EntityState> CheckBoxTextures;
 
 		/// <summary>Radio button textures.</summary>
-		public static TexturesGetter<EntityState> RadioTextures = new TexturesGetter<EntityState>("textures/radio");
+		public static TexturesGetter<EntityState> RadioTextures;
 
 		/// <summary>ProgressBar texture.</summary>
-		public static Texture2D ProgressBarTexture => _content.Load<Texture2D>(_root + "textures/progressbar");
+		public static Texture2D ProgressBarTexture;
 
 		/// <summary>Metadata about progressbar texture.</summary>
 		public static TextureData ProgressBarData;
 
 		/// <summary>ProgressBar fill texture.</summary>
-		public static Texture2D ProgressBarFillTexture => _content.Load<Texture2D>(_root + "textures/progressbar_fill");
+		public static Texture2D ProgressBarFillTexture;
 
 		/// <summary>HorizontalLine texture.</summary>
-		public static Texture2D HorizontalLineTexture => _content.Load<Texture2D>(_root + "textures/horizontal_line");
+		public static Texture2D HorizontalLineTexture;
 
 		/// <summary>Sliders base textures.</summary>
-		public static TexturesGetter<SliderSkin> SliderTextures = new TexturesGetter<SliderSkin>("textures/slider_");
+		public static TexturesGetter<SliderSkin> SliderTextures;
 
 		/// <summary>Sliders mark textures (the sliding piece that shows current value).</summary>
-		public static TexturesGetter<SliderSkin> SliderMarkTextures = new TexturesGetter<SliderSkin>("textures/slider_", "_mark");
+		public static TexturesGetter<SliderSkin> SliderMarkTextures;
 
 		/// <summary>Metadata about slider textures.</summary>
 		public static TextureData[] SliderData;
 
 		/// <summary>All icon textures.</summary>
-		public static TexturesGetter<IconType> IconTextures = new TexturesGetter<IconType>("textures/icons/");
+		public static TexturesGetter<IconType> IconTextures;
 
 		/// <summary>Icons inventory background texture.</summary>
-		public static Texture2D IconBackgroundTexture => _content.Load<Texture2D>(_root + "textures/icons/background");
+		public static Texture2D IconBackgroundTexture;
 
 		/// <summary>Vertical scrollbar base texture.</summary>
-		public static Texture2D VerticalScrollbarTexture => _content.Load<Texture2D>(_root + "textures/scrollbar");
+		public static Texture2D VerticalScrollbarTexture;
 
 		/// <summary>Vertical scrollbar mark texture.</summary>
-		public static Texture2D VerticalScrollbarMarkTexture => _content.Load<Texture2D>(_root + "textures/scrollbar_mark");
+		public static Texture2D VerticalScrollbarMarkTexture;
 
 		/// <summary>Metadata about scrollbar texture.</summary>
 		public static TextureData VerticalScrollbarData { get; set; }
 
 		/// <summary>Arrow-down texture (used in dropdown).</summary>
-		public static Texture2D ArrowDown => _content.Load<Texture2D>(_root + "textures/arrow_down");
+		public static Texture2D ArrowDown;
 
 		/// <summary>Arrow-up texture (used in dropdown).</summary>
-		public static Texture2D ArrowUp => _content.Load<Texture2D>(_root + "textures/arrow_up");
+		public static Texture2D ArrowUp;
 
 		/// <summary>Default font types.</summary>
 		public static SpriteFont[] Fonts;
@@ -256,12 +256,30 @@ namespace Nez.GeonBit.UI
 		/// <param name="theme">Which theme to load resources from.</param>
 		public static void LoadContent(ContentManager content, string theme = "default")
 		{
-			// set resources root path and store content manager
-			_root = "engine/ui/" + theme + "/";
-			_content = content;
+            // set resources root path and store content manager
+            _content = content;
+            _root = "engine/ui/" + theme + "/";
 
-			// load cursors metadata
-			CursorsData = new CursorTextureData[Enum.GetValues(typeof(CursorType)).Length];
+			WhiteTexture = _content.Load<Texture2D>(_root + "textures/white_texture");
+			Cursors = new TexturesGetter<CursorType>("textures/cursor_");
+			PanelTextures = new TexturesGetter<PanelSkin>("textures/panel_");
+			ButtonTextures = new TexturesGetter<ButtonSkin>("textures/button_");
+			CheckBoxTextures = new TexturesGetter<EntityState>("textures/checkbox");
+            RadioTextures = new TexturesGetter<EntityState>("textures/radio");
+            ProgressBarTexture = _content.Load<Texture2D>(_root + "textures/progressbar");
+            ProgressBarFillTexture = _content.Load<Texture2D>(_root + "textures/progressbar_fill");
+            HorizontalLineTexture = _content.Load<Texture2D>(_root + "textures/horizontal_line");
+            SliderTextures = new TexturesGetter<SliderSkin>("textures/slider_");
+            SliderMarkTextures = new TexturesGetter<SliderSkin>("textures/slider_", "_mark");
+            IconTextures = new TexturesGetter<IconType>("textures/icons/");
+            //IconBackgroundTexture = _content.Load<Texture2D>(_root + "textures/icons/background");
+            VerticalScrollbarTexture = _content.Load<Texture2D>(_root + "textures/scrollbar");
+            VerticalScrollbarMarkTexture = _content.Load<Texture2D>(_root + "textures/scrollbar_mark");
+            ArrowDown = _content.Load<Texture2D>(_root + "textures/arrow_down");
+            ArrowUp = _content.Load<Texture2D>(_root + "textures/arrow_up");
+
+            // load cursors metadata
+            CursorsData = new CursorTextureData[Enum.GetValues(typeof(CursorType)).Length];
 			foreach (CursorType cursor in Enum.GetValues(typeof(CursorType)))
 			{
 				string cursorName = cursor.ToString().ToLower();

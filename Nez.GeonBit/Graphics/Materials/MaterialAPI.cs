@@ -22,6 +22,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
+using System.Buffers;
 
 namespace Nez.GeonBit.Materials
 {
@@ -491,6 +492,7 @@ namespace Nez.GeonBit.Materials
                 var lights = lightsManager.GetLights(this, ShadowID, ref boundingSphere, MaxLights);
                 AmbientLight = lightsManager.AmbientLight;
                 ApplyLights(lights, ref worldMatrix, ref boundingSphere);
+                ArrayPool<ILightSource>.Shared.Return(lights, true);
             }
 
             // set effect tag to point on self, and call the per-effect specific apply

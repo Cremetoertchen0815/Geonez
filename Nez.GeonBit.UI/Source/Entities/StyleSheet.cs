@@ -35,7 +35,7 @@ namespace Nez.GeonBit.UI.Entities
 		};
 
 		// internal mechanism to reduce memory usage.
-		private static Dictionary<KeyValuePair<string, EntityState>, string> _identifiersCache = new Dictionary<KeyValuePair<string, EntityState>, string>();
+		private static Dictionary<(string, EntityState), string> _identifiersCache = new Dictionary<(string, EntityState), string>();
 
 		/// <summary>
 		/// Get the full string that represent a style property identifier.
@@ -43,7 +43,7 @@ namespace Nez.GeonBit.UI.Entities
 		private string GetPropertyFullId(string property, EntityState state)
 		{
 			// get identifier from cache
-			var pair = new KeyValuePair<string, EntityState>(property, state);
+			var pair = (property, state);
 			if (_identifiersCache.ContainsKey(pair))
 				return _identifiersCache[pair];
 

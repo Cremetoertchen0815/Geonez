@@ -10,6 +10,7 @@
 #endregion
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 namespace Nez.GeonBit.UI
 {
@@ -69,9 +70,10 @@ namespace Nez.GeonBit.UI
 		private GamePadState _newGamePadState;
 		private GamePadState _oldGamePadState;
 		private Vector2 _newMousePos;
+		private Keys[] _allKeyboardKeys = System.Enum.GetValues(typeof(Keys)).Cast<Keys>().ToArray();
 
-		// store current frame gametime
-		private GameTime _currTime;
+        // store current frame gametime
+        private GameTime _currTime;
 
 		/// <summary>An artificial "lag" after a key is pressed when typing text input, to prevent mistake duplications.</summary>
 		public float KeysTypeCooldown = 0.6f;
@@ -216,7 +218,7 @@ namespace Nez.GeonBit.UI
 			_currCharacterInput = '\0';
 
 			// send key-down events
-			foreach (Keys key in System.Enum.GetValues(typeof(Keys)))
+			foreach (Keys key in _allKeyboardKeys)
 			{
 				if (_newKeyboardState.IsKeyDown(key) && !_oldKeyboardState.IsKeyDown(key))
 				{

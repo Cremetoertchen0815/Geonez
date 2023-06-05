@@ -163,7 +163,7 @@ namespace Nez.GeonBit
         /// </summary>
         public static Materials.MaterialAPI[] GetMaterials(this ModelMesh mesh)
         {
-            var ret = new ResizableArray<Materials.MaterialAPI>();
+            var ret = new ResizableRentedArray<Materials.MaterialAPI>();
             foreach (var effect in mesh.Effects)
             {
                 ret.Add(effect.Tag as Materials.MaterialAPI);

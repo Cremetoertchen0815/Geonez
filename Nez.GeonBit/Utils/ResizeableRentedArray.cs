@@ -18,15 +18,16 @@
 //-----------------------------------------------------------------------------
 #endregion
 using System;
-
+using System.Buffers;
 
 namespace Nez.GeonBit
 {
     /// <summary>
     /// An array you can add elements to, but still access the internal array object.
+    /// Internal array needs to be returned manually or via <see cref="Return"/>
     /// </summary>
     /// <typeparam name="T">Type to store in array.</typeparam>
-    internal class ResizableArray<T>
+    internal class ResizableRentedArray<T>
     {
         /// <summary>
         /// Items array.
@@ -42,7 +43,7 @@ namespace Nez.GeonBit
         /// Create the resizable array with default starting size.
         /// </summary>
         /// <param name="initialCapacity">Optional initial starting size.</param>
-        public ResizableArray(int? initialCapacity = null) => m_array = new T[initialCapacity ?? 4];
+        public ResizableRentedArray(int? initialCapacity = null) => m_array = ArrayPool<T>.Shared.Rent(initialCapacity ?? 4);
 
         /// <summary>
         /// Get the internal array.
@@ -59,14 +60,23 @@ namespace Nez.GeonBit
         /// </summary>
         public void Clear()
         {
-            m_array = new T[4];
             m_count = 0;
+            for (int i = 0; i < m_array.Length; i++) m_array[i] = default;
+        }
+
+        /// <summary>
+        /// Returns the internal array to the array pool.
+        /// </summary>
+        public void Return()
+        {
+            ArrayPool<T>.Shared.Return(m_array);
+            m_array = null;
         }
 
         /// <summary>
         /// Remove the extra buffer from array and resize it to actual size.
         /// </summary>
-        public void Trim() => Array.Resize(ref m_array, m_count);
+        public void Trim() => Resize(ref m_array, m_count);
 
         /// <summary>
         /// Add element to array.
@@ -77,7 +87,8 @@ namespace Nez.GeonBit
             // check if need to enlarge array
             if (m_count == m_array.Length)
             {
-                Array.Resize(ref m_array, m_array.Length * 2);
+
+                Resize(ref m_array, m_array.Length * 2);
             }
 
             // add to array and increase count
@@ -94,6 +105,14 @@ namespace Nez.GeonBit
             {
                 Add(val);
             }
+        }
+
+        private void Resize(ref T[] old, int nuSize)
+        {
+            var nuArr = ArrayPool<T>.Shared.Rent(nuSize);
+            for (int i = 0; i < old.Length; i++) nuArr[i] = old[i];
+            ArrayPool<T>.Shared.Return(old);
+            old = nuArr;
         }
     }
 }

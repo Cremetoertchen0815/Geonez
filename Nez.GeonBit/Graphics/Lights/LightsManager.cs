@@ -69,6 +69,8 @@ namespace Nez.GeonBit.Lights
         // to return empty lights array.
         private static readonly ILightSource[] EmptyLightsArray = new ILightSource[0];
 
+        private ResizableRentedArray<ILightSource> _retLights = new();
+
         /// <summary>
         /// Enable / disable all lights.
         /// </summary>
@@ -178,6 +180,8 @@ namespace Nez.GeonBit.Lights
                 return EmptyLightsArray;
             }
 
+            _retLights.Clear();
+
             // if no lights at all, skip
             if (_regions.Count == 0 && _infiniteLights.Count == 0 && _shadowLights.Count == 0) { return EmptyLightsArray; }
 
@@ -186,15 +190,14 @@ namespace Nez.GeonBit.Lights
             var max = GetMaxRegionIndex(ref boundingSphere);
 
             // build array to return
-            var retLights = new ResizableArray<ILightSource>();
 
             // Note: For now only one shadowable light is supported anyway, so any other shadow-projecting lights get ignored.
             //		 Should be changed later, once I actually get how to combine/efficiently store multiple shadowed lights
             var firstEnabledShadowLight = _shadowLights.FirstOrDefault(x => x.Enabled && x.ShadowSourceID == ShadowID);
-            if (firstEnabledShadowLight is not null) retLights.Add(firstEnabledShadowLight);
+            if (firstEnabledShadowLight is not null) _retLights.Add(firstEnabledShadowLight);
 
             // add all infinite lights first (directional lights etc)
-            foreach (var light in _infiniteLights) if (light.Enabled) retLights.Add(light);
+            foreach (var light in _infiniteLights) if (light.Enabled) _retLights.Add(light);
 
             // iterate regions and add lights
             bool isFirstRegionWeCheck = true;
@@ -222,7 +225,7 @@ namespace Nez.GeonBit.Lights
                                 }
 
                                 // if its not first region we fetch, test against duplications
-                                if (!isFirstRegionWeCheck && System.Array.IndexOf(retLights.InternalArray, light) != -1)
+                                if (!isFirstRegionWeCheck && System.Array.IndexOf(_retLights.InternalArray, light) != -1)
                                 {
                                     continue;
                                 }
@@ -240,10 +243,10 @@ namespace Nez.GeonBit.Lights
                                 }
 
                                 // add light to return array
-                                retLights.Add(light);
+                                _retLights.Add(light);
 
                                 // if exceeded max lights stop here
-                                if (retLights.Count >= maxLights)
+                                if (_retLights.Count >= maxLights)
                                 {
                                     break;
                                 }
@@ -257,8 +260,7 @@ namespace Nez.GeonBit.Lights
             }
 
             // return the results array
-            retLights.Trim();
-            return retLights.InternalArray;
+            return _retLights.InternalArray;
         }
 
         /// <summary>

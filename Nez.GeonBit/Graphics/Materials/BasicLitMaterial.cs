@@ -405,6 +405,7 @@ namespace Nez.GeonBit.Materials
             {
                 // get current light
                 var light = lights[i];
+                if (light is null) continue;
 
                 if (light is IShadowedLight sl && shadowedLight is null) shadowedLight = sl;
 

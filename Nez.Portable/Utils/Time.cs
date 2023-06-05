@@ -99,7 +99,7 @@ namespace Nez
 			FrameCount++;
 		}
 
-		internal static void Update(Action fixedUpdate, Action varUpdate, Action varSingle)
+		internal static void Update()
 		{
 			switch (Mode)
 			{
@@ -107,10 +107,11 @@ namespace Nez
 				case TimeMode.LockedFramerate:
 					DeltaTime = UnscaledDeltaTime * TimeScale;
 					FirstUpdateInFrame = true;
-					varSingle();
-					fixedUpdate();
-					varUpdate();
-					break;
+					Input.Update();
+
+                    Core.Instance.FixedUpdate();
+                    Core.Instance.VariableUpdate();
+                    break;
 				case TimeMode.LockedTimestep:
                     DeltaTime = _TargetTimeStep * TimeScale;
 					ScaledTimeStep = TargetTimeStep * TimeScale;
@@ -118,20 +119,20 @@ namespace Nez
                     UnscaledDeltaTime = _TargetTimeStep;
                     FirstUpdateInFrame = true;
 
-					varSingle();
+                    Input.Update();
 
-					bool DidUpdateHappen = accumulator >= ScaledTimeStep;
+                    bool DidUpdateHappen = accumulator >= ScaledTimeStep;
 					while (accumulator >= ScaledTimeStep)
 					{
-						fixedUpdate();
+						Core.Instance.FixedUpdate();
 						accumulator -= ScaledTimeStep;
 						FirstUpdateInFrame = false;
 					}
 					Alpha = (accumulator / ScaledTimeStep);
 
 					FirstUpdateInFrame = true;
-					varUpdate();
-					break;
+                    Core.Instance.VariableUpdate();
+                    break;
 			}
 		}
 

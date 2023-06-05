@@ -77,12 +77,12 @@ namespace Nez.GeonBit
             /// <summary>
             /// Vertices buffer.
             /// </summary>
-            public ResizableArray<VertexType> Vertices { get; internal set; } = new ResizableArray<VertexType>();
+            public ResizableRentedArray<VertexType> Vertices { get; internal set; } = new ResizableRentedArray<VertexType>();
 
             /// <summary>
             /// Vertices indexes.
             /// </summary>
-            public ResizableArray<ushort> Indexes { get; internal set; } = new ResizableArray<ushort>();
+            public ResizableRentedArray<ushort> Indexes { get; internal set; } = new ResizableRentedArray<ushort>();
 
             /// <summary>
             /// Vertex buffer.
