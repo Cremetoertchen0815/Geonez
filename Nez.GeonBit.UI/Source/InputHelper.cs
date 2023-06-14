@@ -70,13 +70,9 @@ namespace Nez.GeonBit.UI
 		private GamePadState _newGamePadState;
 		private GamePadState _oldGamePadState;
 		private Vector2 _newMousePos;
-		private Keys[] _allKeyboardKeys = System.Enum.GetValues(typeof(Keys)).Cast<Keys>().ToArray();
 
         // store current frame gametime
         private GameTime _currTime;
-
-		/// <summary>An artificial "lag" after a key is pressed when typing text input, to prevent mistake duplications.</summary>
-		public float KeysTypeCooldown = 0.6f;
 
 		// last character that was pressed down
 		private char _currCharacterInput { get; set; } = '\0';
@@ -208,36 +204,19 @@ namespace Nez.GeonBit.UI
 			MouseWheel = Input.MouseWheel;
 			MouseWheelChange = System.Math.Sign(MouseWheel - prevMouseWheel);
 
-			if (_kbdChar != null)
+            _currCharacterInput = '\0';
+
+            if (_kbdChar != null && _kbdChar != '\r')
 			{
 				_currCharacterInput = _kbdChar.Value;
 				_kbdChar = null;
 				return;
 			}
 
-			_currCharacterInput = '\0';
 
-			// send key-down events
-			foreach (Keys key in _allKeyboardKeys)
-			{
-				if (_newKeyboardState.IsKeyDown(key) && !_oldKeyboardState.IsKeyDown(key))
-				{
-
-					// handle special keys and characters
-					switch (key)
-					{
-						case Keys.Left:
-							_currCharacterInput = (char)SpecialChars.ArrowLeft;
-							return;
-
-						case Keys.Right:
-							_currCharacterInput = (char)SpecialChars.ArrowRight;
-							return;
-
-					};
-				}
-			}
-		}
+            if (_newKeyboardState.IsKeyDown(Keys.Left) && !_oldKeyboardState.IsKeyDown(Keys.Left)) _currCharacterInput = (char)SpecialChars.ArrowLeft;
+            if (_newKeyboardState.IsKeyDown(Keys.Right) && !_oldKeyboardState.IsKeyDown(Keys.Right)) _currCharacterInput = (char)SpecialChars.ArrowRight;
+        }
 
 		/// <summary>
 		/// Move the cursor to be at the center of the screen.
