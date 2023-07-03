@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.Console;
 using Nez.Systems;
 using Nez.Textures;
 using System;
@@ -370,6 +371,8 @@ namespace Nez
 
 			Physics.Reset();
 
+			if (FramerateGraph.isGraphInScene) FramerateGraph.isGraphInScene = true;
+
 			// prep our render textures
 			UpdateResolutionScaler();
 			Core.GraphicsDevice.SetRenderTarget(_sceneRenderTarget);
@@ -426,10 +429,17 @@ namespace Nez
 			}
 
 
-            // update our SceneComponents
+            // update our renderers
             for (int i = _renderers.Length - 1; i >= 0; i--)
             {
                 if (_renderers.Buffer[i] is IUpdatable up && up.Enabled)
+                    up.Update();
+            }
+
+            // update our post processors
+            for (int i = _postProcessors.Length - 1; i >= 0; i--)
+            {
+                if (_postProcessors.Buffer[i] is IUpdatable up && up.Enabled)
                     up.Update();
             }
 
