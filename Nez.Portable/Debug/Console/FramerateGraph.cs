@@ -5,21 +5,23 @@ using System.Collections.Generic;
 
 namespace Nez.Console
 {
-	internal class FramerateGraph : PostProcessor, IUpdatable
+	internal class FramerateGraph
 	{
 		public enum GraphType
 		{
 			Line,
 			Fill
 		}
-        private float _positionZ;
-        private Vector2 _rotationXY;
 
-		/// <summary>
-		/// wraps Transform.position along with a private Z position
-		/// </summary>
-		/// <value>The position.</value>
-		public Vector3 Position;
+        public static bool Active { get; set; }
+
+        public readonly static FramerateGraph Instance = new FramerateGraph(new Vector2(200, 100), new Vector2(100, 200));
+
+        /// <summary>
+        /// wraps Transform.position along with a private Z position
+        /// </summary>
+        /// <value>The position.</value>
+        public Vector3 Position;
 
         /// <summary>
         /// the scale of the object. 80 by default. You will need to adjust this depending on your Scene's backbuffer size.
@@ -72,11 +74,11 @@ namespace Nez.Console
 		private short[] lineListIndices;
 		private short[] triangleStripIndices;
 
-		public FramerateGraph(Vector2 size, Vector2 position) : base(int.MaxValue)
+		private FramerateGraph(Vector2 size, Vector2 position)
 		{
 			Size = size;
 			MaxValue = 1;
-			Type = GraphType.Line;
+			Type = GraphType.Fill;
 			_pos = position;
 
 
@@ -92,9 +94,8 @@ namespace Nez.Console
             Position = new Vector3(_pos.X, -_pos.Y, 0);
         }
 
-        public override void Process(RenderTarget2D source, RenderTarget2D destination)
+        public void Render()
 		{
-            base.Process(source, destination);
 
             if (values.Count < 2)
                 return;
@@ -200,30 +201,5 @@ namespace Nez.Console
 			if (values.Count > SampleCount) values.RemoveRange(0, values.Count - SampleCount); //Remove access
 			MaxValue = Math.Max(MaxValue, fr);
 		}
-
-		private static bool _isGraphInScene;
-
-        public static bool isGraphInScene
-		{
-			get => _isGraphInScene;
-			set
-			{
-				if (value && !isGraphInScene)
-				{
-					Core.Scene.AddPostProcessor(new FramerateGraph(new Vector2(200, 100), new Vector2(100, 200)) { Type = GraphType.Fill });
-				}
-				else if (!value)
-				{
-					var val = Core.Scene.GetPostProcessor<FramerateGraph>();
-                    if (val is not null) Core.Scene.RemovePostProcessor(val);
-				}
-				_isGraphInScene = value;
-
-            }
-		}
-
-		bool IUpdatable.Enabled => true;
-
-        public int UpdateOrder => 0;
     }
 }

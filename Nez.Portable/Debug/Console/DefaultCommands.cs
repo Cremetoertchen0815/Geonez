@@ -181,10 +181,14 @@ namespace Nez.Console
 					}
 					break;
 				case "framegraph":
-					if (param == "show") { builder.AppendLine(FramerateGraph.isGraphInScene.ToString()); break; }
-					FramerateGraph.isGraphInScene = bool.TryParse(param, out b) ? b : true;
+					if (param == "show") { builder.AppendLine(FramerateGraph.Active.ToString()); break; }
+					FramerateGraph.Active = bool.TryParse(param, out b) ? b : true;
 					break;
-				case "renderable-count":
+                case "metrics":
+                    if (param == "show") { builder.AppendLine(MetricsDisplay.Active.ToString()); break; }
+                    MetricsDisplay.Active = bool.TryParse(param, out b) ? b : true;
+                    break;
+                case "renderable-count":
 					if (Core.Scene == null)
 					{
 						Instance.Log("Current Scene is null!");

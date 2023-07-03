@@ -371,8 +371,6 @@ namespace Nez
 
 			Physics.Reset();
 
-			if (FramerateGraph.isGraphInScene) FramerateGraph.isGraphInScene = true;
-
 			// prep our render textures
 			UpdateResolutionScaler();
 			Core.GraphicsDevice.SetRenderTarget(_sceneRenderTarget);
@@ -448,9 +446,13 @@ namespace Nez
 
 			// we update our renderables after entity.update in case any new Renderables were added
 			RenderableComponents.UpdateLists();
-		}
 
-		internal void VariableUpdate() => Entities.VariableUpdate();
+#if TRACE
+            if (FramerateGraph.Active) FramerateGraph.Instance.Update();
+#endif
+        }
+
+        internal void VariableUpdate() => Entities.VariableUpdate();
 
 		internal void Render()
 		{
@@ -579,9 +581,13 @@ namespace Nez
 			}
 
 #if TRACE
+            if (FramerateGraph.Active) FramerateGraph.Instance.Render();
+
             Graphics.Instance.Batcher.Begin(ScreenTransformMatrix);
-            if (DeltaAnalyzer.Active) DeltaAnalyzer.GetInstance().Render();
+            if (DeltaAnalyzer.Active) DeltaAnalyzer.Instance.Render();
+            if (MetricsDisplay.Active) MetricsDisplay.Instance.Render();
             Graphics.Instance.Batcher.End();
+
 #endif
         }
 

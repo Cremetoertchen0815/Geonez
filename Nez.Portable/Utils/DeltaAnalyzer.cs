@@ -9,13 +9,11 @@ namespace Nez
 #if TRACE
 	public class DeltaAnalyzer
 	{
-        private static DeltaAnalyzer Instance { get; } = new DeltaAnalyzer();
-        public static DeltaAnalyzer GetInstance() => Instance;
-		
-        public DeltaAnalyzer()
+        public readonly static DeltaAnalyzer Instance = new DeltaAnalyzer();
+        public static bool Active { get; set; }
+
+        private DeltaAnalyzer()
 		{
-            Active = true;
-			
 			_s = new Stopwatch();
             _s.Restart();
         }
@@ -118,7 +116,6 @@ namespace Nez
 		public static (string, float, float)[] EntitiesUpdatePercentage = new (string, float, float)[] { };
 		public static (string, float, float)[] ComponentUpdatePercentage = new (string, float, float)[] { };
 		public static (string, float, float)[] ObjectsDrawPercentage = new (string, float, float)[] { };
-		public static bool Active { get; set; } = false;
 
 		public static void RestartMeasure()
 		{
