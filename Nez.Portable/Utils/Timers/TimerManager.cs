@@ -12,7 +12,12 @@ namespace Nez.Timers
 		private List<Timer> _timers = new List<Timer>();
 		private Action _stalledMethods = null;
 
-		public override void Update()
+        /// <summary>
+        /// if true, the timer list will be cleared when a new level loads
+        /// </summary>
+        public static bool RemoveAllTimersOnLevelLoad = false;
+
+        public override void Update()
 		{
 			for (int i = _timers.Count - 1; i >= 0; i--)
 			{
@@ -51,5 +56,11 @@ namespace Nez.Timers
 		/// </summary>
 		/// <param name="action"></param>
 		internal void Stall(Action action) => _stalledMethods += action;
+
+		public void Clear()
+		{
+			_timers.Clear();
+			_stalledMethods = null;
+		}
 	}
 }

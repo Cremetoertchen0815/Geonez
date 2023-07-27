@@ -57,6 +57,8 @@ namespace Nez.Tweens
 
 		public TweenManager() => _instance = this;
 
+		public void Clear() =>	_activeTweens.Clear();
+
 
 		public override void Update()
 		{

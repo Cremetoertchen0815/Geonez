@@ -104,6 +104,7 @@ namespace Nez
 		private FastList<GlobalManager> _globalManagers = new FastList<GlobalManager>();
 		private CoroutineManager _coroutineManager = new CoroutineManager();
 		private TimerManager _timerManager = new TimerManager();
+		private TweenManager _tweenManager = new TweenManager();
 
 
 		/// <summary>
@@ -126,7 +127,7 @@ namespace Nez
 				else
 				{
 					_instance._nextScene = value;
-				}
+                }
 			}
 		}
 
@@ -173,7 +174,7 @@ namespace Nez
 
 				// setup systems
 				RegisterGlobalManager(_coroutineManager);
-				RegisterGlobalManager(new TweenManager());
+				RegisterGlobalManager(_tweenManager);
 				RegisterGlobalManager(_timerManager);
 				RegisterGlobalManager(new RenderTarget());
 			}

@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Nez.Console;
 using Nez.Systems;
 using Nez.Textures;
+using Nez.Timers;
+using Nez.Tweens;
 using System;
 using System.Collections.Generic;
 
@@ -313,7 +315,10 @@ namespace Nez
 
 			//Release mouse
 			Input.EndlessMouseMode = false;
-			Telegram.ClearTelegrams();
+
+            if (TweenManager.RemoveAllTweensOnLevelLoad) Core.GetGlobalManager<TweenManager>().Clear();
+            if (TimerManager.RemoveAllTimersOnLevelLoad) Core.GetGlobalManager<TimerManager>().Clear();
+            Telegram.ClearTelegrams();
 
 
 			SetupResolutionPolicy();
