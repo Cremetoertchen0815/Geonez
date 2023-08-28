@@ -1,7 +1,7 @@
 ﻿namespace Nez.Tweens
 {
-	public interface ITweenable
-	{
+	public interface ITweenable : ICancellableTimer
+    {
 		/// <summary>
 		/// called by TweenManager each frame like an internal Update
 		/// </summary>
@@ -39,5 +39,7 @@
 		/// </summary>
 		/// <param name="bringToCompletion">If set to <c>true</c> bring to completion.</param>
 		void Stop(bool bringToCompletion = false);
+
+		void ICancellableTimer.Cancel(bool completeFinalAction) => Stop(completeFinalAction);
 	}
 }

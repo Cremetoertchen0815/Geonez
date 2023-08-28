@@ -268,7 +268,7 @@ namespace Nez.UI
 			if (repeat)
 			{
 				if (_keyRepeatTimer != null)
-					_keyRepeatTimer.Stop();
+					_keyRepeatTimer.Abort();
 				_keyRepeatTimer = Core.Schedule(_keyRepeatTime, true, this,
 					t => (t.Context as IKeyboardListener).KeyDown(key));
 			}
@@ -361,7 +361,7 @@ namespace Nez.UI
 		{
 			if (_keyRepeatTimer != null)
 			{
-				_keyRepeatTimer.Stop();
+				_keyRepeatTimer.Abort();
 				_keyRepeatTimer = null;
 			}
 		}
@@ -375,7 +375,7 @@ namespace Nez.UI
 			hasSelection = _isFocused = false;
 			if (_keyRepeatTimer != null)
 			{
-				_keyRepeatTimer.Stop();
+				_keyRepeatTimer.Abort();
 				_keyRepeatTimer = null;
 			}
 		}

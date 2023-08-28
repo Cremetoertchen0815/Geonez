@@ -472,7 +472,7 @@ namespace Nez.UI
 		{
 			if (_keyRepeatTimer != null)
 			{
-				_keyRepeatTimer.Stop();
+				_keyRepeatTimer.Abort();
 				_keyRepeatTimer = null;
 			}
 		}

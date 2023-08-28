@@ -17,7 +17,13 @@ namespace Nez.Timers
 		private float _elapsedTime;
 
 
-		public void Stop() => _isDone = true;
+		public void Abort() => _isDone = true;
+
+		public void FinishNow()
+		{
+			_isDone = true;
+			_onTime();
+		}
 
 		public void Reset() => _elapsedTime = 0f;
 

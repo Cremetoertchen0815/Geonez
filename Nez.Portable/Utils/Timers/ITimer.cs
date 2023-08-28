@@ -1,19 +1,24 @@
 ﻿namespace Nez
 {
-	public interface ITimer
-	{
+	public interface ITimer : ICancellableTimer
+    {
 		object Context { get; }
 
 
 		/// <summary>
 		/// call stop to stop this timer from being run again. This has no effect on a non-repeating timer.
 		/// </summary>
-		void Stop();
+		void Abort();
 
-		/// <summary>
-		/// resets the elapsed time of the timer to 0
-		/// </summary>
-		void Reset();
+        /// <summary>
+        /// call stop to stop this timer from being run again. This has no effect on a non-repeating timer.
+        /// </summary>
+        void FinishNow();
+
+        /// <summary>
+        /// resets the elapsed time of the timer to 0
+        /// </summary>
+        void Reset();
 
 		/// <summary>
 		/// returns the context casted to T as a convenience
@@ -21,5 +26,10 @@
 		/// <returns>The context.</returns>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		T GetContext<T>();
+
+		void ICancellableTimer.Cancel(bool completeFinalAction)
+		{
+			if (completeFinalAction) FinishNow(); else Abort();
+		}
 	}
 }

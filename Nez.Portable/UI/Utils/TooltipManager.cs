@@ -90,7 +90,7 @@ namespace Nez.UI
 		{
 			if (_showTask != null)
 			{
-				_showTask.Stop();
+				_showTask.Abort();
 				_showTask = null;
 			}
 		}
@@ -105,7 +105,7 @@ namespace Nez.UI
 		{
 			if (_resetTask != null)
 			{
-				_resetTask.Stop();
+				_resetTask.Abort();
 				_resetTask = null;
 			}
 		}

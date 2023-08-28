@@ -171,7 +171,7 @@ namespace Nez.Console
 
 					if (_drawCallTimer != null)
 					{
-						_drawCallTimer.Stop();
+						_drawCallTimer.Abort();
 						_drawCallTimer = null;
 						Debug.Log("Draw call logging stopped");
 					}
@@ -342,7 +342,7 @@ namespace Nez.Console
 				ticker += Time.DeltaTime;
 				if (ticker >= secondsToDisplay)
 				{
-					timer.Stop();
+					timer.Abort();
 					Core.DebugRenderEnabled = debugRenderState;
 				}
 			});
