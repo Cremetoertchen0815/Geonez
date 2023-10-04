@@ -22,7 +22,7 @@ namespace Nez.Timers
 		public void FinishNow()
 		{
 			_isDone = true;
-			_onTime();
+			_onTime(this);
 		}
 
 		public void Reset() => _elapsedTime = 0f;
