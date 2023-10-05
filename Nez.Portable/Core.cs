@@ -180,7 +180,7 @@ namespace Nez
 			}
 			catch (Exception ex)
 			{
-				CrashHandler.Instance.ReportCrash(CrashHandler.CrashPoint.INIT, ex);
+				ExceptionLogger.Instance.ReportCrash(ExceptionLogger.CrashPoint.INIT, ex);
 #if DEBUG
 				throw;
 #endif
@@ -224,7 +224,7 @@ namespace Nez
 			}
 			catch (Exception ex)
 			{
-				CrashHandler.Instance.ReportCrash(CrashHandler.CrashPoint.UNSPECIFIED, ex);
+				ExceptionLogger.Instance.ReportCrash(ExceptionLogger.CrashPoint.UNSPECIFIED, ex);
 				throw;
 			}
 		}
@@ -275,7 +275,7 @@ namespace Nez
 			}
 			catch (Exception ex)
 			{
-				CrashHandler.Instance.ReportCrash(CrashHandler.CrashPoint.UPDATE, ex);
+				ExceptionLogger.Instance.ReportCrash(ExceptionLogger.CrashPoint.UPDATE, ex);
 #if DEBUG
 				throw;
 #endif
@@ -393,7 +393,7 @@ namespace Nez
 			}
 			catch (Exception ex)
 			{
-				CrashHandler.Instance.ReportCrash(CrashHandler.CrashPoint.DRAW, ex);
+				ExceptionLogger.Instance.ReportCrash(ExceptionLogger.CrashPoint.DRAW, ex);
 #if DEBUG
 				throw;
 #endif
