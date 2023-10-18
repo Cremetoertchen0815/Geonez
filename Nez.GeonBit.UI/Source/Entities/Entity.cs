@@ -2431,6 +2431,12 @@ namespace Nez.GeonBit.UI.Entities
 			UserInterface.Active.OnClick?.Invoke(this);
 		}
 
+		public void SimulateClick()
+		{
+			if (!Enabled || !Visible) return;
+			DoOnClick();
+		}
+
 		/// <summary>
 		/// Handle mouse down event, called every frame while down.
 		/// </summary>
