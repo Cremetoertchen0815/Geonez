@@ -2433,7 +2433,12 @@ namespace Nez.GeonBit.UI.Entities
 
 		public void SimulateClick()
 		{
-			if (!Enabled || !Visible) return;
+			Entity inspectedElement = this;
+			while (inspectedElement is not null)
+            {
+                if (!inspectedElement.Enabled || !inspectedElement.Visible) return;
+				inspectedElement = inspectedElement.Parent;
+            }
 			DoOnClick();
 		}
 
