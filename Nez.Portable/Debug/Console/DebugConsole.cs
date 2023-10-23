@@ -420,8 +420,8 @@ namespace Nez.Console
 				string[] ignoredAssemblies = new string[]
 				{
 					"mscorlib", "MonoMac", "MonoGame.Framework", "Mono.Security", "System", "OpenTK",
-					"ObjCImplementations", "Nez"
-				};
+					"ObjCImplementations", "Nez", "Steamworks.NET"
+                };
 				foreach (var assembly in assemblies)
 				{
 					string name = assembly.GetName().Name;

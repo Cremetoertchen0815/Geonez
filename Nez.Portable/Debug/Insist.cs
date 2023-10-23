@@ -9,8 +9,12 @@ namespace Nez
 		[DebuggerHidden]
 		public static void Fail()
 		{
-			System.Diagnostics.Debug.Assert(false);
-			Debugger.Break();
+			if (Debugger.IsAttached)
+            {
+                System.Diagnostics.Debug.Assert(false);
+                Debugger.Break();
+				return;
+            }
 		}
 
 
