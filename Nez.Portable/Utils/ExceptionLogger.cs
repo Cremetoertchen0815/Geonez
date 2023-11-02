@@ -7,6 +7,8 @@ public class ExceptionLogger
 	//Singleton
 	private static ExceptionLogger _instance = new ExceptionLogger();
 	public static ExceptionLogger Instance => _instance;
+
+	public event Action<Exception> ExceptionThrown;
 	private ExceptionLogger()
 	{
 		Directory.CreateDirectory("logs");
@@ -20,6 +22,19 @@ public class ExceptionLogger
 
 	private void LogException(Exception exception, string type)
 	{
+		if (ExceptionThrown is not null)
+		{
+			try
+			{
+				ExceptionThrown(exception);
+			}
+			catch (Exception)
+			{
+				ExceptionThrown = null;
+				LogException(exception, type);
+			}
+		}
+
 		var txt = $"{DateTime.Now:yyyy-MM-dd hh:mm:ss.FFF tt} - {type}; CurrentScene: {Core.Scene.GetType().FullName})\n";
         var ex = exception;
         int cnt = 0;
