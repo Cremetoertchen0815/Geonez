@@ -33,7 +33,7 @@ namespace Nez.GeonBit
 
     public class GeonScene : Scene
     {
-        public new Camera3D Camera;
+        public new Camera3D Camera { get; set; }
 
 
         /// <summary>
