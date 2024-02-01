@@ -185,7 +185,7 @@ namespace Nez.Tweens
 			}
 
 			// elapsed time will be negative while we are delaying the start of the tween so dont update the value
-			if (_elapsedTime >= 0 && _elapsedTime <= _duration)
+			if (_elapsedTime >= 0 && _elapsedTime <= _duration && _target is not null)
 				UpdateValue();
 
 			// if we have a loopType and we are Complete (meaning we reached 0 or duration) handle the loop.
@@ -280,7 +280,7 @@ namespace Nez.Tweens
 		public void JumpToElapsedTime(float elapsedTime)
 		{
 			_elapsedTime = Mathf.Clamp(elapsedTime, 0f, _duration);
-			UpdateValue();
+			if (_target is not null) UpdateValue();
 		}
 
 
@@ -392,11 +392,10 @@ namespace Nez.Tweens
 				}
 
 				// if we had an elapsedTimeExcess and no delayBetweenLoops update the value
-				if (_delayBetweenLoops == 0f && elapsedTimeExcess > 0f)
+				if (_delayBetweenLoops == 0f && elapsedTimeExcess > 0f && _target is not null)
 					UpdateValue();
 			}
 		}
-
 
 		protected abstract void UpdateValue();
 	}
