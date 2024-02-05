@@ -7,7 +7,8 @@
 //-----------------------------------------------------------------------------
 #endregion
 using Microsoft.Xna.Framework;
-
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nez.GeonBit.UI.Utils
 {
@@ -84,8 +85,8 @@ namespace Nez.GeonBit.UI.Utils
 				Type = type;
 			}
 
-		}
-		public enum OptionType
+        }
+        public enum OptionType
 		{
 			Confirm,
 			Cancel,
@@ -132,19 +133,50 @@ namespace Nez.GeonBit.UI.Utils
 		/// <param name="text">Main text.</param>
 		/// <param name="options">Msgbox response options.</param>
 		/// <returns>Message box panel.</returns>
-		public static Entities.Panel ShowMsgBox(string header, string text, params MsgBoxOption[] options) => ShowMsgBox(header, text, options, null);
+		public static Task<int> ShowMsgBoxAsync(string header, string text, params string[] options)
+		{
+			var cs = new TaskCompletionSource<int>();
+            ShowMsgBox(header, text, options.Select((x, index) => new MsgBoxOption(x, () => { cs.SetResult(index); return true; })).ToArray(), null);
+			return cs.Task;
+        }
 
-		/// <summary>
-		/// Show a message box with custom buttons and callbacks.
-		/// </summary>
-		/// <param name="header">Messagebox header.</param>
-		/// <param name="text">Main text.</param>
-		/// <param name="options">Msgbox response options.</param>
-		/// <param name="append">Optional array of entities to add to msg box under the text and above the buttons.</param>
-		/// <param name="size">Alternative size to use.</param>
-		/// <param name="onDone">Optional callback to call when this msgbox closes.</param>
-		/// <returns>Message box panel.</returns>
-		public static Entities.Panel ShowMsgBox(string header, string text, MsgBoxOption[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
+        /// <summary>
+        /// Show a message box with custom buttons and callbacks.
+        /// </summary>
+        /// <param name="header">Messagebox header.</param>
+        /// <param name="text">Main text.</param>
+        /// <param name="options">Msgbox response options.</param>
+        /// <returns>Message box panel.</returns>
+        public static Entities.Panel ShowMsgBox(string header, string text, params MsgBoxOption[] options) => ShowMsgBox(header, text, options, null);
+
+        /// <summary>
+        /// Show a message box with just "OK".
+        /// </summary>
+        /// <param name="header">Message box title.</param>
+        /// <param name="text">Main text to write on the message box.</param>
+        /// <param name="closeButtonTxt">Text for the closing button (if not provided will use default).</param>
+        /// <param name="size">Message box size (if not provided will use default).</param>
+        /// <returns>Message box panel.</returns>
+        public static Entities.Panel ShowMsgBox(string header, string text, string closeButtonTxt = null, Vector2? size = null)
+        {
+            UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
+            return ShowMsgBox(header, text, new MsgBoxOption[]
+            {
+                new MsgBoxOption(closeButtonTxt ?? DefaultOkButtonText, null)
+            }, size: size ?? DefaultMsgBoxSize);
+        }
+
+        /// <summary>
+        /// Show a message box with custom buttons and callbacks.
+        /// </summary>
+        /// <param name="header">Messagebox header.</param>
+        /// <param name="text">Main text.</param>
+        /// <param name="options">Msgbox response options.</param>
+        /// <param name="append">Optional array of entities to add to msg box under the text and above the buttons.</param>
+        /// <param name="size">Alternative size to use.</param>
+        /// <param name="onDone">Optional callback to call when this msgbox closes.</param>
+        /// <returns>Message box panel.</returns>
+        public static Entities.Panel ShowMsgBox(string header, string text, MsgBoxOption[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
 		{
 			UserInterface.GamePadModeEnabled = Input.GamePads[0]?.IsConnected() ?? false;
 
@@ -223,16 +255,27 @@ namespace Nez.GeonBit.UI.Utils
 			// add panel to active ui
 			UserInterface.Active.AddEntity(panel);
 			return panel;
-		}
+        }
 
-		/// <summary>
-		/// Show an input box with custom buttons and callbacks.
-		/// </summary>
-		/// <param name="header">Inputbox header.</param>
-		/// <param name="text">Main text.</param>
-		/// <param name="options">Input response options.</param>
-		/// <returns>Input box panel.</returns>
-		public static Entities.Panel ShowInputBox(string header, string text, string defVal = null, params InputBoxOption[] options) => ShowInputBox(header, text, defVal, options, null);
+        public static Task<string> ShowInputBoxAsync(string header, string text, string defValue, string confirmText, string cancelText)
+		{
+			var cs = new TaskCompletionSource<string>();
+			ShowInputBox(header, text, defValue, new InputBoxOption[]
+			{
+				new InputBoxOption(cancelText, _ => { cs.SetResult(null); return true; }, OptionType.Cancel),
+				new InputBoxOption(confirmText, x => { cs.SetResult(x); return true; }, OptionType.Confirm),
+			}, null);
+			return cs.Task;
+        }
+
+        /// <summary>
+        /// Show an input box with custom buttons and callbacks.
+        /// </summary>
+        /// <param name="header">Inputbox header.</param>
+        /// <param name="text">Main text.</param>
+        /// <param name="options">Input response options.</param>
+        /// <returns>Input box panel.</returns>
+        public static Entities.Panel ShowInputBox(string header, string text, string defVal = null, params InputBoxOption[] options) => ShowInputBox(header, text, defVal, options, null);
 
 		public static Entities.Panel ShowInputBox(string header, string text, params InputBoxOption[] options) => ShowInputBox(header, text, null, options, null);
 
@@ -325,23 +368,6 @@ namespace Nez.GeonBit.UI.Utils
 			// add panel to active ui
 			UserInterface.Active.AddEntity(panel);
 			return panel;
-		}
-
-		/// <summary>
-		/// Show a message box with just "OK".
-		/// </summary>
-		/// <param name="header">Message box title.</param>
-		/// <param name="text">Main text to write on the message box.</param>
-		/// <param name="closeButtonTxt">Text for the closing button (if not provided will use default).</param>
-		/// <param name="size">Message box size (if not provided will use default).</param>
-		/// <returns>Message box panel.</returns>
-		public static Entities.Panel ShowMsgBox(string header, string text, string closeButtonTxt = null, Vector2? size = null)
-		{
-			UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
-			return ShowMsgBox(header, text, new MsgBoxOption[]
-			{
-				new MsgBoxOption(closeButtonTxt ?? DefaultOkButtonText, null)
-			}, size: size ?? DefaultMsgBoxSize);
 		}
 	}
 }
