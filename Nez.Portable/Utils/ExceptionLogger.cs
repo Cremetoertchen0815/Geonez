@@ -35,7 +35,7 @@ public class ExceptionLogger
 			}
 		}
 
-		var txt = $"{DateTime.Now:yyyy-MM-dd hh:mm:ss.FFF tt} - {type}; CurrentScene: {Core.Scene.GetType().FullName})\n";
+		var txt = $"{DateTime.Now:yyyy-MM-dd hh:mm:ss.FFF tt} - {type}; CurrentScene: {Core.Scene?.GetType().FullName})\n";
         var ex = exception;
         int cnt = 0;
         while (ex != null)
