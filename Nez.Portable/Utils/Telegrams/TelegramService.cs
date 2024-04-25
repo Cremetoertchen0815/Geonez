@@ -48,7 +48,7 @@ namespace Nez
 			if (receivers.ContainsKey(message.Receiver))
 			{
 				foreach (var cp in receivers[message.Receiver]) cp.MessageReceived(message);
-				DebugConsole.Instance.Log("Telegram transmitted: " + message.Sender + " -> " + message.Receiver + "; " + message.Head + (message.Body is not null ? " | " + message.Body.ToString() : string.Empty));
+				if (LogToConsole) DebugConsole.Instance.Log("Telegram transmitted: " + message.Sender + " -> " + message.Receiver + "; " + message.Head + (message.Body is not null ? " | " + message.Body.ToString() : string.Empty));
 				return true;
 			}
 			else if (message.Receiver == internalTelegramReceiverName)
@@ -56,7 +56,7 @@ namespace Nez
 				switch (message.Head)
 				{
 					case "execute_double":
-						DebugConsole.Instance.Log("Telegram transmitted: " + message.Sender + " -> " + message.Receiver + "; " + message.Head + message.Body != string.Empty ? " | " + message.Body : string.Empty);
+                        if (LogToConsole) DebugConsole.Instance.Log("Telegram transmitted: " + message.Sender + " -> " + message.Receiver + "; " + message.Head + message.Body != string.Empty ? " | " + message.Body : string.Empty);
 						var resultingtwo = Newtonsoft.Json.JsonConvert.DeserializeObject<(Telegram, Telegram)>((string)message.Body);
 						SendPrivate(resultingtwo.Item1);
 						SendPrivate(resultingtwo.Item2);
