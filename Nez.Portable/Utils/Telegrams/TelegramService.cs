@@ -14,7 +14,7 @@ namespace Nez
 		public static void SendPublic(Telegram message)
 		{
 			foreach (var a in receivers) foreach (var b in a.Value) b.MessageReceived(message);
-			if (receivers.Count > 0) DebugConsole.Instance.Log("Telegram transmitted: " + message.Sender + " -> all; " + message.Head + "|" + message.Body);
+			if (receivers.Count > 0 && LogToConsole) DebugConsole.Instance.Log("Telegram transmitted: " + message.Sender + " -> all; " + message.Head + "|" + message.Body);
 		}
 
 		public static void Register(ITelegramReceiver reg, params string[] IDs)
