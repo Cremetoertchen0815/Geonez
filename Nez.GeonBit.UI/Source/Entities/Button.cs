@@ -89,6 +89,8 @@ namespace Nez.GeonBit.UI.Entities
 			// update styles
 			UpdateStyle(DefaultStyle);
 
+			MilkFactor = 0.4f;
+
 			if (!UserInterface.Active._isDeserializing)
 			{
 				// create and set button paragraph
