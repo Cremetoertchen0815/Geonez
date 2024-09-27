@@ -23,7 +23,7 @@ namespace Nez.GeonBit.UI.Utils
 	/// <summary>
 	/// Helper class to generate message boxes and prompts.
 	/// </summary>
-	public static class MessageBox
+	public static class Popup
 	{
 		/// <summary>
 		/// Default size to use for message boxes.
@@ -56,7 +56,7 @@ namespace Nez.GeonBit.UI.Utils
 		/// <summary>
 		/// A button / option for a message box.
 		/// </summary>
-		public class MsgBoxOption
+		public class PopupButton
 		{
 			/// <summary>
 			/// Option title (for the button).
@@ -71,14 +71,14 @@ namespace Nez.GeonBit.UI.Utils
 			/// <summary>
 			/// Determines the option type, which correlates to button shortcuts.
 			/// </summary>
-			public OptionType Type;
+			public ButtonType Type;
 
 			/// <summary>
 			/// Create the message box option.
 			/// </summary>
 			/// <param name="title">Text to write on the button.</param>
 			/// <param name="callback">Action when clicked. Return false if you want to abort and leave the message opened, return true to close it.</param>
-			public MsgBoxOption(string title, System.Func<bool> callback, OptionType type = OptionType.None)
+			public PopupButton(string title, System.Func<bool> callback, ButtonType type = ButtonType.None)
 			{
 				Title = title;
 				Callback = callback;
@@ -86,7 +86,7 @@ namespace Nez.GeonBit.UI.Utils
 			}
 
         }
-        public enum OptionType
+        public enum ButtonType
 		{
 			Confirm,
 			Cancel,
@@ -96,7 +96,7 @@ namespace Nez.GeonBit.UI.Utils
 		/// <summary>
 		/// A button / option for a message box.
 		/// </summary>
-		public class InputBoxOption
+		public class PopupInputOption
 		{
 			/// <summary>
 			/// Option title (for the button).
@@ -111,14 +111,14 @@ namespace Nez.GeonBit.UI.Utils
 			/// <summary>
 			/// Determines the option type, which correlates to button shortcuts.
 			/// </summary>
-			public OptionType Type;
+			public ButtonType Type;
 
 			/// <summary>
 			/// Create the message box option.
 			/// </summary>
 			/// <param name="title">Text to write on the button.</param>
 			/// <param name="callback">Action when clicked. Return false if you want to abort and leave the message opened, return true to close it.</param>
-			public InputBoxOption(string title, System.Func<string, bool> callback, OptionType type = OptionType.None)
+			public PopupInputOption(string title, System.Func<string, bool> callback, ButtonType type = ButtonType.None)
 			{
 				Title = title;
 				Callback = callback;
@@ -133,10 +133,10 @@ namespace Nez.GeonBit.UI.Utils
 		/// <param name="text">Main text.</param>
 		/// <param name="options">Msgbox response options.</param>
 		/// <returns>Message box panel.</returns>
-		public static Task<int> ShowMsgBoxAsync(string header, string text, params string[] options)
+		public static Task<int> ShowAsync(string header, string text, params string[] options)
 		{
 			var cs = new TaskCompletionSource<int>();
-            ShowMsgBox(header, text, options.Select((x, index) => new MsgBoxOption(x, () => { cs.SetResult(index); return true; })).ToArray(), null);
+            Show(header, text, options.Select((x, index) => new PopupButton(x, () => { cs.SetResult(index); return true; })).ToArray(), null);
 			return cs.Task;
         }
 
@@ -147,7 +147,7 @@ namespace Nez.GeonBit.UI.Utils
         /// <param name="text">Main text.</param>
         /// <param name="options">Msgbox response options.</param>
         /// <returns>Message box panel.</returns>
-        public static Entities.Panel ShowMsgBox(string header, string text, params MsgBoxOption[] options) => ShowMsgBox(header, text, options, null);
+        public static Entities.Panel Show(string header, string text, params PopupButton[] options) => Show(header, text, options, null);
 
         /// <summary>
         /// Show a message box with just "OK".
@@ -157,12 +157,12 @@ namespace Nez.GeonBit.UI.Utils
         /// <param name="closeButtonTxt">Text for the closing button (if not provided will use default).</param>
         /// <param name="size">Message box size (if not provided will use default).</param>
         /// <returns>Message box panel.</returns>
-        public static Entities.Panel ShowMsgBox(string header, string text, string closeButtonTxt = null, Vector2? size = null)
+        public static Entities.Panel Show(string header, string text, string closeButtonTxt = null, Vector2? size = null)
         {
             UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
-            return ShowMsgBox(header, text, new MsgBoxOption[]
+            return Show(header, text, new PopupButton[]
             {
-                new MsgBoxOption(closeButtonTxt ?? DefaultOkButtonText, null)
+                new PopupButton(closeButtonTxt ?? DefaultOkButtonText, null)
             }, size: size ?? DefaultMsgBoxSize);
         }
 
@@ -176,7 +176,7 @@ namespace Nez.GeonBit.UI.Utils
         /// <param name="size">Alternative size to use.</param>
         /// <param name="onDone">Optional callback to call when this msgbox closes.</param>
         /// <returns>Message box panel.</returns>
-        public static Entities.Panel ShowMsgBox(string header, string text, MsgBoxOption[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
+        public static Entities.Panel Show(string header, string text, PopupButton[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
 		{
 			UserInterface.GamePadModeEnabled = Input.GamePads[0]?.IsConnected() ?? false;
 
@@ -257,13 +257,13 @@ namespace Nez.GeonBit.UI.Utils
 			return panel;
         }
 
-        public static Task<string> ShowInputBoxAsync(string header, string text, string defValue, string confirmText, string cancelText)
+        public static Task<string> ShowInputAsync(string header, string text, string defValue, string confirmText, string cancelText)
 		{
 			var cs = new TaskCompletionSource<string>();
-			ShowInputBox(header, text, defValue, new InputBoxOption[]
+			ShowInput(header, text, defValue, new PopupInputOption[]
 			{
-				new InputBoxOption(cancelText, _ => { cs.SetResult(null); return true; }, OptionType.Cancel),
-				new InputBoxOption(confirmText, x => { cs.SetResult(x); return true; }, OptionType.Confirm),
+				new PopupInputOption(cancelText, _ => { cs.SetResult(null); return true; }, ButtonType.Cancel),
+				new PopupInputOption(confirmText, x => { cs.SetResult(x); return true; }, ButtonType.Confirm),
 			}, null);
 			return cs.Task;
         }
@@ -275,9 +275,9 @@ namespace Nez.GeonBit.UI.Utils
         /// <param name="text">Main text.</param>
         /// <param name="options">Input response options.</param>
         /// <returns>Input box panel.</returns>
-        public static Entities.Panel ShowInputBox(string header, string text, string defVal = null, params InputBoxOption[] options) => ShowInputBox(header, text, defVal, options, null);
+        public static Entities.Panel ShowInput(string header, string text, string defVal = null, params PopupInputOption[] options) => ShowInput(header, text, defVal, options, null);
 
-		public static Entities.Panel ShowInputBox(string header, string text, params InputBoxOption[] options) => ShowInputBox(header, text, null, options, null);
+		public static Entities.Panel ShowInput(string header, string text, params PopupInputOption[] options) => ShowInput(header, text, null, options, null);
 
 		/// <summary>
 		/// Show an input box with custom buttons and callbacks.
@@ -289,7 +289,7 @@ namespace Nez.GeonBit.UI.Utils
 		/// <param name="size">Alternative size to use.</param>
 		/// <param name="onDone">Optional callback to call when this inputbox closes.</param>
 		/// <returns>Input box panel.</returns>
-		public static Entities.Panel ShowInputBox(string header, string text, string defVal, InputBoxOption[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
+		public static Entities.Panel ShowInput(string header, string text, string defVal, PopupInputOption[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
 		{
 			UserInterface.GamePadModeEnabled = Input.GamePads[0]?.IsConnected() ?? false;
 

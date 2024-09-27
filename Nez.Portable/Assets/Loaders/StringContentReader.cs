@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
-using MonoGame.Framework.Utilities.Deflate;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
 
 namespace Nez
