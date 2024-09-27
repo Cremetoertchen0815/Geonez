@@ -536,7 +536,7 @@ namespace Nez.GeonBit.UI.Entities
 		}
 
 		/// <summary>Currently calculated destination rect (eg the region this entity is drawn on).</summary>
-		internal Rectangle _destRect;
+		protected Rectangle _destRect;
 
 		/// <summary>Currently calculated internal destination rect (eg the region this entity children are positioned in).</summary>
 		protected Rectangle _destRectInternal;
