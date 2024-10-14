@@ -101,7 +101,16 @@ namespace Nez.GeonBit.UI.Entities
 		/// <param name="anchor">Position anchor.</param>
 		/// <param name="offset">Offset from anchor position.</param>
 		public Panel(Vector2 size, PanelSkin skin = PanelSkin.Default, Anchor anchor = Anchor.Center, Vector2? offset = null) :
-			base(size, skin, anchor, offset) => UpdateStyle(DefaultStyle);
+			base(size, skin, anchor, offset)
+		{
+            UpdateStyle(DefaultStyle);
+
+			if (skin is PanelSkin.None or PanelSkin.Simple)
+			{
+				OutlineColor = Color.Transparent;
+				OutlineWidth = 0;
+			}
+        }
 
 		/// <summary>
 		/// Special init after deserializing entity from file.
