@@ -68,6 +68,8 @@ namespace Nez
 			IsRepeating = false;
 
 			bool check = false;
+			if (Nodes is null) return;
+
 			for (int i = 0; i < Nodes.Count; i++)
 			{
 				Nodes[i].Update();
