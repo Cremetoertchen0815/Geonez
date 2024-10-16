@@ -32,11 +32,9 @@ namespace Nez.GeonBit
         /// </summary>
         protected abstract BaseRenderableEntity RenderableEntity { get; }
 
-        public override void OnAddedToEntity()
-        {
-            base.OnAddedToEntity();
-            Node.AddEntity(RenderableEntity);
-        }
+        public override void OnAddedToEntity() => Node?.AddEntity(RenderableEntity);
+
+        public override void OnRemovedFromEntity() => Node?.RemoveEntity(RenderableEntity);
 
         /// <summary>
         /// Set / get Entity blending state.
