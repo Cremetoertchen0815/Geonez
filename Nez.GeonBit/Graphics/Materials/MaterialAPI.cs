@@ -22,6 +22,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
+using Nez.UI;
 using System.Buffers;
 
 namespace Nez.GeonBit.Materials
@@ -225,11 +226,7 @@ namespace Nez.GeonBit.Materials
         /// <summary>
         /// Ambient light color.
         /// </summary>
-        public virtual Color AmbientLight
-        {
-            get => _ambientLight;
-            internal set { _ambientLight = value; SetAsDirty(MaterialDirtyFlags.AmbientLight); }
-        }
+        internal virtual Color AmbientLight => _ambientLight;
 
         private Color _ambientLight;
 
@@ -490,7 +487,14 @@ namespace Nez.GeonBit.Materials
                 // get lights in rendering range
                 var lightsManager = GeonDefaultRenderer.ActiveLightsManager;
                 var lights = lightsManager.GetLights(this, ShadowID, ref boundingSphere, MaxLights);
-                AmbientLight = lightsManager.AmbientLight;
+
+                // set ambient light
+                if (AmbientLight != lightsManager.AmbientLight)
+                {
+                    _ambientLight = lightsManager.AmbientLight;
+                    SetAsDirty(MaterialDirtyFlags.AmbientLight);
+                }
+
                 ApplyLights(lights, ref worldMatrix, ref boundingSphere);
                 ArrayPool<ILightSource>.Shared.Return(lights, true);
             }
@@ -572,7 +576,6 @@ namespace Nez.GeonBit.Materials
             cloned.DiffuseColor = DiffuseColor;
             cloned.SpecularColor = SpecularColor;
             cloned.SpecularPower = SpecularPower;
-            cloned.AmbientLight = AmbientLight;
             cloned.EmissiveLight = EmissiveLight;
             cloned.SamplerState = SamplerState;
         }
@@ -590,7 +593,6 @@ namespace Nez.GeonBit.Materials
             SpecularColor = Color.White;
             EmissiveLight = Color.Black;
             SpecularPower = 1f;
-            AmbientLight = Color.White;
             SamplerState = DefaultSamplerState;
         }
     }

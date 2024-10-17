@@ -95,7 +95,6 @@ namespace Nez.GeonBit.Materials
                 // set effect defaults
                 Texture = fromEffect.Texture;
                 Alpha = fromEffect.Alpha;
-                AmbientLight = new Color(fromEffect.AmbientLightColor.X, fromEffect.AmbientLightColor.Y, fromEffect.AmbientLightColor.Z);
                 DiffuseColor = new Color(fromEffect.DiffuseColor.X, fromEffect.DiffuseColor.Y, fromEffect.DiffuseColor.Z);
 
                 // enable lightings by default

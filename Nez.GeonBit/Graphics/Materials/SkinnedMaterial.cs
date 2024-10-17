@@ -69,7 +69,6 @@ namespace Nez.GeonBit.Materials
                 Texture = fromEffect.Texture;
                 TextureEnabled = fromEffect.Texture != null;
                 Alpha = fromEffect.Alpha;
-                AmbientLight = new Color(fromEffect.AmbientLightColor.X, fromEffect.AmbientLightColor.Y, fromEffect.AmbientLightColor.Z);
                 DiffuseColor = new Color(fromEffect.DiffuseColor.X, fromEffect.DiffuseColor.Y, fromEffect.DiffuseColor.Z);
                 SpecularColor = new Color(fromEffect.SpecularColor.X, fromEffect.SpecularColor.Y, fromEffect.SpecularColor.Z);
                 SpecularPower = fromEffect.SpecularPower;
