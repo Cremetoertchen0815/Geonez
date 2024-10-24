@@ -153,5 +153,7 @@ namespace Nez.GeonBit.Materials
         /// </summary>
         /// <returns>Copy of this material.</returns>
         public override MaterialAPI Clone() => new BasicMaterial(this);
+
+        public static implicit operator BasicEffect(BasicMaterial effect) => effect._effect;
     }
 }

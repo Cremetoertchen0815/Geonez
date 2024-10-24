@@ -189,7 +189,7 @@ namespace Nez.GeonBit.Materials
         /// </summary>
         /// <param name="fromEffect">Effect to create material from.</param>
         /// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-        public BasicLitMaterial(BasicEffect fromEffect, PCFQuality? shadowQuality = null, bool copyEffectProperties = true)
+        public BasicLitMaterial(MaterialAPI fromEffect, PCFQuality? shadowQuality = null, bool copyEffectProperties = true)
         {
             // store effect and set default properties
             ShadowQuality = shadowQuality;
@@ -204,8 +204,8 @@ namespace Nez.GeonBit.Materials
                 Texture = fromEffect.Texture;
                 TextureEnabled = fromEffect.TextureEnabled;
                 Alpha = fromEffect.Alpha;
-                DiffuseColor = new Color(fromEffect.DiffuseColor.X, fromEffect.DiffuseColor.Y, fromEffect.DiffuseColor.Z);
-                SpecularColor = new Color(fromEffect.SpecularColor.X, fromEffect.SpecularColor.Y, fromEffect.SpecularColor.Z);
+                DiffuseColor = fromEffect.DiffuseColor;
+                SpecularColor = fromEffect.SpecularColor;
                 SpecularPower = fromEffect.SpecularPower;
             }
 
