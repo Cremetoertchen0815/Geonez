@@ -10,7 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:..\..\..\Nez.ExtendedContent\bin\Debug\net6.0\Nez.ExtendedContent.dll
+/reference:..\..\..\Nez.ExtendedContent\bin\Debug\net8.0\Nez.ExtendedContent.dll
 
 #---------------------------------- Content ---------------------------------#
 
