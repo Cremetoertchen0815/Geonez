@@ -16,7 +16,7 @@ public class RESTManager : GlobalManager
     public RESTManager(string URL, IAuthenticator? authenticator = null)
     {
         Client = new RestClient(URL);
-        Client.Authenticator = authenticator;
+        //Client.Authenticator = authenticator;
     }
 
 
