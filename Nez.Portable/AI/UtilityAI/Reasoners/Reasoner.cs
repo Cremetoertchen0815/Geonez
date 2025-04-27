@@ -1,42 +1,39 @@
 ﻿using System.Collections.Generic;
 
+namespace Nez.AI.UtilityAI;
 
-namespace Nez.AI.UtilityAI
+/// <summary>
+///     the root of UtilityAI.
+/// </summary>
+public abstract class Reasoner<T>
 {
-	/// <summary>
-	/// the root of UtilityAI.
-	/// </summary>
-	public abstract class Reasoner<T>
-	{
-		public IConsideration<T> DefaultConsideration = new FixedScoreConsideration<T>();
-
-		protected List<IConsideration<T>> _considerations = new List<IConsideration<T>>();
+    protected List<IConsideration<T>> _considerations = new();
+    public IConsideration<T> DefaultConsideration = new FixedScoreConsideration<T>();
 
 
-		public IAction<T> Select(T context)
-		{
-			var consideration = SelectBestConsideration(context);
-			if (consideration != null)
-				return consideration.Action;
+    public IAction<T> Select(T context)
+    {
+        var consideration = SelectBestConsideration(context);
+        if (consideration != null)
+            return consideration.Action;
 
-			return null;
-		}
-
-
-		protected abstract IConsideration<T> SelectBestConsideration(T context);
+        return null;
+    }
 
 
-		public Reasoner<T> AddConsideration(IConsideration<T> consideration)
-		{
-			_considerations.Add(consideration);
-			return this;
-		}
+    protected abstract IConsideration<T> SelectBestConsideration(T context);
 
 
-		public Reasoner<T> SetDefaultConsideration(IConsideration<T> defaultConsideration)
-		{
-			DefaultConsideration = defaultConsideration;
-			return this;
-		}
-	}
+    public Reasoner<T> AddConsideration(IConsideration<T> consideration)
+    {
+        _considerations.Add(consideration);
+        return this;
+    }
+
+
+    public Reasoner<T> SetDefaultConsideration(IConsideration<T> defaultConsideration)
+    {
+        DefaultConsideration = defaultConsideration;
+        return this;
+    }
 }

@@ -1,99 +1,98 @@
 using System.Collections.Generic;
 
-namespace Nez.Tiled
+namespace Nez.Tiled;
+
+public class TmxTilesetTile
 {
-	public class TmxTilesetTile
-	{
-		public TmxTileset Tileset;
+    private int _animationCurrentFrame;
 
-		public int Id;
-		public TmxTerrain[] TerrainEdges;
-		public double Probability;
-		public string Type;
+    private float _animationElapsedTime;
+    public List<TmxAnimationFrame> AnimationFrames;
 
-		public PropertyDict Properties;
-		public TmxImage Image;
-		public TmxList<TmxObjectGroup> ObjectGroups;
-		public List<TmxAnimationFrame> AnimationFrames;
+    public int Id;
+    public TmxImage Image;
 
-		// HACK: why do animated tiles need to add the firstGid?
-		public int currentAnimationFrameGid => AnimationFrames[_animationCurrentFrame].Gid + Tileset.FirstGid;
+    /// <summary>
+    ///     returns the value of an "nez:isDestructable" property if present in the properties dictionary
+    /// </summary>
+    /// <value><c>true</c> if is destructable; otherwise, <c>false</c>.</value>
+    public bool IsDestructable;
 
-		private float _animationElapsedTime;
-		private int _animationCurrentFrame;
+    /// <summary>
+    ///     returns the value of a "nez:isOneWayPlatform" property if present in the properties dictionary
+    /// </summary>
+    public bool IsOneWayPlatform;
 
-		/// <summary>
-		/// returns the value of an "nez:isDestructable" property if present in the properties dictionary
-		/// </summary>
-		/// <value><c>true</c> if is destructable; otherwise, <c>false</c>.</value>
-		public bool IsDestructable;
+    /// <summary>
+    ///     returns the value of a "nez:isSlope" property if present in the properties dictionary
+    /// </summary>
+    /// <value>The is slope.</value>
+    public bool IsSlope;
 
-		/// <summary>
-		/// returns the value of a "nez:isSlope" property if present in the properties dictionary
-		/// </summary>
-		/// <value>The is slope.</value>
-		public bool IsSlope;
+    public TmxList<TmxObjectGroup> ObjectGroups;
+    public double Probability;
 
-		/// <summary>
-		/// returns the value of a "nez:isOneWayPlatform" property if present in the properties dictionary
-		/// </summary>
-		public bool IsOneWayPlatform;
+    public PropertyDict Properties;
 
-		/// <summary>
-		/// returns the value of a "nez:slopeTopLeft" property if present in the properties dictionary
-		/// </summary>
-		/// <value>The slope top left.</value>
-		public int SlopeTopLeft;
+    /// <summary>
+    ///     returns the value of a "nez:slopeTopLeft" property if present in the properties dictionary
+    /// </summary>
+    /// <value>The slope top left.</value>
+    public int SlopeTopLeft;
 
-		/// <summary>
-		/// returns the value of a "nez:slopeTopRight" property if present in the properties dictionary
-		/// </summary>
-		/// <value>The slope top right.</value>
-		public int SlopeTopRight;
+    /// <summary>
+    ///     returns the value of a "nez:slopeTopRight" property if present in the properties dictionary
+    /// </summary>
+    /// <value>The slope top right.</value>
+    public int SlopeTopRight;
 
-		public bool CanWallJump { get; set; } = false;
+    public TmxTerrain[] TerrainEdges;
+    public TmxTileset Tileset;
+    public string Type;
 
-		public void ProcessProperties()
-		{
-			if (Properties.TryGetValue("nez:isDestructable", out string value))
-				IsDestructable = bool.Parse(value);
+    // HACK: why do animated tiles need to add the firstGid?
+    public int currentAnimationFrameGid => AnimationFrames[_animationCurrentFrame].Gid + Tileset.FirstGid;
 
-			if (Properties.TryGetValue("nez:isSlope", out value))
-				IsSlope = bool.Parse(value);
+    public bool CanWallJump { get; set; }
 
-			if (Properties.TryGetValue("nez:isOneWayPlatform", out value))
-				IsOneWayPlatform = bool.Parse(value);
+    public void ProcessProperties()
+    {
+        if (Properties.TryGetValue("nez:isDestructable", out var value))
+            IsDestructable = bool.Parse(value);
 
-			if (Properties.TryGetValue("nez:slopeTopLeft", out value))
-				SlopeTopLeft = int.Parse(value);
+        if (Properties.TryGetValue("nez:isSlope", out value))
+            IsSlope = bool.Parse(value);
 
-			if (Properties.TryGetValue("nez:slopeTopRight", out value))
-				SlopeTopRight = int.Parse(value);
+        if (Properties.TryGetValue("nez:isOneWayPlatform", out value))
+            IsOneWayPlatform = bool.Parse(value);
 
-			if (Properties.TryGetValue("canWallJump", out value))
-				CanWallJump = bool.Parse(value);
-		}
+        if (Properties.TryGetValue("nez:slopeTopLeft", out value))
+            SlopeTopLeft = int.Parse(value);
 
-		public void UpdateAnimatedTiles()
-		{
-			if (AnimationFrames.Count == 0)
-				return;
+        if (Properties.TryGetValue("nez:slopeTopRight", out value))
+            SlopeTopRight = int.Parse(value);
 
-			_animationElapsedTime += Time.DeltaTime;
+        if (Properties.TryGetValue("canWallJump", out value))
+            CanWallJump = bool.Parse(value);
+    }
 
-			if (_animationElapsedTime > AnimationFrames[_animationCurrentFrame].Duration)
-			{
-				_animationCurrentFrame = Mathf.IncrementWithWrap(_animationCurrentFrame, AnimationFrames.Count);
-				_animationElapsedTime = 0;
-			}
-		}
-	}
+    public void UpdateAnimatedTiles()
+    {
+        if (AnimationFrames.Count == 0)
+            return;
 
+        _animationElapsedTime += Time.DeltaTime;
 
-	public class TmxAnimationFrame
-	{
-		public int Gid;
-		public float Duration;
-	}
+        if (_animationElapsedTime > AnimationFrames[_animationCurrentFrame].Duration)
+        {
+            _animationCurrentFrame = Mathf.IncrementWithWrap(_animationCurrentFrame, AnimationFrames.Count);
+            _animationElapsedTime = 0;
+        }
+    }
+}
 
+public class TmxAnimationFrame
+{
+    public float Duration;
+    public int Gid;
 }

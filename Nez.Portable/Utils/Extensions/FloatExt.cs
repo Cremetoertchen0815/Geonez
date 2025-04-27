@@ -1,7 +1,9 @@
-﻿namespace Nez
+﻿namespace Nez;
+
+public static class FloatExt
 {
-	public static class FloatExt
-	{
-		public static bool Approximately(this float self, float other) => Mathf.Approximately(self, other);
-	}
+    public static bool Approximately(this float self, float other)
+    {
+        return Mathf.Approximately(self, other);
+    }
 }

@@ -1,8 +1,7 @@
-﻿namespace Nez
+﻿namespace Nez;
+
+public enum Axis
 {
-	public enum Axis
-	{
-		X,
-		Y
-	}
+    X,
+    Y
 }

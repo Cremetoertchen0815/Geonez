@@ -1,8 +1,6 @@
-﻿namespace Nez
-{
-	internal interface IVariableUpdatable
-	{
+﻿namespace Nez;
 
-		void VariableUpdate();
-	}
+internal interface IVariableUpdatable
+{
+    void VariableUpdate();
 }

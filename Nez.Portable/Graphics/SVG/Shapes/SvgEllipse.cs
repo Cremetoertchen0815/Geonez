@@ -1,16 +1,13 @@
 ﻿using System.Xml.Serialization;
 
+namespace Nez.Svg;
 
-namespace Nez.Svg
+public class SvgEllipse : SvgElement
 {
-	public class SvgEllipse : SvgElement
-	{
-		[XmlAttribute("rx")] public float RadiusX;
+    [XmlAttribute("cx")] public float CenterX;
 
-		[XmlAttribute("ry")] public float RadiusY;
+    [XmlAttribute("cy")] public float CenterY;
+    [XmlAttribute("rx")] public float RadiusX;
 
-		[XmlAttribute("cy")] public float CenterY;
-
-		[XmlAttribute("cx")] public float CenterX;
-	}
+    [XmlAttribute("ry")] public float RadiusY;
 }

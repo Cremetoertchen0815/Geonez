@@ -1,196 +1,190 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
+namespace Nez.AI.GOAP;
 
-namespace Nez.AI.GOAP
+/// <summary>
+///     GOAP based on https://github.com/stolk/GPGOAP
+/// </summary>
+public class ActionPlanner
 {
-	/// <summary>
-	/// GOAP based on https://github.com/stolk/GPGOAP
-	/// </summary>
-	public class ActionPlanner
-	{
-		public const int MAX_CONDITIONS = 64;
+    public const int MAX_CONDITIONS = 64;
+    private readonly List<Action> _actions = new();
 
-		/// <summary>
-		/// Names associated with all world state atoms
-		/// </summary>
-		public string[] ConditionNames = new string[MAX_CONDITIONS];
-		private List<Action> _actions = new List<Action>();
-		private List<Action> _viableActions = new List<Action>();
+    /// <summary>
+    ///     Postconditions for all actions (action effects).
+    /// </summary>
+    private readonly WorldState[] _postConditions = new WorldState[MAX_CONDITIONS];
 
-		/// <summary>
-		/// Preconditions for all actions
-		/// </summary>
-		private WorldState[] _preConditions = new WorldState[MAX_CONDITIONS];
+    /// <summary>
+    ///     Preconditions for all actions
+    /// </summary>
+    private readonly WorldState[] _preConditions = new WorldState[MAX_CONDITIONS];
 
-		/// <summary>
-		/// Postconditions for all actions (action effects).
-		/// </summary>
-		private WorldState[] _postConditions = new WorldState[MAX_CONDITIONS];
+    private readonly List<Action> _viableActions = new();
 
-		/// <summary>
-		/// Number of world state atoms.
-		/// </summary>
-		private int _numConditionNames;
+    /// <summary>
+    ///     Number of world state atoms.
+    /// </summary>
+    private int _numConditionNames;
+
+    /// <summary>
+    ///     Names associated with all world state atoms
+    /// </summary>
+    public string[] ConditionNames = new string[MAX_CONDITIONS];
 
 
-		public ActionPlanner()
-		{
-			_numConditionNames = 0;
-			for (int i = 0; i < MAX_CONDITIONS; ++i)
-			{
-				ConditionNames[i] = null;
-				_preConditions[i] = WorldState.Create(this);
-				_postConditions[i] = WorldState.Create(this);
-			}
-		}
+    public ActionPlanner()
+    {
+        _numConditionNames = 0;
+        for (var i = 0; i < MAX_CONDITIONS; ++i)
+        {
+            ConditionNames[i] = null;
+            _preConditions[i] = WorldState.Create(this);
+            _postConditions[i] = WorldState.Create(this);
+        }
+    }
 
 
-		/// <summary>
-		/// convenince method for fetching a WorldState object
-		/// </summary>
-		/// <returns>The world state.</returns>
-		public WorldState CreateWorldState() => WorldState.Create(this);
+    /// <summary>
+    ///     convenince method for fetching a WorldState object
+    /// </summary>
+    /// <returns>The world state.</returns>
+    public WorldState CreateWorldState()
+    {
+        return WorldState.Create(this);
+    }
 
 
-		public void AddAction(Action action)
-		{
-			int actionId = FindActionIndex(action);
-			if (actionId == -1)
-				throw new KeyNotFoundException("could not find or create Action");
+    public void AddAction(Action action)
+    {
+        var actionId = FindActionIndex(action);
+        if (actionId == -1)
+            throw new KeyNotFoundException("could not find or create Action");
 
-			foreach (var preCondition in action._preConditions)
-			{
-				int conditionId = FindConditionNameIndex(preCondition.Item1);
-				if (conditionId == -1)
-					throw new KeyNotFoundException("could not find or create conditionName");
+        foreach (var preCondition in action._preConditions)
+        {
+            var conditionId = FindConditionNameIndex(preCondition.Item1);
+            if (conditionId == -1)
+                throw new KeyNotFoundException("could not find or create conditionName");
 
-				_preConditions[actionId].Set(conditionId, preCondition.Item2);
-			}
+            _preConditions[actionId].Set(conditionId, preCondition.Item2);
+        }
 
-			foreach (var postCondition in action._postConditions)
-			{
-				int conditionId = FindConditionNameIndex(postCondition.Item1);
-				if (conditionId == -1)
-					throw new KeyNotFoundException("could not find conditionName");
+        foreach (var postCondition in action._postConditions)
+        {
+            var conditionId = FindConditionNameIndex(postCondition.Item1);
+            if (conditionId == -1)
+                throw new KeyNotFoundException("could not find conditionName");
 
-				_postConditions[actionId].Set(conditionId, postCondition.Item2);
-			}
-		}
-
-
-		public Stack<Action> Plan(WorldState startState, WorldState goalState, List<AStarNode> selectedNodes = null)
-		{
-			_viableActions.Clear();
-			for (int i = 0; i < _actions.Count; i++)
-			{
-				if (_actions[i].Validate())
-					_viableActions.Add(_actions[i]);
-			}
-
-			return AStar.Plan(this, startState, goalState, selectedNodes);
-		}
+            _postConditions[actionId].Set(conditionId, postCondition.Item2);
+        }
+    }
 
 
-		/// <summary>
-		/// Describe the action planner by listing all actions with pre and post conditions. For debugging purpose.
-		/// </summary>
-		public string Describe()
-		{
-			var sb = new StringBuilder();
-			for (int a = 0; a < _actions.Count; ++a)
-			{
-				sb.AppendLine(_actions[a].GetType().Name);
+    public Stack<Action> Plan(WorldState startState, WorldState goalState, List<AStarNode> selectedNodes = null)
+    {
+        _viableActions.Clear();
+        for (var i = 0; i < _actions.Count; i++)
+            if (_actions[i].Validate())
+                _viableActions.Add(_actions[i]);
 
-				var pre = _preConditions[a];
-				var pst = _postConditions[a];
-				for (int i = 0; i < MAX_CONDITIONS; ++i)
-				{
-					if ((pre.DontCare & (1L << i)) == 0)
-					{
-						bool v = (pre.Values & (1L << i)) != 0;
-						sb.AppendFormat("  {0}=={1}\n", ConditionNames[i], v ? 1 : 0);
-					}
-				}
-
-				for (int i = 0; i < MAX_CONDITIONS; ++i)
-				{
-					if ((pst.DontCare & (1L << i)) == 0)
-					{
-						bool v = (pst.Values & (1L << i)) != 0;
-						sb.AppendFormat("  {0}:={1}\n", ConditionNames[i], v ? 1 : 0);
-					}
-				}
-			}
-
-			return sb.ToString();
-		}
+        return AStar.Plan(this, startState, goalState, selectedNodes);
+    }
 
 
-		internal int FindConditionNameIndex(string conditionName)
-		{
-			int idx;
-			for (idx = 0; idx < _numConditionNames; ++idx)
-			{
-				if (string.Equals(ConditionNames[idx], conditionName))
-					return idx;
-			}
+    /// <summary>
+    ///     Describe the action planner by listing all actions with pre and post conditions. For debugging purpose.
+    /// </summary>
+    public string Describe()
+    {
+        var sb = new StringBuilder();
+        for (var a = 0; a < _actions.Count; ++a)
+        {
+            sb.AppendLine(_actions[a].GetType().Name);
 
-			if (idx < MAX_CONDITIONS - 1)
-			{
-				ConditionNames[idx] = conditionName;
-				_numConditionNames++;
-				return idx;
-			}
+            var pre = _preConditions[a];
+            var pst = _postConditions[a];
+            for (var i = 0; i < MAX_CONDITIONS; ++i)
+                if ((pre.DontCare & (1L << i)) == 0)
+                {
+                    var v = (pre.Values & (1L << i)) != 0;
+                    sb.AppendFormat("  {0}=={1}\n", ConditionNames[i], v ? 1 : 0);
+                }
 
-			return -1;
-		}
+            for (var i = 0; i < MAX_CONDITIONS; ++i)
+                if ((pst.DontCare & (1L << i)) == 0)
+                {
+                    var v = (pst.Values & (1L << i)) != 0;
+                    sb.AppendFormat("  {0}:={1}\n", ConditionNames[i], v ? 1 : 0);
+                }
+        }
 
-
-		internal int FindActionIndex(Action action)
-		{
-			int idx = _actions.IndexOf(action);
-			if (idx > -1)
-				return idx;
-
-			_actions.Add(action);
-
-			return _actions.Count - 1;
-		}
-
-
-		internal List<AStarNode> GetPossibleTransitions(WorldState fr)
-		{
-			var result = ListPool<AStarNode>.Obtain();
-			for (int i = 0; i < _viableActions.Count; ++i)
-			{
-				// see if precondition is met
-				var pre = _preConditions[i];
-				long care = (pre.DontCare ^ -1L);
-				bool met = ((pre.Values & care) == (fr.Values & care));
-				if (met)
-				{
-					var node = Pool<AStarNode>.Obtain();
-					node.Action = _viableActions[i];
-					node.CostSoFar = _viableActions[i].Cost;
-					node.WorldState = ApplyPostConditions(this, i, fr);
-					result.Add(node);
-				}
-			}
-
-			return result;
-		}
+        return sb.ToString();
+    }
 
 
-		internal WorldState ApplyPostConditions(ActionPlanner ap, int actionnr, WorldState fr)
-		{
-			var pst = ap._postConditions[actionnr];
-			long unaffected = pst.DontCare;
-			long affected = (unaffected ^ -1L);
+    internal int FindConditionNameIndex(string conditionName)
+    {
+        int idx;
+        for (idx = 0; idx < _numConditionNames; ++idx)
+            if (string.Equals(ConditionNames[idx], conditionName))
+                return idx;
 
-			fr.Values = (fr.Values & unaffected) | (pst.Values & affected);
-			fr.DontCare &= pst.DontCare;
-			return fr;
-		}
-	}
+        if (idx < MAX_CONDITIONS - 1)
+        {
+            ConditionNames[idx] = conditionName;
+            _numConditionNames++;
+            return idx;
+        }
+
+        return -1;
+    }
+
+
+    internal int FindActionIndex(Action action)
+    {
+        var idx = _actions.IndexOf(action);
+        if (idx > -1)
+            return idx;
+
+        _actions.Add(action);
+
+        return _actions.Count - 1;
+    }
+
+
+    internal List<AStarNode> GetPossibleTransitions(WorldState fr)
+    {
+        var result = ListPool<AStarNode>.Obtain();
+        for (var i = 0; i < _viableActions.Count; ++i)
+        {
+            // see if precondition is met
+            var pre = _preConditions[i];
+            var care = pre.DontCare ^ -1L;
+            var met = (pre.Values & care) == (fr.Values & care);
+            if (met)
+            {
+                var node = Pool<AStarNode>.Obtain();
+                node.Action = _viableActions[i];
+                node.CostSoFar = _viableActions[i].Cost;
+                node.WorldState = ApplyPostConditions(this, i, fr);
+                result.Add(node);
+            }
+        }
+
+        return result;
+    }
+
+
+    internal WorldState ApplyPostConditions(ActionPlanner ap, int actionnr, WorldState fr)
+    {
+        var pst = ap._postConditions[actionnr];
+        var unaffected = pst.DontCare;
+        var affected = unaffected ^ -1L;
+
+        fr.Values = (fr.Values & unaffected) | (pst.Values & affected);
+        fr.DontCare &= pst.DontCare;
+        return fr;
+    }
 }

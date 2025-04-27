@@ -1,4 +1,5 @@
 ﻿#region LICENSE
+
 //-----------------------------------------------------------------------------
 // For the purpose of making video games, educational projects or gamification,
 // GeonBit is distributed under the MIT license and is totally free to use.
@@ -8,70 +9,74 @@
 // Copyright (c) 2017 Ronen Ness [ronenness@gmail.com].
 // Do not remove this license notice.
 //-----------------------------------------------------------------------------
+
 #endregion
+
 #region File Description
+
 //-----------------------------------------------------------------------------
 // A scene node with basic Bounding-Box based culling.
 //
 // Author: Ronen Ness.
 // Since: 2017.
 //-----------------------------------------------------------------------------
+
 #endregion
+
 using Microsoft.Xna.Framework;
 
-namespace Nez.GeonBit
+namespace Nez.GeonBit;
+
+/// <summary>
+///     Bounding-Box culling node will calculate the bounding box of the node and its children, and will cull out
+///     if it doesn't intersect with the camera frustum.
+/// </summary>
+public class BoundingBoxCullingNode : CullingNode
 {
     /// <summary>
-    /// Bounding-Box culling node will calculate the bounding box of the node and its children, and will cull out 
-    /// if it doesn't intersect with the camera frustum.
+    ///     Get if this node is currently visible in camera.
     /// </summary>
-    public class BoundingBoxCullingNode : CullingNode
+    public override bool IsInScreen
     {
-        /// <summary>
-        /// Clone this scene node.
-        /// </summary>
-        /// <returns>GeonNode copy.</returns>
-        public override Node Clone()
+        get
         {
-            var ret = new BoundingBoxCullingNode
-            {
-                Transformations = Transformations.Clone(),
-                LastBoundingBox = LastBoundingBox,
-                Visible = Visible
-            };
-            return ret;
+            var bb = GetBoundingBox();
+            return bb.Min != bb.Max && CameraFrustum.Contains(bb) != ContainmentType.Disjoint;
         }
+    }
 
-        /// <summary>
-        /// Get if this node is currently visible in camera.
-        /// </summary>
-        public override bool IsInScreen
+    /// <summary>
+    ///     Get if this node is partly inside screen (eg intersects with camera frustum).
+    /// </summary>
+    public override bool IsPartlyInScreen
+    {
+        get
         {
-            get
-            {
-                var bb = GetBoundingBox();
-                return (bb.Min != bb.Max && CameraFrustum.Contains(bb) != ContainmentType.Disjoint);
-            }
+            var bb = GetBoundingBox();
+            return bb.Min != bb.Max && CameraFrustum.Contains(GetBoundingBox()) == ContainmentType.Intersects;
         }
+    }
 
-        /// <summary>
-        /// Get if this node is partly inside screen (eg intersects with camera frustum).
-        /// </summary>
-        public override bool IsPartlyInScreen
+    /// <summary>
+    ///     Clone this scene node.
+    /// </summary>
+    /// <returns>GeonNode copy.</returns>
+    public override Node Clone()
+    {
+        var ret = new BoundingBoxCullingNode
         {
-            get
-            {
-                var bb = GetBoundingBox();
-                return (bb.Min != bb.Max && CameraFrustum.Contains(GetBoundingBox()) == ContainmentType.Intersects);
-            }
-        }
+            Transformations = Transformations.Clone(),
+            LastBoundingBox = LastBoundingBox,
+            Visible = Visible
+        };
+        return ret;
+    }
 
-        /// <summary>
-        /// Update culling test / cached data.
-        /// This is called whenever trying to draw this node after transformations update
-        /// </summary>
-        protected override void UpdateCullingData()
-        {
-        }
+    /// <summary>
+    ///     Update culling test / cached data.
+    ///     This is called whenever trying to draw this node after transformations update
+    /// </summary>
+    protected override void UpdateCullingData()
+    {
     }
 }

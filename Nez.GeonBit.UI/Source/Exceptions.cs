@@ -4,95 +4,94 @@
 // Author: Ronen Ness.
 // Since: 2017.
 // -------------------------------------------------------
+
 using System;
 
+namespace Nez.GeonBit.UI.Exceptions;
 
-namespace Nez.GeonBit.UI.Exceptions
+/// <summary>
+///     Thrown when something is not found (key, value, index, etc.)
+/// </summary>
+public class NotFoundException : Exception
 {
 	/// <summary>
-	/// Thrown when something is not found (key, value, index, etc.)
+	///     Create the exception without message.
 	/// </summary>
-	public class NotFoundException : Exception
-	{
-		/// <summary>
-		/// Create the exception without message.
-		/// </summary>
-		public NotFoundException()
-		{
-		}
-
-		/// <summary>
-		/// Create the exception with message.
-		/// </summary>
-		public NotFoundException(string message)
-			: base(message)
-		{
-		}
-
-		/// <summary>
-		/// Create the exception with message and inner exception.
-		/// </summary>
-		public NotFoundException(string message, Exception inner)
-			: base(message, inner)
-		{
-		}
-	}
+	public NotFoundException()
+    {
+    }
 
 	/// <summary>
-	/// Thrown when the user provides an invalid value.
+	///     Create the exception with message.
 	/// </summary>
-	public class InvalidValueException : Exception
-	{
-		/// <summary>
-		/// Create the exception without message.
-		/// </summary>
-		public InvalidValueException()
-		{
-		}
-
-		/// <summary>
-		/// Create the exception with message.
-		/// </summary>
-		public InvalidValueException(string message)
-			: base(message)
-		{
-		}
-
-		/// <summary>
-		/// Create the exception with message and inner exception.
-		/// </summary>
-		public InvalidValueException(string message, Exception inner)
-			: base(message, inner)
-		{
-		}
-	}
+	public NotFoundException(string message)
+        : base(message)
+    {
+    }
 
 	/// <summary>
-	/// Thrown when the user tries to perform an action but the object / UI state does not allow it.
+	///     Create the exception with message and inner exception.
 	/// </summary>
-	public class InvalidStateException : Exception
-	{
-		/// <summary>
-		/// Create the exception without message.
-		/// </summary>
-		public InvalidStateException()
-		{
-		}
+	public NotFoundException(string message, Exception inner)
+        : base(message, inner)
+    {
+    }
+}
 
-		/// <summary>
-		/// Create the exception with message.
-		/// </summary>
-		public InvalidStateException(string message)
-			: base(message)
-		{
-		}
+/// <summary>
+///     Thrown when the user provides an invalid value.
+/// </summary>
+public class InvalidValueException : Exception
+{
+	/// <summary>
+	///     Create the exception without message.
+	/// </summary>
+	public InvalidValueException()
+    {
+    }
 
-		/// <summary>
-		/// Create the exception with message and inner exception.
-		/// </summary>
-		public InvalidStateException(string message, Exception inner)
-			: base(message, inner)
-		{
-		}
-	}
+	/// <summary>
+	///     Create the exception with message.
+	/// </summary>
+	public InvalidValueException(string message)
+        : base(message)
+    {
+    }
+
+	/// <summary>
+	///     Create the exception with message and inner exception.
+	/// </summary>
+	public InvalidValueException(string message, Exception inner)
+        : base(message, inner)
+    {
+    }
+}
+
+/// <summary>
+///     Thrown when the user tries to perform an action but the object / UI state does not allow it.
+/// </summary>
+public class InvalidStateException : Exception
+{
+	/// <summary>
+	///     Create the exception without message.
+	/// </summary>
+	public InvalidStateException()
+    {
+    }
+
+	/// <summary>
+	///     Create the exception with message.
+	/// </summary>
+	public InvalidStateException(string message)
+        : base(message)
+    {
+    }
+
+	/// <summary>
+	///     Create the exception with message and inner exception.
+	/// </summary>
+	public InvalidStateException(string message, Exception inner)
+        : base(message, inner)
+    {
+    }
 }

@@ -4,14 +4,14 @@ namespace Nez;
 
 public class SimpleColorGradePostProcessor : PostProcessor
 {
-    private EffectParameter _paramBrightness;
-    private EffectParameter _paramContrast;
-    private EffectParameter _paramSaturation;
-    private EffectParameter _paramGamma;
-    private float _brightness = 0f;
+    private readonly EffectParameter _paramBrightness;
+    private readonly EffectParameter _paramContrast;
+    private readonly EffectParameter _paramGamma;
+    private readonly EffectParameter _paramSaturation;
+    private float _brightness;
     private float _contrast = 1f;
-    private float _saturation = 1f;
     private float _gamma = 1f;
+    private float _saturation = 1f;
 
     public SimpleColorGradePostProcessor(int executionOrder) : base(executionOrder)
     {
@@ -66,5 +66,4 @@ public class SimpleColorGradePostProcessor : PostProcessor
             _paramGamma.SetValue(value);
         }
     }
-
 }

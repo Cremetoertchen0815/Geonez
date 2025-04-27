@@ -1,37 +1,39 @@
-﻿using Nez.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
-
+using Nez.UI;
 
 #if TRACE
 namespace Nez
 {
-	public class EnumInspector : Inspector
-	{
-		private SelectBox<string> _selectBox;
+    public class EnumInspector : Inspector
+    {
+        private SelectBox<string> _selectBox;
 
 
-		public override void Initialize(Table table, Skin skin, float leftCellWidth)
-		{
-			var label = CreateNameLabel(table, skin, leftCellWidth);
+        public override void Initialize(Table table, Skin skin, float leftCellWidth)
+        {
+            var label = CreateNameLabel(table, skin, leftCellWidth);
 
-			// gotta get ugly here
-			_selectBox = new SelectBox<string>(skin);
+            // gotta get ugly here
+            _selectBox = new SelectBox<string>(skin);
 
-			var enumValues = Enum.GetValues(_valueType);
-			var enumStringValues = new List<string>();
-			foreach (object e in enumValues)
-				enumStringValues.Add(e.ToString());
-			_selectBox.SetItems(enumStringValues);
+            var enumValues = Enum.GetValues(_valueType);
+            var enumStringValues = new List<string>();
+            foreach (var e in enumValues)
+                enumStringValues.Add(e.ToString());
+            _selectBox.SetItems(enumStringValues);
 
-			_selectBox.OnChanged += selectedItem => { SetValue(Enum.Parse(_valueType, selectedItem)); };
+            _selectBox.OnChanged += selectedItem => { SetValue(Enum.Parse(_valueType, selectedItem)); };
 
-			table.Add(label);
-			table.Add(_selectBox).SetFillX();
-		}
+            table.Add(label);
+            table.Add(_selectBox).SetFillX();
+        }
 
 
-		public override void Update() => _selectBox.SetSelected(GetValue<object>().ToString());
-	}
+        public override void Update()
+        {
+            _selectBox.SetSelected(GetValue<object>().ToString());
+        }
+    }
 }
 #endif

@@ -3,7 +3,6 @@ Tiled Map Integration
 
 Heavily modified fork of [TiledSharp](https://github.com/marshallward/TiledSharp)
 
-
 Load and render a map:
 
 ```csharp

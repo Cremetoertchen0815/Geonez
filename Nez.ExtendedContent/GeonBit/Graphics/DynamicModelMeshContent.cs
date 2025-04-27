@@ -1,4 +1,5 @@
 ﻿#region License
+
 //   Copyright 2016 Kastellanos Nikolaos
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,52 +13,52 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
+
 #endregion
 
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
-using System.Collections.Generic;
 
-namespace Nez.ExtendedContent.GeonBit.Graphics
+namespace Nez.ExtendedContent.GeonBit.Graphics;
+
+public class DynamicModelMeshContent
 {
-	public class DynamicModelMeshContent
-	{
-		protected internal ModelMeshContent Source { get; protected set; }
+    public DynamicModelMeshContent(ModelMeshContent source)
+    {
+        Source = source;
 
-		// Summary:
-		//     Gets the mesh name.
-		public string Name => Source.Name;
+        //deep clone MeshParts
+        MeshParts = new List<DynamicModelMeshPartContent>(source.MeshParts.Count);
+        foreach (var mesh in source.MeshParts)
+            MeshParts.Add(new DynamicModelMeshPartContent(mesh));
+    }
 
-		// Summary:
-		//     Gets the parent bone.
-		[ContentSerializerIgnore]
-		public ModelBoneContent ParentBone => Source.ParentBone;
+    protected internal ModelMeshContent Source { get; protected set; }
 
-		// Summary:
-		//     Gets the bounding sphere for this mesh.
-		public BoundingSphere BoundingSphere => Source.BoundingSphere;
+    // Summary:
+    //     Gets the mesh name.
+    public string Name => Source.Name;
 
-		// Summary:
-		//     Gets the children mesh parts associated with this mesh.
-		[ContentSerializerIgnore]
-		public List<DynamicModelMeshPartContent> MeshParts { get; private set; }
+    // Summary:
+    //     Gets the parent bone.
+    [ContentSerializerIgnore] public ModelBoneContent ParentBone => Source.ParentBone;
 
-		// Summary:
-		//     Gets a user defined tag object.
-		[ContentSerializer(SharedResource = true)]
-		public object Tag { get => Source.Tag; set => Source.Tag = value; }
+    // Summary:
+    //     Gets the bounding sphere for this mesh.
+    public BoundingSphere BoundingSphere => Source.BoundingSphere;
 
+    // Summary:
+    //     Gets the children mesh parts associated with this mesh.
+    [ContentSerializerIgnore] public List<DynamicModelMeshPartContent> MeshParts { get; }
 
-		public DynamicModelMeshContent(ModelMeshContent source)
-		{
-			Source = source;
-
-			//deep clone MeshParts
-			MeshParts = new List<DynamicModelMeshPartContent>(source.MeshParts.Count);
-			foreach (var mesh in source.MeshParts)
-				MeshParts.Add(new DynamicModelMeshPartContent(mesh));
-		}
-
-	}
+    // Summary:
+    //     Gets a user defined tag object.
+    [ContentSerializer(SharedResource = true)]
+    public object Tag
+    {
+        get => Source.Tag;
+        set => Source.Tag = value;
+    }
 }

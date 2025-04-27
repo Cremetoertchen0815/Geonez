@@ -1,92 +1,94 @@
 ﻿using Microsoft.Xna.Framework;
 
+namespace Nez.Verlet;
 
-namespace Nez.Verlet
+public class Particle
 {
-	public class Particle
-	{
-		/// <summary>
-		/// the current position of the Particle
-		/// </summary>
-		public Vector2 Position;
+    internal Vector2 acceleration;
 
-		/// <summary>
-		/// the position of the Particle prior to its latest move
-		/// </summary>
-		public Vector2 LastPosition;
+    /// <summary>
+    ///     if true, the Particle will collide with standard Nez Colliders
+    /// </summary>
+    public bool CollidesWithColliders = true;
 
-		/// <summary>
-		/// the mass of the Particle. Taken into account for all forces and constraints
-		/// </summary>
-		public float Mass = 1;
+    internal bool isPinned;
 
-		/// <summary>
-		/// the radius of the Particle
-		/// </summary>
-		public float Radius;
+    /// <summary>
+    ///     the position of the Particle prior to its latest move
+    /// </summary>
+    public Vector2 LastPosition;
 
-		/// <summary>
-		/// if true, the Particle will collide with standard Nez Colliders
-		/// </summary>
-		public bool CollidesWithColliders = true;
+    /// <summary>
+    ///     the mass of the Particle. Taken into account for all forces and constraints
+    /// </summary>
+    public float Mass = 1;
 
-		internal bool isPinned;
-		internal Vector2 acceleration;
-		internal Vector2 pinnedPosition;
+    internal Vector2 pinnedPosition;
 
+    /// <summary>
+    ///     the current position of the Particle
+    /// </summary>
+    public Vector2 Position;
 
-		public Particle(Vector2 position)
-		{
-			Position = position;
-			LastPosition = position;
-		}
+    /// <summary>
+    ///     the radius of the Particle
+    /// </summary>
+    public float Radius;
 
 
-		public Particle(float x, float y) : this(new Vector2(x, y))
-		{
-		}
+    public Particle(Vector2 position)
+    {
+        Position = position;
+        LastPosition = position;
+    }
 
 
-		/// <summary>
-		/// applies a force taking mass into account to the Particle
-		/// </summary>
-		/// <param name="force">Force.</param>
-		public void ApplyForce(Vector2 force) =>
-			// acceleration = (1 / mass) * force
-			acceleration += force / Mass;
+    public Particle(float x, float y) : this(new Vector2(x, y))
+    {
+    }
 
 
-		/// <summary>
-		/// pins the Particle to its current position
-		/// </summary>
-		public Particle Pin()
-		{
-			isPinned = true;
-			pinnedPosition = Position;
-			return this;
-		}
+    /// <summary>
+    ///     applies a force taking mass into account to the Particle
+    /// </summary>
+    /// <param name="force">Force.</param>
+    public void ApplyForce(Vector2 force)
+    {
+        // acceleration = (1 / mass) * force
+        acceleration += force / Mass;
+    }
 
 
-		/// <summary>
-		/// pins the particle to the specified position
-		/// </summary>
-		/// <param name="position">Position.</param>
-		public Particle PinTo(Vector2 position)
-		{
-			isPinned = true;
-			pinnedPosition = position;
-			Position = pinnedPosition;
-			return this;
-		}
+    /// <summary>
+    ///     pins the Particle to its current position
+    /// </summary>
+    public Particle Pin()
+    {
+        isPinned = true;
+        pinnedPosition = Position;
+        return this;
+    }
 
 
-		/// <summary>
-		/// unpins the particle setting it free like the wind
-		/// </summary>
-		public Particle Unpin()
-		{
-			isPinned = false;
-			return this;
-		}
-	}
+    /// <summary>
+    ///     pins the particle to the specified position
+    /// </summary>
+    /// <param name="position">Position.</param>
+    public Particle PinTo(Vector2 position)
+    {
+        isPinned = true;
+        pinnedPosition = position;
+        Position = pinnedPosition;
+        return this;
+    }
+
+
+    /// <summary>
+    ///     unpins the particle setting it free like the wind
+    /// </summary>
+    public Particle Unpin()
+    {
+        isPinned = false;
+        return this;
+    }
 }

@@ -1,116 +1,111 @@
 using Microsoft.Xna.Framework;
 
-namespace Nez.Tiled
+namespace Nez.Tiled;
+
+public partial class TmxLayer : ITmxLayer
 {
-	public partial class TmxLayer : ITmxLayer
-	{
-		public TmxMap Map;
-		public string Name { get; set; }
-		public float Opacity { get; set; }
-		public bool Visible { get; set; }
-		public float OffsetX { get; set; }
-		public float OffsetY { get; set; }
-		public Vector2 Offset => new Vector2(OffsetX, OffsetY);
-		public float ParallaxFactorX { get; set; }
-		public float ParallaxFactorY { get; set; }
-		public Vector2 ParallaxFactor => new Vector2(ParallaxFactorX, ParallaxFactorY);
+	/// <summary>
+	///     height in tiles for this layer. Always the same as the map height for fixed-size maps.
+	/// </summary>
+	public int Height;
 
-		public PropertyDict Properties { get; set; }
+    public TmxMap Map;
+    public TmxLayerTile[] Tiles;
 
-		/// <summary>
-		/// width in tiles for this layer. Always the same as the map width for fixed-size maps.
-		/// </summary>
-		public int Width;
+    /// <summary>
+    ///     width in tiles for this layer. Always the same as the map width for fixed-size maps.
+    /// </summary>
+    public int Width;
 
-		/// <summary>
-		/// height in tiles for this layer. Always the same as the map height for fixed-size maps.
-		/// </summary>
-		public int Height;
-		public TmxLayerTile[] Tiles;
+    public Vector2 Offset => new(OffsetX, OffsetY);
+    public Vector2 ParallaxFactor => new(ParallaxFactorX, ParallaxFactorY);
+    public string Name { get; set; }
+    public float Opacity { get; set; }
+    public bool Visible { get; set; }
+    public float OffsetX { get; set; }
+    public float OffsetY { get; set; }
+    public float ParallaxFactorX { get; set; }
+    public float ParallaxFactorY { get; set; }
 
-		/// <summary>
-		/// returns the TmxLayerTile with gid. This is a slow lookup so cache it!
-		/// </summary>
-		/// <param name="gid"></param>
-		/// <returns></returns>
-		public TmxLayerTile GetTileWithGid(int gid)
-		{
-			for (int i = 0; i < Tiles.Length; i++)
-			{
-				if (Tiles[i] != null && Tiles[i].Gid == gid)
-					return Tiles[i];
-			}
-			return null;
-		}
-	}
+    public PropertyDict Properties { get; set; }
 
-	public class TmxLayerTile
-	{
-		private const uint FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
-		private const uint FLIPPED_VERTICALLY_FLAG = 0x40000000;
-		private const uint FLIPPED_DIAGONALLY_FLAG = 0x20000000;
+    /// <summary>
+    ///     returns the TmxLayerTile with gid. This is a slow lookup so cache it!
+    /// </summary>
+    /// <param name="gid"></param>
+    /// <returns></returns>
+    public TmxLayerTile GetTileWithGid(int gid)
+    {
+        for (var i = 0; i < Tiles.Length; i++)
+            if (Tiles[i] != null && Tiles[i].Gid == gid)
+                return Tiles[i];
+        return null;
+    }
+}
 
-		public TmxTileset Tileset;
-		public int Gid;
-		public int X;
-		public int Y;
-		public Vector2 Position => new Vector2(X, Y);
-		public bool HorizontalFlip;
-		public bool VerticalFlip;
-		public bool DiagonalFlip;
-		private int? _tilesetTileIndex;
+public class TmxLayerTile
+{
+    private const uint FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+    private const uint FLIPPED_VERTICALLY_FLAG = 0x40000000;
+    private const uint FLIPPED_DIAGONALLY_FLAG = 0x20000000;
+    private int? _tilesetTileIndex;
+    public bool DiagonalFlip;
+    public int Gid;
+    public bool HorizontalFlip;
 
-		/// <summary>
-		/// gets the TmxTilesetTile for this TmxLayerTile if it exists. TmxTilesetTile only exist for animated tiles and tiles with attached
-		/// properties.
-		/// </summary>
-		public TmxTilesetTile TilesetTile
-		{
-			get
-			{
-				if (!_tilesetTileIndex.HasValue)
-				{
-					_tilesetTileIndex = -1;
-					if (Tileset.FirstGid <= Gid)
-					{
-						if (Tileset.Tiles.TryGetValue(Gid - Tileset.FirstGid, out var tilesetTile))
-						{
-							_tilesetTileIndex = Gid - Tileset.FirstGid;
-						}
-					}
-				}
+    public TmxTileset Tileset;
+    public bool VerticalFlip;
+    public int X;
+    public int Y;
 
-				if (_tilesetTileIndex.Value < 0)
-					return null;
+    public TmxLayerTile(TmxMap map, uint id, int x, int y)
+    {
+        X = x;
+        Y = y;
+        var rawGid = id;
 
-				return Tileset.Tiles[_tilesetTileIndex.Value];
-			}
-		}
+        // Scan for tile flip bit flags
+        bool flip;
+        flip = (rawGid & FLIPPED_HORIZONTALLY_FLAG) != 0;
+        HorizontalFlip = flip;
 
-		public TmxLayerTile(TmxMap map, uint id, int x, int y)
-		{
-			X = x;
-			Y = y;
-			uint rawGid = id;
+        flip = (rawGid & FLIPPED_VERTICALLY_FLAG) != 0;
+        VerticalFlip = flip;
 
-			// Scan for tile flip bit flags
-			bool flip;
-			flip = (rawGid & FLIPPED_HORIZONTALLY_FLAG) != 0;
-			HorizontalFlip = flip;
+        flip = (rawGid & FLIPPED_DIAGONALLY_FLAG) != 0;
+        DiagonalFlip = flip;
 
-			flip = (rawGid & FLIPPED_VERTICALLY_FLAG) != 0;
-			VerticalFlip = flip;
+        // Zero the bit flags
+        rawGid &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
 
-			flip = (rawGid & FLIPPED_DIAGONALLY_FLAG) != 0;
-			DiagonalFlip = flip;
+        // Save GID remainder to int
+        Gid = (int)rawGid;
+        Tileset = map.GetTilesetForTileGid(Gid);
+    }
 
-			// Zero the bit flags
-			rawGid &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+    public Vector2 Position => new(X, Y);
 
-			// Save GID remainder to int
-			Gid = (int)rawGid;
-			Tileset = map.GetTilesetForTileGid(Gid);
-		}
-	}
+    /// <summary>
+    ///     gets the TmxTilesetTile for this TmxLayerTile if it exists. TmxTilesetTile only exist for animated tiles and tiles
+    ///     with attached
+    ///     properties.
+    /// </summary>
+    public TmxTilesetTile TilesetTile
+    {
+        get
+        {
+            if (!_tilesetTileIndex.HasValue)
+            {
+                _tilesetTileIndex = -1;
+                if (Tileset.FirstGid <= Gid)
+                    if (Tileset.Tiles.TryGetValue(Gid - Tileset.FirstGid, out var tilesetTile))
+                        _tilesetTileIndex = Gid - Tileset.FirstGid;
+            }
 
+            if (_tilesetTileIndex.Value < 0)
+                return null;
+
+            return Tileset.Tiles[_tilesetTileIndex.Value];
+        }
+    }
 }

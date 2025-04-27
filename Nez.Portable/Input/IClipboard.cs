@@ -1,8 +1,7 @@
-﻿namespace Nez
+﻿namespace Nez;
+
+public interface IClipboard
 {
-	public interface IClipboard
-	{
-		string GetContents();
-		void SetContents(string text);
-	}
+    string GetContents();
+    void SetContents(string text);
 }

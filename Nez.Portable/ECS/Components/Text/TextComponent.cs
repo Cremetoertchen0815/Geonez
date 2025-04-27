@@ -1,149 +1,154 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez.Sprites;
 
+namespace Nez;
 
-namespace Nez
+public class TextComponent : SpriteRenderer
 {
-	public class TextComponent : SpriteRenderer
-	{
-		public override RectangleF Bounds
-		{
-			get
-			{
-				if (_areBoundsDirty)
-				{
-					_bounds.CalculateBounds(Entity.Transform.Position, _localOffset, _origin, Entity.Transform.Scale,
-						Entity.Transform.Rotation, _size.X, _size.Y);
-					_areBoundsDirty = false;
-				}
-
-				return _bounds;
-			}
-		}
-
-		/// <summary>
-		/// text to draw
-		/// </summary>
-		/// <value>The text.</value>
-		public string Text
-		{
-			get => _text;
-			set => SetText(value);
-		}
-
-		/// <summary>
-		/// horizontal alignment of the text
-		/// </summary>
-		/// <value>The horizontal origin.</value>
-		public HorizontalAlign HorizontalOrigin
-		{
-			get => _horizontalAlign;
-			set => SetHorizontalAlign(value);
-		}
-
-		/// <summary>
-		/// vertical alignment of the text
-		/// </summary>
-		/// <value>The vertical origin.</value>
-		public VerticalAlign VerticalOrigin
-		{
-			get => _verticalAlign;
-			set => SetVerticalAlign(value);
-		}
+    protected IFont _font;
 
 
-		protected HorizontalAlign _horizontalAlign;
-		protected VerticalAlign _verticalAlign;
-		protected IFont _font;
-		protected string _text;
-		private Vector2 _size;
+    protected HorizontalAlign _horizontalAlign;
+    private Vector2 _size;
+    protected string _text;
+    protected VerticalAlign _verticalAlign;
 
 
-		public TextComponent() : this(Graphics.Instance.BitmapFont, "", Vector2.Zero, Color.White)
-		{
-		}
+    public TextComponent() : this(Graphics.Instance.BitmapFont, "", Vector2.Zero, Color.White)
+    {
+    }
 
-		public TextComponent(IFont font, string text, Vector2 localOffset, Color color)
-		{
-			_font = font;
-			_text = text;
-			_localOffset = localOffset;
-			Color = color;
-			_horizontalAlign = HorizontalAlign.Left;
-			_verticalAlign = VerticalAlign.Top;
+    public TextComponent(IFont font, string text, Vector2 localOffset, Color color)
+    {
+        _font = font;
+        _text = text;
+        _localOffset = localOffset;
+        Color = color;
+        _horizontalAlign = HorizontalAlign.Left;
+        _verticalAlign = VerticalAlign.Top;
 
-			UpdateSize();
-		}
+        UpdateSize();
+    }
+
+    public override RectangleF Bounds
+    {
+        get
+        {
+            if (_areBoundsDirty)
+            {
+                _bounds.CalculateBounds(Entity.Transform.Position, _localOffset, _origin, Entity.Transform.Scale,
+                    Entity.Transform.Rotation, _size.X, _size.Y);
+                _areBoundsDirty = false;
+            }
+
+            return _bounds;
+        }
+    }
+
+    /// <summary>
+    ///     text to draw
+    /// </summary>
+    /// <value>The text.</value>
+    public string Text
+    {
+        get => _text;
+        set => SetText(value);
+    }
+
+    /// <summary>
+    ///     horizontal alignment of the text
+    /// </summary>
+    /// <value>The horizontal origin.</value>
+    public HorizontalAlign HorizontalOrigin
+    {
+        get => _horizontalAlign;
+        set => SetHorizontalAlign(value);
+    }
+
+    /// <summary>
+    ///     vertical alignment of the text
+    /// </summary>
+    /// <value>The vertical origin.</value>
+    public VerticalAlign VerticalOrigin
+    {
+        get => _verticalAlign;
+        set => SetVerticalAlign(value);
+    }
 
 
-		#region Fluent setters
+    private void UpdateSize()
+    {
+        _size = _font.MeasureString(_text);
+        UpdateCentering();
+    }
 
-		public IFont GetFont() => _font;
+    private void UpdateCentering()
+    {
+        var oldOrigin = _origin;
 
-		public TextComponent SetFont(IFont font)
-		{
-			_font = font;
-			UpdateSize();
+        if (_horizontalAlign == HorizontalAlign.Left)
+            oldOrigin.X = 0;
+        else if (_horizontalAlign == HorizontalAlign.Center)
+            oldOrigin.X = _size.X / 2;
+        else
+            oldOrigin.X = _size.X;
 
-			return this;
-		}
+        if (_verticalAlign == VerticalAlign.Top)
+            oldOrigin.Y = 0;
+        else if (_verticalAlign == VerticalAlign.Center)
+            oldOrigin.Y = _size.Y / 2;
+        else
+            oldOrigin.Y = _size.Y;
 
-		public TextComponent SetText(string text)
-		{
-			_text = text;
-			UpdateSize();
-			UpdateCentering();
+        Origin = new Vector2((int)oldOrigin.X, (int)oldOrigin.Y);
+    }
 
-			return this;
-		}
-
-		public TextComponent SetHorizontalAlign(HorizontalAlign hAlign)
-		{
-			_horizontalAlign = hAlign;
-			UpdateCentering();
-
-			return this;
-		}
-
-		public TextComponent SetVerticalAlign(VerticalAlign vAlign)
-		{
-			_verticalAlign = vAlign;
-			UpdateCentering();
-
-			return this;
-		}
-
-		#endregion
+    public override void Render(Batcher batcher, Camera camera)
+    {
+        batcher.DrawString(_font, _text, Entity.Transform.Position + _localOffset, Color,
+            Entity.Transform.Rotation, Origin, Entity.Transform.Scale, SpriteEffects, LayerDepth);
+    }
 
 
-		private void UpdateSize()
-		{
-			_size = _font.MeasureString(_text);
-			UpdateCentering();
-		}
+    #region Fluent setters
 
-		private void UpdateCentering()
-		{
-			var oldOrigin = _origin;
+    public IFont GetFont()
+    {
+        return _font;
+    }
 
-			if (_horizontalAlign == HorizontalAlign.Left)
-				oldOrigin.X = 0;
-			else if (_horizontalAlign == HorizontalAlign.Center)
-				oldOrigin.X = _size.X / 2;
-			else
-				oldOrigin.X = _size.X;
+    public TextComponent SetFont(IFont font)
+    {
+        _font = font;
+        UpdateSize();
 
-			if (_verticalAlign == VerticalAlign.Top)
-				oldOrigin.Y = 0;
-			else if (_verticalAlign == VerticalAlign.Center)
-				oldOrigin.Y = _size.Y / 2;
-			else
-				oldOrigin.Y = _size.Y;
+        return this;
+    }
 
-			Origin = new Vector2((int)oldOrigin.X, (int)oldOrigin.Y);
-		}
+    public TextComponent SetText(string text)
+    {
+        _text = text;
+        UpdateSize();
+        UpdateCentering();
 
-		public override void Render(Batcher batcher, Camera camera) => batcher.DrawString(_font, _text, Entity.Transform.Position + _localOffset, Color,
-				Entity.Transform.Rotation, Origin, Entity.Transform.Scale, SpriteEffects, LayerDepth);
-	}
+        return this;
+    }
+
+    public TextComponent SetHorizontalAlign(HorizontalAlign hAlign)
+    {
+        _horizontalAlign = hAlign;
+        UpdateCentering();
+
+        return this;
+    }
+
+    public TextComponent SetVerticalAlign(VerticalAlign vAlign)
+    {
+        _verticalAlign = vAlign;
+        UpdateCentering();
+
+        return this;
+    }
+
+    #endregion
 }

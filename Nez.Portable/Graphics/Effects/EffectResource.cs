@@ -1,123 +1,125 @@
-using Microsoft.Xna.Framework;
 using System.IO;
+using Microsoft.Xna.Framework;
 
+namespace Nez;
 
-namespace Nez
+public static class EffectResource
 {
-	public static class EffectResource
-	{
-		// sprite effects
-		internal static byte[] SpriteBlinkEffectBytes => GetFileResourceBytes("engine/fx/sprite/blink");
+    // sprite effects
+    internal static byte[] SpriteBlinkEffectBytes => GetFileResourceBytes("engine/fx/sprite/blink");
 
-		internal static byte[] SpriteLinesEffectBytes => GetFileResourceBytes("engine/fx/sprite/lines");
+    internal static byte[] SpriteLinesEffectBytes => GetFileResourceBytes("engine/fx/sprite/lines");
 
-		internal static byte[] SpriteAlphaTestBytes => GetFileResourceBytes("engine/fx/sprite/alpha_test");
+    internal static byte[] SpriteAlphaTestBytes => GetFileResourceBytes("engine/fx/sprite/alpha_test");
 
-		internal static byte[] CrosshatchBytes => GetFileResourceBytes("engine/fx/sprite/crosshatch");
+    internal static byte[] CrosshatchBytes => GetFileResourceBytes("engine/fx/sprite/crosshatch");
 
-		internal static byte[] NoiseBytes => GetFileResourceBytes("engine/fx/sprite/noise");
+    internal static byte[] NoiseBytes => GetFileResourceBytes("engine/fx/sprite/noise");
 
-		internal static byte[] TwistBytes => GetFileResourceBytes("engine/fx/sprite/twist");
+    internal static byte[] TwistBytes => GetFileResourceBytes("engine/fx/sprite/twist");
 
-		internal static byte[] DotsBytes => GetFileResourceBytes("engine/fx/sprite/dots");
+    internal static byte[] DotsBytes => GetFileResourceBytes("engine/fx/sprite/dots");
 
-		internal static byte[] DissolveBytes => GetFileResourceBytes("engine/fx/sprite/dissolve");
+    internal static byte[] DissolveBytes => GetFileResourceBytes("engine/fx/sprite/dissolve");
 
-		// post processor effects
+    // post processor effects
 
-		internal static byte[] QualityBloom => GetFileResourceBytes("engine/fx/ppfx/bloom");
+    internal static byte[] QualityBloom => GetFileResourceBytes("engine/fx/ppfx/bloom");
 
-		internal static byte[] Mosaic => GetFileResourceBytes("engine/fx/ppfx/mosaic");
+    internal static byte[] Mosaic => GetFileResourceBytes("engine/fx/ppfx/mosaic");
 
-		internal static byte[] SimpleColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade_simple");
-		
-		internal static byte[] LUTColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade_lut");
+    internal static byte[] SimpleColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade_simple");
 
-        internal static byte[] FXAntiAliasing => GetFileResourceBytes("engine/fx/ppfx/fxaa");
+    internal static byte[] LUTColorGrade => GetFileResourceBytes("engine/fx/ppfx/color_grade_lut");
 
-        internal static byte[] GaussianBlurBytes => GetFileResourceBytes("engine/fx/ppfx/gauss_blur");
+    internal static byte[] FXAntiAliasing => GetFileResourceBytes("engine/fx/ppfx/fxaa");
 
-		internal static byte[] VignetteBytes => GetFileResourceBytes("engine/fx/ppfx/vignette");
+    internal static byte[] GaussianBlurBytes => GetFileResourceBytes("engine/fx/ppfx/gauss_blur");
 
-		internal static byte[] LetterboxBytes => GetFileResourceBytes("engine/fx/ppfx/letterbox");
+    internal static byte[] VignetteBytes => GetFileResourceBytes("engine/fx/ppfx/vignette");
 
-		internal static byte[] HeatDistortionBytes => GetFileResourceBytes("engine/fx/ppfx/heat_distortion");
+    internal static byte[] LetterboxBytes => GetFileResourceBytes("engine/fx/ppfx/letterbox");
 
-		internal static byte[] SpriteLightMultiplyBytes => GetFileResourceBytes("engine/fx/ppfx/sprite_light_multiply");
+    internal static byte[] HeatDistortionBytes => GetFileResourceBytes("engine/fx/ppfx/heat_distortion");
 
-		internal static byte[] PixelGlitchBytes => GetFileResourceBytes("engine/fx/ppfx/pixel_glitch");
+    internal static byte[] SpriteLightMultiplyBytes => GetFileResourceBytes("engine/fx/ppfx/sprite_light_multiply");
 
-		internal static byte[] StencilLightBytes => GetFileResourceBytes("engine/fx/ppfx/stencil_light");
+    internal static byte[] PixelGlitchBytes => GetFileResourceBytes("engine/fx/ppfx/pixel_glitch");
 
-		// deferred lighting
-		internal static byte[] DeferredSpriteBytes => GetFileResourceBytes("engine/fx/light/deferred_sprite");
+    internal static byte[] StencilLightBytes => GetFileResourceBytes("engine/fx/ppfx/stencil_light");
 
-		internal static byte[] DeferredLightBytes => GetFileResourceBytes("engine/fx/light/deferred");
+    // deferred lighting
+    internal static byte[] DeferredSpriteBytes => GetFileResourceBytes("engine/fx/light/deferred_sprite");
 
-		// forward lighting
-		internal static byte[] ForwardLightingBytes => GetFileResourceBytes("engine/fx/light/forward");
+    internal static byte[] DeferredLightBytes => GetFileResourceBytes("engine/fx/light/deferred");
 
-		internal static byte[] PolygonLightBytes => GetFileResourceBytes("engine/fx/light/polygon");
+    // forward lighting
+    internal static byte[] ForwardLightingBytes => GetFileResourceBytes("engine/fx/light/forward");
 
-		// scene transitions
-		internal static byte[] SquaresTransitionBytes => GetFileResourceBytes("engine/fx/transition/square");
+    internal static byte[] PolygonLightBytes => GetFileResourceBytes("engine/fx/light/polygon");
 
-		// sprite or post processor effects
-		internal static byte[] SpriteEffectBytes => GetMonoGameEmbeddedResourceBytes("Microsoft.Xna.Framework.Graphics.Effect.Resources.SpriteEffect.ogl.mgfxo");
+    // scene transitions
+    internal static byte[] SquaresTransitionBytes => GetFileResourceBytes("engine/fx/transition/square");
 
-		internal static byte[] MultiTextureOverlayBytes => GetFileResourceBytes("engine/fx/ppfx/multi_tex_overlay");
+    // sprite or post processor effects
+    internal static byte[] SpriteEffectBytes =>
+        GetMonoGameEmbeddedResourceBytes("Microsoft.Xna.Framework.Graphics.Effect.Resources.SpriteEffect.ogl.mgfxo");
 
-		internal static byte[] ScanlinesBytes => GetFileResourceBytes("engine/fx/ppfx/scanline");
+    internal static byte[] MultiTextureOverlayBytes => GetFileResourceBytes("engine/fx/ppfx/multi_tex_overlay");
 
-		internal static byte[] ReflectionBytes => GetFileResourceBytes("engine/fx/ppfx/reflection");
+    internal static byte[] ScanlinesBytes => GetFileResourceBytes("engine/fx/ppfx/scanline");
 
-		internal static byte[] GrayscaleBytes => GetFileResourceBytes("engine/fx/ppfx/grayscale");
+    internal static byte[] ReflectionBytes => GetFileResourceBytes("engine/fx/ppfx/reflection");
 
-		internal static byte[] SepiaBytes => GetFileResourceBytes("engine/fx/ppfx/sepia");
+    internal static byte[] GrayscaleBytes => GetFileResourceBytes("engine/fx/ppfx/grayscale");
 
-		internal static byte[] PaletteCyclerBytes => GetFileResourceBytes("engine/fx/ppfx/palette_cycle");
+    internal static byte[] SepiaBytes => GetFileResourceBytes("engine/fx/ppfx/sepia");
 
-
-		/// <summary>
-		/// gets the raw byte[] from an EmbeddedResource
-		/// </summary>
-		/// <returns>The embedded resource bytes.</returns>
-		/// <param name="name">Name.</param>
-		private static byte[] GetEmbeddedResourceBytes(string name)
-		{
-			var assembly = typeof(EffectResource).Assembly;
-			using (var stream = assembly.GetManifestResourceStream(name))
-			{
-				using (var ms = new MemoryStream())
-				{
-					stream.CopyTo(ms);
-					return ms.ToArray();
-				}
-			}
-		}
+    internal static byte[] PaletteCyclerBytes => GetFileResourceBytes("engine/fx/ppfx/palette_cycle");
 
 
-		internal static byte[] GetMonoGameEmbeddedResourceBytes(string name)
-		{
-			var assembly = typeof(MathHelper).Assembly;
+    /// <summary>
+    ///     gets the raw byte[] from an EmbeddedResource
+    /// </summary>
+    /// <returns>The embedded resource bytes.</returns>
+    /// <param name="name">Name.</param>
+    private static byte[] GetEmbeddedResourceBytes(string name)
+    {
+        var assembly = typeof(EffectResource).Assembly;
+        using (var stream = assembly.GetManifestResourceStream(name))
+        {
+            using (var ms = new MemoryStream())
+            {
+                stream.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+    }
+
+
+    internal static byte[] GetMonoGameEmbeddedResourceBytes(string name)
+    {
+        var assembly = typeof(MathHelper).Assembly;
 #if FNA
 			name = name.Replace( ".ogl.mgfxo", ".fxb" );
 #else
-			// MG 3.8 decided to change the location of Effecs...sigh.
-			if (!assembly.GetManifestResourceNames().Contains(name))
-				name = name.Replace(".Framework", ".Framework.Platform");
+        // MG 3.8 decided to change the location of Effecs...sigh.
+        if (!assembly.GetManifestResourceNames().Contains(name))
+            name = name.Replace(".Framework", ".Framework.Platform");
 #endif
 
-			using (var stream = assembly.GetManifestResourceStream(name))
-			{
-				using (var ms = new MemoryStream())
-				{
-					stream.CopyTo(ms);
-					return ms.ToArray();
-				}
-			}
-		}
+        using (var stream = assembly.GetManifestResourceStream(name))
+        {
+            using (var ms = new MemoryStream())
+            {
+                stream.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+    }
 
-		public static byte[] GetFileResourceBytes(string path) => Core.Content.Load<byte[]>(path);
-	}
+    public static byte[] GetFileResourceBytes(string path)
+    {
+        return Core.Content.Load<byte[]>(path);
+    }
 }

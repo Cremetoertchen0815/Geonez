@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Nez.GeonBit.Materials;
 using Nez.Systems;
 
-namespace Nez.GeonBit
+namespace Nez.GeonBit;
+
+public static class Extension
 {
-    public static class Extension
+    public static Model LoadModel(this NezContentManager c, string path)
     {
-        public static Model LoadModel(this NezContentManager c, string path) => c.LoadModel(path, x => Materials.DefaultMaterialsFactory.GetDefaultMaterial(x));
+        return c.LoadModel(path, x => DefaultMaterialsFactory.GetDefaultMaterial(x));
     }
 }

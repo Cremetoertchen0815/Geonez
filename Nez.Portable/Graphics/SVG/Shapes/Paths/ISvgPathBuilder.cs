@@ -1,14 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
+namespace Nez.Svg;
 
-namespace Nez.Svg
+/// <summary>
+///     dummy interface used by SvgPath.getTransformedDrawingPoints to workaround PCL not having System.Drawing
+/// </summary>
+public interface ISvgPathBuilder
 {
-	/// <summary>
-	/// dummy interface used by SvgPath.getTransformedDrawingPoints to workaround PCL not having System.Drawing
-	/// </summary>
-	public interface ISvgPathBuilder
-	{
-		Vector2[] GetDrawingPoints(List<SvgPathSegment> segments, float flatness = 3);
-	}
+    Vector2[] GetDrawingPoints(List<SvgPathSegment> segments, float flatness = 3);
 }

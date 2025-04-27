@@ -1,4 +1,5 @@
 ﻿#region License
+
 //   Copyright 2016 Kastellanos Nikolaos
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,26 +13,30 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
+
 #endregion
 
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 
-namespace Nez.ExtendedContent.GeonBit.Graphics
+namespace Nez.ExtendedContent.GeonBit.Graphics;
+
+public class DynamicVertexBufferContent : VertexBufferContent
 {
-	public class DynamicVertexBufferContent : VertexBufferContent
-	{
-		protected internal VertexBufferContent Source { get; protected set; }
+    public bool IsWriteOnly = false;
 
-		public bool IsWriteOnly = false;
+    public DynamicVertexBufferContent(VertexBufferContent source)
+    {
+        Source = source;
+    }
 
-		public new VertexDeclarationContent VertexDeclaration => Source.VertexDeclaration;
+    public DynamicVertexBufferContent(VertexBufferContent source, int size) : base(size)
+    {
+        Source = source;
+    }
 
-		public new byte[] VertexData => Source.VertexData;
+    protected internal VertexBufferContent Source { get; protected set; }
 
-		public DynamicVertexBufferContent(VertexBufferContent source) : base() => Source = source;
+    public new VertexDeclarationContent VertexDeclaration => Source.VertexDeclaration;
 
-		public DynamicVertexBufferContent(VertexBufferContent source, int size) : base(size) => Source = source;
-
-
-	}
+    public new byte[] VertexData => Source.VertexData;
 }

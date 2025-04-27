@@ -1,4 +1,5 @@
 ﻿#region LICENSE
+
 //-----------------------------------------------------------------------------
 // For the purpose of making video games, educational projects or gamification,
 // GeonBit is distributed under the MIT license and is totally free to use.
@@ -8,80 +9,85 @@
 // Copyright (c) 2017 Ronen Ness [ronenness@gmail.com].
 // Do not remove this license notice.
 //-----------------------------------------------------------------------------
+
 #endregion
+
 #region File Description
+
 //-----------------------------------------------------------------------------
 // Collision shape for a cone.
 //
 // Author: Ronen Ness.
 // Since: 2017.
 //-----------------------------------------------------------------------------
+
 #endregion
+
+using BulletSharp;
 using Microsoft.Xna.Framework;
 
-namespace Nez.GeonBit.Physics.CollisionShapes
+namespace Nez.GeonBit.Physics.CollisionShapes;
+
+/// <summary>
+///     Which axis the cylinder is aligned with.
+/// </summary>
+public enum CylinderDirectionAxis
 {
     /// <summary>
-    /// Which axis the cylinder is aligned with.
+    ///     Cylinder aligned with X axis.
     /// </summary>
-    public enum CylinderDirectionAxis
+    X,
+
+    /// <summary>
+    ///     Cylinder aligned with Y axis.
+    /// </summary>
+    Y,
+
+    /// <summary>
+    ///     Cylinder aligned with Z axis.
+    /// </summary>
+    Z
+}
+
+/// <summary>
+///     Cone collision shape.
+/// </summary>
+public class CollisionCylinder : ICollisionShape
+{
+    // cylinder axis type
+    private readonly CylinderDirectionAxis _axisType;
+
+    /// <summary>
+    ///     Create the collision cylinder.
+    /// </summary>
+    /// <param name="halfExtent">Half extent on X, Y and Z of the cylinder.</param>
+    /// <param name="axis">Cylinder axis direction.</param>
+    public CollisionCylinder(Vector3 halfExtent, CylinderDirectionAxis axis = CylinderDirectionAxis.Y)
     {
-        /// <summary>
-        /// Cylinder aligned with X axis.
-        /// </summary>
-        X,
+        _axisType = axis;
+        switch (_axisType)
+        {
+            case CylinderDirectionAxis.X:
+                _shape = new CylinderShapeX(halfExtent.X, halfExtent.Y, halfExtent.Z);
+                break;
 
-        /// <summary>
-        /// Cylinder aligned with Y axis.
-        /// </summary>
-        Y,
+            case CylinderDirectionAxis.Y:
+                _shape = new CylinderShape(halfExtent.X, halfExtent.Y, halfExtent.Z);
+                break;
 
-        /// <summary>
-        /// Cylinder aligned with Z axis.
-        /// </summary>
-        Z,
+            case CylinderDirectionAxis.Z:
+                _shape = new CylinderShapeZ(halfExtent.X, halfExtent.Y, halfExtent.Z);
+                break;
+        }
     }
 
     /// <summary>
-    /// Cone collision shape.
+    ///     Clone the physical shape.
     /// </summary>
-    public class CollisionCylinder : ICollisionShape
+    /// <returns>Cloned shape.</returns>
+    protected override ICollisionShape CloneImp()
     {
-        // cylinder axis type
-        private readonly CylinderDirectionAxis _axisType;
-
-        /// <summary>
-        /// Create the collision cylinder.
-        /// </summary>
-        /// <param name="halfExtent">Half extent on X, Y and Z of the cylinder.</param>
-        /// <param name="axis">Cylinder axis direction.</param>
-        public CollisionCylinder(Vector3 halfExtent, CylinderDirectionAxis axis = CylinderDirectionAxis.Y)
-        {
-            _axisType = axis;
-            switch (_axisType)
-            {
-                case CylinderDirectionAxis.X:
-                    _shape = new BulletSharp.CylinderShapeX(halfExtent.X, halfExtent.Y, halfExtent.Z);
-                    break;
-
-                case CylinderDirectionAxis.Y:
-                    _shape = new BulletSharp.CylinderShape(halfExtent.X, halfExtent.Y, halfExtent.Z);
-                    break;
-
-                case CylinderDirectionAxis.Z:
-                    _shape = new BulletSharp.CylinderShapeZ(halfExtent.X, halfExtent.Y, halfExtent.Z);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Clone the physical shape.
-        /// </summary>
-        /// <returns>Cloned shape.</returns>
-        protected override ICollisionShape CloneImp()
-        {
-            var shape = _shape as BulletSharp.CylinderShape;
-            return new CollisionCylinder(ToMonoGame.Vector(shape.HalfExtentsWithoutMargin), _axisType);
-        }
+        var shape = _shape as CylinderShape;
+        return new CollisionCylinder(ToMonoGame.Vector(shape.HalfExtentsWithoutMargin), _axisType);
     }
 }

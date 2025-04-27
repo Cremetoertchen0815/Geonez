@@ -1,4 +1,5 @@
 ﻿#region License
+
 //   Copyright 2016 Kastellanos Nikolaos
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,68 +13,70 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
+
 #endregion
 
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 
-namespace Nez.ExtendedContent.GeonBit.Graphics
+namespace Nez.ExtendedContent.GeonBit.Graphics;
+
+public class DynamicModelContent
 {
-	public class DynamicModelContent
-	{
-		[Flags]
-		public enum BufferType : int
-		{
-			/// <summary>
-			/// Use the default BufferReader
-			/// </summary>
-			Default = int.MinValue,
+    [Flags]
+    public enum BufferType
+    {
+	    /// <summary>
+	    ///     Use the default BufferReader
+	    /// </summary>
+	    Default = int.MinValue,
 
-			/// <summary>
-			/// Deserialize a Dynamic Buffer
-			/// </summary> 
-			Dynamic = 0,
+	    /// <summary>
+	    ///     Deserialize a Dynamic Buffer
+	    /// </summary>
+	    Dynamic = 0,
 
-			/// <summary>
-			/// Deserialize a Dynamic Buffer with BufferUsage.WriteOnly
-			/// </summary>
-			DynamicWriteOnly = 0x01,
-		}
+	    /// <summary>
+	    ///     Deserialize a Dynamic Buffer with BufferUsage.WriteOnly
+	    /// </summary>
+	    DynamicWriteOnly = 0x01
+    }
 
-		protected internal ModelContent Source { get; protected set; }
-		public BufferType VertexBufferType = BufferType.Dynamic;
-		public BufferType IndexBufferType = BufferType.Dynamic;
+    public BufferType IndexBufferType = BufferType.Dynamic;
+    public BufferType VertexBufferType = BufferType.Dynamic;
 
-		// Summary:
-		//     Gets the collection of bones that are referenced by this model.
-		public ModelBoneContentCollection Bones => Source.Bones;
+    public DynamicModelContent(ModelContent source)
+    {
+        Source = source;
 
-		// Summary:
-		//     Gets the collection of meshes that are associated with this model.
-		[ContentSerializerIgnore]
-		public List<DynamicModelMeshContent> Meshes { get; private set; }
+        //deep clone Meshes
+        Meshes = new List<DynamicModelMeshContent>(source.Meshes.Count);
+        foreach (var mesh in source.Meshes)
+            Meshes.Add(new DynamicModelMeshContent(mesh));
+    }
 
-		// Summary:
-		//     Gets the root bone of this model
-		[ContentSerializerIgnore]
-		public ModelBoneContent Root => Source.Root;
+    protected internal ModelContent Source { get; protected set; }
 
-		// Summary:
-		//     Gets a user defined tag object.
-		[ContentSerializer(SharedResource = true)]
-		public object Tag { get => Source.Tag; set => Source.Tag = value; }
+    // Summary:
+    //     Gets the collection of bones that are referenced by this model.
+    public ModelBoneContentCollection Bones => Source.Bones;
 
-		public DynamicModelContent(ModelContent source)
-		{
-			Source = source;
+    // Summary:
+    //     Gets the collection of meshes that are associated with this model.
+    [ContentSerializerIgnore] public List<DynamicModelMeshContent> Meshes { get; }
 
-			//deep clone Meshes
-			Meshes = new List<DynamicModelMeshContent>(source.Meshes.Count);
-			foreach (var mesh in source.Meshes)
-				Meshes.Add(new DynamicModelMeshContent(mesh));
-		}
+    // Summary:
+    //     Gets the root bone of this model
+    [ContentSerializerIgnore] public ModelBoneContent Root => Source.Root;
 
-	}
+    // Summary:
+    //     Gets a user defined tag object.
+    [ContentSerializer(SharedResource = true)]
+    public object Tag
+    {
+        get => Source.Tag;
+        set => Source.Tag = value;
+    }
 }

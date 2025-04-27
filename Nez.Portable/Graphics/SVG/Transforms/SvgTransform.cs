@@ -1,7 +1,6 @@
-﻿namespace Nez.Svg
+﻿namespace Nez.Svg;
+
+public abstract class SvgTransform
 {
-	public abstract class SvgTransform
-	{
-		public Matrix2D Matrix;
-	}
+    public Matrix2D Matrix;
 }

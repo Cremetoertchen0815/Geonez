@@ -1,17 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+namespace Nez;
 
-namespace Nez
+public class SpriteEffect : Effect
 {
-	public class SpriteEffect : Effect
-	{
-		private EffectParameter _matrixTransformParam;
+    private readonly EffectParameter _matrixTransformParam;
 
 
-		public SpriteEffect() : base(Core.GraphicsDevice, EffectResource.SpriteEffectBytes) => _matrixTransformParam = Parameters["MatrixTransform"];
+    public SpriteEffect() : base(Core.GraphicsDevice, EffectResource.SpriteEffectBytes)
+    {
+        _matrixTransformParam = Parameters["MatrixTransform"];
+    }
 
 
-		public void SetMatrixTransform(ref Matrix matrixTransform) => _matrixTransformParam.SetValue(matrixTransform);
-	}
+    public void SetMatrixTransform(ref Matrix matrixTransform)
+    {
+        _matrixTransformParam.SetValue(matrixTransform);
+    }
 }

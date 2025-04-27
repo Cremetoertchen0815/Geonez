@@ -1,4 +1,5 @@
 ﻿#region License
+
 /// -------------------------------------------------------------------------------------
 /// Notice: This file had been edited to integrate as core inside GeonBit.
 /// Original license and attributes below. The license and copyright notice below affect
@@ -17,21 +18,21 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
+
 #endregion
 
 using System;
 
-namespace Nez.ExtendedContent.GeonBit.Animation
-{
-	public class ClipContent
-	{
-		public TimeSpan Duration { get; internal set; }
-		public KeyframeContent[] Keyframes { get; private set; }
+namespace Nez.ExtendedContent.GeonBit.Animation;
 
-		internal ClipContent(TimeSpan duration, KeyframeContent[] keyframes)
-		{
-			Duration = duration;
-			Keyframes = keyframes;
-		}
-	}
+public class ClipContent
+{
+    internal ClipContent(TimeSpan duration, KeyframeContent[] keyframes)
+    {
+        Duration = duration;
+        Keyframes = keyframes;
+    }
+
+    public TimeSpan Duration { get; internal set; }
+    public KeyframeContent[] Keyframes { get; private set; }
 }

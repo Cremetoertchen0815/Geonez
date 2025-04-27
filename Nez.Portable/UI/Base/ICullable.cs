@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 
+namespace Nez.UI;
 
-namespace Nez.UI
+public interface ICullable
 {
-	public interface ICullable
-	{
-		void SetCullingArea(Rectangle cullingArea);
-	}
+    void SetCullingArea(Rectangle cullingArea);
 }

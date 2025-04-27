@@ -1,33 +1,31 @@
 ﻿using System.Globalization;
 
+namespace Nez.Svg;
 
-namespace Nez.Svg
+public class SvgSkew : SvgTransform
 {
-	public class SvgSkew : SvgTransform
-	{
-		private float _angleX;
-		private float _angleY;
+    private readonly float _angleX;
+    private readonly float _angleY;
 
 
-		public SvgSkew(float angleX, float angleY)
-		{
-			_angleX = angleX;
-			_angleY = angleY;
+    public SvgSkew(float angleX, float angleY)
+    {
+        _angleX = angleX;
+        _angleY = angleY;
 
-			Debug.Warn("SvgSkew matrix is not implemented");
+        Debug.Warn("SvgSkew matrix is not implemented");
 
-			//matrix = Matrix2D.Shear(
-			//	(float)System.Math.Tan( _angleX / 180 * MathHelper.Pi ),
-			//	(float)System.Math.Tan( _angleY / 180 * MathHelper.Pi ) );
-		}
+        //matrix = Matrix2D.Shear(
+        //	(float)System.Math.Tan( _angleX / 180 * MathHelper.Pi ),
+        //	(float)System.Math.Tan( _angleY / 180 * MathHelper.Pi ) );
+    }
 
 
-		public override string ToString()
-		{
-			if (_angleY == 0)
-				return string.Format(CultureInfo.InvariantCulture, "skewX({0})", _angleX);
+    public override string ToString()
+    {
+        if (_angleY == 0)
+            return string.Format(CultureInfo.InvariantCulture, "skewX({0})", _angleX);
 
-			return string.Format(CultureInfo.InvariantCulture, "skewY({0})", _angleY);
-		}
-	}
+        return string.Format(CultureInfo.InvariantCulture, "skewY({0})", _angleY);
+    }
 }

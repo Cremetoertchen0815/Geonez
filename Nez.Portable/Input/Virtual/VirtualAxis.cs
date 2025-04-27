@@ -1,252 +1,261 @@
-﻿using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
 
+namespace Nez;
 
-namespace Nez
+/// <summary>
+///     A virtual input represented as a float between -1 and 1
+/// </summary>
+public class VirtualAxis : VirtualInput
 {
-	/// <summary>
-	/// A virtual input represented as a float between -1 and 1
-	/// </summary>
-	public class VirtualAxis : VirtualInput
-	{
-		public List<Node> Nodes = new List<Node>();
-
-		public float Value
-		{
-			get
-			{
-				if (!Input.IsInputActive(this)) return 0;
-
-				for (int i = 0; i < Nodes.Count; i++)
-				{
-					float val = Nodes[i].Value;
-					if (val != 0)
-						return val;
-				}
-
-				return 0;
-			}
-		}
+    public List<Node> Nodes = new();
 
 
-		public VirtualAxis()
-		{
-		}
+    public VirtualAxis()
+    {
+    }
 
 
-		public VirtualAxis(params Node[] nodes) => Nodes.AddRange(nodes);
+    public VirtualAxis(params Node[] nodes)
+    {
+        Nodes.AddRange(nodes);
+    }
+
+    public float Value
+    {
+        get
+        {
+            if (!Input.IsInputActive(this)) return 0;
+
+            for (var i = 0; i < Nodes.Count; i++)
+            {
+                var val = Nodes[i].Value;
+                if (val != 0)
+                    return val;
+            }
+
+            return 0;
+        }
+    }
 
 
-		public override void Update()
-		{
-			for (int i = 0; i < Nodes.Count; i++)
-				Nodes[i].Update();
-		}
+    public override void Update()
+    {
+        for (var i = 0; i < Nodes.Count; i++)
+            Nodes[i].Update();
+    }
 
 
-		public static implicit operator float(VirtualAxis axis)
-		{
-			if (!Input.IsInputActive(axis)) return 0;
-			return axis.Value;
-		}
+    public static implicit operator float(VirtualAxis axis)
+    {
+        if (!Input.IsInputActive(axis)) return 0;
+        return axis.Value;
+    }
 
 
-		#region Node types
+    #region Node types
 
-		public abstract class Node : VirtualInputNode
-		{
-			public abstract float Value { get; }
-		}
-
-
-		public class GamePadLeftStickX : Node
-		{
-			public int GamepadIndex;
-			public float Deadzone;
+    public abstract class Node : VirtualInputNode
+    {
+        public abstract float Value { get; }
+    }
 
 
-			public GamePadLeftStickX(int gamepadIndex = 0, float deadzone = Input.DEFAULT_DEADZONE)
-			{
-				GamepadIndex = gamepadIndex;
-				Deadzone = deadzone;
-			}
-
-			public override float Value => Mathf.SignThreshold(Input.GamePads[GamepadIndex].GetLeftStick(Deadzone).X, Deadzone);
-		}
+    public class GamePadLeftStickX : Node
+    {
+        public float Deadzone;
+        public int GamepadIndex;
 
 
-		public class GamePadLeftStickY : Node
-		{
-			/// <summary>
-			/// if true, pressing up will return -1 and down will return 1 matching GamePadDpadUpDown
-			/// </summary>
-			public bool InvertResult = true;
+        public GamePadLeftStickX(int gamepadIndex = 0, float deadzone = Input.DEFAULT_DEADZONE)
+        {
+            GamepadIndex = gamepadIndex;
+            Deadzone = deadzone;
+        }
 
-			public int GamepadIndex;
-			public float Deadzone;
-
-
-			public GamePadLeftStickY(int gamepadIndex = 0, float deadzone = Input.DEFAULT_DEADZONE)
-			{
-				GamepadIndex = gamepadIndex;
-				Deadzone = deadzone;
-			}
-
-			public override float Value
-			{
-				get
-				{
-					int multiplier = InvertResult ? -1 : 1;
-					return multiplier *
-						   Mathf.SignThreshold(Input.GamePads[GamepadIndex].GetLeftStick(Deadzone).Y, Deadzone);
-				}
-			}
-		}
+        public override float Value =>
+            Mathf.SignThreshold(Input.GamePads[GamepadIndex].GetLeftStick(Deadzone).X, Deadzone);
+    }
 
 
-		public class GamePadRightStickX : Node
-		{
-			public int GamepadIndex;
-			public float Deadzone;
+    public class GamePadLeftStickY : Node
+    {
+        public float Deadzone;
+
+        public int GamepadIndex;
+
+        /// <summary>
+        ///     if true, pressing up will return -1 and down will return 1 matching GamePadDpadUpDown
+        /// </summary>
+        public bool InvertResult = true;
 
 
-			public GamePadRightStickX(int gamepadIndex = 0, float deadzone = Input.DEFAULT_DEADZONE)
-			{
-				GamepadIndex = gamepadIndex;
-				Deadzone = deadzone;
-			}
+        public GamePadLeftStickY(int gamepadIndex = 0, float deadzone = Input.DEFAULT_DEADZONE)
+        {
+            GamepadIndex = gamepadIndex;
+            Deadzone = deadzone;
+        }
 
-			public override float Value => Mathf.SignThreshold(Input.GamePads[GamepadIndex].GetRightStick(Deadzone).X, Deadzone);
-		}
-
-
-		public class GamePadRightStickY : Node
-		{
-			public int GamepadIndex;
-			public float Deadzone;
-
-
-			public GamePadRightStickY(int gamepadIndex = 0, float deadzone = Input.DEFAULT_DEADZONE)
-			{
-				GamepadIndex = gamepadIndex;
-				Deadzone = deadzone;
-			}
-
-			public override float Value => Mathf.SignThreshold(Input.GamePads[GamepadIndex].GetRightStick(Deadzone).Y, Deadzone);
-		}
+        public override float Value
+        {
+            get
+            {
+                var multiplier = InvertResult ? -1 : 1;
+                return multiplier *
+                       Mathf.SignThreshold(Input.GamePads[GamepadIndex].GetLeftStick(Deadzone).Y, Deadzone);
+            }
+        }
+    }
 
 
-		public class GamePadDpadLeftRight : Node
-		{
-			public int GamepadIndex;
+    public class GamePadRightStickX : Node
+    {
+        public float Deadzone;
+        public int GamepadIndex;
 
 
-			public GamePadDpadLeftRight(int gamepadIndex = 0) => GamepadIndex = gamepadIndex;
+        public GamePadRightStickX(int gamepadIndex = 0, float deadzone = Input.DEFAULT_DEADZONE)
+        {
+            GamepadIndex = gamepadIndex;
+            Deadzone = deadzone;
+        }
+
+        public override float Value =>
+            Mathf.SignThreshold(Input.GamePads[GamepadIndex].GetRightStick(Deadzone).X, Deadzone);
+    }
 
 
-			public override float Value
-			{
-				get
-				{
-					if (Input.GamePads[GamepadIndex].DpadRightDown)
-						return 1f;
-					else if (Input.GamePads[GamepadIndex].DpadLeftDown)
-						return -1f;
-					else
-						return 0f;
-				}
-			}
-		}
+    public class GamePadRightStickY : Node
+    {
+        public float Deadzone;
+        public int GamepadIndex;
 
 
-		public class GamePadDpadUpDown : Node
-		{
-			public int GamepadIndex;
+        public GamePadRightStickY(int gamepadIndex = 0, float deadzone = Input.DEFAULT_DEADZONE)
+        {
+            GamepadIndex = gamepadIndex;
+            Deadzone = deadzone;
+        }
+
+        public override float Value =>
+            Mathf.SignThreshold(Input.GamePads[GamepadIndex].GetRightStick(Deadzone).Y, Deadzone);
+    }
 
 
-			public GamePadDpadUpDown(int gamepadIndex = 0) => GamepadIndex = gamepadIndex;
+    public class GamePadDpadLeftRight : Node
+    {
+        public int GamepadIndex;
 
 
-			public override float Value
-			{
-				get
-				{
-					if (Input.GamePads[GamepadIndex].DpadDownDown)
-						return 1f;
-					else if (Input.GamePads[GamepadIndex].DpadUpDown)
-						return -1f;
-					else
-						return 0f;
-				}
-			}
-		}
+        public GamePadDpadLeftRight(int gamepadIndex = 0)
+        {
+            GamepadIndex = gamepadIndex;
+        }
 
 
-		public class KeyboardKeys : Node
-		{
-			public OverlapBehavior OverlapBehavior;
-			public Keys Positive;
-			public Keys Negative;
-			private float _value;
-			private bool _turned;
+        public override float Value
+        {
+            get
+            {
+                if (Input.GamePads[GamepadIndex].DpadRightDown)
+                    return 1f;
+                if (Input.GamePads[GamepadIndex].DpadLeftDown)
+                    return -1f;
+                return 0f;
+            }
+        }
+    }
 
 
-			public KeyboardKeys(OverlapBehavior overlapBehavior, Keys negative, Keys positive)
-			{
-				OverlapBehavior = overlapBehavior;
-				Negative = negative;
-				Positive = positive;
-			}
+    public class GamePadDpadUpDown : Node
+    {
+        public int GamepadIndex;
 
 
-			public override void Update()
-			{
-				if (Input.IsKeyDown(Positive))
-				{
-					if (Input.IsKeyDown(Negative))
-					{
-						switch (OverlapBehavior)
-						{
-							default:
-							case OverlapBehavior.CancelOut:
-								_value = 0;
-								break;
-
-							case OverlapBehavior.TakeNewer:
-								if (!_turned)
-								{
-									_value *= -1;
-									_turned = true;
-								}
-
-								break;
-							case OverlapBehavior.TakeOlder:
-								//value stays the same
-								break;
-						}
-					}
-					else
-					{
-						_turned = false;
-						_value = 1;
-					}
-				}
-				else if (Input.IsKeyDown(Negative))
-				{
-					_turned = false;
-					_value = -1;
-				}
-				else
-				{
-					_turned = false;
-					_value = 0;
-				}
-			}
+        public GamePadDpadUpDown(int gamepadIndex = 0)
+        {
+            GamepadIndex = gamepadIndex;
+        }
 
 
-			public override float Value => _value;
-		}
+        public override float Value
+        {
+            get
+            {
+                if (Input.GamePads[GamepadIndex].DpadDownDown)
+                    return 1f;
+                if (Input.GamePads[GamepadIndex].DpadUpDown)
+                    return -1f;
+                return 0f;
+            }
+        }
+    }
 
-		#endregion
-	}
+
+    public class KeyboardKeys : Node
+    {
+        private bool _turned;
+        private float _value;
+        public Keys Negative;
+        public OverlapBehavior OverlapBehavior;
+        public Keys Positive;
+
+
+        public KeyboardKeys(OverlapBehavior overlapBehavior, Keys negative, Keys positive)
+        {
+            OverlapBehavior = overlapBehavior;
+            Negative = negative;
+            Positive = positive;
+        }
+
+
+        public override float Value => _value;
+
+
+        public override void Update()
+        {
+            if (Input.IsKeyDown(Positive))
+            {
+                if (Input.IsKeyDown(Negative))
+                {
+                    switch (OverlapBehavior)
+                    {
+                        default:
+                        case OverlapBehavior.CancelOut:
+                            _value = 0;
+                            break;
+
+                        case OverlapBehavior.TakeNewer:
+                            if (!_turned)
+                            {
+                                _value *= -1;
+                                _turned = true;
+                            }
+
+                            break;
+                        case OverlapBehavior.TakeOlder:
+                            //value stays the same
+                            break;
+                    }
+                }
+                else
+                {
+                    _turned = false;
+                    _value = 1;
+                }
+            }
+            else if (Input.IsKeyDown(Negative))
+            {
+                _turned = false;
+                _value = -1;
+            }
+            else
+            {
+                _turned = false;
+                _value = 0;
+            }
+        }
+    }
+
+    #endregion
 }

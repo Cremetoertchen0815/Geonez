@@ -1,4 +1,5 @@
 ﻿#region License
+
 /// -------------------------------------------------------------------------------------
 /// Notice: This file had been edited to integrate as core inside GeonBit.
 /// Original license and attributes below. The license and copyright notice below affect
@@ -17,24 +18,24 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
+
 #endregion
 
-using Microsoft.Xna.Framework;
 using System;
+using Microsoft.Xna.Framework;
 
-namespace Nez.ExtendedContent.GeonBit.Animation
+namespace Nez.ExtendedContent.GeonBit.Animation;
+
+public struct KeyframeContent
 {
-	public struct KeyframeContent
-	{
-		public int Bone;
-		public TimeSpan Time;
-		public Matrix Transform;
+    public int Bone;
+    public TimeSpan Time;
+    public Matrix Transform;
 
-		public KeyframeContent(int bone, TimeSpan time, Matrix transform)
-		{
-			Bone = bone;
-			Time = time;
-			Transform = transform;
-		}
-	}
+    public KeyframeContent(int bone, TimeSpan time, Matrix transform)
+    {
+        Bone = bone;
+        Time = time;
+        Transform = transform;
+    }
 }

@@ -1,4 +1,5 @@
 ﻿#region LICENSE
+
 //-----------------------------------------------------------------------------
 // For the purpose of making video games, educational projects or gamification,
 // GeonBit is distributed under the MIT license and is totally free to use.
@@ -8,45 +9,50 @@
 // Copyright (c) 2017 Ronen Ness [ronenness@gmail.com].
 // Do not remove this license notice.
 //-----------------------------------------------------------------------------
+
 #endregion
+
 #region File Description
+
 //-----------------------------------------------------------------------------
 // Collision shape for a an endless plane.
 //
 // Author: Ronen Ness.
 // Since: 2017.
 //-----------------------------------------------------------------------------
+
 #endregion
+
+using BulletSharp;
 using Microsoft.Xna.Framework;
 
-namespace Nez.GeonBit.Physics.CollisionShapes
+namespace Nez.GeonBit.Physics.CollisionShapes;
+
+/// <summary>
+///     Endless plane collision shape.
+/// </summary>
+public class CollisionEndlessPlane : ICollisionShape
 {
     /// <summary>
-    /// Endless plane collision shape.
+    ///     Create the collision plane.
     /// </summary>
-    public class CollisionEndlessPlane : ICollisionShape
+    /// <param name="normal">Plane normal vector.</param>
+    public CollisionEndlessPlane(Vector3? normal = null)
     {
-        /// <summary>
-        /// Create the collision plane.
-        /// </summary>
-        /// <param name="normal">Plane normal vector.</param>
-        public CollisionEndlessPlane(Vector3? normal = null)
-        {
-            // default normal
-            if (normal == null) { normal = Vector3.Up; }
+        // default normal
+        if (normal == null) normal = Vector3.Up;
 
-            // create the plane shape
-            _shape = new BulletSharp.StaticPlaneShape(ToBullet.Vector((Vector3)normal), 1);
-        }
+        // create the plane shape
+        _shape = new StaticPlaneShape(ToBullet.Vector((Vector3)normal), 1);
+    }
 
-        /// <summary>
-        /// Clone the physical shape.
-        /// </summary>
-        /// <returns>Cloned shape.</returns>
-        protected override ICollisionShape CloneImp()
-        {
-            var shape = _shape as BulletSharp.StaticPlaneShape;
-            return new CollisionEndlessPlane(ToMonoGame.Vector(shape.PlaneNormal));
-        }
+    /// <summary>
+    ///     Clone the physical shape.
+    /// </summary>
+    /// <returns>Cloned shape.</returns>
+    protected override ICollisionShape CloneImp()
+    {
+        var shape = _shape as StaticPlaneShape;
+        return new CollisionEndlessPlane(ToMonoGame.Vector(shape.PlaneNormal));
     }
 }

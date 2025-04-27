@@ -1,20 +1,22 @@
-﻿namespace Nez.AI.BehaviorTrees
+﻿namespace Nez.AI.BehaviorTrees;
+
+/// <summary>
+///     runs an entire BehaviorTree as a child and returns success
+/// </summary>
+public class BehaviorTreeReference<T> : Behavior<T>
 {
-	/// <summary>
-	/// runs an entire BehaviorTree as a child and returns success
-	/// </summary>
-	public class BehaviorTreeReference<T> : Behavior<T>
-	{
-		private BehaviorTree<T> _childTree;
+    private readonly BehaviorTree<T> _childTree;
 
 
-		public BehaviorTreeReference(BehaviorTree<T> tree) => _childTree = tree;
+    public BehaviorTreeReference(BehaviorTree<T> tree)
+    {
+        _childTree = tree;
+    }
 
 
-		public override TaskStatus Update(T context)
-		{
-			_childTree.Tick();
-			return TaskStatus.Success;
-		}
-	}
+    public override TaskStatus Update(T context)
+    {
+        _childTree.Tick();
+        return TaskStatus.Success;
+    }
 }

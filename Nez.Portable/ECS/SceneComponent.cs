@@ -1,112 +1,113 @@
 ﻿using System;
 
+namespace Nez;
 
-namespace Nez
+public class SceneComponent : IComparable<SceneComponent>
 {
-	public class SceneComponent : IComparable<SceneComponent>
-	{
-		/// <summary>
-		/// the scene this SceneComponent is attached to
-		/// </summary>
-		public Scene Scene;
+    private bool _enabled = true;
 
-		/// <summary>
-		/// true if the SceneComponent is enabled. Changes in state result in onEnabled/onDisable being called.
-		/// </summary>
-		/// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
-		public bool Enabled
-		{
-			get => _enabled;
-			set => SetEnabled(value);
-		}
+    /// <summary>
+    ///     the scene this SceneComponent is attached to
+    /// </summary>
+    public Scene Scene;
 
-		/// <summary>
-		/// update order of the SceneComponents on this Scene
-		/// </summary>
-		/// <value>The order.</value>
-		public int UpdateOrder { get; private set; } = 0;
+    /// <summary>
+    ///     true if the SceneComponent is enabled. Changes in state result in onEnabled/onDisable being called.
+    /// </summary>
+    /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
+    public bool Enabled
+    {
+        get => _enabled;
+        set => SetEnabled(value);
+    }
 
-		private bool _enabled = true;
+    /// <summary>
+    ///     update order of the SceneComponents on this Scene
+    /// </summary>
+    /// <value>The order.</value>
+    public int UpdateOrder { get; private set; }
 
 
-		#region SceneComponent Lifecycle
-
-		/// <summary>
-		/// called when this SceneComponent is enabled
-		/// </summary>
-		public virtual void OnEnabled()
-		{
-		}
+    int IComparable<SceneComponent>.CompareTo(SceneComponent other)
+    {
+        return UpdateOrder.CompareTo(other.UpdateOrder);
+    }
 
 
-		/// <summary>
-		/// called when the this SceneComponent is disabled
-		/// </summary>
-		public virtual void OnDisabled()
-		{
-		}
+    #region SceneComponent Lifecycle
+
+    /// <summary>
+    ///     called when this SceneComponent is enabled
+    /// </summary>
+    public virtual void OnEnabled()
+    {
+    }
 
 
-		/// <summary>
-		/// called when this SceneComponent is removed from the Scene
-		/// </summary>
-		public virtual void OnRemovedFromScene()
-		{
-		}
+    /// <summary>
+    ///     called when the this SceneComponent is disabled
+    /// </summary>
+    public virtual void OnDisabled()
+    {
+    }
 
 
-		/// <summary>
-		/// called each frame before the Entities are updated
-		/// </summary>
-		public virtual void Update()
-		{
-		}
-
-		#endregion
+    /// <summary>
+    ///     called when this SceneComponent is removed from the Scene
+    /// </summary>
+    public virtual void OnRemovedFromScene()
+    {
+    }
 
 
-		#region Fluent setters
+    /// <summary>
+    ///     called each frame before the Entities are updated
+    /// </summary>
+    public virtual void Update()
+    {
+    }
 
-		/// <summary>
-		/// enables/disables this SceneComponent
-		/// </summary>
-		/// <returns>The enabled.</returns>
-		/// <param name="isEnabled">If set to <c>true</c> is enabled.</param>
-		public SceneComponent SetEnabled(bool isEnabled)
-		{
-			if (_enabled != isEnabled)
-			{
-				_enabled = isEnabled;
-
-				if (_enabled)
-					OnEnabled();
-				else
-					OnDisabled();
-			}
-
-			return this;
-		}
+    #endregion
 
 
-		/// <summary>
-		/// sets the updateOrder for the SceneComponent and triggers a sort of the SceneComponents
-		/// </summary>
-		/// <returns>The update order.</returns>
-		/// <param name="updateOrder">Update order.</param>
-		public SceneComponent SetUpdateOrder(int updateOrder)
-		{
-			if (UpdateOrder != updateOrder)
-			{
-				UpdateOrder = updateOrder;
-				Core.Scene._sceneComponents.Sort();
-			}
+    #region Fluent setters
 
-			return this;
-		}
+    /// <summary>
+    ///     enables/disables this SceneComponent
+    /// </summary>
+    /// <returns>The enabled.</returns>
+    /// <param name="isEnabled">If set to <c>true</c> is enabled.</param>
+    public SceneComponent SetEnabled(bool isEnabled)
+    {
+        if (_enabled != isEnabled)
+        {
+            _enabled = isEnabled;
 
-		#endregion
+            if (_enabled)
+                OnEnabled();
+            else
+                OnDisabled();
+        }
+
+        return this;
+    }
 
 
-		int IComparable<SceneComponent>.CompareTo(SceneComponent other) => UpdateOrder.CompareTo(other.UpdateOrder);
-	}
+    /// <summary>
+    ///     sets the updateOrder for the SceneComponent and triggers a sort of the SceneComponents
+    /// </summary>
+    /// <returns>The update order.</returns>
+    /// <param name="updateOrder">Update order.</param>
+    public SceneComponent SetUpdateOrder(int updateOrder)
+    {
+        if (UpdateOrder != updateOrder)
+        {
+            UpdateOrder = updateOrder;
+            Core.Scene._sceneComponents.Sort();
+        }
+
+        return this;
+    }
+
+    #endregion
 }

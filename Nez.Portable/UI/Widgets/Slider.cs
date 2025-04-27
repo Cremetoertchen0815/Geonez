@@ -1,260 +1,314 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
+using Microsoft.Xna.Framework;
 
+namespace Nez.UI;
 
-namespace Nez.UI
+public class Slider : ProgressBar, IInputListener, IGamepadFocusable
 {
-	public class Slider : ProgressBar, IInputListener, IGamepadFocusable
-	{
-		/// <summary>
-		/// the maximum distance outside the slider the mouse can move when pressing it to cause it to be unfocused
-		/// </summary>
-		public float SliderBoundaryThreshold = 50f;
-		private SliderStyle style;
-		private bool _mouseOver, _mouseDown;
+    private bool _mouseOver, _mouseDown;
+
+    /// <summary>
+    ///     the maximum distance outside the slider the mouse can move when pressing it to cause it to be unfocused
+    /// </summary>
+    public float SliderBoundaryThreshold = 50f;
+
+    private SliderStyle style;
+
+
+    /// <summary>
+    ///     Creates a new slider. It's width is determined by the given prefWidth parameter, its height is determined by the
+    ///     maximum of
+    ///     the height of either the slider {@link NinePatch} or slider handle {@link TextureRegion}. The min and max values
+    ///     determine
+    ///     the range the values of this slider can take on, the stepSize parameter specifies the distance between individual
+    ///     values.
+    ///     E.g. min could be 4, max could be 10 and stepSize could be 0.2, giving you a total of 30 values, 4.0 4.2, 4.4 and
+    ///     so on.
+    /// </summary>
+    /// <param name="min">Minimum.</param>
+    /// <param name="max">Max.</param>
+    /// <param name="stepSize">Step size.</param>
+    /// <param name="vertical">If set to <c>true</c> vertical.</param>
+    /// <param name="background">Background.</param>
+    public Slider(float min, float max, float stepSize, bool vertical, SliderStyle style) : base(min, max, stepSize,
+        vertical, style)
+    {
+        ShiftIgnoresSnap = true;
+        this.style = style;
+    }
+
+    public Slider(float min, float max, float stepSize, bool vertical, Skin skin, string styleName = null) : this(
+        min, max, stepSize, vertical, skin.Get<SliderStyle>(styleName))
+    {
+    }
+
+    public Slider(Skin skin, string styleName = null) : this(0, 1, 0.1f, false, skin.Get<SliderStyle>(styleName))
+    {
+    }
+
+    // Leaving this constructor for backwards-compatibility
+    public Slider(Skin skin, string styleName = null, float min = 0, float max = 1, float step = 0.1f) : this(min,
+        max, step, false, skin.Get<SliderStyle>(styleName))
+    {
+    }
+
+
+    public Slider SetStyle(SliderStyle style)
+    {
+        Insist.IsTrue(style is SliderStyle, "style must be a SliderStyle");
+
+        base.SetStyle(style);
+        this.style = style;
+        return this;
+    }
+
+
+    /// <summary>
+    ///     Returns the slider's style. Modifying the returned style may not have an effect until {@link
+    ///     #setStyle(SliderStyle)} is called
+    /// </summary>
+    /// <returns>The style.</returns>
+    public new SliderStyle GetStyle()
+    {
+        return style;
+    }
+
+
+    public bool IsDragging()
+    {
+        return _mouseDown && _mouseOver;
+    }
+
+
+    protected override IDrawable GetKnobDrawable()
+    {
+        if (Disabled && style.DisabledKnob != null)
+            return style.DisabledKnob;
+
+        if (IsDragging() && style.KnobDown != null)
+            return style.KnobDown;
+
+        if (_mouseOver && style.KnobOver != null)
+            return style.KnobOver;
+
+        return style.Knob;
+    }
+
+    private void CalculatePositionAndValue(Vector2 mousePos)
+    {
+        var knob = GetKnobDrawable();
+
+        float value;
+        if (_vertical)
+        {
+            var height = this.height - style.Background.TopHeight - style.Background.BottomHeight;
+            var knobHeight = knob == null ? 0 : knob.MinHeight;
+            position = mousePos.Y - style.Background.BottomHeight - knobHeight * 0.5f;
+            value = Min + (Max - Min) * (position / (height - knobHeight));
+            position = Math.Max(0, position);
+            position = Math.Min(height - knobHeight, position);
+        }
+        else
+        {
+            var width = this.width - style.Background.LeftWidth - style.Background.RightWidth;
+            var knobWidth = knob == null ? 0 : knob.MinWidth;
+            position = mousePos.X - style.Background.LeftWidth - knobWidth * 0.5f;
+            value = Min + (Max - Min) * (position / (width - knobWidth));
+            position = Math.Max(0, position);
+            position = Math.Min(width - knobWidth, position);
+        }
 
+        SetValue(value);
+    }
 
-		/// <summary>
-		/// Creates a new slider. It's width is determined by the given prefWidth parameter, its height is determined by the maximum of
-		///  the height of either the slider {@link NinePatch} or slider handle {@link TextureRegion}. The min and max values determine
-		/// the range the values of this slider can take on, the stepSize parameter specifies the distance between individual values.
-		/// E.g. min could be 4, max could be 10 and stepSize could be 0.2, giving you a total of 30 values, 4.0 4.2, 4.4 and so on.
-		/// </summary>
-		/// <param name="min">Minimum.</param>
-		/// <param name="max">Max.</param>
-		/// <param name="stepSize">Step size.</param>
-		/// <param name="vertical">If set to <c>true</c> vertical.</param>
-		/// <param name="background">Background.</param>
-		public Slider(float min, float max, float stepSize, bool vertical, SliderStyle style) : base(min, max, stepSize,
-			vertical, style)
-		{
-			ShiftIgnoresSnap = true;
-			this.style = style;
-		}
+    #region IInputListener
 
-		public Slider(float min, float max, float stepSize, bool vertical, Skin skin, string styleName = null) : this(
-			min, max, stepSize, vertical, skin.Get<SliderStyle>(styleName))
-		{
-		}
+    void IInputListener.OnMouseEnter()
+    {
+        _mouseOver = true;
+    }
 
-		public Slider(Skin skin, string styleName = null) : this(0, 1, 0.1f, false, skin.Get<SliderStyle>(styleName))
-		{
-		}
 
-		// Leaving this constructor for backwards-compatibility
-		public Slider(Skin skin, string styleName = null, float min = 0, float max = 1, float step = 0.1f) : this(min,
-			max, step, false, skin.Get<SliderStyle>(styleName))
-		{
-		}
+    void IInputListener.OnMouseExit()
+    {
+        _mouseOver = _mouseDown = false;
+    }
 
-		#region IInputListener
 
-		void IInputListener.OnMouseEnter() => _mouseOver = true;
+    bool IInputListener.OnMousePressed(Vector2 mousePos)
+    {
+        CalculatePositionAndValue(mousePos);
+        _mouseDown = true;
+        return true;
+    }
 
 
-		void IInputListener.OnMouseExit() => _mouseOver = _mouseDown = false;
+    void IInputListener.OnMouseMoved(Vector2 mousePos)
+    {
+        if (DistanceOutsideBoundsToPoint(mousePos) > SliderBoundaryThreshold)
+        {
+            _mouseDown = _mouseOver = false;
+            GetStage().RemoveInputFocusListener(this);
+        }
+        else
+        {
+            CalculatePositionAndValue(mousePos);
+        }
+    }
 
 
-		bool IInputListener.OnMousePressed(Vector2 mousePos)
-		{
-			CalculatePositionAndValue(mousePos);
-			_mouseDown = true;
-			return true;
-		}
+    void IInputListener.OnMouseUp(Vector2 mousePos)
+    {
+        _mouseDown = false;
+    }
 
 
-		void IInputListener.OnMouseMoved(Vector2 mousePos)
-		{
-			if (DistanceOutsideBoundsToPoint(mousePos) > SliderBoundaryThreshold)
-			{
-				_mouseDown = _mouseOver = false;
-				GetStage().RemoveInputFocusListener(this);
-			}
-			else
-			{
-				CalculatePositionAndValue(mousePos);
-			}
-		}
+    bool IInputListener.OnMouseScrolled(int mouseWheelDelta)
+    {
+        return false;
+    }
 
+    #endregion
 
-		void IInputListener.OnMouseUp(Vector2 mousePos) => _mouseDown = false;
 
+    #region IGamepadFocusable
 
-		bool IInputListener.OnMouseScrolled(int mouseWheelDelta) => false;
+    public bool ShouldUseExplicitFocusableControl { get; set; }
+    public IGamepadFocusable GamepadUpElement { get; set; }
+    public IGamepadFocusable GamepadDownElement { get; set; }
+    public IGamepadFocusable GamepadLeftElement { get; set; }
+    public IGamepadFocusable GamepadRightElement { get; set; }
 
-		#endregion
 
+    public void EnableExplicitFocusableControl(IGamepadFocusable upEle, IGamepadFocusable downEle,
+        IGamepadFocusable leftEle, IGamepadFocusable rightEle)
+    {
+        ShouldUseExplicitFocusableControl = true;
+        GamepadUpElement = upEle;
+        GamepadDownElement = downEle;
+        GamepadLeftElement = leftEle;
+        GamepadRightElement = rightEle;
+    }
 
-		#region IGamepadFocusable
 
-		public bool ShouldUseExplicitFocusableControl { get; set; }
-		public IGamepadFocusable GamepadUpElement { get; set; }
-		public IGamepadFocusable GamepadDownElement { get; set; }
-		public IGamepadFocusable GamepadLeftElement { get; set; }
-		public IGamepadFocusable GamepadRightElement { get; set; }
+    void IGamepadFocusable.OnUnhandledDirectionPressed(Direction direction)
+    {
+        OnUnhandledDirectionPressed(direction);
+    }
 
 
-		public void EnableExplicitFocusableControl(IGamepadFocusable upEle, IGamepadFocusable downEle,
-												   IGamepadFocusable leftEle, IGamepadFocusable rightEle)
-		{
-			ShouldUseExplicitFocusableControl = true;
-			GamepadUpElement = upEle;
-			GamepadDownElement = downEle;
-			GamepadLeftElement = leftEle;
-			GamepadRightElement = rightEle;
-		}
+    void IGamepadFocusable.OnFocused()
+    {
+        OnFocused();
+    }
 
 
-		void IGamepadFocusable.OnUnhandledDirectionPressed(Direction direction) => OnUnhandledDirectionPressed(direction);
+    void IGamepadFocusable.OnUnfocused()
+    {
+        OnUnfocused();
+    }
 
 
-		void IGamepadFocusable.OnFocused() => OnFocused();
+    void IGamepadFocusable.OnActionButtonPressed()
+    {
+        OnActionButtonPressed();
+    }
 
 
-		void IGamepadFocusable.OnUnfocused() => OnUnfocused();
+    void IGamepadFocusable.OnActionButtonReleased()
+    {
+        OnActionButtonReleased();
+    }
 
+    #endregion
 
-		void IGamepadFocusable.OnActionButtonPressed() => OnActionButtonPressed();
 
+    #region overrideable focus handlers
 
-		void IGamepadFocusable.OnActionButtonReleased() => OnActionButtonReleased();
+    protected virtual void OnUnhandledDirectionPressed(Direction direction)
+    {
+        if (direction == Direction.Up || direction == Direction.Right)
+            SetValue(_value + StepSize);
+        else
+            SetValue(_value - StepSize);
+    }
 
-		#endregion
 
+    protected virtual void OnFocused()
+    {
+        _mouseOver = true;
+    }
 
-		#region overrideable focus handlers
 
-		protected virtual void OnUnhandledDirectionPressed(Direction direction)
-		{
-			if (direction == Direction.Up || direction == Direction.Right)
-				SetValue(_value + StepSize);
-			else
-				SetValue(_value - StepSize);
-		}
+    protected virtual void OnUnfocused()
+    {
+        _mouseOver = _mouseDown = false;
+    }
 
 
-		protected virtual void OnFocused() => _mouseOver = true;
+    protected virtual void OnActionButtonPressed()
+    {
+        _mouseDown = true;
+    }
 
 
-		protected virtual void OnUnfocused() => _mouseOver = _mouseDown = false;
+    protected virtual void OnActionButtonReleased()
+    {
+        _mouseDown = false;
+    }
 
+    #endregion
+}
 
-		protected virtual void OnActionButtonPressed() => _mouseDown = true;
+public class SliderStyle : ProgressBarStyle
+{
+	/**
+     * Optional.
+     */
+	public IDrawable KnobOver, KnobDown;
 
 
-		protected virtual void OnActionButtonReleased() => _mouseDown = false;
+    public SliderStyle()
+    {
+    }
 
-		#endregion
 
+    public SliderStyle(IDrawable background, IDrawable knob) : base(background, knob)
+    {
+    }
 
-		public Slider SetStyle(SliderStyle style)
-		{
-			Insist.IsTrue(style is SliderStyle, "style must be a SliderStyle");
 
-			base.SetStyle(style);
-			this.style = style;
-			return this;
-		}
+    public new static SliderStyle Create(Color backgroundColor, Color knobColor)
+    {
+        var background = new PrimitiveDrawable(backgroundColor);
+        background.MinWidth = background.MinHeight = 10;
 
+        var knob = new PrimitiveDrawable(knobColor);
+        knob.MinWidth = knob.MinHeight = 20;
 
-		/// <summary>
-		/// Returns the slider's style. Modifying the returned style may not have an effect until {@link #setStyle(SliderStyle)} is called
-		/// </summary>
-		/// <returns>The style.</returns>
-		public new SliderStyle GetStyle() => style;
+        return new SliderStyle
+        {
+            Background = background,
+            Knob = knob
+        };
+    }
 
 
-		public bool IsDragging() => _mouseDown && _mouseOver;
+    public new SliderStyle Clone()
+    {
+        return new SliderStyle
+        {
+            Background = Background,
+            DisabledBackground = DisabledBackground,
+            Knob = Knob,
+            DisabledKnob = DisabledKnob,
+            KnobBefore = KnobBefore,
+            KnobAfter = KnobAfter,
+            DisabledKnobBefore = DisabledKnobBefore,
+            DisabledKnobAfter = DisabledKnobAfter,
 
-
-		protected override IDrawable GetKnobDrawable()
-		{
-			if (Disabled && style.DisabledKnob != null)
-				return style.DisabledKnob;
-
-			if (IsDragging() && style.KnobDown != null)
-				return style.KnobDown;
-
-			if (_mouseOver && style.KnobOver != null)
-				return style.KnobOver;
-
-			return style.Knob;
-		}
-
-		private void CalculatePositionAndValue(Vector2 mousePos)
-		{
-			var knob = GetKnobDrawable();
-
-			float value;
-			if (_vertical)
-			{
-				float height = this.height - style.Background.TopHeight - style.Background.BottomHeight;
-				float knobHeight = knob == null ? 0 : knob.MinHeight;
-				position = mousePos.Y - style.Background.BottomHeight - knobHeight * 0.5f;
-				value = Min + (Max - Min) * (position / (height - knobHeight));
-				position = Math.Max(0, position);
-				position = Math.Min(height - knobHeight, position);
-			}
-			else
-			{
-				float width = this.width - style.Background.LeftWidth - style.Background.RightWidth;
-				float knobWidth = knob == null ? 0 : knob.MinWidth;
-				position = mousePos.X - style.Background.LeftWidth - knobWidth * 0.5f;
-				value = Min + (Max - Min) * (position / (width - knobWidth));
-				position = Math.Max(0, position);
-				position = Math.Min(width - knobWidth, position);
-			}
-
-			SetValue(value);
-		}
-	}
-
-
-	public class SliderStyle : ProgressBarStyle
-	{
-		/** Optional. */
-		public IDrawable KnobOver, KnobDown;
-
-
-		public SliderStyle()
-		{
-		}
-
-
-		public SliderStyle(IDrawable background, IDrawable knob) : base(background, knob)
-		{
-		}
-
-
-		public static new SliderStyle Create(Color backgroundColor, Color knobColor)
-		{
-			var background = new PrimitiveDrawable(backgroundColor);
-			background.MinWidth = background.MinHeight = 10;
-
-			var knob = new PrimitiveDrawable(knobColor);
-			knob.MinWidth = knob.MinHeight = 20;
-
-			return new SliderStyle
-			{
-				Background = background,
-				Knob = knob
-			};
-		}
-
-
-		public new SliderStyle Clone() => new SliderStyle
-		{
-			Background = Background,
-			DisabledBackground = DisabledBackground,
-			Knob = Knob,
-			DisabledKnob = DisabledKnob,
-			KnobBefore = KnobBefore,
-			KnobAfter = KnobAfter,
-			DisabledKnobBefore = DisabledKnobBefore,
-			DisabledKnobAfter = DisabledKnobAfter,
-
-			KnobOver = KnobOver,
-			KnobDown = KnobDown
-		};
-	}
+            KnobOver = KnobOver,
+            KnobDown = KnobDown
+        };
+    }
 }

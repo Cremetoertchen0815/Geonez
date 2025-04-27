@@ -1,157 +1,165 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
+using Microsoft.Xna.Framework;
 
+namespace Nez;
 
-namespace Nez
+/// <summary>
+///     provides frame timing information
+/// </summary>
+public static class Time
 {
-	/// <summary>
-	/// provides frame timing information
-	/// </summary>
-	public static class Time
-	{
-		private static TimeMode _mode = TimeMode.LockedFramerate;
-		public static TimeMode Mode
-		{
-			get => _mode;
-			set
-			{
-				_mode = value;
-				switch (value)
-				{
-					case TimeMode.Unlocked:
-					case TimeMode.LockedTimestep:
-						Core.Instance.IsFixedTimeStep = false;
-						break;
-					case TimeMode.LockedFramerate:
-						Core.Instance.IsFixedTimeStep = true;
-						break;
-				}
-			}
-		}
+    private static TimeMode _mode = TimeMode.LockedFramerate;
 
-		public static bool FirstUpdateInFrame;
+    public static bool FirstUpdateInFrame;
 
-		/// <summary>
-		/// total time the game has been running
-		/// </summary>
-		public static float TotalTime;
+    /// <summary>
+    ///     total time the game has been running
+    /// </summary>
+    public static float TotalTime;
 
-		/// <summary>
-		/// delta time from the previous frame to the current, scaled by timeScale(if mode is LockedFramerate)
-		/// </summary>
-		public static float DeltaTime;
+    /// <summary>
+    ///     delta time from the previous frame to the current, scaled by timeScale(if mode is LockedFramerate)
+    /// </summary>
+    public static float DeltaTime;
 
-		/// <summary>
-		/// unscaled version of deltaTime. Not affected by timeScale
-		/// </summary>
-		public static float UnscaledDeltaTime;
+    /// <summary>
+    ///     unscaled version of deltaTime. Not affected by timeScale
+    /// </summary>
+    public static float UnscaledDeltaTime;
 
-        /// <summary>
-        /// unscaled version of deltaTime. Not affected by timeScale
-        /// </summary>
-        public static float OriginalDeltaTime;
+    /// <summary>
+    ///     unscaled version of deltaTime. Not affected by timeScale
+    /// </summary>
+    public static float OriginalDeltaTime;
 
-        /// <summary>
-        /// total time since the Scene was loaded
-        /// </summary>
-        public static float TimeSinceSceneLoad;
+    /// <summary>
+    ///     total time since the Scene was loaded
+    /// </summary>
+    public static float TimeSinceSceneLoad;
 
-		/// <summary>
-		/// time scale of deltaTime/TargetTimeStep
-		/// </summary>
-		public static float TimeScale = 1f;
+    /// <summary>
+    ///     time scale of deltaTime/TargetTimeStep
+    /// </summary>
+    public static float TimeScale = 1f;
 
-		private static float _TargetTimeStep = 1 / 60F;
-		public static float TargetTimeStep
-		{
-			get => _TargetTimeStep;
-			set
-			{
-				if (Mode == TimeMode.LockedFramerate) Core.Instance.TargetElapsedTime = TimeSpan.FromSeconds(value);
-				_TargetTimeStep = value;
-			}
-		}
+    private static float _TargetTimeStep = 1 / 60F;
 
-		public static float Alpha;
+    public static float Alpha;
 
-		public static float MaxDeltaTime = 1F;
+    public static float MaxDeltaTime = 1F;
 
-		/// <summary>
-		/// total number of frames that have passed
-		/// </summary>
-		public static uint FrameCount;
-		private static float lastTotalGameTime;
-		private static float ScaledTimeStep;
-		private static float accumulator;
+    /// <summary>
+    ///     total number of frames that have passed
+    /// </summary>
+    public static uint FrameCount;
+
+    private static float lastTotalGameTime;
+    private static float ScaledTimeStep;
+    private static float accumulator;
+
+    public static TimeMode Mode
+    {
+        get => _mode;
+        set
+        {
+            _mode = value;
+            switch (value)
+            {
+                case TimeMode.Unlocked:
+                case TimeMode.LockedTimestep:
+                    Core.Instance.IsFixedTimeStep = false;
+                    break;
+                case TimeMode.LockedFramerate:
+                    Core.Instance.IsFixedTimeStep = true;
+                    break;
+            }
+        }
+    }
+
+    public static float TargetTimeStep
+    {
+        get => _TargetTimeStep;
+        set
+        {
+            if (Mode == TimeMode.LockedFramerate) Core.Instance.TargetElapsedTime = TimeSpan.FromSeconds(value);
+            _TargetTimeStep = value;
+        }
+    }
 
 
+    internal static void Prepare(GameTime gt)
+    {
+        TotalTime = (float)gt.TotalGameTime.TotalSeconds;
+        OriginalDeltaTime = UnscaledDeltaTime = (float)gt.ElapsedGameTime.TotalSeconds;
+        lastTotalGameTime = TotalTime;
+        DeltaTime = UnscaledDeltaTime * TimeScale;
+        Alpha = 1;
 
-		internal static void Prepare(GameTime gt)
-		{
-			TotalTime = (float)gt.TotalGameTime.TotalSeconds;
-            OriginalDeltaTime = UnscaledDeltaTime = (float)gt.ElapsedGameTime.TotalSeconds;
-			lastTotalGameTime = TotalTime;
-			DeltaTime = UnscaledDeltaTime * TimeScale;
-			Alpha = 1;
+        TimeSinceSceneLoad += UnscaledDeltaTime;
+        FrameCount++;
+    }
 
-			TimeSinceSceneLoad += UnscaledDeltaTime;
-			FrameCount++;
-		}
+    internal static void Update()
+    {
+        switch (Mode)
+        {
+            case TimeMode.Unlocked:
+            case TimeMode.LockedFramerate:
+                DeltaTime = UnscaledDeltaTime * TimeScale;
+                FirstUpdateInFrame = true;
+                Input.Update();
 
-		internal static void Update()
-		{
-			switch (Mode)
-			{
-				case TimeMode.Unlocked:
-				case TimeMode.LockedFramerate:
-					DeltaTime = UnscaledDeltaTime * TimeScale;
-					FirstUpdateInFrame = true;
-					Input.Update();
+                Core.Instance.FixedUpdate();
+                Core.Instance.VariableUpdate();
+                break;
+            case TimeMode.LockedTimestep:
+                DeltaTime = _TargetTimeStep * TimeScale;
+                ScaledTimeStep = TargetTimeStep * TimeScale;
+                accumulator += Math.Min(UnscaledDeltaTime, MaxDeltaTime);
+                UnscaledDeltaTime = _TargetTimeStep;
+                FirstUpdateInFrame = true;
 
+                Input.Update();
+
+                var DidUpdateHappen = accumulator >= ScaledTimeStep;
+                while (accumulator >= ScaledTimeStep)
+                {
                     Core.Instance.FixedUpdate();
-                    Core.Instance.VariableUpdate();
-                    break;
-				case TimeMode.LockedTimestep:
-                    DeltaTime = _TargetTimeStep * TimeScale;
-					ScaledTimeStep = TargetTimeStep * TimeScale;
-					accumulator += Math.Min(UnscaledDeltaTime, MaxDeltaTime);
-                    UnscaledDeltaTime = _TargetTimeStep;
-                    FirstUpdateInFrame = true;
+                    accumulator -= ScaledTimeStep;
+                    FirstUpdateInFrame = false;
+                }
 
-                    Input.Update();
+                Alpha = accumulator / ScaledTimeStep;
 
-                    bool DidUpdateHappen = accumulator >= ScaledTimeStep;
-					while (accumulator >= ScaledTimeStep)
-					{
-						Core.Instance.FixedUpdate();
-						accumulator -= ScaledTimeStep;
-						FirstUpdateInFrame = false;
-					}
-					Alpha = (accumulator / ScaledTimeStep);
-
-					FirstUpdateInFrame = true;
-                    Core.Instance.VariableUpdate();
-                    break;
-			}
-		}
+                FirstUpdateInFrame = true;
+                Core.Instance.VariableUpdate();
+                break;
+        }
+    }
 
 
-		internal static void SceneChanged() => TimeSinceSceneLoad = 0f;
+    internal static void SceneChanged()
+    {
+        TimeSinceSceneLoad = 0f;
+    }
 
 
-		/// <summary>
-		/// Allows to check in intervals. Should only be used with interval values above deltaTime,
-		/// otherwise it will always return true.
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool CheckEvery(float interval) =>
-			// we subtract deltaTime since timeSinceSceneLoad already includes this update ticks deltaTime
-			(int)(TimeSinceSceneLoad / interval) > (int)((TimeSinceSceneLoad - DeltaTime) / interval);
-	}
+    /// <summary>
+    ///     Allows to check in intervals. Should only be used with interval values above deltaTime,
+    ///     otherwise it will always return true.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool CheckEvery(float interval)
+    {
+        // we subtract deltaTime since timeSinceSceneLoad already includes this update ticks deltaTime
+        return (int)(TimeSinceSceneLoad / interval) > (int)((TimeSinceSceneLoad - DeltaTime) / interval);
+    }
+}
 
-	public enum TimeMode
-	{
-		Unlocked, LockedFramerate, LockedTimestep
-	}
+public enum TimeMode
+{
+    Unlocked,
+    LockedFramerate,
+    LockedTimestep
 }

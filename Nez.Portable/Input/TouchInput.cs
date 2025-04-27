@@ -1,61 +1,56 @@
-﻿using Microsoft.Xna.Framework.Input.Touch;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input.Touch;
 
+namespace Nez;
 
-namespace Nez
+/// <summary>
+///     to enable touch input you must first call enableTouchSupport()
+/// </summary>
+public class TouchInput
 {
-	/// <summary>
-	/// to enable touch input you must first call enableTouchSupport()
-	/// </summary>
-	public class TouchInput
-	{
-		public bool IsConnected => _isConnected;
-		public TouchCollection CurrentTouches => _currentTouches;
+    public bool IsConnected { get; private set; }
 
-		public TouchCollection PreviousTouches => _previousTouches;
-		public List<GestureSample> PreviousGestures => _previousGestures;
-		public List<GestureSample> CurrentGestures => _currentGestures;
+    public TouchCollection CurrentTouches { get; private set; }
 
-		private TouchCollection _previousTouches;
-		private TouchCollection _currentTouches;
-		private List<GestureSample> _previousGestures = new List<GestureSample>();
-		private List<GestureSample> _currentGestures = new List<GestureSample>();
-		private bool _isConnected;
+    public TouchCollection PreviousTouches { get; private set; }
 
-		private void OnGraphicsDeviceReset()
-		{
-			TouchPanel.DisplayWidth = Core.GraphicsDevice.Viewport.Width;
-			TouchPanel.DisplayHeight = Core.GraphicsDevice.Viewport.Height;
-			TouchPanel.DisplayOrientation = Core.GraphicsDevice.PresentationParameters.DisplayOrientation;
-		}
+    public List<GestureSample> PreviousGestures { get; } = new();
+
+    public List<GestureSample> CurrentGestures { get; } = new();
+
+    private void OnGraphicsDeviceReset()
+    {
+        TouchPanel.DisplayWidth = Core.GraphicsDevice.Viewport.Width;
+        TouchPanel.DisplayHeight = Core.GraphicsDevice.Viewport.Height;
+        TouchPanel.DisplayOrientation = Core.GraphicsDevice.PresentationParameters.DisplayOrientation;
+    }
 
 
-		internal void Update()
-		{
-			if (!_isConnected)
-				return;
+    internal void Update()
+    {
+        if (!IsConnected)
+            return;
 
-			_previousTouches = _currentTouches;
-			_currentTouches = TouchPanel.GetState();
+        PreviousTouches = CurrentTouches;
+        CurrentTouches = TouchPanel.GetState();
 
-			_previousGestures.Clear();
-			_previousGestures.AddRange(_currentGestures);
-			_currentGestures.Clear();
-			while (TouchPanel.IsGestureAvailable)
-				_currentGestures.Add(TouchPanel.ReadGesture());
-		}
+        PreviousGestures.Clear();
+        PreviousGestures.AddRange(CurrentGestures);
+        CurrentGestures.Clear();
+        while (TouchPanel.IsGestureAvailable)
+            CurrentGestures.Add(TouchPanel.ReadGesture());
+    }
 
 
-		public void EnableTouchSupport()
-		{
-			_isConnected = TouchPanel.GetCapabilities().IsConnected;
+    public void EnableTouchSupport()
+    {
+        IsConnected = TouchPanel.GetCapabilities().IsConnected;
 
-			if (_isConnected)
-			{
-				Core.Emitter.AddObserver(CoreEvents.GraphicsDeviceReset, OnGraphicsDeviceReset);
-				Core.Emitter.AddObserver(CoreEvents.OrientationChanged, OnGraphicsDeviceReset);
-				OnGraphicsDeviceReset();
-			}
-		}
-	}
+        if (IsConnected)
+        {
+            Core.Emitter.AddObserver(CoreEvents.GraphicsDeviceReset, OnGraphicsDeviceReset);
+            Core.Emitter.AddObserver(CoreEvents.OrientationChanged, OnGraphicsDeviceReset);
+            OnGraphicsDeviceReset();
+        }
+    }
 }

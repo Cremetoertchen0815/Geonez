@@ -1,288 +1,285 @@
+using System;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Nez.PhysicsShapes;
-using System.Runtime.CompilerServices;
 
+namespace Nez.Verlet;
 
-namespace Nez.Verlet
+/// <summary>
+///     the root of the Verlet simulation. Create a World and call its update method each frame.
+/// </summary>
+public class VerletWorld
 {
-	/// <summary>
-	/// the root of the Verlet simulation. Create a World and call its update method each frame.
-	/// </summary>
-	public class VerletWorld
-	{
-		/// <summary>
-		/// gravity for the simulation
-		/// </summary>
-		public Vector2 Gravity = new Vector2(0, 980f);
+    // collision helpers
+    internal static Collider[] _colliders = new Collider[4];
+    private readonly FastList<Composite> _composites = new();
+    private readonly float _fixedDeltaTime = 1f / 60;
+    private readonly float _fixedDeltaTimeSq;
+    private readonly Circle _tempCircle = new(1);
+    private Particle _draggedParticle;
+    private int _iterationSteps;
 
-		/// <summary>
-		/// number of iterations that will be used for Constraint solving
-		/// </summary>
-		public int ConstraintIterations = 3;
+    // timing
+    private float _leftOverTime;
 
-		/// <summary>
-		/// max number of iterations for the simulation as a whole
-		/// </summary>
-		public int MaximumStepIterations = 5;
+    /// <summary>
+    ///     should Particles be allowed to be dragged?
+    /// </summary>
+    public bool AllowDragging = true;
 
-		/// <summary>
-		/// Bounds of the Verlet World. Particles will be confined to this space if set.
-		/// </summary>
-		public Rectangle? SimulationBounds;
+    /// <summary>
+    ///     number of iterations that will be used for Constraint solving
+    /// </summary>
+    public int ConstraintIterations = 3;
 
-		/// <summary>
-		/// should Particles be allowed to be dragged?
-		/// </summary>
-		public bool AllowDragging = true;
+    /// <summary>
+    ///     gravity for the simulation
+    /// </summary>
+    public Vector2 Gravity = new(0, 980f);
 
-		/// <summary>
-		/// squared selection radius of the mouse pointer
-		/// </summary>
-		public float SelectionRadiusSquared = 20 * 20;
-		private Particle _draggedParticle;
-		private FastList<Composite> _composites = new FastList<Composite>();
+    /// <summary>
+    ///     max number of iterations for the simulation as a whole
+    /// </summary>
+    public int MaximumStepIterations = 5;
 
-		// collision helpers
-		internal static Collider[] _colliders = new Collider[4];
-		private Circle _tempCircle = new Circle(1);
+    /// <summary>
+    ///     squared selection radius of the mouse pointer
+    /// </summary>
+    public float SelectionRadiusSquared = 20 * 20;
 
-		// timing
-		private float _leftOverTime;
-		private float _fixedDeltaTime = 1f / 60;
-		private int _iterationSteps;
-		private float _fixedDeltaTimeSq;
+    /// <summary>
+    ///     Bounds of the Verlet World. Particles will be confined to this space if set.
+    /// </summary>
+    public Rectangle? SimulationBounds;
 
 
-		public VerletWorld(Rectangle? simulationBounds = null)
-		{
-			SimulationBounds = simulationBounds;
-			_fixedDeltaTimeSq = Mathf.Pow(_fixedDeltaTime, 2);
-		}
+    public VerletWorld(Rectangle? simulationBounds = null)
+    {
+        SimulationBounds = simulationBounds;
+        _fixedDeltaTimeSq = Mathf.Pow(_fixedDeltaTime, 2);
+    }
 
 
-		#region verlet simulation
-
-		public void Update()
-		{
-			UpdateTiming();
-
-			if (AllowDragging)
-				HandleDragging();
-
-			for (int iteration = 1; iteration <= _iterationSteps; iteration++)
-			{
-				for (int i = _composites.Length - 1; i >= 0; i--)
-				{
-					var composite = _composites.Buffer[i];
-
-					// solve constraints
-					for (int s = 0; s < ConstraintIterations; s++)
-						composite.SolveConstraints();
-
-					// do the verlet integration
-					composite.UpdateParticles(_fixedDeltaTimeSq, Gravity);
-
-					// handle collisions with Nez Colliders
-					composite.HandleConstraintCollisions();
-
-					for (int j = 0; j < composite.Particles.Length; j++)
-					{
-						var p = composite.Particles.Buffer[j];
-
-						// optinally constrain to bounds
-						if (SimulationBounds.HasValue)
-							ConstrainParticleToBounds(p);
-
-						// optionally handle collisions with Nez Colliders
-						if (p.CollidesWithColliders)
-							HandleCollisions(p, composite.CollidesWithLayers);
-					}
-				}
-			}
-		}
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void HandleDragging()
+    {
+        if (Input.LeftMouseButtonPressed)
+        {
+            _draggedParticle = GetNearestParticle(Input.MousePosition);
+        }
+        else if (Input.LeftMouseButtonDown)
+        {
+            if (_draggedParticle != null)
+                _draggedParticle.Position = Input.MousePosition;
+        }
+        else if (Input.LeftMouseButtonReleased)
+        {
+            if (_draggedParticle != null)
+                _draggedParticle.Position = Input.MousePosition;
+            _draggedParticle = null;
+        }
+    }
 
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private void ConstrainParticleToBounds(Particle p)
-		{
-			var tempPos = p.Position;
-			var bounds = SimulationBounds.Value;
+    /// <summary>
+    ///     gets the nearest Particle to the position. Uses the selectionRadiusSquared to determine if a Particle is near
+    ///     enough for consideration.
+    /// </summary>
+    /// <returns>The nearest particle.</returns>
+    /// <param name="position">Position.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Particle GetNearestParticle(Vector2 position)
+    {
+        // less than 64 and we count it
+        var nearestSquaredDistance = SelectionRadiusSquared;
+        Particle particle = null;
 
-			if (p.Radius == 0)
-			{
-				if (tempPos.Y > bounds.Height)
-					tempPos.Y = bounds.Height;
-				else if (tempPos.Y < bounds.Y)
-					tempPos.Y = bounds.Y;
+        // find nearest point
+        for (var j = 0; j < _composites.Length; j++)
+        {
+            var particles = _composites.Buffer[j].Particles;
+            for (var i = 0; i < particles.Length; i++)
+            {
+                var p = particles.Buffer[i];
+                var squaredDistanceToParticle = Vector2.DistanceSquared(p.Position, position);
+                if (squaredDistanceToParticle <= SelectionRadiusSquared &&
+                    (particle == null || squaredDistanceToParticle < nearestSquaredDistance))
+                {
+                    particle = p;
+                    nearestSquaredDistance = squaredDistanceToParticle;
+                }
+            }
+        }
 
-				if (tempPos.X < bounds.X)
-					tempPos.X = bounds.X;
-				else if (tempPos.X > bounds.Width)
-					tempPos.X = bounds.Width;
-			}
-			else
-			{
-				// special care for larger particles
-				if (tempPos.Y < bounds.Y + p.Radius)
-					tempPos.Y = 2f * (bounds.Y + p.Radius) - tempPos.Y;
-				if (tempPos.Y > bounds.Height - p.Radius)
-					tempPos.Y = 2f * (bounds.Height - p.Radius) - tempPos.Y;
-				if (tempPos.X > bounds.Width - p.Radius)
-					tempPos.X = 2f * (bounds.Width - p.Radius) - tempPos.X;
-				if (tempPos.X < bounds.X + p.Radius)
-					tempPos.X = 2f * (bounds.X + p.Radius) - tempPos.X;
-			}
-
-			p.Position = tempPos;
-		}
-
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private void HandleCollisions(Particle p, int collidesWithLayers)
-		{
-			int collidedCount = Physics.OverlapCircleAll(p.Position, p.Radius, _colliders, collidesWithLayers);
-			for (int i = 0; i < collidedCount; i++)
-			{
-				var collider = _colliders[i];
-				if (collider.IsTrigger)
-					continue;
-
-				CollisionResult collisionResult;
-
-				// if we have a large enough Particle radius use a Circle for the collision check else fall back to a point
-				if (p.Radius < 2)
-				{
-					if (collider.Shape.PointCollidesWithShape(p.Position, out collisionResult))
-					{
-						// TODO: add a Dictionary of Collider,float that lets Colliders be setup as force volumes. The float can then be
-						// multiplied by the mtv here. It should be very small values, like 0.002f for example.
-						p.Position -= collisionResult.MinimumTranslationVector;
-					}
-				}
-				else
-				{
-					_tempCircle.Radius = p.Radius;
-					_tempCircle.position = p.Position;
-
-					if (_tempCircle.CollidesWithShape(collider.Shape, out collisionResult))
-					{
-						p.Position -= collisionResult.MinimumTranslationVector;
-					}
-				}
-			}
-		}
+        return particle;
+    }
 
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private void UpdateTiming()
-		{
-			_leftOverTime += Time.DeltaTime;
-			_iterationSteps = Mathf.TruncateToInt(_leftOverTime / _fixedDeltaTime);
-			_leftOverTime -= _iterationSteps * _fixedDeltaTime;
+    public void DebugRender(Batcher batcher)
+    {
+        for (var i = 0; i < _composites.Length; i++)
+            _composites.Buffer[i].DebugRender(batcher);
 
-			_iterationSteps = System.Math.Min(_iterationSteps, MaximumStepIterations);
-		}
-
-		#endregion
-
-
-		#region Composite management
-
-		/// <summary>
-		/// adds a Composite to the simulation
-		/// </summary>
-		/// <returns>The composite.</returns>
-		/// <param name="composite">Composite.</param>
-		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		public T AddComposite<T>(T composite) where T : Composite
-		{
-			_composites.Add(composite);
-			return composite;
-		}
+        if (AllowDragging)
+        {
+            if (_draggedParticle != null)
+            {
+                batcher.DrawCircle(_draggedParticle.Position, 8, Color.White);
+            }
+            else
+            {
+                // Highlight the nearest particle within the selection radius
+                var particle = GetNearestParticle(Input.MousePosition);
+                if (particle != null)
+                    batcher.DrawCircle(particle.Position, 8, Color.White * 0.4f);
+            }
+        }
+    }
 
 
-		/// <summary>
-		/// removes a Composite from the simulation
-		/// </summary>
-		/// <param name="composite">Composite.</param>
-		public void RemoveComposite(Composite composite) => _composites.Remove(composite);
+    #region verlet simulation
 
-		#endregion
+    public void Update()
+    {
+        UpdateTiming();
 
+        if (AllowDragging)
+            HandleDragging();
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private void HandleDragging()
-		{
-			if (Input.LeftMouseButtonPressed)
-			{
-				_draggedParticle = GetNearestParticle(Input.MousePosition);
-			}
-			else if (Input.LeftMouseButtonDown)
-			{
-				if (_draggedParticle != null)
-					_draggedParticle.Position = Input.MousePosition;
-			}
-			else if (Input.LeftMouseButtonReleased)
-			{
-				if (_draggedParticle != null)
-					_draggedParticle.Position = Input.MousePosition;
-				_draggedParticle = null;
-			}
-		}
+        for (var iteration = 1; iteration <= _iterationSteps; iteration++)
+        for (var i = _composites.Length - 1; i >= 0; i--)
+        {
+            var composite = _composites.Buffer[i];
 
+            // solve constraints
+            for (var s = 0; s < ConstraintIterations; s++)
+                composite.SolveConstraints();
 
-		/// <summary>
-		/// gets the nearest Particle to the position. Uses the selectionRadiusSquared to determine if a Particle is near enough for consideration.
-		/// </summary>
-		/// <returns>The nearest particle.</returns>
-		/// <param name="position">Position.</param>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Particle GetNearestParticle(Vector2 position)
-		{
-			// less than 64 and we count it
-			float nearestSquaredDistance = SelectionRadiusSquared;
-			Particle particle = null;
+            // do the verlet integration
+            composite.UpdateParticles(_fixedDeltaTimeSq, Gravity);
 
-			// find nearest point
-			for (int j = 0; j < _composites.Length; j++)
-			{
-				var particles = _composites.Buffer[j].Particles;
-				for (int i = 0; i < particles.Length; i++)
-				{
-					var p = particles.Buffer[i];
-					float squaredDistanceToParticle = Vector2.DistanceSquared(p.Position, position);
-					if (squaredDistanceToParticle <= SelectionRadiusSquared &&
-						(particle == null || squaredDistanceToParticle < nearestSquaredDistance))
-					{
-						particle = p;
-						nearestSquaredDistance = squaredDistanceToParticle;
-					}
-				}
-			}
+            // handle collisions with Nez Colliders
+            composite.HandleConstraintCollisions();
 
-			return particle;
-		}
+            for (var j = 0; j < composite.Particles.Length; j++)
+            {
+                var p = composite.Particles.Buffer[j];
+
+                // optinally constrain to bounds
+                if (SimulationBounds.HasValue)
+                    ConstrainParticleToBounds(p);
+
+                // optionally handle collisions with Nez Colliders
+                if (p.CollidesWithColliders)
+                    HandleCollisions(p, composite.CollidesWithLayers);
+            }
+        }
+    }
 
 
-		public void DebugRender(Batcher batcher)
-		{
-			for (int i = 0; i < _composites.Length; i++)
-				_composites.Buffer[i].DebugRender(batcher);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void ConstrainParticleToBounds(Particle p)
+    {
+        var tempPos = p.Position;
+        var bounds = SimulationBounds.Value;
 
-			if (AllowDragging)
-			{
-				if (_draggedParticle != null)
-				{
-					batcher.DrawCircle(_draggedParticle.Position, 8, Color.White);
-				}
-				else
-				{
-					// Highlight the nearest particle within the selection radius
-					var particle = GetNearestParticle(Input.MousePosition);
-					if (particle != null)
-						batcher.DrawCircle(particle.Position, 8, Color.White * 0.4f);
-				}
-			}
-		}
-	}
+        if (p.Radius == 0)
+        {
+            if (tempPos.Y > bounds.Height)
+                tempPos.Y = bounds.Height;
+            else if (tempPos.Y < bounds.Y)
+                tempPos.Y = bounds.Y;
+
+            if (tempPos.X < bounds.X)
+                tempPos.X = bounds.X;
+            else if (tempPos.X > bounds.Width)
+                tempPos.X = bounds.Width;
+        }
+        else
+        {
+            // special care for larger particles
+            if (tempPos.Y < bounds.Y + p.Radius)
+                tempPos.Y = 2f * (bounds.Y + p.Radius) - tempPos.Y;
+            if (tempPos.Y > bounds.Height - p.Radius)
+                tempPos.Y = 2f * (bounds.Height - p.Radius) - tempPos.Y;
+            if (tempPos.X > bounds.Width - p.Radius)
+                tempPos.X = 2f * (bounds.Width - p.Radius) - tempPos.X;
+            if (tempPos.X < bounds.X + p.Radius)
+                tempPos.X = 2f * (bounds.X + p.Radius) - tempPos.X;
+        }
+
+        p.Position = tempPos;
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void HandleCollisions(Particle p, int collidesWithLayers)
+    {
+        var collidedCount = Physics.OverlapCircleAll(p.Position, p.Radius, _colliders, collidesWithLayers);
+        for (var i = 0; i < collidedCount; i++)
+        {
+            var collider = _colliders[i];
+            if (collider.IsTrigger)
+                continue;
+
+            CollisionResult collisionResult;
+
+            // if we have a large enough Particle radius use a Circle for the collision check else fall back to a point
+            if (p.Radius < 2)
+            {
+                if (collider.Shape.PointCollidesWithShape(p.Position, out collisionResult))
+                    // TODO: add a Dictionary of Collider,float that lets Colliders be setup as force volumes. The float can then be
+                    // multiplied by the mtv here. It should be very small values, like 0.002f for example.
+                    p.Position -= collisionResult.MinimumTranslationVector;
+            }
+            else
+            {
+                _tempCircle.Radius = p.Radius;
+                _tempCircle.position = p.Position;
+
+                if (_tempCircle.CollidesWithShape(collider.Shape, out collisionResult))
+                    p.Position -= collisionResult.MinimumTranslationVector;
+            }
+        }
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void UpdateTiming()
+    {
+        _leftOverTime += Time.DeltaTime;
+        _iterationSteps = Mathf.TruncateToInt(_leftOverTime / _fixedDeltaTime);
+        _leftOverTime -= _iterationSteps * _fixedDeltaTime;
+
+        _iterationSteps = Math.Min(_iterationSteps, MaximumStepIterations);
+    }
+
+    #endregion
+
+
+    #region Composite management
+
+    /// <summary>
+    ///     adds a Composite to the simulation
+    /// </summary>
+    /// <returns>The composite.</returns>
+    /// <param name="composite">Composite.</param>
+    /// <typeparam name="T">The 1st type parameter.</typeparam>
+    public T AddComposite<T>(T composite) where T : Composite
+    {
+        _composites.Add(composite);
+        return composite;
+    }
+
+
+    /// <summary>
+    ///     removes a Composite from the simulation
+    /// </summary>
+    /// <param name="composite">Composite.</param>
+    public void RemoveComposite(Composite composite)
+    {
+        _composites.Remove(composite);
+    }
+
+    #endregion
 }

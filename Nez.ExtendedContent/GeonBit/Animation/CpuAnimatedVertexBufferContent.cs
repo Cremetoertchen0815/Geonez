@@ -1,4 +1,5 @@
 ﻿#region License
+
 /// -------------------------------------------------------------------------------------
 /// Notice: This file had been edited to integrate as core inside GeonBit.
 /// Original license and attributes below. The license and copyright notice below affect
@@ -17,19 +18,17 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
+
 #endregion
 
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Nez.ExtendedContent.GeonBit.Graphics;
 
-namespace Nez.ExtendedContent.GeonBit.Animation
+namespace Nez.ExtendedContent.GeonBit.Animation;
+
+public class CpuAnimatedVertexBufferContent : DynamicVertexBufferContent
 {
-	public class CpuAnimatedVertexBufferContent : DynamicVertexBufferContent
-	{
-		public CpuAnimatedVertexBufferContent(VertexBufferContent source) : base(source)
-		{
-		}
-
-
-	}
+    public CpuAnimatedVertexBufferContent(VertexBufferContent source) : base(source)
+    {
+    }
 }

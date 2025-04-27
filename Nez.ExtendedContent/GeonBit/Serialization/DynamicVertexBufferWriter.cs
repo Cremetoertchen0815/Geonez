@@ -1,4 +1,5 @@
 ﻿#region License
+
 //   Copyright 2016 Kastellanos Nikolaos
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,35 +13,35 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
+
 #endregion
 
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using Nez.ExtendedContent.GeonBit.Graphics;
 
-namespace Nez.ExtendedContent.GeonBit.Serialization
+namespace Nez.ExtendedContent.GeonBit.Serialization;
+
+[ContentTypeWriter]
+public class DynamicVertexBufferWriter : ContentTypeWriter<DynamicVertexBufferContent>
 {
-	[ContentTypeWriter]
-	public class DynamicVertexBufferWriter : ContentTypeWriter<DynamicVertexBufferContent>
-	{
-		protected override void Write(ContentWriter output, DynamicVertexBufferContent buffer)
-		{
-			WriteVertexBuffer(output, buffer);
+    protected override void Write(ContentWriter output, DynamicVertexBufferContent buffer)
+    {
+        WriteVertexBuffer(output, buffer);
 
-			output.Write(buffer.IsWriteOnly);
+        output.Write(buffer.IsWriteOnly);
+    }
 
-			return;
-		}
+    private void WriteVertexBuffer(ContentWriter output, DynamicVertexBufferContent buffer)
+    {
+        var vertexCount = buffer.VertexData.Length / buffer.VertexDeclaration.VertexStride;
+        output.WriteRawObject(buffer.VertexDeclaration);
+        output.Write((uint)vertexCount);
+        output.Write(buffer.VertexData);
+    }
 
-		private void WriteVertexBuffer(ContentWriter output, DynamicVertexBufferContent buffer)
-		{
-			int? vertexCount = buffer.VertexData.Length / buffer.VertexDeclaration.VertexStride;
-			output.WriteRawObject(buffer.VertexDeclaration);
-			output.Write((uint)vertexCount);
-			output.Write(buffer.VertexData);
-		}
-
-		public override string GetRuntimeReader(TargetPlatform targetPlatform) => "GeonBit.Graphics.Content.DynamicVertexBufferReader, Aether.Graphics";
-
-	}
+    public override string GetRuntimeReader(TargetPlatform targetPlatform)
+    {
+        return "GeonBit.Graphics.Content.DynamicVertexBufferReader, Aether.Graphics";
+    }
 }

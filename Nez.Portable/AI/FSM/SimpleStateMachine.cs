@@ -1,110 +1,108 @@
 ﻿using System;
 using System.Collections.Generic;
 
+namespace Nez.AI.FSM;
 
-namespace Nez.AI.FSM
+/// <summary>
+///     Simple state machine with an enum constraint. There are some rules you must follow when using this:
+///     - before update is called initialState must be set (use the constructor or onAddedToEntity)
+///     - if you implement update in your subclass you must call base.update()
+///     Note: if you use an enum as the contraint you can avoid allocations/boxing in Mono by doing what the Core
+///     Emitter does for its enum: pass in a IEqualityComparer to the constructor.
+/// </summary>
+public abstract class SimpleStateMachine<TEnum> : Component, IUpdatable
+    where TEnum : struct, IComparable, IFormattable
 {
-	/// <summary>
-	/// Simple state machine with an enum constraint. There are some rules you must follow when using this:
-	/// - before update is called initialState must be set (use the constructor or onAddedToEntity)
-	/// - if you implement update in your subclass you must call base.update()
-	/// 
-	/// Note: if you use an enum as the contraint you can avoid allocations/boxing in Mono by doing what the Core
-	/// Emitter does for its enum: pass in a IEqualityComparer to the constructor.
-	/// </summary>
-	public abstract class SimpleStateMachine<TEnum> : Component, IUpdatable
-		where TEnum : struct, IComparable, IFormattable
-	{
-		private class StateMethodCache
-		{
-			public Action EnterState;
-			public Action Tick;
-			public Action ExitState;
-		}
+    private readonly Dictionary<TEnum, StateMethodCache> _stateCache;
+    private TEnum _currentState;
+    private StateMethodCache _stateMethods;
 
-		protected float elapsedTimeInState = 0f;
-		protected TEnum previousState;
-		private Dictionary<TEnum, StateMethodCache> _stateCache;
-		private StateMethodCache _stateMethods;
-		private TEnum _currentState;
-
-		protected TEnum CurrentState
-		{
-			get => _currentState;
-			set
-			{
-				// dont change to the current state
-				if (_stateCache.Comparer.Equals(_currentState, value))
-					return;
-
-				// swap previous/current
-				previousState = _currentState;
-				_currentState = value;
-
-				// exit the state, fetch the next cached state methods then enter that state
-				if (_stateMethods.ExitState != null)
-					_stateMethods.ExitState();
-
-				elapsedTimeInState = 0f;
-				_stateMethods = _stateCache[_currentState];
-
-				if (_stateMethods.EnterState != null)
-					_stateMethods.EnterState();
-			}
-		}
-
-		protected TEnum InitialState
-		{
-			set
-			{
-				_currentState = value;
-				_stateMethods = _stateCache[_currentState];
-
-				if (_stateMethods.EnterState != null)
-					_stateMethods.EnterState();
-			}
-		}
+    protected float elapsedTimeInState;
+    protected TEnum previousState;
 
 
-		public SimpleStateMachine(IEqualityComparer<TEnum> customComparer = null)
-		{
-			_stateCache = new Dictionary<TEnum, StateMethodCache>(customComparer);
+    public SimpleStateMachine(IEqualityComparer<TEnum> customComparer = null)
+    {
+        _stateCache = new Dictionary<TEnum, StateMethodCache>(customComparer);
 
-			// cache all of our state methods
-			var enumValues = (TEnum[])Enum.GetValues(typeof(TEnum));
-			foreach (var e in enumValues)
-				ConfigureAndCacheState(e);
-		}
+        // cache all of our state methods
+        var enumValues = (TEnum[])Enum.GetValues(typeof(TEnum));
+        foreach (var e in enumValues)
+            ConfigureAndCacheState(e);
+    }
 
-		public virtual void Update()
-		{
-			elapsedTimeInState += Time.DeltaTime;
+    protected TEnum CurrentState
+    {
+        get => _currentState;
+        set
+        {
+            // dont change to the current state
+            if (_stateCache.Comparer.Equals(_currentState, value))
+                return;
 
-			if (_stateMethods.Tick != null)
-				_stateMethods.Tick();
-		}
+            // swap previous/current
+            previousState = _currentState;
+            _currentState = value;
 
-		private void ConfigureAndCacheState(TEnum stateEnum)
-		{
-			string stateName = stateEnum.ToString();
+            // exit the state, fetch the next cached state methods then enter that state
+            if (_stateMethods.ExitState != null)
+                _stateMethods.ExitState();
 
-			var state = new StateMethodCache
-			{
-				EnterState = GetDelegateForMethod(stateName + "_Enter"),
-				Tick = GetDelegateForMethod(stateName + "_Tick"),
-				ExitState = GetDelegateForMethod(stateName + "_Exit")
-			};
+            elapsedTimeInState = 0f;
+            _stateMethods = _stateCache[_currentState];
 
-			_stateCache[stateEnum] = state;
-		}
+            if (_stateMethods.EnterState != null)
+                _stateMethods.EnterState();
+        }
+    }
 
-		private Action GetDelegateForMethod(string methodName)
-		{
-			var methodInfo = ReflectionUtils.GetMethodInfo(this, methodName);
-			if (methodInfo != null)
-				return ReflectionUtils.CreateDelegate<Action>(this, methodInfo);
+    protected TEnum InitialState
+    {
+        set
+        {
+            _currentState = value;
+            _stateMethods = _stateCache[_currentState];
 
-			return null;
-		}
-	}
+            if (_stateMethods.EnterState != null)
+                _stateMethods.EnterState();
+        }
+    }
+
+    public virtual void Update()
+    {
+        elapsedTimeInState += Time.DeltaTime;
+
+        if (_stateMethods.Tick != null)
+            _stateMethods.Tick();
+    }
+
+    private void ConfigureAndCacheState(TEnum stateEnum)
+    {
+        var stateName = stateEnum.ToString();
+
+        var state = new StateMethodCache
+        {
+            EnterState = GetDelegateForMethod(stateName + "_Enter"),
+            Tick = GetDelegateForMethod(stateName + "_Tick"),
+            ExitState = GetDelegateForMethod(stateName + "_Exit")
+        };
+
+        _stateCache[stateEnum] = state;
+    }
+
+    private Action GetDelegateForMethod(string methodName)
+    {
+        var methodInfo = ReflectionUtils.GetMethodInfo(this, methodName);
+        if (methodInfo != null)
+            return ReflectionUtils.CreateDelegate<Action>(this, methodInfo);
+
+        return null;
+    }
+
+    private class StateMethodCache
+    {
+        public Action EnterState;
+        public Action ExitState;
+        public Action Tick;
+    }
 }

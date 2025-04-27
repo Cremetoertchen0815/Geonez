@@ -1,21 +1,19 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
+using Microsoft.Xna.Framework;
 
-namespace Nez
+namespace Nez;
+
+public static class Vector2Extension
 {
-	public static class Vector2Extension
-	{
+    public static Vector2 Rotate(this Vector2 v, float degrees)
+    {
+        var sin = (float)Math.Sin(degrees);
+        var cos = (float)Math.Cos(degrees);
 
-		public static Vector2 Rotate(this Vector2 v, float degrees)
-		{
-			float sin = (float)Math.Sin(degrees);
-			float cos = (float)Math.Cos(degrees);
-
-			float tx = v.X;
-			float ty = v.Y;
-			v.X = (cos * tx) - (sin * ty);
-			v.Y = (sin * tx) + (cos * ty);
-			return v;
-		}
-	}
+        var tx = v.X;
+        var ty = v.Y;
+        v.X = cos * tx - sin * ty;
+        v.Y = sin * tx + cos * ty;
+        return v;
+    }
 }

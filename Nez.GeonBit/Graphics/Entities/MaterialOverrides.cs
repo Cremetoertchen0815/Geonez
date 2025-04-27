@@ -1,4 +1,5 @@
 ﻿#region LICENSE
+
 //-----------------------------------------------------------------------------
 // For the purpose of making video games, educational projects or gamification,
 // GeonBit is distributed under the MIT license and is totally free to use.
@@ -8,181 +9,201 @@
 // Copyright (c) 2017 Ronen Ness [ronenness@gmail.com].
 // Do not remove this license notice.
 //-----------------------------------------------------------------------------
+
 #endregion
+
 #region File Description
+
 //-----------------------------------------------------------------------------
 // A special class to hold per-entity material properties.
 //
 // Author: Ronen Ness.
 // Since: 2017.
 //-----------------------------------------------------------------------------
+
 #endregion
+
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
+using Nez.GeonBit.Materials;
 
-namespace Nez.GeonBit
+namespace Nez.GeonBit;
+
+/// <summary>
+///     Helper class to manage materials override properties.
+///     You can use this class to set color, material, specular, etc for a specific model renderers, without having to
+///     create a
+///     new material for them.
+///     This allow you to easily override material's defaults without having to define lots of different materials, but
+///     note that this method is
+///     slightly slower so don't use it on too many entities at the same time.
+/// </summary>
+public class MaterialOverrides
 {
+    // dictionary of cached material clones for original materials replacement
+    private readonly Dictionary<MaterialAPI, MaterialAPI> _materialsCache = new();
+
+    private float? _alpha;
+
+    // optional per-entity properties that override material's defaults
+    private Color? _diffuseColor;
+    private Color? _emissiveLight;
+    private Color? _specularColor;
+    private Texture2D _texture;
+
     /// <summary>
-    /// Helper class to manage materials override properties.
-    /// You can use this class to set color, material, specular, etc for a specific model renderers, without having to create a
-    /// new material for them.
-    /// 
-    /// This allow you to easily override material's defaults without having to define lots of different materials, but note that this method is
-    /// slightly slower so don't use it on too many entities at the same time.
+    ///     Override diffuse color for this specific entity.
+    ///     Note: will affect all parts of the model.
     /// </summary>
-    public class MaterialOverrides
+    public Color? DiffuseColor
     {
-        // optional per-entity properties that override material's defaults
-        private Color? _diffuseColor = null;
-        private Color? _specularColor = null;
-        private Color? _emissiveLight = null;
-        private float? _alpha = null;
-        private Texture2D _texture = null;
-
-        /// <summary>
-        /// Override diffuse color for this specific entity.
-        /// Note: will affect all parts of the model.
-        /// </summary>
-        public Color? DiffuseColor
+        get => _diffuseColor;
+        set
         {
-            get => _diffuseColor;
-            set { _diffuseColor = value; UpdateOverridePropertiesState(); }
+            _diffuseColor = value;
+            UpdateOverridePropertiesState();
         }
+    }
 
-        /// <summary>
-        /// Override specular color for this specific entity.
-        /// Note: will affect all parts of the model.
-        /// </summary>
-        public Color? SpecularColor
+    /// <summary>
+    ///     Override specular color for this specific entity.
+    ///     Note: will affect all parts of the model.
+    /// </summary>
+    public Color? SpecularColor
+    {
+        get => _specularColor;
+        set
         {
-            get => _specularColor;
-            set { _specularColor = value; UpdateOverridePropertiesState(); }
+            _specularColor = value;
+            UpdateOverridePropertiesState();
         }
+    }
 
-        /// <summary>
-        /// Override emissive color for this specific entity.
-        /// Note: will affect all parts of the model.
-        /// </summary>
-        public Color? EmissiveLight
+    /// <summary>
+    ///     Override emissive color for this specific entity.
+    ///     Note: will affect all parts of the model.
+    /// </summary>
+    public Color? EmissiveLight
+    {
+        get => _emissiveLight;
+        set
         {
-            get => _emissiveLight;
-            set { _emissiveLight = value; UpdateOverridePropertiesState(); }
+            _emissiveLight = value;
+            UpdateOverridePropertiesState();
         }
+    }
 
-        /// <summary>
-        /// Override Alpha value for this specific entity.
-        /// Note: will affect all parts of the model.
-        /// </summary>
-        public float? Alpha
+    /// <summary>
+    ///     Override Alpha value for this specific entity.
+    ///     Note: will affect all parts of the model.
+    /// </summary>
+    public float? Alpha
+    {
+        get => _alpha;
+        set
         {
-            get => _alpha;
-            set { _alpha = value; UpdateOverridePropertiesState(); }
+            _alpha = value;
+            UpdateOverridePropertiesState();
         }
+    }
 
-        /// <summary>
-        /// Override material texture for this specific entity.
-        /// Note: will affect all parts of the model.
-        /// </summary>
-        public Texture2D Texture
+    /// <summary>
+    ///     Override material texture for this specific entity.
+    ///     Note: will affect all parts of the model.
+    /// </summary>
+    public Texture2D Texture
+    {
+        get => _texture;
+        set
         {
-            get => _texture;
-            set { _texture = value; UpdateOverridePropertiesState(); }
+            _texture = value;
+            UpdateOverridePropertiesState();
         }
+    }
 
-        /// <summary>
-        /// If true will use the override per-entity properties.
-        /// </summary>
-        public bool UsingOverrideProperties { get; protected set; }
+    /// <summary>
+    ///     If true will use the override per-entity properties.
+    /// </summary>
+    public bool UsingOverrideProperties { get; protected set; }
 
-        /// <summary>
-        /// Return if this entity should use material override properties (properties like texture, color, etc
-        /// which override the material defaults).
-        /// </summary>
-        private bool HaveOverrideProperties => Alpha != null || DiffuseColor != null || Texture != null || SpecularColor != null || EmissiveLight != null;
+    /// <summary>
+    ///     Return if this entity should use material override properties (properties like texture, color, etc
+    ///     which override the material defaults).
+    /// </summary>
+    private bool HaveOverrideProperties => Alpha != null || DiffuseColor != null || Texture != null ||
+                                           SpecularColor != null || EmissiveLight != null;
 
-        /// <summary>
-        /// Update if currently using override properties or not.
-        /// </summary>
-        private void UpdateOverridePropertiesState() => UsingOverrideProperties = HaveOverrideProperties;
+    /// <summary>
+    ///     Update if currently using override properties or not.
+    /// </summary>
+    private void UpdateOverridePropertiesState()
+    {
+        UsingOverrideProperties = HaveOverrideProperties;
+    }
 
-        /// <summary>
-        /// Clone custom render settings.
-        /// </summary>
-        /// <returns>Cloned settings.</returns>
-        public MaterialOverrides Clone()
+    /// <summary>
+    ///     Clone custom render settings.
+    /// </summary>
+    /// <returns>Cloned settings.</returns>
+    public MaterialOverrides Clone()
+    {
+        var ret = new MaterialOverrides
         {
-            var ret = new MaterialOverrides
-            {
-                _diffuseColor = _diffuseColor,
-                _specularColor = _specularColor,
-                _emissiveLight = _emissiveLight,
-                _alpha = _alpha,
-                _texture = _texture
-            };
-            ret.UpdateOverridePropertiesState();
-            return ret;
-        }
+            _diffuseColor = _diffuseColor,
+            _specularColor = _specularColor,
+            _emissiveLight = _emissiveLight,
+            _alpha = _alpha,
+            _texture = _texture
+        };
+        ret.UpdateOverridePropertiesState();
+        return ret;
+    }
 
-        // dictionary of cached material clones for original materials replacement
-        private readonly Dictionary<Materials.MaterialAPI, Materials.MaterialAPI> _materialsCache = new Dictionary<Materials.MaterialAPI, Materials.MaterialAPI>();
-
-        /// <summary>
-        /// Apply all custom render properties on a given material, and return either the given material or a clone of it, if needed.
-        /// This will not do anything if there are no custom properties currently used.
-        /// </summary>
-        /// <param name="material">Effect to set properties.</param>
-        /// <returns>Either the input material or a clone of it with applied properties.</returns>
-        public Materials.MaterialAPI Apply(Materials.MaterialAPI material)
+    /// <summary>
+    ///     Apply all custom render properties on a given material, and return either the given material or a clone of it, if
+    ///     needed.
+    ///     This will not do anything if there are no custom properties currently used.
+    /// </summary>
+    /// <param name="material">Effect to set properties.</param>
+    /// <returns>Either the input material or a clone of it with applied properties.</returns>
+    public MaterialAPI Apply(MaterialAPI material)
+    {
+        // if there's nothing to do just return the original material
+        if (!UsingOverrideProperties)
         {
-            // if there's nothing to do just return the original material
-            if (!UsingOverrideProperties)
-            {
-                _materialsCache.Clear();
-                return material;
-            }
-
-            // we need to apply custom properties. get the cached material with properties or create a new one
-            var original = material;
-            if (!_materialsCache.TryGetValue(material, out material))
-            {
-                material = original.Clone();
-                _materialsCache[original] = material;
-            }
-
-            // if got override diffuse color, set it
-            if (DiffuseColor != null)
-            {
-                material.DiffuseColor = DiffuseColor.Value;
-            }
-
-            // if got override specular color, set it
-            if (SpecularColor != null)
-            {
-                material.SpecularColor = SpecularColor.Value;
-            }
-
-            // if got override emissive color, set it
-            if (EmissiveLight != null)
-            {
-                material.EmissiveLight = EmissiveLight.Value;
-            }
-
-            // if got override alpha, set it
-            if (Alpha != null)
-            {
-                material.Alpha = Alpha.Value;
-            }
-
-            // if got override texture, set it
-            if (Texture != null)
-            {
-                material.Texture = Texture;
-                material.TextureEnabled = true;
-            }
-
-            // return the cloned material
+            _materialsCache.Clear();
             return material;
         }
+
+        // we need to apply custom properties. get the cached material with properties or create a new one
+        var original = material;
+        if (!_materialsCache.TryGetValue(material, out material))
+        {
+            material = original.Clone();
+            _materialsCache[original] = material;
+        }
+
+        // if got override diffuse color, set it
+        if (DiffuseColor != null) material.DiffuseColor = DiffuseColor.Value;
+
+        // if got override specular color, set it
+        if (SpecularColor != null) material.SpecularColor = SpecularColor.Value;
+
+        // if got override emissive color, set it
+        if (EmissiveLight != null) material.EmissiveLight = EmissiveLight.Value;
+
+        // if got override alpha, set it
+        if (Alpha != null) material.Alpha = Alpha.Value;
+
+        // if got override texture, set it
+        if (Texture != null)
+        {
+            material.Texture = Texture;
+            material.TextureEnabled = true;
+        }
+
+        // return the cloned material
+        return material;
     }
 }

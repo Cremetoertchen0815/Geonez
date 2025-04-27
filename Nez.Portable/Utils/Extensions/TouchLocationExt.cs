@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
 
+namespace Nez;
 
-namespace Nez
+public static class TouchLocationExt
 {
-	public static class TouchLocationExt
-	{
-		public static Vector2 ScaledPosition(this TouchLocation touchLocation) => Input.ScaledPosition(touchLocation.Position);
-	}
+    public static Vector2 ScaledPosition(this TouchLocation touchLocation)
+    {
+        return Input.ScaledPosition(touchLocation.Position);
+    }
 }

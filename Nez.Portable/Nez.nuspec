@@ -15,7 +15,7 @@
         <tags>nez monogame xna fna</tags>
     </metadata>
     <files>
-        <file src="..\DefaultContent\**\*" target="tools" />
-        <file src="bin\$configuration$\Nez.*" target="lib" />
+        <file src="..\DefaultContent\**\*" target="tools"/>
+        <file src="bin\$configuration$\Nez.*" target="lib"/>
     </files>
 </package>

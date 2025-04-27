@@ -1,69 +1,67 @@
 ﻿using System;
 
+namespace Nez;
 
-namespace Nez
+/// <summary>
+///     Renderer that renders using its own Camera which doesnt move.
+/// </summary>
+public class ScreenSpaceRenderer : Renderer
 {
-	/// <summary>
-	/// Renderer that renders using its own Camera which doesnt move.
-	/// </summary>
-	public class ScreenSpaceRenderer : Renderer
-	{
-		public int[] RenderLayers;
+    public int[] RenderLayers;
 
 
-		public ScreenSpaceRenderer(int renderOrder, params int[] renderLayers) : base(renderOrder, null)
-		{
-			Array.Sort(renderLayers);
-			Array.Reverse(renderLayers);
-			RenderLayers = renderLayers;
-			WantsToRenderAfterPostProcessors = true;
-		}
+    public ScreenSpaceRenderer(int renderOrder, params int[] renderLayers) : base(renderOrder, null)
+    {
+        Array.Sort(renderLayers);
+        Array.Reverse(renderLayers);
+        RenderLayers = renderLayers;
+        WantsToRenderAfterPostProcessors = true;
+    }
 
-		public override void Render(Scene scene)
-		{
-			BeginRender(Camera);
+    public override void Render(Scene scene)
+    {
+        BeginRender(Camera);
 
-			for (int i = 0; i < RenderLayers.Length; i++)
-			{
-				var renderables = scene.RenderableComponents.ComponentsWithRenderLayer(RenderLayers[i]);
-				for (int j = 0; j < renderables.Length; j++)
-				{
-					var renderable = renderables.Buffer[j];
-					if (renderable.Enabled && renderable.IsVisibleFromCamera(Camera))
-						RenderAfterStateCheck(renderable, Camera);
-				}
-			}
+        for (var i = 0; i < RenderLayers.Length; i++)
+        {
+            var renderables = scene.RenderableComponents.ComponentsWithRenderLayer(RenderLayers[i]);
+            for (var j = 0; j < renderables.Length; j++)
+            {
+                var renderable = renderables.Buffer[j];
+                if (renderable.Enabled && renderable.IsVisibleFromCamera(Camera))
+                    RenderAfterStateCheck(renderable, Camera);
+            }
+        }
 
-			if (ShouldDebugRender && Core.DebugRenderEnabled)
-				DebugRender(scene, Camera);
+        if (ShouldDebugRender && Core.DebugRenderEnabled)
+            DebugRender(scene, Camera);
 
-			EndRender();
-		}
+        EndRender();
+    }
 
-		protected override void DebugRender(Scene scene, Camera cam)
-		{
-			Graphics.Instance.Batcher.End();
-			Graphics.Instance.Batcher.Begin(cam.TransformMatrix);
+    protected override void DebugRender(Scene scene, Camera cam)
+    {
+        Graphics.Instance.Batcher.End();
+        Graphics.Instance.Batcher.Begin(cam.TransformMatrix);
 
-			for (int i = 0; i < RenderLayers.Length; i++)
-			{
-				var renderables = scene.RenderableComponents.ComponentsWithRenderLayer(RenderLayers[i]);
-				for (int j = 0; j < renderables.Length; j++)
-				{
-					var entity = renderables.Buffer[j];
-					if (entity.Enabled)
-						entity.DebugRender(Graphics.Instance.Batcher);
-				}
-			}
-		}
+        for (var i = 0; i < RenderLayers.Length; i++)
+        {
+            var renderables = scene.RenderableComponents.ComponentsWithRenderLayer(RenderLayers[i]);
+            for (var j = 0; j < renderables.Length; j++)
+            {
+                var entity = renderables.Buffer[j];
+                if (entity.Enabled)
+                    entity.DebugRender(Graphics.Instance.Batcher);
+            }
+        }
+    }
 
-		public override void OnSceneBackBufferSizeChanged(int newWidth, int newHeight)
-		{
-			base.OnSceneBackBufferSizeChanged(newWidth, newHeight);
+    public override void OnSceneBackBufferSizeChanged(int newWidth, int newHeight)
+    {
+        base.OnSceneBackBufferSizeChanged(newWidth, newHeight);
 
-			// this is a bit of a hack. we maybe should take the Camera in the constructor
-			if (Camera == null)
-				Camera = Core.Scene.CreateEntity("screenspace camera").AddComponent<Camera>();
-		}
-	}
+        // this is a bit of a hack. we maybe should take the Camera in the constructor
+        if (Camera == null)
+            Camera = Core.Scene.CreateEntity("screenspace camera").AddComponent<Camera>();
+    }
 }

@@ -1,10 +1,9 @@
-﻿namespace Nez.AI.BehaviorTrees
+﻿namespace Nez.AI.BehaviorTrees;
+
+public enum TaskStatus
 {
-	public enum TaskStatus
-	{
-		Invalid,
-		Success,
-		Failure,
-		Running
-	}
+    Invalid,
+    Success,
+    Failure,
+    Running
 }

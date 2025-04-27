@@ -1,117 +1,120 @@
-using Microsoft.Xna.Framework;
 using System;
+using Microsoft.Xna.Framework;
 
-namespace Nez.Tiled
+namespace Nez.Tiled;
+
+public partial class TmxMap : TmxDocument, IDisposable
 {
-	public partial class TmxMap : TmxDocument, IDisposable
-	{
-		public string Version;
-		public string TiledVersion;
-		public int Width;
-		public int Height;
-		public int WorldWidth => Width * TileWidth;
-		public int WorldHeight => Height * TileHeight;
-		public int TileWidth;
-		public int TileHeight;
-		public int? HexSideLength;
-		public OrientationType Orientation;
-		public StaggerAxisType StaggerAxis;
-		public StaggerIndexType StaggerIndex;
-		public RenderOrderType RenderOrder;
-		public Color BackgroundColor;
-		public int? NextObjectID;
+    public Color BackgroundColor;
+    public TmxList<TmxGroup> Groups;
+    public int Height;
+    public int? HexSideLength;
+    public TmxList<TmxImageLayer> ImageLayers;
 
-		/// <summary>
-		/// contains all of the ITmxLayers, regardless of their specific type. Note that layers in a TmxGroup will not
-		/// be in this list. TmxGroup manages its own layers list.
-		/// </summary>
-		public TmxList<ITmxLayer> Layers;
+    /// <summary>
+    ///     contains all of the ITmxLayers, regardless of their specific type. Note that layers in a TmxGroup will not
+    ///     be in this list. TmxGroup manages its own layers list.
+    /// </summary>
+    public TmxList<ITmxLayer> Layers;
 
-		public TmxList<TmxTileset> Tilesets;
-		public TmxList<TmxLayer> TileLayers;
-		public TmxList<TmxObjectGroup> ObjectGroups;
-		public TmxList<TmxImageLayer> ImageLayers;
-		public TmxList<TmxGroup> Groups;
-
-		public PropertyDict Properties;
+    /// <summary>
+    ///     when we have an image tileset, tiles can be any size so we record the max size for culling
+    /// </summary>
+    public int MaxTileHeight;
 
 
-		/// <summary>
-		/// when we have an image tileset, tiles can be any size so we record the max size for culling
-		/// </summary>
-		public int MaxTileWidth;
+    /// <summary>
+    ///     when we have an image tileset, tiles can be any size so we record the max size for culling
+    /// </summary>
+    public int MaxTileWidth;
 
-		/// <summary>
-		/// when we have an image tileset, tiles can be any size so we record the max size for culling
-		/// </summary>
-		public int MaxTileHeight;
+    public int? NextObjectID;
+    public TmxList<TmxObjectGroup> ObjectGroups;
+    public OrientationType Orientation;
 
-		/// <summary>
-		/// does this map have non-default tile sizes that would require special culling?
-		/// </summary>
-		public bool RequiresLargeTileCulling => MaxTileWidth > TileWidth || MaxTileHeight > TileHeight;
+    public PropertyDict Properties;
+    public RenderOrderType RenderOrder;
+    public StaggerAxisType StaggerAxis;
+    public StaggerIndexType StaggerIndex;
+    public string TiledVersion;
+    public int TileHeight;
+    public TmxList<TmxLayer> TileLayers;
 
-		/// <summary>
-		/// currently only used to tick all the Tilesets so they can update their animated tiles
-		/// </summary>
-		public void Update()
-		{
-			foreach (var tileset in Tilesets)
-				tileset.Update();
-		}
+    public TmxList<TmxTileset> Tilesets;
+    public int TileWidth;
+    public string Version;
+    public int Width;
+    public int WorldWidth => Width * TileWidth;
+    public int WorldHeight => Height * TileHeight;
 
-		#region IDisposable Support
+    /// <summary>
+    ///     does this map have non-default tile sizes that would require special culling?
+    /// </summary>
+    public bool RequiresLargeTileCulling => MaxTileWidth > TileWidth || MaxTileHeight > TileHeight;
 
-		private bool _isDisposed;
+    /// <summary>
+    ///     currently only used to tick all the Tilesets so they can update their animated tiles
+    /// </summary>
+    public void Update()
+    {
+        foreach (var tileset in Tilesets)
+            tileset.Update();
+    }
 
-		private void Dispose(bool disposing)
-		{
-			if (!_isDisposed)
-			{
-				if (disposing)
-				{
-					foreach (var tileset in Tilesets)
-						tileset.Image?.Dispose();
+    #region IDisposable Support
 
-					foreach (var layer in ImageLayers)
-						layer.Image?.Dispose();
-				}
+    private bool _isDisposed;
 
-				_isDisposed = true;
-			}
-		}
+    private void Dispose(bool disposing)
+    {
+        if (!_isDisposed)
+        {
+            if (disposing)
+            {
+                foreach (var tileset in Tilesets)
+                    tileset.Image?.Dispose();
 
-		void IDisposable.Dispose() => Dispose(true);
+                foreach (var layer in ImageLayers)
+                    layer.Image?.Dispose();
+            }
 
-		#endregion
-	}
+            _isDisposed = true;
+        }
+    }
 
-	public enum OrientationType
-	{
-		Unknown,
-		Orthogonal,
-		Isometric,
-		Staggered,
-		Hexagonal
-	}
+    void IDisposable.Dispose()
+    {
+        Dispose(true);
+    }
 
-	public enum StaggerAxisType
-	{
-		X,
-		Y
-	}
+    #endregion
+}
 
-	public enum StaggerIndexType
-	{
-		Odd,
-		Even
-	}
+public enum OrientationType
+{
+    Unknown,
+    Orthogonal,
+    Isometric,
+    Staggered,
+    Hexagonal
+}
 
-	public enum RenderOrderType
-	{
-		RightDown,
-		RightUp,
-		LeftDown,
-		LeftUp
-	}
+public enum StaggerAxisType
+{
+    X,
+    Y
+}
+
+public enum StaggerIndexType
+{
+    Odd,
+    Even
+}
+
+public enum RenderOrderType
+{
+    RightDown,
+    RightUp,
+    LeftDown,
+    LeftUp
 }

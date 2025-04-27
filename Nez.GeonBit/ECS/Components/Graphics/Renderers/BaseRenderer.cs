@@ -1,4 +1,5 @@
 ﻿#region LICENSE
+
 //-----------------------------------------------------------------------------
 // For the purpose of making video games, educational projects or gamification,
 // GeonBit is distributed under the MIT license and is totally free to use.
@@ -8,113 +9,129 @@
 // Copyright (c) 2017 Ronen Ness [ronenness@gmail.com].
 // Do not remove this license notice.
 //-----------------------------------------------------------------------------
+
 #endregion
+
 #region File Description
+
 //-----------------------------------------------------------------------------
 // Implement basic functionality for components that render stuff.
 //
 // Author: Ronen Ness.
 // Since: 2017.
 //-----------------------------------------------------------------------------
+
 #endregion
+
 using Microsoft.Xna.Framework.Graphics;
 using Nez.GeonBit.Graphics.Lights;
 
-namespace Nez.GeonBit
+namespace Nez.GeonBit;
+
+/// <summary>
+///     Base implementation for most graphics-related components.
+/// </summary>
+public abstract class BaseRendererComponent : GeonComponent
 {
     /// <summary>
-    /// Base implementation for most graphics-related components.
+    ///     Get the main entity instance of this renderer.
     /// </summary>
-    public abstract class BaseRendererComponent : GeonComponent
+    protected abstract BaseRenderableEntity RenderableEntity { get; }
+
+    /// <summary>
+    ///     Set / get Entity blending state.
+    /// </summary>
+    public BlendState BlendingState
     {
-        /// <summary>
-        /// Get the main entity instance of this renderer.
-        /// </summary>
-        protected abstract BaseRenderableEntity RenderableEntity { get; }
+        set => RenderableEntity.BlendingState = value;
+        get => RenderableEntity.BlendingState;
+    }
 
-        public override void OnAddedToEntity() => Node?.AddEntity(RenderableEntity);
+    /// <summary>
+    ///     Set / get the rendering queue of this entity.
+    /// </summary>
+    public virtual RenderingQueue RenderingQueue
+    {
+        get => RenderableEntity.RenderingQueue;
+        set => RenderableEntity.RenderingQueue = value;
+    }
 
-        public override void OnRemovedFromEntity() => Node?.RemoveEntity(RenderableEntity);
-
-        /// <summary>
-        /// Set / get Entity blending state.
-        /// </summary>
-        public BlendState BlendingState
+    public virtual bool CastsShadows
+    {
+        get => (RenderableEntity as IShadowCaster)?.CastsShadow ?? false;
+        set
         {
-            set => RenderableEntity.BlendingState = value;
-            get => RenderableEntity.BlendingState;
+            if (RenderableEntity is not IShadowCaster shadowEntity) return;
+            shadowEntity.CastsShadow = value;
         }
+    }
 
-        /// <summary>
-        /// Set / get the rendering queue of this entity.
-        /// </summary>
-        public virtual RenderingQueue RenderingQueue
+    public virtual int ShadowCasterLOD
+    {
+        get => (RenderableEntity as IShadowCaster)?.ShadowCasterLOD ?? 0;
+        set
         {
-            get => RenderableEntity.RenderingQueue;
-            set => RenderableEntity.RenderingQueue = value;
+            if (RenderableEntity is not IShadowCaster shadowEntity) return;
+            shadowEntity.ShadowCasterLOD = value;
         }
+    }
 
-        public virtual bool CastsShadows
+    public virtual int PrimaryLight
+    {
+        get => (RenderableEntity as IShadowCaster)?.PrimaryLight ?? -1;
+        set
         {
-            get => (RenderableEntity as IShadowCaster)?.CastsShadow ?? false;
-            set
-            {
-                if (RenderableEntity is not IShadowCaster shadowEntity) return;
-                shadowEntity.CastsShadow = value;
-            }
+            if (RenderableEntity is not IShadowCaster shadowEntity) return;
+            shadowEntity.PrimaryLight = value;
         }
+    }
 
-        public virtual int ShadowCasterLOD
+    public virtual RasterizerState ShadowCasterRasterizerState
+    {
+        get => (RenderableEntity as IShadowCaster)?.ShadowRasterizerState ?? null;
+        set
         {
-            get => (RenderableEntity as IShadowCaster)?.ShadowCasterLOD ?? 0;
-            set
-            {
-                if (RenderableEntity is not IShadowCaster shadowEntity) return;
-                shadowEntity.ShadowCasterLOD = value;
-            }
+            if (RenderableEntity is not IShadowCaster shadowEntity) return;
+            shadowEntity.ShadowRasterizerState = value;
         }
+    }
 
-        public virtual int PrimaryLight
-        {
-            get => (RenderableEntity as IShadowCaster)?.PrimaryLight ?? -1;
-            set
-            {
-                if (RenderableEntity is not IShadowCaster shadowEntity) return;
-                shadowEntity.PrimaryLight = value;
-            }
-        }
+    public override void OnAddedToEntity()
+    {
+        Node?.AddEntity(RenderableEntity);
+    }
 
-        public virtual RasterizerState ShadowCasterRasterizerState
-        {
-            get => (RenderableEntity as IShadowCaster)?.ShadowRasterizerState ?? null;
-            set
-            {
-                if (RenderableEntity is not IShadowCaster shadowEntity) return;
-                shadowEntity.ShadowRasterizerState = value;
-            }
-        }
+    public override void OnRemovedFromEntity()
+    {
+        Node?.RemoveEntity(RenderableEntity);
+    }
 
-        /// <summary>
-        /// Copy basic properties to another component (helper function to help with Cloning).
-        /// </summary>
-        /// <param name="copyTo">Other component to copy values to.</param>
-        /// <returns>The object we are copying properties to.</returns>
-        public virtual Component CopyBasics(Component copyTo)
-        {
-            var otherRenderer = copyTo as BaseRendererComponent;
-            otherRenderer.RenderingQueue = RenderingQueue;
-            otherRenderer.BlendingState = BlendingState;
-            return copyTo;
-        }
+    /// <summary>
+    ///     Copy basic properties to another component (helper function to help with Cloning).
+    /// </summary>
+    /// <param name="copyTo">Other component to copy values to.</param>
+    /// <returns>The object we are copying properties to.</returns>
+    public virtual Component CopyBasics(Component copyTo)
+    {
+        var otherRenderer = copyTo as BaseRendererComponent;
+        otherRenderer.RenderingQueue = RenderingQueue;
+        otherRenderer.BlendingState = BlendingState;
+        return copyTo;
+    }
 
-        /// <summary>
-        /// Called when GameObject turned disabled.
-        /// </summary>
-        public override void OnDisabled() => RenderableEntity.Visible = false;
+    /// <summary>
+    ///     Called when GameObject turned disabled.
+    /// </summary>
+    public override void OnDisabled()
+    {
+        RenderableEntity.Visible = false;
+    }
 
-        /// <summary>
-        /// Called when GameObject is enabled.
-        /// </summary>
-        public override void OnEnabled() => RenderableEntity.Visible = true;
+    /// <summary>
+    ///     Called when GameObject is enabled.
+    /// </summary>
+    public override void OnEnabled()
+    {
+        RenderableEntity.Visible = true;
     }
 }

@@ -1,41 +1,39 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
+namespace Nez;
 
-namespace Nez
+/// <summary>
+///     used by the WaterReflectionPlane
+/// </summary>
+public class WaterReflectionMaterial : Material<WaterReflectionEffect>
 {
 	/// <summary>
-	/// used by the WaterReflectionPlane
+	///     cache the array so we dont have to recreate it every frame
 	/// </summary>
-	public class WaterReflectionMaterial : Material<WaterReflectionEffect>
-	{
-		/// <summary>
-		/// we store a reference to the RenderTarget so we can update the Effect when it changes
-		/// </summary>
-		private RenderTarget2D _renderTarget;
+	private readonly RenderTargetBinding[] _renderTargetBinding = new RenderTargetBinding[1];
 
-		/// <summary>
-		/// cache the array so we dont have to recreate it every frame
-		/// </summary>
-		private RenderTargetBinding[] _renderTargetBinding = new RenderTargetBinding[1];
+	/// <summary>
+	///     we store a reference to the RenderTarget so we can update the Effect when it changes
+	/// </summary>
+	private RenderTarget2D _renderTarget;
 
 
-		public WaterReflectionMaterial() : base(new WaterReflectionEffect())
-		{
-		}
+    public WaterReflectionMaterial() : base(new WaterReflectionEffect())
+    {
+    }
 
-		public override void OnPreRender(Camera camera)
-		{
-			Core.GraphicsDevice.GetRenderTargets(_renderTargetBinding);
-			var boundRenderTarget = _renderTargetBinding[0].RenderTarget as RenderTarget2D;
+    public override void OnPreRender(Camera camera)
+    {
+        Core.GraphicsDevice.GetRenderTargets(_renderTargetBinding);
+        var boundRenderTarget = _renderTargetBinding[0].RenderTarget as RenderTarget2D;
 
-			// only update the Shader when the renderTarget changes. it will be swapped out whenever the GraphicsDevice resets.
-			if (_renderTarget == null || _renderTarget != boundRenderTarget)
-			{
-				_renderTarget = boundRenderTarget;
-				Effect.RenderTexture = boundRenderTarget;
-			}
+        // only update the Shader when the renderTarget changes. it will be swapped out whenever the GraphicsDevice resets.
+        if (_renderTarget == null || _renderTarget != boundRenderTarget)
+        {
+            _renderTarget = boundRenderTarget;
+            Effect.RenderTexture = boundRenderTarget;
+        }
 
-			Effect.MatrixTransform = camera.ViewProjectionMatrix;
-		}
-	}
+        Effect.MatrixTransform = camera.ViewProjectionMatrix;
+    }
 }

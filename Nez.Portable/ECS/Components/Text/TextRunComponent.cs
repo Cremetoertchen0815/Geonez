@@ -1,50 +1,51 @@
-﻿namespace Nez
+﻿namespace Nez;
+
+/// <summary>
+///     very basic wrapper around TextRun. Note that the TextRunComponent.compile method should be used not TextRun.compile
+///     so that
+///     the Component data can be passed off to the TextRun.
+/// </summary>
+public class TextRunComponent : RenderableComponent
 {
-	/// <summary>
-	/// very basic wrapper around TextRun. Note that the TextRunComponent.compile method should be used not TextRun.compile so that
-	/// the Component data can be passed off to the TextRun.
-	/// </summary>
-	public class TextRunComponent : RenderableComponent
-	{
-		public override float Width => TextRun.Width;
-		public override float Height => TextRun.Height;
+    private TextRun _textRun;
 
-		public TextRun TextRun
-		{
-			get => _textRun;
-			set
-			{
-				_textRun = value;
-				Compile();
-			}
-		}
+    public TextRunComponent()
+    {
+    }
 
-		private TextRun _textRun;
+    public TextRunComponent(TextRun textRun)
+    {
+        _textRun = textRun;
+        Compile();
+    }
 
-		public TextRunComponent()
-		{
-		}
+    public override float Width => TextRun.Width;
+    public override float Height => TextRun.Height;
 
-		public TextRunComponent(TextRun textRun)
-		{
-			_textRun = textRun;
-			Compile();
-		}
+    public TextRun TextRun
+    {
+        get => _textRun;
+        set
+        {
+            _textRun = value;
+            Compile();
+        }
+    }
 
-		/// <summary>
-		/// calls through to TextRun.compile and handles marshalling some data between this Component and the underlying TextRun
-		/// </summary>
-		public void Compile()
-		{
-			_textRun.Position = Transform.Position;
-			_textRun.Rotation = Transform.Rotation;
-			_textRun.Compile();
-		}
+    /// <summary>
+    ///     calls through to TextRun.compile and handles marshalling some data between this Component and the underlying
+    ///     TextRun
+    /// </summary>
+    public void Compile()
+    {
+        _textRun.Position = Transform.Position;
+        _textRun.Rotation = Transform.Rotation;
+        _textRun.Compile();
+    }
 
-		public override void Render(Batcher batcher, Camera camera)
-		{
-			if (_textRun != null)
-				_textRun.Render(batcher);
-		}
-	}
+    public override void Render(Batcher batcher, Camera camera)
+    {
+        if (_textRun != null)
+            _textRun.Render(batcher);
+    }
 }

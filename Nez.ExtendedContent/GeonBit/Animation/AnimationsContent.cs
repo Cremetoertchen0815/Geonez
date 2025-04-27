@@ -1,4 +1,5 @@
 ﻿#region License
+
 /// -------------------------------------------------------------------------------------
 /// Notice: This file had been edited to integrate as core inside GeonBit.
 /// Original license and attributes below. The license and copyright notice below affect
@@ -17,29 +18,29 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
+
 #endregion
 
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
-namespace Nez.ExtendedContent.GeonBit.Animation
+namespace Nez.ExtendedContent.GeonBit.Animation;
+
+public class AnimationsContent
 {
-	public class AnimationsContent
-	{
-		public List<Matrix> BindPose { get; private set; }
-		public List<Matrix> InvBindPose { get; private set; }
-		public List<int> SkeletonHierarchy { get; private set; }
-		public List<string> BoneNames { get; private set; }
-		public Dictionary<string, ClipContent> Clips { get; private set; }
+    internal AnimationsContent(List<Matrix> bindPose, List<Matrix> invBindPose, List<int> skeletonHierarchy,
+        List<string> boneNames, Dictionary<string, ClipContent> clips)
+    {
+        BindPose = bindPose;
+        InvBindPose = invBindPose;
+        SkeletonHierarchy = skeletonHierarchy;
+        BoneNames = boneNames;
+        Clips = clips;
+    }
 
-
-		internal AnimationsContent(List<Matrix> bindPose, List<Matrix> invBindPose, List<int> skeletonHierarchy, List<string> boneNames, Dictionary<string, ClipContent> clips)
-		{
-			BindPose = bindPose;
-			InvBindPose = invBindPose;
-			SkeletonHierarchy = skeletonHierarchy;
-			BoneNames = boneNames;
-			Clips = clips;
-		}
-	}
+    public List<Matrix> BindPose { get; private set; }
+    public List<Matrix> InvBindPose { get; private set; }
+    public List<int> SkeletonHierarchy { get; private set; }
+    public List<string> BoneNames { get; private set; }
+    public Dictionary<string, ClipContent> Clips { get; private set; }
 }
