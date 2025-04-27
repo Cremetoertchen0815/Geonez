@@ -3,6 +3,7 @@
         <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2025.1.0-eap1" />
         <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.2.1105">
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>

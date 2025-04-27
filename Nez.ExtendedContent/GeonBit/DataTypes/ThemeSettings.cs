@@ -1,29 +1,33 @@
-﻿namespace Nez.ExtendedContent.DataTypes;
+﻿using JetBrains.Annotations;
 
-/// <summary>
-///     General data / settings about a UI theme.
-///     Loaded from the theme data xml file.
-/// </summary>
-public class ThemeSettings
+namespace Nez.ExtendedContent.DataTypes
 {
-    /// <summary>Theme author name.</summary>
-    public string AuthorName;
+	/// <summary>
+	/// General data / settings about a UI theme.
+	/// Loaded from the theme data xml file.
+	/// </summary>
+	[PublicAPI]
+	public class ThemeSettings
+	{
+		/// <summary>Name fot he theme.</summary>
+		public string ThemeName;
 
-    /// <summary>Theme additional credits.</summary>
-    public string Credits;
+		/// <summary>Theme author name.</summary>
+		public string AuthorName;
 
-    /// <summary>Theme description.</summary>
-    public string Description;
+		/// <summary>Theme description.</summary>
+		public string Description;
 
-    /// <summary>Theme license.</summary>
-    public string License;
+		/// <summary>Theme additional credits.</summary>
+		public string Credits;
 
-    /// <summary>Theme project URL.</summary>
-    public string RepoUrl;
+		/// <summary>Theme version.</summary>
+		public string Version;
 
-    /// <summary>Name fot he theme.</summary>
-    public string ThemeName;
+		/// <summary>Theme project URL.</summary>
+		public string RepoUrl;
 
-    /// <summary>Theme version.</summary>
-    public string Version;
+		/// <summary>Theme license.</summary>
+		public string License;
+	}
 }
