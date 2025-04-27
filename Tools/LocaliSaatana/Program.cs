@@ -1,18 +1,31 @@
-﻿using Nez.LocaliSaatana;
+﻿using LocaliSaatana;
+using Newtonsoft.Json;
 
-namespace LocaliSaatana;
-
-internal static class Program
+if (args.Length < 1)
 {
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
-    [STAThread]
-    static void Main()
-    {
-        // To customize application configuration such as set high DPI settings or default font,
-        // see https://aka.ms/applicationconfiguration.
-        ApplicationConfiguration.Initialize();
-        Application.Run(new Form1());
-    }
+    Console.WriteLine("Please specify the project file to compile!");
+    return;
 }
+
+if (!File.Exists(args[0]))
+{
+    Console.WriteLine("Project file does not exist!");
+    return;
+}
+
+Project project;
+
+try
+{
+    var data = await File.ReadAllTextAsync(args[0]);
+    project = JsonConvert.DeserializeObject<Project>(data) ?? throw new InvalidDataException();
+}
+catch (Exception)
+{
+    Console.WriteLine("Project file is invalid!");
+    throw;
+}
+
+await project.Build();
+
+Console.WriteLine("Build successful!");
