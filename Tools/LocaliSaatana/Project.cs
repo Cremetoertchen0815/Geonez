@@ -5,8 +5,10 @@ namespace LocaliSaatana
 {
 	internal class Project
 	{
+		public string FilePath { get; set; } = null!;
+		
 		[UsedImplicitly]
-		public string ContentPath { get; init; } = null!;
+		public string ContentFolder { get; init; } = null!;
 		
 		[UsedImplicitly]
 		public string MapPath { get; init; } = null!;
@@ -22,6 +24,9 @@ namespace LocaliSaatana
 
 		public async Task Build()
 		{
+			var parentFolder = Directory.GetParent(FilePath)!.FullName;
+			var contentDir = Path.Combine(parentFolder, ContentFolder);
+			
 			//Create map
 			var sb = new StringBuilder();
 			sb.AppendLine($"namespace {Namespace};\n");
@@ -45,7 +50,7 @@ namespace LocaliSaatana
 				sb.Append(i + 1 < Languages.Count ? ",\n" : "\n");
 			}
 			sb.AppendLine("}");
-			await File.WriteAllTextAsync(MapPath, sb.ToString());
+			await File.WriteAllTextAsync(Path.Combine(parentFolder, MapPath), sb.ToString());
 
 			//Create content
 			for (var i = 0; i < Languages.Count; i++)
@@ -61,7 +66,7 @@ namespace LocaliSaatana
 				}
 				sb.AppendLine("\t</Asset>");
 				sb.AppendLine("</XnaContent>");
-				await File.WriteAllTextAsync(ContentPath + "\\lang_" + lang.Literal + ".xml", sb.ToString());
+				await File.WriteAllTextAsync(Path.Combine(contentDir, $"lang_{lang.Literal}.xml"), sb.ToString());
 			}
 
 			//Create language description list
@@ -75,7 +80,7 @@ namespace LocaliSaatana
 			}
 			sb.AppendLine("\t</Asset>");
 			sb.AppendLine("</XnaContent>");
-			await File.WriteAllTextAsync(ContentPath + "\\languages.xml", sb.ToString());
+			await File.WriteAllTextAsync(Path.Combine(contentDir, "languages.xml"), sb.ToString());
 		}
 	}
 }

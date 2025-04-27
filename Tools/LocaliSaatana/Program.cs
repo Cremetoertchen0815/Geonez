@@ -19,6 +19,7 @@ try
 {
     var data = await File.ReadAllTextAsync(args[0]);
     project = JsonConvert.DeserializeObject<Project>(data) ?? throw new InvalidDataException();
+    project.FilePath = Path.GetFullPath(args[0]);
 }
 catch (Exception)
 {
