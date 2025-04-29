@@ -62,7 +62,7 @@ public class CollisionCapsule : ICollisionShape
     /// <param name="radius">Capsule radius.</param>
     /// <param name="height">Capsule height.</param>
     /// <param name="axis">Capsule axis direction.</param>
-    public CollisionCapsule(double radius = 1f, double height = 1f, CapsuleDirectionAxis axis = CapsuleDirectionAxis.Y)
+    public CollisionCapsule(float radius = 1f, float height = 1f, CapsuleDirectionAxis axis = CapsuleDirectionAxis.Y)
     {
         _axisType = axis;
         switch (_axisType)

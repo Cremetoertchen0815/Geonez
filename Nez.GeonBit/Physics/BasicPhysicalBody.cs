@@ -118,7 +118,7 @@ public class BasicPhysicalBody
     /// <summary>
     ///     Get / set body restitution.
     /// </summary>
-    public double Restitution
+    public float Restitution
     {
         get => _BulletEntity.Restitution;
         set => _BulletEntity.Restitution = value;
@@ -140,7 +140,7 @@ public class BasicPhysicalBody
     /// <summary>
     ///     Get / set body friction.
     /// </summary>
-    public double Friction
+    public float Friction
     {
         get => _BulletEntity.Friction;
         set => _BulletEntity.Friction = Friction;

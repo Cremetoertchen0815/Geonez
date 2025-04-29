@@ -62,7 +62,7 @@ public class CollisionCone : ICollisionShape
     /// <param name="radius">Cone radius.</param>
     /// <param name="height">Cone height.</param>
     /// <param name="axis">Cone axis direction.</param>
-    public CollisionCone(double radius = 1f, double height = 1f, ConeDirectionAxis axis = ConeDirectionAxis.Y)
+    public CollisionCone(float radius = 1f, float height = 1f, ConeDirectionAxis axis = ConeDirectionAxis.Y)
     {
         _axisType = axis;
         switch (_axisType)

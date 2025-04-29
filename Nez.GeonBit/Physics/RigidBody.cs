@@ -53,7 +53,7 @@ public class RigidBody : BasicPhysicalBody
     /// <param name="mass">Body mass (in kg), or 0 for static.</param>
     /// <param name="inertia">Body inertia, or 0 for static.</param>
     /// <param name="transformations">Starting transformations.</param>
-    public RigidBody(ICollisionShape shape, double mass = 10f, double inertia = 1f, Matrix? transformations = null)
+    public RigidBody(ICollisionShape shape, float mass = 10f, float inertia = 1f, Matrix? transformations = null)
     {
         // store collision shape
         _shape = shape;
@@ -189,7 +189,7 @@ public class RigidBody : BasicPhysicalBody
     /// <summary>
     ///     Get / set linear damping.
     /// </summary>
-    public double LinearDamping
+    public float LinearDamping
     {
         get => BulletRigidBody.LinearDamping;
         set => SetDamping(value, BulletRigidBody.AngularDamping);
@@ -198,7 +198,7 @@ public class RigidBody : BasicPhysicalBody
     /// <summary>
     ///     Get / set angular damping.
     /// </summary>
-    public double AngularDamping
+    public float AngularDamping
     {
         get => BulletRigidBody.AngularDamping;
         set => SetDamping(BulletRigidBody.LinearDamping, value);
@@ -295,7 +295,7 @@ public class RigidBody : BasicPhysicalBody
     /// </summary>
     /// <param name="linear">Linear damping.</param>
     /// <param name="angular">Angular damping.</param>
-    public void SetDamping(double linear, double angular)
+    public void SetDamping(float linear, float angular)
     {
         BulletRigidBody.SetDamping(linear, angular);
     }
@@ -305,7 +305,7 @@ public class RigidBody : BasicPhysicalBody
     /// </summary>
     /// <param name="mass">New body mass.</param>
     /// <param name="inertia">New body inertia.</param>
-    public void SetMassAndInertia(double mass, double inertia)
+    public void SetMassAndInertia(float mass, float inertia)
     {
         BulletRigidBody.SetMassProps(mass, _shape.BulletCollisionShape.CalculateLocalInertia(mass) * inertia);
     }

@@ -17,10 +17,20 @@
         <Optimize>false</Optimize>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="BulletSharp.x64" Version="0.12.0"/>
-    </ItemGroup>
-    <ItemGroup>
         <ProjectReference Include="..\Nez.GeonBit.UI\Nez.GeonBit.UI.csproj"/>
         <ProjectReference Include="..\Nez.Portable\Nez.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="BulletSharp">
+        <HintPath>runtimes\BulletSharp.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="runtimes\" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Update="runtimes\BulletSharp.dll.config">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>

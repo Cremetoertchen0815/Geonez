@@ -54,7 +54,7 @@ public class CollisionConvexHull : ICollisionShape
         var shape = _shape as ConvexHullShape;
         var points = new Vector3[shape.NumPoints];
         var i = 0;
-        foreach (var point in shape.Points) points[i++] = ToMonoGame.Vector(point);
+        foreach (var point in shape.UnscaledPoints) points[i++] = ToMonoGame.Vector(point);
 
         // create and return clone
         return new CollisionConvexHull(points);

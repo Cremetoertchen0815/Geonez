@@ -41,10 +41,10 @@ public class RigidBody : BasePhysicsComponent, IUpdatable
     private Physics.RigidBody _body;
 
     // body inertia
-    private double _intertia;
+    private float _intertia;
 
     // body mass
-    private double _mass;
+    private float _mass;
 
     /// <summary>
     ///     The shape used for this physical body.
@@ -85,7 +85,7 @@ public class RigidBody : BasePhysicsComponent, IUpdatable
     /// <param name="mass">Body mass (0 for static).</param>
     /// <param name="inertia">Body inertia (0 for static).</param>
     /// <param name="friction">Body friction.</param>
-    public RigidBody(IBodyShapeInfo shapeInfo, double mass = 0f, double inertia = 0f, double friction = 1f)
+    public RigidBody(IBodyShapeInfo shapeInfo, float mass = 0f, float inertia = 0f, float friction = 1f)
     {
         CreateBody(shapeInfo.CreateShape(), mass, inertia, friction);
     }
@@ -97,7 +97,7 @@ public class RigidBody : BasePhysicsComponent, IUpdatable
     /// <param name="mass">Body mass (0 for static).</param>
     /// <param name="inertia">Body inertia (0 for static).</param>
     /// <param name="friction">Body friction.</param>
-    public RigidBody(ICollisionShape shape, double mass = 0f, double inertia = 0f, double friction = 1f)
+    public RigidBody(ICollisionShape shape, float mass = 0f, float inertia = 0f, float friction = 1f)
     {
         CreateBody(shape, mass, inertia, friction);
     }
@@ -115,7 +115,7 @@ public class RigidBody : BasePhysicsComponent, IUpdatable
     /// <summary>
     ///     Get / set body mass.
     /// </summary>
-    public double Mass
+    public float Mass
     {
         get => _mass;
         set
@@ -128,7 +128,7 @@ public class RigidBody : BasePhysicsComponent, IUpdatable
     /// <summary>
     ///     Get / set body inertia.
     /// </summary>
-    public double Inertia
+    public float Inertia
     {
         get => _intertia;
         set
@@ -146,7 +146,7 @@ public class RigidBody : BasePhysicsComponent, IUpdatable
     /// <summary>
     ///     Get / set linear damping.
     /// </summary>
-    public double LinearDamping
+    public float LinearDamping
     {
         get => _body.LinearDamping;
         set => _body.LinearDamping = value;
@@ -155,7 +155,7 @@ public class RigidBody : BasePhysicsComponent, IUpdatable
     /// <summary>
     ///     Get / set angular damping.
     /// </summary>
-    public double AngularDamping
+    public float AngularDamping
     {
         get => _body.AngularDamping;
         set => _body.AngularDamping = value;
@@ -235,7 +235,7 @@ public class RigidBody : BasePhysicsComponent, IUpdatable
     /// <param name="mass">Body mass.</param>
     /// <param name="inertia">Body inertia.</param>
     /// <param name="friction">Body friction.</param>
-    private void CreateBody(ICollisionShape shape, double mass, double inertia, double friction)
+    private void CreateBody(ICollisionShape shape, float mass, float inertia, float friction)
     {
         // store params and create the body
         _mass = mass;

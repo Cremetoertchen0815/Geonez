@@ -36,7 +36,7 @@ public class CollisionSphere : ICollisionShape
     ///     Create the collision sphere.
     /// </summary>
     /// <param name="radius">Sphere radius.</param>
-    public CollisionSphere(double radius = 1f)
+    public CollisionSphere(float radius = 1f)
     {
         _shape = new SphereShape(radius);
     }

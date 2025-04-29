@@ -145,7 +145,7 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// <summary>
     ///     Get / set body restitution.
     /// </summary>
-    public double Restitution
+    public float Restitution
     {
         get => _PhysicalBody.Restitution;
         set => _PhysicalBody.Restitution = value;
@@ -154,7 +154,7 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// <summary>
     ///     Get / set body friction.
     /// </summary>
-    public double Friction
+    public float Friction
     {
         get => _PhysicalBody.Friction;
         set => _PhysicalBody.Friction = Friction;
