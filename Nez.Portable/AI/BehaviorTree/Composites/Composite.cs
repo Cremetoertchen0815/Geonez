@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
+using Nez.AI.BehaviorTree.Conditionals;
+using Nez.AI.BehaviorTree.Decorators;
 
-namespace Nez.AI.BehaviorTrees;
+namespace Nez.AI.BehaviorTree.Composites;
 
 /// <summary>
-///     any Composite nodes must subclass this. Provides storage for children and helpers to deal with AbortTypes
+/// Any Composite nodes must subclass this. Provides storage for children and helpers to deal with AbortTypes
 /// </summary>
 public abstract class Composite<T> : Behavior<T>
 {
-    protected List<Behavior<T>> _children = new();
-    protected int _currentChildIndex;
-    protected bool _hasLowerPriorityConditionalAbort;
+    protected List<Behavior<T>> Children = [];
+    protected int CurrentChildIndex;
+    protected bool HasLowerPriorityConditionalAbort;
     public AbortTypes AbortType = AbortTypes.None;
 
 
@@ -17,24 +19,24 @@ public abstract class Composite<T> : Behavior<T>
     {
         base.Invalidate();
 
-        for (var i = 0; i < _children.Count; i++)
-            _children[i].Invalidate();
+        for (var i = 0; i < Children.Count; i++)
+            Children[i].Invalidate();
     }
 
 
     public override void OnStart()
     {
         // LowerPriority aborts happen one level down so we check for any here
-        _hasLowerPriorityConditionalAbort = HasLowerPriorityConditionalAbortInChildren();
-        _currentChildIndex = 0;
+        HasLowerPriorityConditionalAbort = HasLowerPriorityConditionalAbortInChildren();
+        CurrentChildIndex = 0;
     }
 
 
     public override void OnEnd()
     {
         // we are done so invalidate our children so they are ready for the next tick
-        for (var i = 0; i < _children.Count; i++)
-            _children[i].Invalidate();
+        for (var i = 0; i < Children.Count; i++)
+            Children[i].Invalidate();
     }
 
 
@@ -44,7 +46,7 @@ public abstract class Composite<T> : Behavior<T>
     /// <param name="child">Child.</param>
     public void AddChild(Behavior<T> child)
     {
-        _children.Add(child);
+        Children.Add(child);
     }
 
 
@@ -54,7 +56,7 @@ public abstract class Composite<T> : Behavior<T>
     /// <returns><c>true</c>, if first child conditional was ised, <c>false</c> otherwise.</returns>
     public bool IsFirstChildConditional()
     {
-        return _children[0] is IConditional<T>;
+        return Children[0] is IConditional<T>;
     }
 
 
@@ -64,14 +66,14 @@ public abstract class Composite<T> : Behavior<T>
     /// <returns><c>true</c>, if lower priority conditional abort in children was hased, <c>false</c> otherwise.</returns>
     private bool HasLowerPriorityConditionalAbortInChildren()
     {
-        for (var i = 0; i < _children.Count; i++)
+        for (var i = 0; i < Children.Count; i++)
         {
             // check for a Composite with an abortType set
-            var composite = _children[i] as Composite<T>;
-            if (composite != null && composite.AbortType.Has(AbortTypes.LowerPriority))
-                // now make sure the first child is a Conditional
-                if (composite.IsFirstChildConditional())
-                    return true;
+            if (Children[i] is not Composite<T> composite ||
+                !composite.AbortType.Has(AbortTypes.LowerPriority)) continue;
+            // now make sure the first child is a Conditional
+            if (composite.IsFirstChildConditional())
+                return true;
         }
 
         return false;
@@ -90,24 +92,21 @@ public abstract class Composite<T> : Behavior<T>
     protected void UpdateLowerPriorityAbortConditional(T context, TaskStatus statusCheck)
     {
         // check any lower priority tasks to see if they changed status
-        for (var i = 0; i < _currentChildIndex; i++)
+        for (var i = 0; i < CurrentChildIndex; i++)
         {
-            var composite = _children[i] as Composite<T>;
-            if (composite != null && composite.AbortType.Has(AbortTypes.LowerPriority))
-            {
-                // now we get the status of only the Conditional (update instead of tick) to see if it changed taking care with ConditionalDecorators
-                var child = composite._children[0];
-                var status = UpdateConditionalNode(context, child);
-                if (status != statusCheck)
-                {
-                    _currentChildIndex = i;
+            var composite = Children[i] as Composite<T>;
+            if (composite == null || !composite.AbortType.Has(AbortTypes.LowerPriority)) continue;
+            
+            // now we get the status of only the Conditional (update instead of tick) to see if it changed taking care with ConditionalDecorators
+            var child = composite.Children[0];
+            var status = UpdateConditionalNode(context, child);
+            if (status == statusCheck) continue;
+            CurrentChildIndex = i;
 
-                    // we have an abort so we invalidate the children so they get reevaluated
-                    for (var j = i; j < _children.Count; j++)
-                        _children[j].Invalidate();
-                    break;
-                }
-            }
+            // we have an abort so we invalidate the children so they get reevaluated
+            for (var j = i; j < Children.Count; j++)
+                Children[j].Invalidate();
+            break;
         }
     }
 
@@ -120,20 +119,20 @@ public abstract class Composite<T> : Behavior<T>
     protected void UpdateSelfAbortConditional(T context, TaskStatus statusCheck)
     {
         // check any IConditional child tasks to see if they changed status
-        for (var i = 0; i < _currentChildIndex; i++)
+        for (var i = 0; i < CurrentChildIndex; i++)
         {
-            var child = _children[i];
+            var child = Children[i];
             if (!(child is IConditional<T>))
                 continue;
 
             var status = UpdateConditionalNode(context, child);
             if (status != statusCheck)
             {
-                _currentChildIndex = i;
+                CurrentChildIndex = i;
 
                 // we have an abort so we invalidate the children so they get reevaluated
-                for (var j = i; j < _children.Count; j++)
-                    _children[j].Invalidate();
+                for (var j = i; j < Children.Count; j++)
+                    Children[j].Invalidate();
                 break;
             }
         }
@@ -146,10 +145,10 @@ public abstract class Composite<T> : Behavior<T>
     /// <returns>The conditional node.</returns>
     /// <param name="context">Context.</param>
     /// <param name="node">Node.</param>
-    private TaskStatus UpdateConditionalNode(T context, Behavior<T> node)
+    private static TaskStatus UpdateConditionalNode(T context, Behavior<T> node)
     {
-        if (node is ConditionalDecorator<T>)
-            return (node as ConditionalDecorator<T>).ExecuteConditional(context, true);
+        if (node is ConditionalDecorator<T> conditionalDecorator)
+            return conditionalDecorator.ExecuteConditional(context, true);
         return node.Update(context);
     }
 }

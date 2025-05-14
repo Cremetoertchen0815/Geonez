@@ -4,6 +4,7 @@
         <OutputType>Library</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <ApplicationIcon/>
+        <Nullable>enable</Nullable>
         <Configurations>Debug;Release</Configurations>
         <PlatformTarget>x64</PlatformTarget>
         <Platforms>AnyCPU;x64</Platforms>
@@ -38,6 +39,12 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0"/>
         <PackageReference Include="System.ValueTuple" Version="4.5.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="JetBrains.Annotations">
+        <HintPath>..\..\..\.nuget\packages\jetbrains.annotations\2024.3.0\lib\netstandard2.0\JetBrains.Annotations.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

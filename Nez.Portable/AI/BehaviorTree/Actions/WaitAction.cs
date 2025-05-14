@@ -1,24 +1,18 @@
-﻿namespace Nez.AI.BehaviorTrees;
+﻿namespace Nez.AI.BehaviorTree.Actions;
 
 /// <summary>
 ///     Wait a specified amount of time. The task will return running until the task is done waiting. It will return
 ///     success after the wait
 ///     time has elapsed.
 /// </summary>
-public class WaitAction<T> : Behavior<T>
+public class WaitAction<T>(float waitTime) : Behavior<T>
 {
     private float _startTime;
 
     /// <summary>
-    ///     the amount of time to wait
+    /// The amount of time to wait
     /// </summary>
-    public float WaitTime;
-
-
-    public WaitAction(float waitTime)
-    {
-        WaitTime = waitTime;
-    }
+    public float WaitTime = waitTime;
 
 
     public override void OnStart()
@@ -29,13 +23,10 @@ public class WaitAction<T> : Behavior<T>
 
     public override TaskStatus Update(T context)
     {
-        // we cant use Time.deltaTime due to the tree ticking at its own rate so we store the start time instead
+        // We cant use Time.deltaTime due to the tree ticking at its own rate, so we store the start time instead.
         if (_startTime == 0)
             _startTime = Time.TotalTime;
 
-        if (Time.TotalTime - _startTime >= WaitTime)
-            return TaskStatus.Success;
-
-        return TaskStatus.Running;
+        return Time.TotalTime - _startTime >= WaitTime ? TaskStatus.Success : TaskStatus.Running;
     }
 }

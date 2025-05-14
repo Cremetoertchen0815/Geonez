@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace Nez.AI.GOAP;
 
+[PublicAPI]
 public class Action
 {
-    internal HashSet<Tuple<string, bool>> _postConditions = new();
+    internal readonly HashSet<Tuple<string, bool>> PostConditions = [];
 
 
-    internal HashSet<Tuple<string, bool>> _preConditions = new();
+    internal readonly HashSet<Tuple<string, bool>> PreConditions = [];
 
     /// <summary>
     ///     The cost of performing the action.  Figure out a weight that suits the action.  Changing it will affect what
@@ -20,7 +22,7 @@ public class Action
     /// <summary>
     ///     optional name for the Action. Used for debugging purposes
     /// </summary>
-    public string Name;
+    public string Name = "";
 
 
     public Action()
@@ -42,13 +44,13 @@ public class Action
 
     public void SetPrecondition(string conditionName, bool value)
     {
-        _preConditions.Add(new Tuple<string, bool>(conditionName, value));
+        PreConditions.Add(new Tuple<string, bool>(conditionName, value));
     }
 
 
     public void SetPostcondition(string conditionName, bool value)
     {
-        _postConditions.Add(new Tuple<string, bool>(conditionName, value));
+        PostConditions.Add(new Tuple<string, bool>(conditionName, value));
     }
 
 

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+using Nez.Debug;
 
 namespace Nez.AI.GOAP;
 
@@ -7,37 +9,31 @@ namespace Nez.AI.GOAP;
 ///     convenince wrapper
 ///     around the ActionPlanner making it easier to get plans and store the results.
 /// </summary>
+[PublicAPI]
 public abstract class Agent
 {
-    protected ActionPlanner _planner;
-    public Stack<Action> Actions;
-
-
-    public Agent()
-    {
-        _planner = new ActionPlanner();
-    }
+    protected readonly ActionPlanner Planner = new();
+    public Stack<Action>? Actions;
 
 
     public bool Plan(bool debugPlan = false)
     {
-        List<AStarNode> nodes = null;
+        List<AStarNode>? nodes = null;
         if (debugPlan)
-            nodes = new List<AStarNode>();
+            nodes = [];
 
-        Actions = _planner.Plan(GetWorldState(), GetGoalState(), nodes);
+        Actions = Planner.Plan(GetWorldState(), GetGoalState(), nodes);
 
-        if (nodes != null && nodes.Count > 0)
+        if (nodes is not { Count: > 0 }) return HasActionPlan();
+        
+        DebugHelpers.Log("---- ActionPlanner plan ----");
+        DebugHelpers.Log("plan cost = {0}\n", nodes[^1].CostSoFar);
+        DebugHelpers.Log("{0}\t{1}", "start".PadRight(15), GetWorldState().Describe(Planner));
+        for (var i = 0; i < nodes.Count; i++)
         {
-            Debug.Log("---- ActionPlanner plan ----");
-            Debug.Log("plan cost = {0}\n", nodes[nodes.Count - 1].CostSoFar);
-            Debug.Log("{0}\t{1}", "start".PadRight(15), GetWorldState().Describe(_planner));
-            for (var i = 0; i < nodes.Count; i++)
-            {
-                Debug.Log("{0}: {1}\t{2}", i, nodes[i].Action.GetType().Name.PadRight(15),
-                    nodes[i].WorldState.Describe(_planner));
-                Pool<AStarNode>.Free(nodes[i]);
-            }
+            DebugHelpers.Log("{0}: {1}\t{2}", i, nodes[i].Action.GetType().Name.PadRight(15),
+                nodes[i].WorldState.Describe(Planner));
+            Pool<AStarNode>.Free(nodes[i]);
         }
 
         return HasActionPlan();
@@ -46,7 +42,7 @@ public abstract class Agent
 
     public bool HasActionPlan()
     {
-        return Actions != null && Actions.Count > 0;
+        return Actions is { Count: > 0 };
     }
 
 

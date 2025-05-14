@@ -31,7 +31,7 @@ public class ActionPlanner
     /// <summary>
     ///     Names associated with all world state atoms
     /// </summary>
-    public string[] ConditionNames = new string[MAX_CONDITIONS];
+    public readonly string?[] ConditionNames = new string[MAX_CONDITIONS];
 
 
     public ActionPlanner()
@@ -62,7 +62,7 @@ public class ActionPlanner
         if (actionId == -1)
             throw new KeyNotFoundException("could not find or create Action");
 
-        foreach (var preCondition in action._preConditions)
+        foreach (var preCondition in action.PreConditions)
         {
             var conditionId = FindConditionNameIndex(preCondition.Item1);
             if (conditionId == -1)
@@ -71,7 +71,7 @@ public class ActionPlanner
             _preConditions[actionId].Set(conditionId, preCondition.Item2);
         }
 
-        foreach (var postCondition in action._postConditions)
+        foreach (var postCondition in action.PostConditions)
         {
             var conditionId = FindConditionNameIndex(postCondition.Item1);
             if (conditionId == -1)
@@ -82,7 +82,7 @@ public class ActionPlanner
     }
 
 
-    public Stack<Action> Plan(WorldState startState, WorldState goalState, List<AStarNode> selectedNodes = null)
+    public Stack<Action> Plan(WorldState startState, WorldState goalState, List<AStarNode>? selectedNodes = null)
     {
         _viableActions.Clear();
         for (var i = 0; i < _actions.Count; i++)

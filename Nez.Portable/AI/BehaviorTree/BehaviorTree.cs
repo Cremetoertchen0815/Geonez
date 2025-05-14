@@ -1,4 +1,4 @@
-﻿namespace Nez.AI.BehaviorTrees;
+﻿namespace Nez.AI.BehaviorTree;
 
 /// <summary>
 ///     root class used to control a BehaviorTree. Handles storing the context
@@ -38,14 +38,13 @@ public class BehaviorTree<T>
         if (UpdatePeriod > 0)
         {
             _elapsedTime -= Time.DeltaTime;
-            if (_elapsedTime <= 0)
-            {
-                // ensure we only tick once for long frames
-                while (_elapsedTime <= 0)
-                    _elapsedTime += UpdatePeriod;
+            if (!(_elapsedTime <= 0)) return;
+            
+            // ensure we only tick once for long frames
+            while (_elapsedTime <= 0)
+                _elapsedTime += UpdatePeriod;
 
-                _root.Tick(_context);
-            }
+            _root.Tick(_context);
         }
         else
         {

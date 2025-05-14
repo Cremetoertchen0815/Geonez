@@ -1,4 +1,6 @@
-﻿namespace Nez.AI.BehaviorTrees;
+﻿using Nez.Debugging;
+
+namespace Nez.AI.BehaviorTree.Decorators;
 
 /// <summary>
 ///     inverts the result of the child node
@@ -9,7 +11,7 @@ public class Inverter<T> : Decorator<T>
     {
         Insist.IsNotNull(Child, "child must not be null");
 
-        var status = Child.Tick(context);
+        var status = Child!.Tick(context);
 
         if (status == TaskStatus.Success)
             return TaskStatus.Failure;

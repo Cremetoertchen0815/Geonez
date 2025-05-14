@@ -1,27 +1,15 @@
-﻿namespace Nez.AI.BehaviorTrees;
+﻿using Nez.AI.BehaviorTree.Conditionals;
+using Nez.Debugging;
+
+namespace Nez.AI.BehaviorTree.Decorators;
 
 /// <summary>
 ///     decorator that will only run its child if a condition is met. By default, the condition will be reevaluated every
 ///     tick.
 /// </summary>
-public class ConditionalDecorator<T> : Decorator<T>, IConditional<T>
+public class ConditionalDecorator<T>(IConditional<T> conditional, bool shouldReevalute) : Decorator<T>, IConditional<T>
 {
-    private readonly IConditional<T> _conditional;
-    private readonly bool _shouldReevaluate;
     private TaskStatus _conditionalStatus;
-
-
-    public ConditionalDecorator(IConditional<T> conditional, bool shouldReevalute)
-    {
-        Insist.IsTrue(conditional is IConditional<T>, "conditional must implment IConditional");
-        _conditional = conditional;
-        _shouldReevaluate = shouldReevalute;
-    }
-
-
-    public ConditionalDecorator(IConditional<T> conditional) : this(conditional, true)
-    {
-    }
 
 
     public override TaskStatus Update(T context)
@@ -31,10 +19,7 @@ public class ConditionalDecorator<T> : Decorator<T>, IConditional<T>
         // evalute the condition if we need to
         _conditionalStatus = ExecuteConditional(context);
 
-        if (_conditionalStatus == TaskStatus.Success)
-            return Child.Tick(context);
-
-        return TaskStatus.Failure;
+        return _conditionalStatus == TaskStatus.Success ? Child!.Tick(context) : TaskStatus.Failure;
     }
 
 
@@ -61,8 +46,8 @@ public class ConditionalDecorator<T> : Decorator<T>, IConditional<T>
     /// <param name="forceUpdate">If set to <c>true</c> force update.</param>
     internal TaskStatus ExecuteConditional(T context, bool forceUpdate = false)
     {
-        if (forceUpdate || _shouldReevaluate || _conditionalStatus == TaskStatus.Invalid)
-            _conditionalStatus = _conditional.Update(context);
+        if (forceUpdate || shouldReevalute || _conditionalStatus == TaskStatus.Invalid)
+            _conditionalStatus = conditional.Update(context);
         return _conditionalStatus;
     }
 }

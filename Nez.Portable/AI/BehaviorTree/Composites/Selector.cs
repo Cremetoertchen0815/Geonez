@@ -1,4 +1,4 @@
-﻿namespace Nez.AI.BehaviorTrees;
+﻿namespace Nez.AI.BehaviorTree.Composites;
 
 /// <summary>
 ///     The selector task is similar to an "or" operation. It will return success as soon as one of its child tasks return
@@ -17,33 +17,31 @@ public class Selector<T> : Composite<T>
     public override TaskStatus Update(T context)
     {
         // first, we handle conditinoal aborts if we are not already on the first child
-        if (_currentChildIndex != 0)
+        if (CurrentChildIndex != 0)
             HandleConditionalAborts(context);
 
-        var current = _children[_currentChildIndex];
+        var current = Children[CurrentChildIndex];
         var status = current.Tick(context);
 
         // if the child succeeds or is still running, early return.
         if (status != TaskStatus.Failure)
             return status;
 
-        _currentChildIndex++;
+        CurrentChildIndex++;
 
         // if the end of the children is hit, that means the whole thing fails.
-        if (_currentChildIndex == _children.Count)
-        {
-            // reset index otherwise it will crash on next run through
-            _currentChildIndex = 0;
-            return TaskStatus.Failure;
-        }
+        if (CurrentChildIndex != Children.Count) return TaskStatus.Running;
+        
+        // reset index otherwise it will crash on next run through
+        CurrentChildIndex = 0;
+        return TaskStatus.Failure;
 
-        return TaskStatus.Running;
     }
 
     private void HandleConditionalAborts(T context)
     {
         // check any lower priority tasks to see if they changed to a success
-        if (_hasLowerPriorityConditionalAbort)
+        if (HasLowerPriorityConditionalAbort)
             UpdateLowerPriorityAbortConditional(context, TaskStatus.Failure);
 
         if (AbortType.Has(AbortTypes.Self))

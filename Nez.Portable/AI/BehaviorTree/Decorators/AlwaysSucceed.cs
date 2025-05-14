@@ -1,4 +1,6 @@
-﻿namespace Nez.AI.BehaviorTrees;
+﻿using Nez.Debugging;
+
+namespace Nez.AI.BehaviorTree.Decorators;
 
 /// <summary>
 ///     will always return success except when the child task is running
@@ -9,11 +11,8 @@ public class AlwaysSucceed<T> : Decorator<T>
     {
         Insist.IsNotNull(Child, "child must not be null");
 
-        var status = Child.Update(context);
+        var status = Child!.Update(context);
 
-        if (status == TaskStatus.Running)
-            return TaskStatus.Running;
-
-        return TaskStatus.Success;
+        return status == TaskStatus.Running ? TaskStatus.Running : TaskStatus.Success;
     }
 }

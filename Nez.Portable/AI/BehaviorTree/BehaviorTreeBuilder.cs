@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using Nez.AI.BehaviorTree.Actions;
+using Nez.AI.BehaviorTree.Composites;
+using Nez.AI.BehaviorTree.Conditionals;
+using Nez.AI.BehaviorTree.Decorators;
+using Nez.Debugging;
 
-namespace Nez.AI.BehaviorTrees;
+namespace Nez.AI.BehaviorTree;
 
 /// <summary>
 ///     helper for building a BehaviorTree using a fluent API. Leaf nodes need to first have a parent added. Parents can be
@@ -9,10 +15,10 @@ namespace Nez.AI.BehaviorTrees;
 ///     Decorators. Decorators are automatically closed when a leaf node is added. Composites must have endComposite called
 ///     to close them.
 /// </summary>
-public class BehaviorTreeBuilder<T>
+///
+[PublicAPI]
+public class BehaviorTreeBuilder<T>(T context)
 {
-    private readonly T _context;
-
     /// <summary>
     ///     Stack nodes that we are build via the fluent API.
     /// </summary>
@@ -21,13 +27,7 @@ public class BehaviorTreeBuilder<T>
     /// <summary>
     ///     Last node created.
     /// </summary>
-    private Behavior<T> _currentNode;
-
-
-    public BehaviorTreeBuilder(T context)
-    {
-        _context = context;
-    }
+    private Behavior<T>? _currentNode;
 
 
     public static BehaviorTreeBuilder<T> Begin(T context)
@@ -38,15 +38,16 @@ public class BehaviorTreeBuilder<T>
     private BehaviorTreeBuilder<T> SetChildOnParent(Behavior<T> child)
     {
         var parent = _parentNodeStack.Peek();
-        if (parent is Composite<T>)
+        switch (parent)
         {
-            (parent as Composite<T>).AddChild(child);
-        }
-        else if (parent is Decorator<T>)
-        {
-            // Decorators have just one child so end it automatically
-            (parent as Decorator<T>).Child = child;
-            EndDecorator();
+            case Composite<T> composite:
+                composite.AddChild(child);
+                break;
+            case Decorator<T> decorator:
+                // Decorators have just one child so end it automatically
+                decorator.Child = child;
+                EndDecorator();
+                break;
         }
 
         return this;
@@ -77,7 +78,7 @@ public class BehaviorTreeBuilder<T>
     public BehaviorTree<T> Build(float updatePeriod = 0.2f)
     {
         Insist.IsNotNull(_currentNode, "Can't create a behaviour tree with zero nodes");
-        return new BehaviorTree<T>(_context, _currentNode, updatePeriod);
+        return new BehaviorTree<T>(context, _currentNode!, updatePeriod);
     }
 
 

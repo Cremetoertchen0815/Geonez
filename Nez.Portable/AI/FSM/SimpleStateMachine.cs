@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using Nez.Utils;
 
 namespace Nez.AI.FSM;
 
@@ -10,18 +12,19 @@ namespace Nez.AI.FSM;
 ///     Note: if you use an enum as the contraint you can avoid allocations/boxing in Mono by doing what the Core
 ///     Emitter does for its enum: pass in a IEqualityComparer to the constructor.
 /// </summary>
+[PublicAPI]
 public abstract class SimpleStateMachine<TEnum> : Component, IUpdatable
     where TEnum : struct, IComparable, IFormattable
 {
     private readonly Dictionary<TEnum, StateMethodCache> _stateCache;
     private TEnum _currentState;
-    private StateMethodCache _stateMethods;
+    private StateMethodCache _stateMethods = new();
 
-    protected float elapsedTimeInState;
-    protected TEnum previousState;
+    protected float ElapsedTimeInState;
+    protected TEnum PreviousState;
 
 
-    public SimpleStateMachine(IEqualityComparer<TEnum> customComparer = null)
+    protected SimpleStateMachine(IEqualityComparer<TEnum>? customComparer = null)
     {
         _stateCache = new Dictionary<TEnum, StateMethodCache>(customComparer);
 
@@ -41,14 +44,14 @@ public abstract class SimpleStateMachine<TEnum> : Component, IUpdatable
                 return;
 
             // swap previous/current
-            previousState = _currentState;
+            PreviousState = _currentState;
             _currentState = value;
 
             // exit the state, fetch the next cached state methods then enter that state
             if (_stateMethods.ExitState != null)
                 _stateMethods.ExitState();
 
-            elapsedTimeInState = 0f;
+            ElapsedTimeInState = 0f;
             _stateMethods = _stateCache[_currentState];
 
             if (_stateMethods.EnterState != null)
@@ -70,7 +73,7 @@ public abstract class SimpleStateMachine<TEnum> : Component, IUpdatable
 
     public virtual void Update()
     {
-        elapsedTimeInState += Time.DeltaTime;
+        ElapsedTimeInState += Time.DeltaTime;
 
         if (_stateMethods.Tick != null)
             _stateMethods.Tick();
@@ -90,19 +93,16 @@ public abstract class SimpleStateMachine<TEnum> : Component, IUpdatable
         _stateCache[stateEnum] = state;
     }
 
-    private Action GetDelegateForMethod(string methodName)
+    private Action? GetDelegateForMethod(string methodName)
     {
         var methodInfo = ReflectionUtils.GetMethodInfo(this, methodName);
-        if (methodInfo != null)
-            return ReflectionUtils.CreateDelegate<Action>(this, methodInfo);
-
-        return null;
+        return methodInfo != null ? ReflectionUtils.CreateDelegate<Action>(this, methodInfo) : null;
     }
 
     private class StateMethodCache
     {
-        public Action EnterState;
-        public Action ExitState;
-        public Action Tick;
+        public Action? EnterState;
+        public Action? ExitState;
+        public Action? Tick;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Nez.AI.BehaviorTrees;
+﻿namespace Nez.AI.BehaviorTree.Composites;
 
 /// <summary>
 ///     Same as Sequence except it shuffles the children when started
@@ -7,6 +7,6 @@ public class RandomSequence<T> : Sequence<T>
 {
     public override void OnStart()
     {
-        _children.Shuffle();
+        Children.Shuffle();
     }
 }

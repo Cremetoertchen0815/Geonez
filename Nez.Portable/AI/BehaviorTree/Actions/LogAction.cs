@@ -1,28 +1,25 @@
-﻿namespace Nez.AI.BehaviorTrees;
+﻿using JetBrains.Annotations;
+
+namespace Nez.AI.BehaviorTree.Actions;
 
 /// <summary>
-///     simple task which will output the specified text and return success. It can be used for debugging.
+/// A simple task which will output the specified text and return success. It can be used for debugging.
 /// </summary>
-public class LogAction<T> : Behavior<T>
+[PublicAPI]
+public class LogAction<T>(string text) : Behavior<T>
 {
 	/// <summary>
-	///     is this text an error
+	/// Is this text an error
 	/// </summary>
-	public bool IsError;
+	public bool IsError { get; init; }
 
 	/// <summary>
-	///     text to log
+	/// Text to log
 	/// </summary>
-	public string Text;
+	public string Text { get; init; } = text;
 
 
-    public LogAction(string text)
-    {
-        Text = text;
-    }
-
-
-    public override TaskStatus Update(T context)
+	public override TaskStatus Update(T context)
     {
         if (IsError)
             Debug.Error(Text);
