@@ -6,10 +6,10 @@ namespace Nez;
 
 public static class Physics
 {
-	/// <summary>
-	///     default value for all methods that accept a layerMask
-	/// </summary>
-	public const int AllLayers = -1;
+    /// <summary>
+    ///     default value for all methods that accept a layerMask
+    /// </summary>
+    public const int AllLayers = -1;
 
     private static SpatialHash _spatialHash;
 

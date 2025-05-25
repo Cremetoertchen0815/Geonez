@@ -12,7 +12,7 @@ public class TrailRibbon : RenderableComponent, IUpdatable
 {
     // number of max segments
     private readonly int _ribbonLength = 50;
-    private readonly LinkedList<RibbonSegment> _segments = new();
+    private readonly LinkedList<RibbonSegment> _segments = [];
     private bool _areVertsDirty = true;
     private BasicEffect _basicEffect;
     private VertexPositionColor[] _vertices;

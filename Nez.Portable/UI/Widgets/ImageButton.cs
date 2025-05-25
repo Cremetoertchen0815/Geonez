@@ -102,10 +102,10 @@ public class ImageButton : Button
 
 public class ImageButtonStyle : ButtonStyle
 {
-	/**
+    /**
      * Optional.
      */
-	public IDrawable ImageUp, ImageDown, ImageOver, ImageChecked, ImageCheckedOver, ImageDisabled;
+    public IDrawable ImageUp, ImageDown, ImageOver, ImageChecked, ImageCheckedOver, ImageDisabled;
 
 
     public ImageButtonStyle()

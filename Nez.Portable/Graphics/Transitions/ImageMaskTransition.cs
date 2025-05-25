@@ -15,30 +15,30 @@ namespace Nez;
 /// </summary>
 public class ImageMaskTransition : SceneTransition
 {
-	/// <summary>
-	///     multiplicative BlendState used for rendering the mask
-	/// </summary>
-	private readonly BlendState _blendState;
+    /// <summary>
+    ///     multiplicative BlendState used for rendering the mask
+    /// </summary>
+    private readonly BlendState _blendState;
 
-	/// <summary>
-	///     origin of the mask, the center of the Texture
-	/// </summary>
-	private readonly Vector2 _maskOrigin;
+    /// <summary>
+    ///     origin of the mask, the center of the Texture
+    /// </summary>
+    private readonly Vector2 _maskOrigin;
 
-	/// <summary>
-	///     position of the mask, the center of the screen
-	/// </summary>
-	private readonly Vector2 _maskPosition;
+    /// <summary>
+    ///     position of the mask, the center of the screen
+    /// </summary>
+    private readonly Vector2 _maskPosition;
 
-	/// <summary>
-	///     the mask is first rendered into a RenderTarget
-	/// </summary>
-	private readonly RenderTarget2D _maskRenderTarget;
+    /// <summary>
+    ///     the mask is first rendered into a RenderTarget
+    /// </summary>
+    private readonly RenderTarget2D _maskRenderTarget;
 
-	/// <summary>
-	///     the Texture used as a mask. It should be white where the mask shows the underlying Scene and transparent elsewhere
-	/// </summary>
-	private readonly Texture2D _maskTexture;
+    /// <summary>
+    ///     the Texture used as a mask. It should be white where the mask shows the underlying Scene and transparent elsewhere
+    /// </summary>
+    private readonly Texture2D _maskTexture;
 
     private float _renderRotation;
     private float _renderScale;

@@ -31,7 +31,7 @@ public class Emitter<T> where T : struct, IComparable, IFormattable
     {
         if (!_messageTable.TryGetValue(eventType, out var list))
         {
-            list = new List<Action>();
+            list = [];
             _messageTable.Add(eventType, list);
         }
 
@@ -84,7 +84,7 @@ public class Emitter<T, U> where T : struct, IComparable, IFormattable
     {
         if (!_messageTable.TryGetValue(eventType, out var list))
         {
-            list = new List<Action<U>>();
+            list = [];
             _messageTable.Add(eventType, list);
         }
 

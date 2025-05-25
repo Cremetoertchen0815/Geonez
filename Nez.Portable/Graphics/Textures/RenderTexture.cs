@@ -9,25 +9,25 @@ namespace Nez.Textures;
 /// </summary>
 public class RenderTexture : IDisposable
 {
-	/// <summary>
-	///     handles what should happen when onSceneBackBufferSizeChanged. Defaults to SizeToSceneRenderTarget
-	/// </summary>
-	public enum RenderTextureResizeBehavior
+    /// <summary>
+    ///     handles what should happen when onSceneBackBufferSizeChanged. Defaults to SizeToSceneRenderTarget
+    /// </summary>
+    public enum RenderTextureResizeBehavior
     {
         None,
         SizeToSceneRenderTarget,
         SizeToScreen
     }
 
-	/// <summary>
-	///     the RenderTarget2D this RenderTexture manages
-	/// </summary>
-	public RenderTarget2D RenderTarget;
+    /// <summary>
+    ///     the RenderTarget2D this RenderTexture manages
+    /// </summary>
+    public RenderTarget2D RenderTarget;
 
-	/// <summary>
-	///     resize behavior that should occur when onSceneBackBufferSizeChanged is called
-	/// </summary>
-	public RenderTextureResizeBehavior ResizeBehavior = RenderTextureResizeBehavior.SizeToSceneRenderTarget;
+    /// <summary>
+    ///     resize behavior that should occur when onSceneBackBufferSizeChanged is called
+    /// </summary>
+    public RenderTextureResizeBehavior ResizeBehavior = RenderTextureResizeBehavior.SizeToSceneRenderTarget;
 
 
     public void Dispose()

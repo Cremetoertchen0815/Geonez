@@ -5,12 +5,12 @@ namespace Nez;
 
 public static partial class Debug
 {
-	/// <summary>
-	///     we store all the default colors for various systems here such as collider debug rendering, Debug.drawText and
-	///     others. The naming
-	///     convention is CLASS-THING where possible to make it clear where it is used.
-	/// </summary>
-	public static class Colors
+    /// <summary>
+    ///     we store all the default colors for various systems here such as collider debug rendering, Debug.drawText and
+    ///     others. The naming
+    ///     convention is CLASS-THING where possible to make it clear where it is used.
+    /// </summary>
+    public static class Colors
     {
         public static Color DebugText = Color.White;
 

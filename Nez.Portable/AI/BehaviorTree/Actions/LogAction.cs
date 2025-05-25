@@ -5,15 +5,15 @@
 /// </summary>
 public class LogAction<T> : Behavior<T>
 {
-	/// <summary>
-	///     is this text an error
-	/// </summary>
-	public bool IsError;
+    /// <summary>
+    ///     is this text an error
+    /// </summary>
+    public bool IsError;
 
-	/// <summary>
-	///     text to log
-	/// </summary>
-	public string Text;
+    /// <summary>
+    ///     text to log
+    /// </summary>
+    public string Text;
 
 
     public LogAction(string text)

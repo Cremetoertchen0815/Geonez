@@ -23,7 +23,7 @@ public class VirtualButton : VirtualInput
 
     public VirtualButton(float bufferTime)
     {
-        Nodes = new List<Node>();
+        Nodes = [];
         BufferTime = bufferTime;
     }
 

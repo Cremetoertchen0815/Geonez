@@ -9,35 +9,35 @@ namespace Nez;
 /// </summary>
 public class PostProcessor : IComparable<PostProcessor>
 {
-	/// <summary>
-	///     specifies the order in which the Renderers will be called by the scene
-	/// </summary>
-	public readonly int ExecutionOrder;
+    /// <summary>
+    ///     specifies the order in which the Renderers will be called by the scene
+    /// </summary>
+    public readonly int ExecutionOrder;
 
-	/// <summary>
-	///     the Scene this PostProcessor is attached to or null
-	/// </summary>
-	protected internal Scene _scene;
+    /// <summary>
+    ///     the Scene this PostProcessor is attached to or null
+    /// </summary>
+    protected internal Scene _scene;
 
-	/// <summary>
-	///     BlendState used by the drawFullsceenQuad method
-	/// </summary>
-	public BlendState BlendState = BlendState.Opaque;
+    /// <summary>
+    ///     BlendState used by the drawFullsceenQuad method
+    /// </summary>
+    public BlendState BlendState = BlendState.Opaque;
 
-	/// <summary>
-	///     The effect used to render with
-	/// </summary>
-	public Effect Effect;
+    /// <summary>
+    ///     The effect used to render with
+    /// </summary>
+    public Effect Effect;
 
-	/// <summary>
-	///     Step is Enabled or not.
-	/// </summary>
-	public bool Enabled;
+    /// <summary>
+    ///     Step is Enabled or not.
+    /// </summary>
+    public bool Enabled;
 
-	/// <summary>
-	///     SamplerState used for the drawFullscreenQuad method
-	/// </summary>
-	public SamplerState SamplerState = Core.DefaultSamplerState;
+    /// <summary>
+    ///     SamplerState used for the drawFullscreenQuad method
+    /// </summary>
+    public SamplerState SamplerState = Core.DefaultSamplerState;
 
 
     public PostProcessor(int executionOrder, Effect effect = null)

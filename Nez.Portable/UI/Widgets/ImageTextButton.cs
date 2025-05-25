@@ -142,10 +142,10 @@ public class ImageTextButton : Button
 
 public class ImageTextButtonStyle : TextButtonStyle
 {
-	/**
+    /**
      * Optional.
      */
-	public IDrawable ImageUp, ImageDown, ImageOver, ImageChecked, ImageCheckedOver, ImageDisabled;
+    public IDrawable ImageUp, ImageDown, ImageOver, ImageChecked, ImageCheckedOver, ImageDisabled;
 
 
     public ImageTextButtonStyle()

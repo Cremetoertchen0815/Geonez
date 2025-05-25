@@ -160,7 +160,7 @@ public static class Mathf
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Snap(float value, float increment, float offset)
     {
-        return (Round((value - offset) / increment) * increment) + offset;
+        return Round((value - offset) / increment) * increment + offset;
     }
 
 

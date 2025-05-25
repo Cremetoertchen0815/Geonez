@@ -11,7 +11,7 @@ namespace Nez;
 /// </summary>
 public class VirtualIntegerAxis : VirtualInput
 {
-    public List<VirtualAxis.Node> Nodes = new();
+    public List<VirtualAxis.Node> Nodes = [];
 
 
     public VirtualIntegerAxis()

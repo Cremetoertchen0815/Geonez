@@ -96,7 +96,7 @@ public class StencilLightRenderer : Renderer
     {
         // fetch all the Colliders in range
         var colliders = Physics.BoxcastBroadphase(renderable.Bounds, CollidesWithLayers);
-        var colliderCount = IEnumerableExt.Count(colliders);
+        var colliderCount = colliders.Count();
 
         if (colliderCount > 0)
         {

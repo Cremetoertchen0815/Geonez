@@ -53,12 +53,12 @@ public enum EaseType
 /// </summary>
 public static class EaseHelper
 {
-	/// <summary>
-	///     returns the opposite EaseType of easeType
-	/// </summary>
-	/// <returns>The ease type.</returns>
-	/// <param name="easeType">Ease type.</param>
-	public static EaseType OppositeEaseType(EaseType easeType)
+    /// <summary>
+    ///     returns the opposite EaseType of easeType
+    /// </summary>
+    /// <returns>The ease type.</returns>
+    /// <param name="easeType">Ease type.</param>
+    public static EaseType OppositeEaseType(EaseType easeType)
     {
         switch (easeType)
         {

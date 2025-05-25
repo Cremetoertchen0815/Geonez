@@ -11,17 +11,17 @@ namespace Nez.BitmapFonts;
 
 public partial class BitmapFont
 {
-	/// <summary>
-	///     Load font information from the specified <see cref="Stream" />.
-	/// </summary>
-	/// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-	/// <exception cref="ArgumentException">
-	///     Thrown when one or more arguments have unsupported or
-	///     illegal values.
-	/// </exception>
-	/// <exception cref="InvalidDataException">Thrown when an Invalid Data error condition occurs.</exception>
-	/// <param name="stream">The stream to load.</param>
-	public void Load(Stream stream)
+    /// <summary>
+    ///     Load font information from the specified <see cref="Stream" />.
+    /// </summary>
+    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when one or more arguments have unsupported or
+    ///     illegal values.
+    /// </exception>
+    /// <exception cref="InvalidDataException">Thrown when an Invalid Data error condition occurs.</exception>
+    /// <param name="stream">The stream to load.</param>
+    public void Load(Stream stream)
     {
         if (stream == null)
             throw new ArgumentNullException(nameof(stream));
@@ -49,13 +49,13 @@ public partial class BitmapFont
         }
     }
 
-	/// <summary>
-	///     Load font information from the specified file.
-	/// </summary>
-	/// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-	/// <exception cref="FileNotFoundException">Thrown when the requested file is not present.</exception>
-	/// <param name="filename">The file name to load.</param>
-	public void Load(string filename)
+    /// <summary>
+    ///     Load font information from the specified file.
+    /// </summary>
+    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+    /// <exception cref="FileNotFoundException">Thrown when the requested file is not present.</exception>
+    /// <param name="filename">The file name to load.</param>
+    public void Load(string filename)
     {
         if (string.IsNullOrEmpty(filename))
             throw new ArgumentNullException(nameof(filename));
@@ -71,12 +71,12 @@ public partial class BitmapFont
         BitmapFontLoader.QualifyResourcePaths(this, Path.GetDirectoryName(filename));
     }
 
-	/// <summary>
-	///     Loads font information from the specified string.
-	/// </summary>
-	/// <param name="text">String containing the font to load.</param>
-	/// <remarks>The source data must be in BMFont text format.</remarks>
-	public void LoadText(string text)
+    /// <summary>
+    ///     Loads font information from the specified string.
+    /// </summary>
+    /// <param name="text">String containing the font to load.</param>
+    /// <remarks>The source data must be in BMFont text format.</remarks>
+    public void LoadText(string text)
     {
         using (var reader = new StringReader(text))
         {
@@ -84,15 +84,15 @@ public partial class BitmapFont
         }
     }
 
-	/// <summary>
-	///     Loads font information from the specified stream.
-	/// </summary>
-	/// <remarks>
-	///     The source data must be in BMFont text format.
-	/// </remarks>
-	/// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-	/// <param name="stream">The stream containing the font to load.</param>
-	public void LoadText(Stream stream)
+    /// <summary>
+    ///     Loads font information from the specified stream.
+    /// </summary>
+    /// <remarks>
+    ///     The source data must be in BMFont text format.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+    /// <param name="stream">The stream containing the font to load.</param>
+    public void LoadText(Stream stream)
     {
         if (stream == null)
             throw new ArgumentNullException(nameof(stream));
@@ -103,15 +103,15 @@ public partial class BitmapFont
         }
     }
 
-	/// <summary>
-	///     Loads font information from the specified <see cref="TextReader" />.
-	/// </summary>
-	/// <remarks>
-	///     The source data must be in BMFont text format.
-	/// </remarks>
-	/// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-	/// <param name="reader">The <strong>TextReader</strong> used to feed the data into the font.</param>
-	public void LoadText(TextReader reader)
+    /// <summary>
+    ///     Loads font information from the specified <see cref="TextReader" />.
+    /// </summary>
+    /// <remarks>
+    ///     The source data must be in BMFont text format.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+    /// <param name="reader">The <strong>TextReader</strong> used to feed the data into the font.</param>
+    public void LoadText(TextReader reader)
     {
         if (reader == null)
             throw new ArgumentNullException(nameof(reader));
@@ -195,12 +195,12 @@ public partial class BitmapFont
         Kernings = kerningDictionary;
     }
 
-	/// <summary>
-	///     Loads font information from the specified string.
-	/// </summary>
-	/// <param name="xml">String containing the font to load.</param>
-	/// <remarks>The source data must be in BMFont XML format.</remarks>
-	public void LoadXml(string xml)
+    /// <summary>
+    ///     Loads font information from the specified string.
+    /// </summary>
+    /// <param name="xml">String containing the font to load.</param>
+    /// <remarks>The source data must be in BMFont XML format.</remarks>
+    public void LoadXml(string xml)
     {
         using (var reader = new StringReader(xml))
         {
@@ -208,10 +208,10 @@ public partial class BitmapFont
         }
     }
 
-	/// <summary>
-	///     Loads font information from the specified stream. The source data must be in BMFont XML format.
-	/// </summary>
-	public void LoadXml(Stream stream)
+    /// <summary>
+    ///     Loads font information from the specified stream. The source data must be in BMFont XML format.
+    /// </summary>
+    public void LoadXml(Stream stream)
     {
         if (stream == null)
             throw new ArgumentNullException("stream");
@@ -222,10 +222,10 @@ public partial class BitmapFont
         }
     }
 
-	/// <summary>
-	///     Loads font information from the specified <see cref="TextReader" />.
-	/// </summary>
-	public void LoadXml(TextReader reader)
+    /// <summary>
+    ///     Loads font information from the specified <see cref="TextReader" />.
+    /// </summary>
+    public void LoadXml(TextReader reader)
     {
         if (reader == null)
             throw new ArgumentNullException("reader");

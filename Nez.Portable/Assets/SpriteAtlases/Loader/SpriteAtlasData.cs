@@ -11,13 +11,13 @@ namespace Nez.Sprites;
 /// </summary>
 internal class SpriteAtlasData
 {
-    public List<int> AnimationFps = new();
-    public List<List<int>> AnimationFrames = new();
+    public List<int> AnimationFps = [];
+    public List<List<int>> AnimationFrames = [];
 
-    public List<string> AnimationNames = new();
-    public List<string> Names = new();
-    public List<Vector2> Origins = new();
-    public List<Rectangle> SourceRects = new();
+    public List<string> AnimationNames = [];
+    public List<string> Names = [];
+    public List<Vector2> Origins = [];
+    public List<Rectangle> SourceRects = [];
 
     public SpriteAtlas AsSpriteAtlas(Texture2D texture, bool generateStencil)
     {

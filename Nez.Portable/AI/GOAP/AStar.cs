@@ -5,20 +5,20 @@ namespace Nez.AI.GOAP;
 
 public class AStarNode : IComparable<AStarNode>, IEquatable<AStarNode>, IPoolable
 {
-	/// <summary>
-	///     the Action associated with this node
-	/// </summary>
-	public Action Action;
+    /// <summary>
+    ///     the Action associated with this node
+    /// </summary>
+    public Action Action;
 
-	/// <summary>
-	///     The cost so far.
-	/// </summary>
-	public int CostSoFar;
+    /// <summary>
+    ///     The cost so far.
+    /// </summary>
+    public int CostSoFar;
 
-	/// <summary>
-	///     costSoFar + heuristicCost (g+h) combined.
-	/// </summary>
-	public int CostSoFarAndHeuristicCost;
+    /// <summary>
+    ///     costSoFar + heuristicCost (g+h) combined.
+    /// </summary>
+    public int CostSoFarAndHeuristicCost;
 
     public int Depth;
 

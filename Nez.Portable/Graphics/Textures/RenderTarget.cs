@@ -5,12 +5,12 @@ namespace Nez.Textures;
 
 public class RenderTarget : GlobalManager
 {
-	/// <summary>
-	///     facilitates exposing a static API for easy access
-	/// </summary>
-	internal static RenderTarget instance;
+    /// <summary>
+    ///     facilitates exposing a static API for easy access
+    /// </summary>
+    internal static RenderTarget instance;
 
-    private readonly List<TrackedRenderTarget2D> _renderTargetPool = new();
+    private readonly List<TrackedRenderTarget2D> _renderTargetPool = [];
 
 
     public RenderTarget()

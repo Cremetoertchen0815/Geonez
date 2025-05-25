@@ -62,10 +62,10 @@ public partial class DebugConsole
 
     public DebugConsole()
     {
-        _commandHistory = new List<string>();
-        _drawCommands = new List<string>();
+        _commandHistory = [];
+        _drawCommands = [];
         _commands = new Dictionary<string, CommandInfo>();
-        _sorted = new List<string>();
+        _sorted = [];
         _functionKeyActions = new Action[12];
 
         Core.Instance.Window.TextInput += TextInput;
@@ -155,7 +155,7 @@ public partial class DebugConsole
         Log(e.Message);
 
         var str = e.StackTrace;
-        var parts = str.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        var parts = str.Split(["\n"], StringSplitOptions.RemoveEmptyEntries);
         foreach (var line in parts)
         {
             var lineWithoutPath = Regex.Replace(line, @"in\s\/.*?\/.*?(\w+\.cs)", "$1");
@@ -180,7 +180,7 @@ public partial class DebugConsole
     {
         str = _charFilter.Replace(str, "#");
         // split up multi-line logs and log each line seperately
-        var parts = str.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        var parts = str.Split(["\n"], StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length > 1)
         {
             foreach (var line in parts)
@@ -415,8 +415,8 @@ public partial class DebugConsole
             // hit in a release build.
             var appDomainType = typeof(string).GetTypeInfo().Assembly.GetType("System.AppDomain");
             var domain = appDomainType.GetRuntimeProperty("CurrentDomain").GetMethod
-                .Invoke(null, Array.Empty<object>());
-            var assembliesMethod = ReflectionUtils.GetMethodInfo(domain, "GetAssemblies", Array.Empty<Type>());
+                .Invoke(null, []);
+            var assembliesMethod = ReflectionUtils.GetMethodInfo(domain, "GetAssemblies", []);
 
             // not sure about arguments, detect in runtime
             var methodCallParams = assembliesMethod.GetParameters().Length == 0

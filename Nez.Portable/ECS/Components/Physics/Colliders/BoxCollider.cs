@@ -5,12 +5,12 @@ namespace Nez;
 
 public class BoxCollider : Collider
 {
-	/// <summary>
-	///     zero param constructor requires that a RenderableComponent be on the entity so that the collider can size itself
-	///     when the
-	///     entity is added to the scene.
-	/// </summary>
-	public BoxCollider()
+    /// <summary>
+    ///     zero param constructor requires that a RenderableComponent be on the entity so that the collider can size itself
+    ///     when the
+    ///     entity is added to the scene.
+    /// </summary>
+    public BoxCollider()
     {
         // we stick a 1x1 box in here as a placeholder until the next frame when the Collider is added to the Entity and can get more
         // accurate auto-sizing data
@@ -18,14 +18,14 @@ public class BoxCollider : Collider
         _colliderRequiresAutoSizing = true;
     }
 
-	/// <summary>
-	///     creates a BoxCollider and uses the x/y components as the localOffset
-	/// </summary>
-	/// <param name="x">The x coordinate.</param>
-	/// <param name="y">The y coordinate.</param>
-	/// <param name="width">Width.</param>
-	/// <param name="height">Height.</param>
-	public BoxCollider(float x, float y, float width, float height)
+    /// <summary>
+    ///     creates a BoxCollider and uses the x/y components as the localOffset
+    /// </summary>
+    /// <param name="x">The x coordinate.</param>
+    /// <param name="y">The y coordinate.</param>
+    /// <param name="width">Width.</param>
+    /// <param name="height">Height.</param>
+    public BoxCollider(float x, float y, float width, float height)
     {
         _localOffset = new Vector2(x + width / 2, y + height / 2);
         Shape = new Box(width, height);

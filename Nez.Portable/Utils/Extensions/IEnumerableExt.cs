@@ -5,13 +5,13 @@ namespace Nez.IEnumerableExtensions;
 
 public static class IEnumerableExt
 {
-	/// <summary>
-	///     Jon Skeet's excellent reimplementation of LINQ Count.
-	/// </summary>
-	/// <typeparam name="TSource">The source type.</typeparam>
-	/// <param name="source">The source IEnumerable.</param>
-	/// <returns>The number of items in the source.</returns>
-	public static int Count<TSource>(this IEnumerable<TSource> source)
+    /// <summary>
+    ///     Jon Skeet's excellent reimplementation of LINQ Count.
+    /// </summary>
+    /// <typeparam name="TSource">The source type.</typeparam>
+    /// <param name="source">The source IEnumerable.</param>
+    /// <returns>The number of items in the source.</returns>
+    public static int Count<TSource>(this IEnumerable<TSource> source)
     {
         Insist.IsNotNull(source, "source cannot be null");
 

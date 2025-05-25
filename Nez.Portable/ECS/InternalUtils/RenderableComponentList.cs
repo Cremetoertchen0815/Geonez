@@ -17,7 +17,7 @@ public class RenderableComponentList
     /// </summary>
     private readonly Dictionary<int, FastList<IRenderable>> _componentsByRenderLayer = new();
 
-    private readonly List<int> _unsortedRenderLayers = new();
+    private readonly List<int> _unsortedRenderLayers = [];
     private bool _componentsNeedSort = true;
 
 

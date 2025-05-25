@@ -8,15 +8,15 @@ namespace Nez.BitmapFonts;
 
 public partial class BitmapFont : IDisposable, IFont
 {
-	/// <summary>
-	///     When used with MeasureString, specifies that no wrapping should occur.
-	/// </summary>
-	private const int kNoMaxWidth = -1;
+    /// <summary>
+    ///     When used with MeasureString, specifies that no wrapping should occur.
+    /// </summary>
+    private const int kNoMaxWidth = -1;
 
-	/// <summary>
-	///     Index to get items within thsi collection using array index syntax.
-	/// </summary>
-	public Character this[char character] => Characters[character];
+    /// <summary>
+    ///     Index to get items within thsi collection using array index syntax.
+    /// </summary>
+    public Character this[char character] => Characters[character];
 
     public void Dispose()
     {

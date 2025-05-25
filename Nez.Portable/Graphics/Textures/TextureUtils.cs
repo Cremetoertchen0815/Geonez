@@ -34,10 +34,10 @@ public static class TextureUtils
 			return result;
 		}
 #else
-	/// <summary>
-	///     loads a Texture2D and premultiplies the alpha
-	/// </summary>
-	public static Texture2D TextureFromStreamPreMultiplied(Stream stream)
+    /// <summary>
+    ///     loads a Texture2D and premultiplies the alpha
+    /// </summary>
+    public static Texture2D TextureFromStreamPreMultiplied(Stream stream)
     {
         var texture = Texture2D.FromStream(Core.GraphicsDevice, stream);
 

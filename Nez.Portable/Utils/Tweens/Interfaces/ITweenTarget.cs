@@ -7,11 +7,11 @@
 /// </summary>
 public interface ITweenTarget<T> where T : struct
 {
-	/// <summary>
-	///     sets the final, tweened value on the object of your choosing.
-	/// </summary>
-	/// <param name="value">Value.</param>
-	void SetTweenedValue(T value);
+    /// <summary>
+    ///     sets the final, tweened value on the object of your choosing.
+    /// </summary>
+    /// <param name="value">Value.</param>
+    void SetTweenedValue(T value);
 
 
     T GetTweenedValue();

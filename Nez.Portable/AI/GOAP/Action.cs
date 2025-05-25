@@ -5,10 +5,10 @@ namespace Nez.AI.GOAP;
 
 public class Action
 {
-    internal HashSet<Tuple<string, bool>> _postConditions = new();
+    internal HashSet<Tuple<string, bool>> _postConditions = [];
 
 
-    internal HashSet<Tuple<string, bool>> _preConditions = new();
+    internal HashSet<Tuple<string, bool>> _preConditions = [];
 
     /// <summary>
     ///     The cost of performing the action.  Figure out a weight that suits the action.  Changing it will affect what

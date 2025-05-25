@@ -30,10 +30,10 @@ public class TiledMapMover :
     Component
 #endif
 {
-	/// <summary>
-	///     class used to house all the collision information from a call to move
-	/// </summary>
-	public class CollisionState
+    /// <summary>
+    ///     class used to house all the collision information from a call to move
+    /// </summary>
+    public class CollisionState
     {
         internal TmxLayerTile _lastGroundTile;
 
@@ -131,7 +131,7 @@ public class TiledMapMover :
     /// <summary>
     ///     temporary storage for all the tiles that intersect the bounds being checked
     /// </summary>
-    private readonly List<TmxLayerTile> _collidingTiles = new();
+    private readonly List<TmxLayerTile> _collidingTiles = [];
 
     /// <summary>
     ///     temporary storage to avoid having to pass it around

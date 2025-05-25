@@ -17,16 +17,16 @@ public class AstarGridGraph : IAstarGraph<Point>
     private readonly int _width;
     public int DefaultWeight = 1;
 
-    public List<Point> Dirs = new()
-    {
+    public List<Point> Dirs =
+    [
         new Point(1, 0),
         new Point(0, -1),
         new Point(-1, 0),
         new Point(0, 1)
-    };
+    ];
 
-    public HashSet<Point> Walls = new();
-    public HashSet<Point> WeightedNodes = new();
+    public HashSet<Point> Walls = [];
+    public HashSet<Point> WeightedNodes = [];
     public int WeightedNodeWeight = 5;
 
 

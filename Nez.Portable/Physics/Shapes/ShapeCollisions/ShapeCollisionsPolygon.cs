@@ -6,13 +6,13 @@ namespace Nez.PhysicsShapes;
 
 public static partial class ShapeCollisions
 {
-	/// <summary>
-	///     checks for a collision between two Polygons
-	/// </summary>
-	/// <returns>The collision.</returns>
-	/// <param name="first">Polygon a.</param>
-	/// <param name="second">Polygon b.</param>
-	public static bool PolygonToPolygon(Polygon first, Polygon second, out CollisionResult result)
+    /// <summary>
+    ///     checks for a collision between two Polygons
+    /// </summary>
+    /// <returns>The collision.</returns>
+    /// <param name="first">Polygon a.</param>
+    /// <param name="second">Polygon b.</param>
+    public static bool PolygonToPolygon(Polygon first, Polygon second, out CollisionResult result)
     {
         result = new CollisionResult();
         var isIntersecting = true;
@@ -99,16 +99,16 @@ public static partial class ShapeCollisions
     }
 
 
-	/// <summary>
-	///     Calculates the distance between [minA, maxA] and [minB, maxB]. The distance will be negative if the intervals
-	///     overlap
-	/// </summary>
-	/// <returns>The distance.</returns>
-	/// <param name="minA">Minimum a.</param>
-	/// <param name="maxA">Max a.</param>
-	/// <param name="minB">Minimum b.</param>
-	/// <param name="maxB">Max b.</param>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     Calculates the distance between [minA, maxA] and [minB, maxB]. The distance will be negative if the intervals
+    ///     overlap
+    /// </summary>
+    /// <returns>The distance.</returns>
+    /// <param name="minA">Minimum a.</param>
+    /// <param name="maxA">Max a.</param>
+    /// <param name="minB">Minimum b.</param>
+    /// <param name="maxB">Max b.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static float IntervalDistance(float minA, float maxA, float minB, float maxB)
     {
         if (minA < minB)
@@ -118,14 +118,14 @@ public static partial class ShapeCollisions
     }
 
 
-	/// <summary>
-	///     Calculates the projection of a polygon on an axis and returns it as a [min, max] interval
-	/// </summary>
-	/// <param name="axis">Axis.</param>
-	/// <param name="polygon">Polygon.</param>
-	/// <param name="min">Minimum.</param>
-	/// <param name="max">Max.</param>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     Calculates the projection of a polygon on an axis and returns it as a [min, max] interval
+    /// </summary>
+    /// <param name="axis">Axis.</param>
+    /// <param name="polygon">Polygon.</param>
+    /// <param name="min">Minimum.</param>
+    /// <param name="max">Max.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void GetInterval(Vector2 axis, Polygon polygon, ref float min, ref float max)
     {
         // To project a point on an axis use the dot product

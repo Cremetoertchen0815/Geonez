@@ -7,7 +7,7 @@ namespace Nez.AI.BehaviorTrees;
 /// </summary>
 public abstract class Composite<T> : Behavior<T>
 {
-    protected List<Behavior<T>> _children = new();
+    protected List<Behavior<T>> _children = [];
     protected int _currentChildIndex;
     protected bool _hasLowerPriorityConditionalAbort;
     public AbortTypes AbortType = AbortTypes.None;

@@ -6,10 +6,10 @@ namespace Nez;
 
 public class BloomPostProcessor : PostProcessor, IDisposable
 {
-	/// <summary>
-	///     Dispose our RenderTargets. This is not covered by the Garbage Collector so we have to do it manually
-	/// </summary>
-	public void Dispose()
+    /// <summary>
+    ///     Dispose our RenderTargets. This is not covered by the Garbage Collector so we have to do it manually
+    /// </summary>
+    public void Dispose()
     {
         _bloomRenderTarget2DMip0.Dispose();
         _bloomRenderTarget2DMip1.Dispose();
@@ -269,7 +269,7 @@ public class BloomPostProcessor : PostProcessor, IDisposable
 
         //if quadRenderer == null -> new, otherwise not
         _quadRenderer = new QuadRenderer(_graphicsDev);
-        Color[] tmp = { Color.Black };
+        Color[] tmp = [Color.Black];
         black = new Texture2D(_graphicsDev, 1, 1);
         black.SetData(tmp);
 

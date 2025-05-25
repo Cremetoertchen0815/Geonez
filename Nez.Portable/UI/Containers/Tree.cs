@@ -7,7 +7,7 @@ namespace Nez.UI.Containers;
 
 public class Tree : Group, IInputListener
 {
-    private readonly List<Node> rootNodes = new(0);
+    private readonly List<Node> rootNodes = [];
     private readonly Selection<Node> selection;
     private Node foundNode;
     private float leftColumnWidth, prefWidth, prefHeight;
@@ -513,10 +513,10 @@ public class Tree : Group, IInputListener
 
 public class TreeStyle
 {
-	/**
+    /**
      * Optional.
      */
-	public IDrawable Over, Selection, Background;
+    public IDrawable Over, Selection, Background;
 
     public IDrawable Plus, Minus;
 }
@@ -524,7 +524,7 @@ public class TreeStyle
 public class Node
 {
     internal Element actor;
-    internal List<Node> children = new(0);
+    internal List<Node> children = [];
     internal bool expanded;
     internal float height;
     internal IDrawable icon;

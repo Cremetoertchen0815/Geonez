@@ -49,10 +49,10 @@ public static class ColorExt
 
     private static uint FlipByteSex(this uint val)
     {
-        return (val & 0x000000FF) << 24 |
-               (val & 0x0000FF00) << 8 |
-               (val & 0x00FF0000) >> 8 |
-               (val & 0xFF000000) >> 24;
+        return ((val & 0x000000FF) << 24) |
+               ((val & 0x0000FF00) << 8) |
+               ((val & 0x00FF0000) >> 8) |
+               ((val & 0xFF000000) >> 24);
     }
 
     public static Color Create(Color color, int alpha)

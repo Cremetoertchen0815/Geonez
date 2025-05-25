@@ -23,14 +23,14 @@ public abstract class Agent
     {
         List<AStarNode> nodes = null;
         if (debugPlan)
-            nodes = new List<AStarNode>();
+            nodes = [];
 
         Actions = _planner.Plan(GetWorldState(), GetGoalState(), nodes);
 
         if (nodes != null && nodes.Count > 0)
         {
             Debug.Log("---- ActionPlanner plan ----");
-            Debug.Log("plan cost = {0}\n", nodes[nodes.Count - 1].CostSoFar);
+            Debug.Log("plan cost = {0}\n", nodes[^1].CostSoFar);
             Debug.Log("{0}\t{1}", "start".PadRight(15), GetWorldState().Describe(_planner));
             for (var i = 0; i < nodes.Count; i++)
             {

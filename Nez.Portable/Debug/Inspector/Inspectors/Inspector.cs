@@ -9,12 +9,12 @@ using Nez.UI;
 #if TRACE
 namespace Nez
 {
-	/// <summary>
-	///     the heart of the inspector system. Subclasses of Inspector are responsible for setting up and managing the UI.
-	///     Currently,
-	///     custom type handling is not yet implemented.
-	/// </summary>
-	public abstract class Inspector
+    /// <summary>
+    ///     the heart of the inspector system. Subclasses of Inspector are responsible for setting up and managing the UI.
+    ///     Currently,
+    ///     custom type handling is not yet implemented.
+    /// </summary>
+    public abstract class Inspector
     {
         protected Func<object> _getter;
         protected MemberInfo _memberInfo;
@@ -183,7 +183,7 @@ namespace Nez
         {
             var materialProp = ReflectionUtils.GetPropertyInfo(target, "Material");
             var materialMethod = ReflectionUtils.GetPropertyGetter(materialProp);
-            var material = materialMethod.Invoke(target, new object[] { }) as Material;
+            var material = materialMethod.Invoke(target, []) as Material;
             if (material == null || material.Effect == null)
                 return null;
 
@@ -212,7 +212,7 @@ namespace Nez
             if (propInfo != null)
             {
                 var getter = ReflectionUtils.GetPropertyGetter(propInfo);
-                if (getter.Invoke(target, new object[] { }) != null)
+                if (getter.Invoke(target, []) != null)
                     return new EffectInspector();
             }
 
@@ -268,7 +268,7 @@ namespace Nez
             _valueType = prop.PropertyType;
 
             _getter = () => { return ReflectionUtils.GetPropertyGetter(prop).Invoke(target, null); };
-            _setter = val => { ReflectionUtils.GetPropertySetter(prop).Invoke(target, new[] { val }); };
+            _setter = val => { ReflectionUtils.GetPropertySetter(prop).Invoke(target, [val]); };
         }
 
 

@@ -9,9 +9,9 @@ public abstract class GeometricPrimitive3D : Renderable3D, IDisposable
 {
     private BasicEffect _basicEffect;
     private IndexBuffer _indexBuffer;
-    protected List<ushort> _indices = new();
+    protected List<ushort> _indices = [];
     private VertexBuffer _vertexBuffer;
-    protected List<VertexPositionColorNormal> _vertices = new();
+    protected List<VertexPositionColorNormal> _vertices = [];
 
 
     public override void Render(Batcher batcher, Camera camera)

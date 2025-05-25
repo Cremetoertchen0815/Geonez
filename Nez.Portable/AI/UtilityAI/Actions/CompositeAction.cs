@@ -7,7 +7,7 @@ namespace Nez.AI.UtilityAI;
 /// </summary>
 public class CompositeAction<T> : IAction<T>
 {
-    private readonly List<IAction<T>> _actions = new();
+    private readonly List<IAction<T>> _actions = [];
 
 
     void IAction<T>.Execute(T context)

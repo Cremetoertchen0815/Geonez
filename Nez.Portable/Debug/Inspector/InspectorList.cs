@@ -5,10 +5,10 @@ using Nez.UI;
 #if TRACE
 namespace Nez
 {
-	/// <summary>
-	///     container for a Component/PostProcessor/Transform and all of its inspectable properties
-	/// </summary>
-	public class InspectorList
+    /// <summary>
+    ///     container for a Component/PostProcessor/Transform and all of its inspectable properties
+    /// </summary>
+    public class InspectorList
     {
         private readonly List<Inspector> _inspectors;
         private CheckBox _enabledCheckbox;

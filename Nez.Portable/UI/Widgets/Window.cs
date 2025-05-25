@@ -370,15 +370,15 @@ public class Window : Table, IInputListener
 
 public class WindowStyle
 {
-	/**
+    /**
      * Optional.
      */
-	public IDrawable Background;
+    public IDrawable Background;
 
-	/**
+    /**
      * Optional.
      */
-	public IDrawable StageBackground;
+    public IDrawable StageBackground;
 
     public BitmapFont TitleFont;
 

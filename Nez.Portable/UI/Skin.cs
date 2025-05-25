@@ -217,19 +217,18 @@ public class Skin
                     setStylesForStyleClassMethod =
                         setStylesForStyleClassMethod.MakeGenericMethod(styleField.FieldType);
                     inlineStyle = setStylesForStyleClassMethod.Invoke(this,
-                        new[]
-                            { inlineStyle, valueObject as Dictionary<string, object>, contentManager, styleName });
+                        [inlineStyle, valueObject as Dictionary<string, object>, contentManager, styleName]);
                     styleField.SetValue(styleClass, inlineStyle);
                 }
                 else
                 {
                     // We have a style reference. First we need to find out what type of style name refers to from the field.
                     // Then we need to fetch the "get" method and properly type it.
-                    var getStyleMethod = ReflectionUtils.GetMethodInfo(this, "Get", new[] { typeof(string) });
+                    var getStyleMethod = ReflectionUtils.GetMethodInfo(this, "Get", [typeof(string)]);
                     getStyleMethod = getStyleMethod.MakeGenericMethod(styleField.FieldType);
 
                     // now we look up the style and finally set it
-                    var theStyle = getStyleMethod.Invoke(this, new object[] { identifier });
+                    var theStyle = getStyleMethod.Invoke(this, [identifier]);
                     styleField.SetValue(styleClass, theStyle);
 
                     if (theStyle == null)

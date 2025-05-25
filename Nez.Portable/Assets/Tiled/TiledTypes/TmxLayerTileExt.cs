@@ -4,29 +4,29 @@ namespace Nez.Tiled;
 
 public static class TmxLayerTileExt
 {
-	/// <summary>
-	///     passthrough to TilesetTile
-	/// </summary>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     passthrough to TilesetTile
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSlope(this TmxLayerTile self)
     {
         return self.TilesetTile != null && self.TilesetTile.IsSlope;
     }
 
-	/// <summary>
-	///     passthrough to TilesetTile
-	/// </summary>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     passthrough to TilesetTile
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsOneWayPlatform(this TmxLayerTile self)
     {
         return self.TilesetTile != null && self.TilesetTile.IsOneWayPlatform;
     }
 
 
-	/// <summary>
-	///     returns the slope top left taking flipping into account. Exceptions if the tile is not a slope.
-	/// </summary>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     returns the slope top left taking flipping into account. Exceptions if the tile is not a slope.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetSlopeTopLeft(this TmxLayerTile self)
     {
         if (self.HorizontalFlip && self.VerticalFlip)
@@ -39,10 +39,10 @@ public static class TmxLayerTileExt
         return self.TilesetTile.SlopeTopLeft;
     }
 
-	/// <summary>
-	///     returns the slope top right taking flipping into account. Exceptions if the tile is not a slope.
-	/// </summary>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     returns the slope top right taking flipping into account. Exceptions if the tile is not a slope.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetSlopeTopRight(this TmxLayerTile self)
     {
         if (self.HorizontalFlip && self.VerticalFlip)
@@ -55,10 +55,10 @@ public static class TmxLayerTileExt
         return self.TilesetTile.SlopeTopRight;
     }
 
-	/// <summary>
-	///     calculates the slope based on the slope top left/right
-	/// </summary>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     calculates the slope based on the slope top left/right
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float GetSlope(this TmxLayerTile self)
     {
         var tileSize = self.Tileset.Map.TileWidth;
@@ -74,19 +74,19 @@ public static class TmxLayerTileExt
         return (self.TilesetTile.SlopeTopRight - (float)self.TilesetTile.SlopeTopLeft) / tileSize;
     }
 
-	/// <summary>
-	///     returns the slope position on the left side of the tile. b in the y = mx + b equation
-	/// </summary>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     returns the slope position on the left side of the tile. b in the y = mx + b equation
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float GetSlopeOffset(this TmxLayerTile self)
     {
         return self.GetSlopeTopLeft();
     }
 
-	/// <summary>
-	///     returns the edge on the side that has the tallest side
-	/// </summary>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     returns the edge on the side that has the tallest side
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Edge GetHighestSlopeEdge(this TmxLayerTile self)
     {
         // left and right already have flipping taken into account. Also remember a lower value means a taller slope since the slope values
@@ -96,10 +96,10 @@ public static class TmxLayerTileExt
         return right > left ? Edge.Left : Edge.Right;
     }
 
-	/// <summary>
-	///     returns the nearest edge to worldPosition
-	/// </summary>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     returns the nearest edge to worldPosition
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Edge GetNearestEdge(this TmxLayerTile self, int worldPosition)
     {
         var tileWidth = self.Tileset.Map.TileWidth;

@@ -9,7 +9,7 @@ namespace Nez.AI.GOAP;
 public class ActionPlanner
 {
     public const int MAX_CONDITIONS = 64;
-    private readonly List<Action> _actions = new();
+    private readonly List<Action> _actions = [];
 
     /// <summary>
     ///     Postconditions for all actions (action effects).
@@ -21,7 +21,7 @@ public class ActionPlanner
     /// </summary>
     private readonly WorldState[] _preConditions = new WorldState[MAX_CONDITIONS];
 
-    private readonly List<Action> _viableActions = new();
+    private readonly List<Action> _viableActions = [];
 
     /// <summary>
     ///     Number of world state atoms.

@@ -664,14 +664,12 @@ public struct Matrix2D : IEquatable<Matrix2D>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(Matrix2D matrix1, Matrix2D matrix2)
     {
-        return (
-            matrix1.M11 == matrix2.M11 &&
-            matrix1.M12 == matrix2.M12 &&
-            matrix1.M21 == matrix2.M21 &&
-            matrix1.M22 == matrix2.M22 &&
-            matrix1.M31 == matrix2.M31 &&
-            matrix1.M32 == matrix2.M32
-        );
+        return matrix1.M11 == matrix2.M11 &&
+               matrix1.M12 == matrix2.M12 &&
+               matrix1.M21 == matrix2.M21 &&
+               matrix1.M22 == matrix2.M22 &&
+               matrix1.M31 == matrix2.M31 &&
+               matrix1.M32 == matrix2.M32;
     }
 
 
@@ -684,14 +682,12 @@ public struct Matrix2D : IEquatable<Matrix2D>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(Matrix2D matrix1, Matrix2D matrix2)
     {
-        return (
-            matrix1.M11 != matrix2.M11 ||
-            matrix1.M12 != matrix2.M12 ||
-            matrix1.M21 != matrix2.M21 ||
-            matrix1.M22 != matrix2.M22 ||
-            matrix1.M31 != matrix2.M31 ||
-            matrix1.M32 != matrix2.M32
-        );
+        return matrix1.M11 != matrix2.M11 ||
+               matrix1.M12 != matrix2.M12 ||
+               matrix1.M21 != matrix2.M21 ||
+               matrix1.M22 != matrix2.M22 ||
+               matrix1.M31 != matrix2.M31 ||
+               matrix1.M32 != matrix2.M32;
     }
 
 

@@ -367,15 +367,15 @@ public class Button : Table, IInputListener, IGamepadFocusable
 /// </summary>
 public class ButtonStyle
 {
-	/**
+    /**
      * Optional. offsets children (labels for example).
      */
-	public float PressedOffsetX, PressedOffsetY, UnpressedOffsetX, UnpressedOffsetY, CheckedOffsetX, CheckedOffsetY;
+    public float PressedOffsetX, PressedOffsetY, UnpressedOffsetX, UnpressedOffsetY, CheckedOffsetX, CheckedOffsetY;
 
-	/**
+    /**
      * Optional.
      */
-	public IDrawable Up, Down, Over, Checked, CheckedOver, Disabled;
+    public IDrawable Up, Down, Over, Checked, CheckedOver, Disabled;
 
 
     public ButtonStyle()

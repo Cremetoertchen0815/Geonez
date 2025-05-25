@@ -7,19 +7,19 @@ namespace Nez;
 /// </summary>
 public class ColliderTriggerHelper
 {
-	/// <summary>
-	///     stores all the active intersection pairs that occured in the current frame
-	/// </summary>
-	private readonly HashSet<Pair<Collider>> _activeTriggerIntersections = new();
+    /// <summary>
+    ///     stores all the active intersection pairs that occured in the current frame
+    /// </summary>
+    private readonly HashSet<Pair<Collider>> _activeTriggerIntersections = [];
 
     private readonly Entity _entity;
 
     /// <summary>
     ///     stores the previous frames intersection pairs so that we can detect exits after moving this frame
     /// </summary>
-    private readonly HashSet<Pair<Collider>> _previousTriggerIntersections = new();
+    private readonly HashSet<Pair<Collider>> _previousTriggerIntersections = [];
 
-    private readonly List<ITriggerListener> _tempTriggerList = new();
+    private readonly List<ITriggerListener> _tempTriggerList = [];
 
 
     public ColliderTriggerHelper(Entity entity)

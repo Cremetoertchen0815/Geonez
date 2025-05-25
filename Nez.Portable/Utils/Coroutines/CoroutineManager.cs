@@ -12,8 +12,8 @@ namespace Nez.Systems;
 /// </summary>
 public class CoroutineManager : GlobalManager
 {
-    private readonly List<CoroutineImpl> _shouldRunNextFrame = new();
-    private readonly List<CoroutineImpl> _unblockedCoroutines = new();
+    private readonly List<CoroutineImpl> _shouldRunNextFrame = [];
+    private readonly List<CoroutineImpl> _unblockedCoroutines = [];
 
 
     /// <summary>

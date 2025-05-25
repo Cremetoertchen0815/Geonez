@@ -10,7 +10,7 @@ namespace Nez.UI;
 /// </summary>
 public class ListBox<T> : Element, IInputListener where T : class
 {
-    private readonly List<T> _items = new();
+    private readonly List<T> _items = [];
     private readonly ArraySelection<T> _selection;
     private Rectangle? _cullingArea;
     private int _hoveredItemIndex = -1;
@@ -386,10 +386,10 @@ public class ListBox<T> : Element, IInputListener where T : class
 
 public class ListBoxStyle
 {
-	/**
+    /**
      * Optional
      */
-	public IDrawable Background;
+    public IDrawable Background;
 
     public BitmapFont Font;
     public Color FontColorHovered = Color.Black;

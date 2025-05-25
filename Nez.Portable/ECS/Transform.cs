@@ -414,7 +414,7 @@ public class Transform : IVariableUpdatable
     private Vector2 _lastlocalPosition;
     private Vector2 _lastlocalScale;
     private float _lastlocalRotation;
-    private readonly List<Transform> _children = new();
+    private readonly List<Transform> _children = [];
 
     #endregion
 

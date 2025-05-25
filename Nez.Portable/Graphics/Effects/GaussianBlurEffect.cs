@@ -179,7 +179,7 @@ public class GaussianBlurEffect : Effect
     /// </summary>
     private float ComputeGaussian(float n)
     {
-        return (float)((1.0 / Math.Sqrt(2 * Math.PI * _blurAmount)) *
+        return (float)(1.0 / Math.Sqrt(2 * Math.PI * _blurAmount) *
                        Math.Exp(-(n * n) / (2 * _blurAmount * _blurAmount)));
     }
 }

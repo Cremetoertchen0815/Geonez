@@ -9,37 +9,37 @@ namespace Nez.Textures;
 /// </summary>
 public class Sprite
 {
-	/// <summary>
-	///     center of the sourceRect if it had a 0,0 origin. This is basically the center in sourceRect-space.
-	/// </summary>
-	/// <value>The center.</value>
-	public readonly Vector2 Center;
+    /// <summary>
+    ///     center of the sourceRect if it had a 0,0 origin. This is basically the center in sourceRect-space.
+    /// </summary>
+    /// <value>The center.</value>
+    public readonly Vector2 Center;
 
-	/// <summary>
-	///     rectangle in the Texture2D for this element
-	/// </summary>
-	public readonly Rectangle SourceRect;
+    /// <summary>
+    ///     rectangle in the Texture2D for this element
+    /// </summary>
+    public readonly Rectangle SourceRect;
 
-	/// <summary>
-	///     UVs for the texture region
-	/// </summary>
-	public readonly RectangleF Uvs;
+    /// <summary>
+    ///     UVs for the texture region
+    /// </summary>
+    public readonly RectangleF Uvs;
 
-	/// <summary>
-	///     the origin that a RenderableComponent should use when using this Sprite. Defaults to the center.
-	/// </summary>
-	public Vector2 Origin;
+    /// <summary>
+    ///     the origin that a RenderableComponent should use when using this Sprite. Defaults to the center.
+    /// </summary>
+    public Vector2 Origin;
 
-	/// <summary>
-	///     A stencil matching all opaque pixels from the source texture.
-	///     Useful for drawing outlines or creating masks.
-	/// </summary>
-	public Texture2D StencilTexture;
+    /// <summary>
+    ///     A stencil matching all opaque pixels from the source texture.
+    ///     Useful for drawing outlines or creating masks.
+    /// </summary>
+    public Texture2D StencilTexture;
 
-	/// <summary>
-	///     the actual Texture2D
-	/// </summary>
-	public Texture2D Texture2D;
+    /// <summary>
+    ///     the actual Texture2D
+    /// </summary>
+    public Texture2D Texture2D;
 
 
     public Sprite(Texture2D texture, Rectangle sourceRect, Vector2 origin)

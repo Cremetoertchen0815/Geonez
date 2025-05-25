@@ -9,20 +9,20 @@ namespace Nez.DeferredLighting;
 /// </summary>
 public class DirLight : DeferredLight
 {
-	/// <summary>
-	///     direction of the light
-	/// </summary>
-	public Vector3 Direction = new(50, 20, 100);
+    /// <summary>
+    ///     direction of the light
+    /// </summary>
+    public Vector3 Direction = new(50, 20, 100);
 
-	/// <summary>
-	///     specular intensity. 0 - 1 range
-	/// </summary>
-	public float SpecularIntensity = 0.5f;
+    /// <summary>
+    ///     specular intensity. 0 - 1 range
+    /// </summary>
+    public float SpecularIntensity = 0.5f;
 
-	/// <summary>
-	///     specular power. this is the exponent passed to pow() of the projection from 0,0,-1 to the light-to-normal
-	/// </summary>
-	public float SpecularPower = 2;
+    /// <summary>
+    ///     specular power. this is the exponent passed to pow() of the projection from 0,0,-1 to the light-to-normal
+    /// </summary>
+    public float SpecularPower = 2;
 
 
     public DirLight()

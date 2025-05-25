@@ -58,15 +58,15 @@ public enum Alignment
 /// </remarks>
 public struct Layout
 {
-	/// <summary>
-	///     Gets/Sets client area.
-	/// </summary>
-	public Rectangle ClientArea;
+    /// <summary>
+    ///     Gets/Sets client area.
+    /// </summary>
+    public Rectangle ClientArea;
 
-	/// <summary>
-	///     Gets/Sets safe area.
-	/// </summary>
-	public Rectangle SafeArea;
+    /// <summary>
+    ///     Gets/Sets safe area.
+    /// </summary>
+    public Rectangle SafeArea;
 
 
     #region Initialization

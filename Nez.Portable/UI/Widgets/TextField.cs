@@ -145,7 +145,7 @@ public class TextField : Element, IInputListener, IKeyboardListener
                 break;
             }
 
-        return new[] { left, right };
+        return [left, right];
     }
 
     private int[] WordUnderCursor(float x)
@@ -1278,15 +1278,15 @@ public class TextField : Element, IInputListener, IKeyboardListener
 
 public class TextFieldStyle
 {
-	/**
+    /**
      * Optional.
      */
-	public IDrawable Background, FocusedBackground, DisabledBackground, Cursor, Selection;
+    public IDrawable Background, FocusedBackground, DisabledBackground, Cursor, Selection;
 
-	/**
+    /**
      * Optional.
      */
-	public Color? FocusedFontColor, DisabledFontColor;
+    public Color? FocusedFontColor, DisabledFontColor;
 
     public BitmapFont Font;
 

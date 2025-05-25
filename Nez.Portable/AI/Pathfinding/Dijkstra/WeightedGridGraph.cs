@@ -10,15 +10,15 @@ namespace Nez.AI.Pathfinding;
 public class WeightedGridGraph : IWeightedGraph<Point>
 {
     public static readonly Point[] CARDINAL_DIRS =
-    {
+    [
         new(1, 0),
         new(0, -1),
         new(-1, 0),
         new(0, 1)
-    };
+    ];
 
     private static readonly Point[] COMPASS_DIRS =
-    {
+    [
         new(1, 0),
         new(1, -1),
         new(0, -1),
@@ -27,7 +27,7 @@ public class WeightedGridGraph : IWeightedGraph<Point>
         new(-1, 1),
         new(0, 1),
         new(1, 1)
-    };
+    ];
 
     private readonly Point[] _dirs;
     private readonly int _height;
@@ -35,8 +35,8 @@ public class WeightedGridGraph : IWeightedGraph<Point>
     private readonly int _width;
     public int DefaultWeight = 1;
 
-    public HashSet<Point> Walls = new();
-    public HashSet<Point> WeightedNodes = new();
+    public HashSet<Point> Walls = [];
+    public HashSet<Point> WeightedNodes = [];
     public int WeightedNodeWeight = 5;
 
 

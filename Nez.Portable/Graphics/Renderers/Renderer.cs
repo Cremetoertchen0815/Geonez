@@ -19,22 +19,22 @@ namespace Nez;
 /// </summary>
 public abstract class Renderer : IComparable<Renderer>
 {
-	/// <summary>
-	///     specifies the order in which the Renderers will be called by the scene
-	/// </summary>
-	public readonly int RenderOrder;
+    /// <summary>
+    ///     specifies the order in which the Renderers will be called by the scene
+    /// </summary>
+    public readonly int RenderOrder;
 
-	/// <summary>
-	///     holds the current Material of the last rendered Renderable (or the Renderer.material if no changes were made)
-	/// </summary>
-	protected Material _currentMaterial;
+    /// <summary>
+    ///     holds the current Material of the last rendered Renderable (or the Renderer.material if no changes were made)
+    /// </summary>
+    protected Material _currentMaterial;
 
-	/// <summary>
-	///     the Camera this renderer uses for rendering (really its transformMatrix and bounds for culling). This is a
-	///     convenience field and isnt
-	///     required. Renderer subclasses can pick the camera used when calling beginRender.
-	/// </summary>
-	public Camera Camera;
+    /// <summary>
+    ///     the Camera this renderer uses for rendering (really its transformMatrix and bounds for culling). This is a
+    ///     convenience field and isnt
+    ///     required. Renderer subclasses can pick the camera used when calling beginRender.
+    /// </summary>
+    public Camera Camera;
 
     public bool Enabled = true;
 

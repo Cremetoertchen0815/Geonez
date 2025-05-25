@@ -262,10 +262,10 @@ public class Slider : ProgressBar, IInputListener, IGamepadFocusable
 
 public class SliderStyle : ProgressBarStyle
 {
-	/**
+    /**
      * Optional.
      */
-	public IDrawable KnobOver, KnobDown;
+    public IDrawable KnobOver, KnobDown;
 
 
     public SliderStyle()

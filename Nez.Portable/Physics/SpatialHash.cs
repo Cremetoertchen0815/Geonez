@@ -8,30 +8,30 @@ namespace Nez.Spatial;
 
 public class SpatialHash
 {
-	/// <summary>
-	///     the Dictionary that holds all of the data
-	/// </summary>
-	private readonly IntIntDictionary _cellDict = new();
+    /// <summary>
+    ///     the Dictionary that holds all of the data
+    /// </summary>
+    private readonly IntIntDictionary _cellDict = new();
 
-	/// <summary>
-	///     the size of each cell in the hash
-	/// </summary>
-	private readonly int _cellSize;
+    /// <summary>
+    ///     the size of each cell in the hash
+    /// </summary>
+    private readonly int _cellSize;
 
-	/// <summary>
-	///     1 over the cell size. cached result due to it being used a lot.
-	/// </summary>
-	private readonly float _inverseCellSize;
+    /// <summary>
+    ///     1 over the cell size. cached result due to it being used a lot.
+    /// </summary>
+    private readonly float _inverseCellSize;
 
-	/// <summary>
-	///     cached box used for overlap checks
-	/// </summary>
-	private readonly Box _overlapTestBox = new(0f, 0f);
+    /// <summary>
+    ///     cached box used for overlap checks
+    /// </summary>
+    private readonly Box _overlapTestBox = new(0f, 0f);
 
-	/// <summary>
-	///     cached circle used for overlap checks
-	/// </summary>
-	private readonly Circle _overlapTestCirce = new(0f);
+    /// <summary>
+    ///     cached circle used for overlap checks
+    /// </summary>
+    private readonly Circle _overlapTestCirce = new(0f);
 
     private readonly RaycastResultParser _raycastParser;
 
@@ -463,7 +463,7 @@ internal class IntIntDictionary
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private long GetKey(int x, int y)
     {
-        return unchecked((long)x << 32 | (uint)y);
+        return unchecked(((long)x << 32) | (uint)y);
     }
 
 

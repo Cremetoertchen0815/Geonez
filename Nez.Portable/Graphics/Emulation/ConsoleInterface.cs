@@ -15,7 +15,7 @@ public static class ConsoleInterface
     internal static int Height = 50;
     internal static object _renderlock = new();
     internal static object _keylock = new();
-    internal static List<ConsoleKey> pressedKeys = new();
+    internal static List<ConsoleKey> pressedKeys = [];
     internal static bool shiftP;
     internal static bool ctrlP;
     internal static bool altP;
@@ -190,16 +190,16 @@ public static class ConsoleInterface
 
     public static void WriteLine(int value)
     {
-        Write(value.ToString() + "\n");
+        Write(value + "\n");
     }
 
     public static void WriteLine(float value)
     {
-        Write(value.ToString() + "\n");
+        Write(value + "\n");
     }
 
     public static void WriteLine(double value)
     {
-        Write(value.ToString() + "\n");
+        Write(value + "\n");
     }
 }

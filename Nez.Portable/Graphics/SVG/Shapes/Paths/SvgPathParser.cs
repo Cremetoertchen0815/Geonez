@@ -8,11 +8,11 @@ namespace Nez.Svg;
 
 public static class SvgPathParser
 {
-	/// <summary>
-	///     parses the 'd' element of an SVG file and returns the command series
-	/// </summary>
-	/// <param name="path">Path.</param>
-	public static List<SvgPathSegment> Parse(string path)
+    /// <summary>
+    ///     parses the 'd' element of an SVG file and returns the command series
+    /// </summary>
+    /// <param name="path">Path.</param>
+    public static List<SvgPathSegment> Parse(string path)
     {
         var segments = new List<SvgPathSegment>();
 
@@ -47,14 +47,14 @@ public static class SvgPathParser
     }
 
 
-	/// <summary>
-	///     creates an SvgPathSegment based on the command and coords passed in
-	/// </summary>
-	/// <param name="command">Command.</param>
-	/// <param name="segments">Segments.</param>
-	/// <param name="coords">Coords.</param>
-	/// <param name="isRelative">If set to <c>true</c> is relative.</param>
-	private static void CreatePathSegment(char command, List<SvgPathSegment> segments, float[] coords, bool isRelative)
+    /// <summary>
+    ///     creates an SvgPathSegment based on the command and coords passed in
+    /// </summary>
+    /// <param name="command">Command.</param>
+    /// <param name="segments">Segments.</param>
+    /// <param name="coords">Coords.</param>
+    /// <param name="isRelative">If set to <c>true</c> is relative.</param>
+    private static void CreatePathSegment(char command, List<SvgPathSegment> segments, float[] coords, bool isRelative)
     {
         switch (command)
         {
@@ -198,36 +198,36 @@ public static class SvgPathParser
     }
 
 
-	/// <summary>
-	///     Creates point with absolute coordinates
-	/// </summary>
-	/// <returns>The absolute.</returns>
-	/// <param name="x">The x coordinate.</param>
-	/// <param name="y">The y coordinate.</param>
-	/// <param name="segments">Segments.</param>
-	/// <param name="areBothRelative">If set to <c>true</c> is relative both.</param>
-	private static Vector2 ToAbsolute(float x, float y, List<SvgPathSegment> segments, bool areBothRelative)
+    /// <summary>
+    ///     Creates point with absolute coordinates
+    /// </summary>
+    /// <returns>The absolute.</returns>
+    /// <param name="x">The x coordinate.</param>
+    /// <param name="y">The y coordinate.</param>
+    /// <param name="segments">Segments.</param>
+    /// <param name="areBothRelative">If set to <c>true</c> is relative both.</param>
+    private static Vector2 ToAbsolute(float x, float y, List<SvgPathSegment> segments, bool areBothRelative)
     {
         return ToAbsolute(x, y, segments, areBothRelative, areBothRelative);
     }
 
 
-	/// <summary>
-	///     Creates point with absolute coordinates
-	/// </summary>
-	/// <param name="x">Raw X-coordinate value.</param>
-	/// <param name="y">Raw Y-coordinate value.</param>
-	/// <param name="segments">Current path segments.</param>
-	/// <param name="isRelativeX">
-	///     <b>true</b> if <paramref name="x" /> contains relative coordinate value, otherwise
-	///     <b>false</b>.
-	/// </param>
-	/// <param name="isRelativeY">
-	///     <b>true</b> if <paramref name="y" /> contains relative coordinate value, otherwise
-	///     <b>false</b>.
-	/// </param>
-	/// <returns><see cref="Vector2" /> that contains absolute coordinates.</returns>
-	private static Vector2 ToAbsolute(float x, float y, List<SvgPathSegment> segments, bool isRelativeX,
+    /// <summary>
+    ///     Creates point with absolute coordinates
+    /// </summary>
+    /// <param name="x">Raw X-coordinate value.</param>
+    /// <param name="y">Raw Y-coordinate value.</param>
+    /// <param name="segments">Current path segments.</param>
+    /// <param name="isRelativeX">
+    ///     <b>true</b> if <paramref name="x" /> contains relative coordinate value, otherwise
+    ///     <b>false</b>.
+    /// </param>
+    /// <param name="isRelativeY">
+    ///     <b>true</b> if <paramref name="y" /> contains relative coordinate value, otherwise
+    ///     <b>false</b>.
+    /// </param>
+    /// <returns><see cref="Vector2" /> that contains absolute coordinates.</returns>
+    private static Vector2 ToAbsolute(float x, float y, List<SvgPathSegment> segments, bool isRelativeX,
         bool isRelativeY)
     {
         var point = new Vector2(x, y);

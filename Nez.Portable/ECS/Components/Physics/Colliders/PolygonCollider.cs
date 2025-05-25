@@ -9,14 +9,14 @@ namespace Nez;
 /// </summary>
 public class PolygonCollider : Collider
 {
-	/// <summary>
-	///     If the points are not centered they will be centered with the difference being applied to the localOffset.
-	/// </summary>
-	/// <param name="points">Points.</param>
-	public PolygonCollider(Vector2[] points)
+    /// <summary>
+    ///     If the points are not centered they will be centered with the difference being applied to the localOffset.
+    /// </summary>
+    /// <param name="points">Points.</param>
+    public PolygonCollider(Vector2[] points)
     {
         // first and last point must not be the same. we want an open polygon
-        var isPolygonClosed = points[0] == points[points.Length - 1];
+        var isPolygonClosed = points[0] == points[^1];
 
         if (isPolygonClosed)
             Array.Resize(ref points, points.Length - 1);

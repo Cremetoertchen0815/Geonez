@@ -11,31 +11,31 @@ public class SpriteAnimator : SpriteRenderer, IUpdatable
 {
     public enum LoopMode
     {
-	    /// <summary>
-	    ///     Play the sequence in a loop forever [A][B][C][A][B][C][A][B][C]...
-	    /// </summary>
-	    Loop,
+        /// <summary>
+        ///     Play the sequence in a loop forever [A][B][C][A][B][C][A][B][C]...
+        /// </summary>
+        Loop,
 
-	    /// <summary>
-	    ///     Play the sequence once [A][B][C] then pause and set time to 0 [A]
-	    /// </summary>
-	    Once,
+        /// <summary>
+        ///     Play the sequence once [A][B][C] then pause and set time to 0 [A]
+        /// </summary>
+        Once,
 
-	    /// <summary>
-	    ///     Plays back the animation once, [A][B][C]. When it reaches the end, it will keep playing the last frame and never
-	    ///     stop playing
-	    /// </summary>
-	    ClampForever,
+        /// <summary>
+        ///     Plays back the animation once, [A][B][C]. When it reaches the end, it will keep playing the last frame and never
+        ///     stop playing
+        /// </summary>
+        ClampForever,
 
-	    /// <summary>
-	    ///     Play the sequence in a ping pong loop forever [A][B][C][B][A][B][C][B]...
-	    /// </summary>
-	    PingPong,
+        /// <summary>
+        ///     Play the sequence in a ping pong loop forever [A][B][C][B][A][B][C][B]...
+        /// </summary>
+        PingPong,
 
-	    /// <summary>
-	    ///     Play the sequence once forward then back to the start [A][B][C][B][A] then pause and set time to 0
-	    /// </summary>
-	    PingPongOnce
+        /// <summary>
+        ///     Play the sequence once forward then back to the start [A][B][C][B][A] then pause and set time to 0
+        /// </summary>
+        PingPongOnce
     }
 
     public enum State
@@ -175,7 +175,7 @@ public class SpriteAnimator : SpriteRenderer, IUpdatable
 
         //Add non-sprite animations
         foreach (var element in atlas.NonAnimationSprites)
-            Animations.Add(atlas.Names[element], new SpriteAnimation(new[] { atlas.Sprites[element] }, 1));
+            Animations.Add(atlas.Names[element], new SpriteAnimation([atlas.Sprites[element]], 1));
         return this;
     }
 

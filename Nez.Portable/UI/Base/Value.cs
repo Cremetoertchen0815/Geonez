@@ -7,10 +7,10 @@
 /// </summary>
 public abstract class Value
 {
-	/// <summary>
-	///     A value that is always zero.
-	/// </summary>
-	public static Fixed Zero = new(0);
+    /// <summary>
+    ///     A value that is always zero.
+    /// </summary>
+    public static Fixed Zero = new(0);
 
 
     public static Value MinWidth = new MinWidthValue();

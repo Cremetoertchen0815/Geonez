@@ -14,9 +14,9 @@ public class TouchInput
 
     public TouchCollection PreviousTouches { get; private set; }
 
-    public List<GestureSample> PreviousGestures { get; } = new();
+    public List<GestureSample> PreviousGestures { get; } = [];
 
-    public List<GestureSample> CurrentGestures { get; } = new();
+    public List<GestureSample> CurrentGestures { get; } = [];
 
     private void OnGraphicsDeviceReset()
     {

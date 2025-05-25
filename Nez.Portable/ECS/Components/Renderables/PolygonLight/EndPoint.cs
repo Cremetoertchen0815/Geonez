@@ -8,26 +8,26 @@ namespace Nez.Shadows;
 /// </summary>
 internal class EndPoint
 {
-	/// <summary>
-	///     The angle of the end-point relative to the location of the visibility test
-	/// </summary>
-	internal float angle;
+    /// <summary>
+    ///     The angle of the end-point relative to the location of the visibility test
+    /// </summary>
+    internal float angle;
 
-	/// <summary>
-	///     If this end-point is a begin or end end-point
-	///     of a segment (each segment has only one begin and one end end-point
-	/// </summary>
-	internal bool begin;
+    /// <summary>
+    ///     If this end-point is a begin or end end-point
+    ///     of a segment (each segment has only one begin and one end end-point
+    /// </summary>
+    internal bool begin;
 
-	/// <summary>
-	///     Position of the segment
-	/// </summary>
-	internal Vector2 position;
+    /// <summary>
+    ///     Position of the segment
+    /// </summary>
+    internal Vector2 position;
 
-	/// <summary>
-	///     The segment this end-point belongs to
-	/// </summary>
-	internal Segment segment;
+    /// <summary>
+    ///     The segment this end-point belongs to
+    /// </summary>
+    internal Segment segment;
 
 
     internal EndPoint()
@@ -61,7 +61,7 @@ internal class EndPoint
 
     public override string ToString()
     {
-        return "{ p:" + position.ToString() + "a: " + angle + " in " + segment.ToString() + "}";
+        return "{ p:" + position + "a: " + angle + " in " + segment + "}";
     }
 }
 

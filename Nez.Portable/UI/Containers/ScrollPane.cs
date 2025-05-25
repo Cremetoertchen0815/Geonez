@@ -1352,20 +1352,20 @@ public class ScrollPane : Group, IInputListener
 
 public class ScrollPaneStyle
 {
-	/**
+    /**
      * Optional.
      */
-	public IDrawable Background, Corner;
+    public IDrawable Background, Corner;
 
-	/**
+    /**
      * Optional.
      */
-	public IDrawable HScroll, HScrollKnob;
+    public IDrawable HScroll, HScrollKnob;
 
-	/**
+    /**
      * Optional.
      */
-	public IDrawable VScroll, VScrollKnob;
+    public IDrawable VScroll, VScrollKnob;
 
 
     public ScrollPaneStyle()

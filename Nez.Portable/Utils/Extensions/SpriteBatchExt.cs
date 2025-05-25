@@ -82,7 +82,7 @@ public static class SpriteBatchExt
             DrawLine(spriteBatch, position + points[i - 1], position + points[i], color, thickness);
 
         if (closePoly)
-            DrawLine(spriteBatch, position + points[points.Length - 1], position + points[0], color, thickness);
+            DrawLine(spriteBatch, position + points[^1], position + points[0], color, thickness);
     }
 
 
@@ -97,7 +97,7 @@ public static class SpriteBatchExt
 
 
         if (closePoly)
-            DrawLine(spriteBatch, position + points[points.Length - 1], position + points[0], color, thickness);
+            DrawLine(spriteBatch, position + points[^1], position + points[0], color, thickness);
     }
 
     #endregion

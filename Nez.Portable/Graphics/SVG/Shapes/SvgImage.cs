@@ -14,15 +14,15 @@ namespace Nez.Svg;
 /// </summary>
 public class SvgImage : SvgElement
 {
-	/// <summary>
-	///     flag that determines if we tried to load the texture. We only attempt to load it once.
-	/// </summary>
-	private bool _didAttemptTextureLoad;
+    /// <summary>
+    ///     flag that determines if we tried to load the texture. We only attempt to load it once.
+    /// </summary>
+    private bool _didAttemptTextureLoad;
 
-	/// <summary>
-	///     cached texture if loaded successfully
-	/// </summary>
-	private Texture2D _texture;
+    /// <summary>
+    ///     cached texture if loaded successfully
+    /// </summary>
+    private Texture2D _texture;
 
     [XmlAttribute("height")] public float Height;
 

@@ -7,11 +7,11 @@ namespace Nez.BitmapFonts;
 /// </summary>
 public struct Kerning : IEquatable<Kerning>
 {
-	/// <summary>
-	///     Gets or sets how much the x position should be adjusted when drawing the second character immediately following the
-	///     first.
-	/// </summary>
-	public int Amount;
+    /// <summary>
+    ///     Gets or sets how much the x position should be adjusted when drawing the second character immediately following the
+    ///     first.
+    /// </summary>
+    public int Amount;
 
     public readonly char FirstCharacter;
     public readonly char SecondCharacter;

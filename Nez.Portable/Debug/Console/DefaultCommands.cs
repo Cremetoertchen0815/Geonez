@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Nez.Console
 {
-	/// <summary>
-	///     add this attribute to any static method
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Method)]
+    /// <summary>
+    ///     add this attribute to any static method
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method)]
     public class CommandAttribute : Attribute
     {
         public string Help;

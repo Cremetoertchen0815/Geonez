@@ -92,6 +92,6 @@ public abstract class GraphicsResource : IDisposable
     {
         var method = shouldAdd ? "AddResourceReference" : "RemoveResourceReference";
         var methodInfo = ReflectionUtils.GetMethodInfo(GraphicsDevice, method);
-        methodInfo.Invoke(GraphicsDevice, new object[] { _selfReference });
+        methodInfo.Invoke(GraphicsDevice, [_selfReference]);
     }
 }

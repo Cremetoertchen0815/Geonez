@@ -15,7 +15,7 @@ public class Triangulator
     /// <summary>
     ///     The indexes of triangle list entries for the list of points used in the last triangulate call.
     /// </summary>
-    public List<int> TriangleIndices = new();
+    public List<int> TriangleIndices = [];
 
 
     /// <summary>

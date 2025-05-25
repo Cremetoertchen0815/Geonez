@@ -7,7 +7,7 @@ namespace Nez.AI.UtilityAI;
 /// </summary>
 public class AllOrNothingConsideration<T> : IConsideration<T>
 {
-    private readonly List<IAppraisal<T>> _appraisals = new();
+    private readonly List<IAppraisal<T>> _appraisals = [];
     public float Threshold;
 
 

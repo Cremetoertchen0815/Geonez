@@ -14,10 +14,10 @@ namespace Nez.Sprites;
 /// </summary>
 internal static class SpriteAtlasLoader
 {
-	/// <summary>
-	///     parses a .atlas file and loads up a SpriteAtlas with it's associated Texture
-	/// </summary>
-	internal static SpriteAtlas ParseSpriteAtlas(string dataFile, NezContentManager content, bool generateStencil,
+    /// <summary>
+    ///     parses a .atlas file and loads up a SpriteAtlas with it's associated Texture
+    /// </summary>
+    internal static SpriteAtlas ParseSpriteAtlas(string dataFile, NezContentManager content, bool generateStencil,
         bool premultiplyAlpha)
     {
         var contentData = content.Load<byte[]>(dataFile);

@@ -6,21 +6,21 @@ namespace Nez.Tiled;
 
 public partial class TmxLayer : ITmxLayer
 {
-	/// <summary>
-	///     gets the TmxLayerTile at the x/y coordinates. Note that these are tile coordinates not world coordinates!
-	/// </summary>
-	/// <returns>The tile.</returns>
-	/// <param name="x">The x coordinate.</param>
-	/// <param name="y">The y coordinate.</param>
-	public TmxLayerTile GetTile(int x, int y)
+    /// <summary>
+    ///     gets the TmxLayerTile at the x/y coordinates. Note that these are tile coordinates not world coordinates!
+    /// </summary>
+    /// <returns>The tile.</returns>
+    /// <param name="x">The x coordinate.</param>
+    /// <param name="y">The y coordinate.</param>
+    public TmxLayerTile GetTile(int x, int y)
     {
         return Tiles[x + y * Width];
     }
 
-	/// <summary>
-	///     gets the TmxLayerTile at the given world position
-	/// </summary>
-	public TmxLayerTile GetTileAtWorldPosition(Vector2 pos)
+    /// <summary>
+    ///     gets the TmxLayerTile at the given world position
+    /// </summary>
+    public TmxLayerTile GetTileAtWorldPosition(Vector2 pos)
     {
         var worldPoint = Map.WorldToTilePosition(pos);
         return GetTile(worldPoint.X, worldPoint.Y);

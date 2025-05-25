@@ -116,7 +116,7 @@ public class SceneManager : GlobalManager, ITelegramReceiver
                     if (constructors.Length == 1)
                     {
                         //Invoke constructor
-                        Core.Scene = (Scene)constructors[0].Invoke(new[] { param });
+                        Core.Scene = (Scene)constructors[0].Invoke([param]);
                         break;
                     }
                 }

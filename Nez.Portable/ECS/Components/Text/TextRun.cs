@@ -12,8 +12,8 @@ namespace Nez;
 /// </summary>
 public class TextRun
 {
-    private static readonly float[] _cornerOffsetX = { 0.0f, 1.0f, 0.0f, 1.0f };
-    private static readonly float[] _cornerOffsetY = { 0.0f, 0.0f, 1.0f, 1.0f };
+    private static readonly float[] _cornerOffsetX = [0.0f, 1.0f, 0.0f, 1.0f];
+    private static readonly float[] _cornerOffsetY = [0.0f, 0.0f, 1.0f, 1.0f];
     private readonly Color _color = Color.White;
     private readonly Vector2 _scale = Vector2.One;
     private CharDetails[] _charDetails;

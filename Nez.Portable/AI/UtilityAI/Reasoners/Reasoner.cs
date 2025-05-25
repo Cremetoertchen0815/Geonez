@@ -7,7 +7,7 @@ namespace Nez.AI.UtilityAI;
 /// </summary>
 public abstract class Reasoner<T>
 {
-    protected List<IConsideration<T>> _considerations = new();
+    protected List<IConsideration<T>> _considerations = [];
     public IConsideration<T> DefaultConsideration = new FixedScoreConsideration<T>();
 
 

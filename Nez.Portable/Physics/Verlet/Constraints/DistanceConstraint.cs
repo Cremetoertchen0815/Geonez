@@ -11,51 +11,51 @@ namespace Nez.Verlet;
 /// </summary>
 public class DistanceConstraint : Constraint
 {
-	/// <summary>
-	///     Polygon shared amongst all DistanceConstraints. Used for collision detection.
-	/// </summary>
-	private static readonly Polygon _polygon = new(2, 1);
+    /// <summary>
+    ///     Polygon shared amongst all DistanceConstraints. Used for collision detection.
+    /// </summary>
+    private static readonly Polygon _polygon = new(2, 1);
 
-	/// <summary>
-	///     the first Particle in the Constraint
-	/// </summary>
-	private readonly Particle _particleOne;
+    /// <summary>
+    ///     the first Particle in the Constraint
+    /// </summary>
+    private readonly Particle _particleOne;
 
-	/// <summary>
-	///     the second particle in the Constraint
-	/// </summary>
-	private readonly Particle _particleTwo;
+    /// <summary>
+    ///     the second particle in the Constraint
+    /// </summary>
+    private readonly Particle _particleTwo;
 
-	/// <summary>
-	///     the resting distnace of the Constraint. It will always try to get to this distance.
-	/// </summary>
-	public float RestingDistance;
+    /// <summary>
+    ///     the resting distnace of the Constraint. It will always try to get to this distance.
+    /// </summary>
+    public float RestingDistance;
 
-	/// <summary>
-	///     sets whether collisions should be approximated by points. This should be used for Constraints that need to collided
-	///     on both
-	///     sides. SAT only works with single sided collisions.
-	/// </summary>
-	public bool ShouldApproximateCollisionsWithPoints;
+    /// <summary>
+    ///     sets whether collisions should be approximated by points. This should be used for Constraints that need to collided
+    ///     on both
+    ///     sides. SAT only works with single sided collisions.
+    /// </summary>
+    public bool ShouldApproximateCollisionsWithPoints;
 
-	/// <summary>
-	///     [0-1]. the stiffness of the Constraint. Lower values are more springy and higher are more rigid.
-	/// </summary>
-	public float Stiffness;
+    /// <summary>
+    ///     [0-1]. the stiffness of the Constraint. Lower values are more springy and higher are more rigid.
+    /// </summary>
+    public float Stiffness;
 
-	/// <summary>
-	///     if the ratio of the current distance / restingDistance is greater than tearSensitivity the Constaint will be
-	///     removed. Values
-	///     should be above 1 and higher values mean rupture wont occur until the Constaint is stretched further.
-	/// </summary>
-	public float TearSensitivity = float.PositiveInfinity;
+    /// <summary>
+    ///     if the ratio of the current distance / restingDistance is greater than tearSensitivity the Constaint will be
+    ///     removed. Values
+    ///     should be above 1 and higher values mean rupture wont occur until the Constaint is stretched further.
+    /// </summary>
+    public float TearSensitivity = float.PositiveInfinity;
 
-	/// <summary>
-	///     if shouldApproximateCollisionsWithPoints is true, this controls how accurate the collisions check will be. Higher
-	///     numbers mean
-	///     more collisions checks.
-	/// </summary>
-	public int TotalPointsToApproximateCollisionsWith = 5;
+    /// <summary>
+    ///     if shouldApproximateCollisionsWithPoints is true, this controls how accurate the collisions check will be. Higher
+    ///     numbers mean
+    ///     more collisions checks.
+    /// </summary>
+    public int TotalPointsToApproximateCollisionsWith = 5;
 
 
     public DistanceConstraint(Particle first, Particle second, float stiffness, float distance = -1)

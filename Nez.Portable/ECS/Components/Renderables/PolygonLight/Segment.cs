@@ -5,15 +5,15 @@
 /// </summary>
 internal class Segment
 {
-	/// <summary>
-	///     First end-point of the segment
-	/// </summary>
-	internal EndPoint p1;
+    /// <summary>
+    ///     First end-point of the segment
+    /// </summary>
+    internal EndPoint p1;
 
-	/// <summary>
-	///     Second end-point of the segment
-	/// </summary>
-	internal EndPoint p2;
+    /// <summary>
+    ///     Second end-point of the segment
+    /// </summary>
+    internal EndPoint p2;
 
 
     internal Segment()
@@ -43,6 +43,6 @@ internal class Segment
 
     public override string ToString()
     {
-        return "{" + p1.position.ToString() + ", " + p2.position.ToString() + "}";
+        return "{" + p1.position + ", " + p2.position + "}";
     }
 }

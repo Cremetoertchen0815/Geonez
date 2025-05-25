@@ -5,22 +5,22 @@ namespace Nez.AI.GOAP;
 
 public struct WorldState : IEquatable<WorldState>
 {
-	/// <summary>
-	///     we use a bitmask shifting on the condition index to flip bits
-	/// </summary>
-	public long Values;
+    /// <summary>
+    ///     we use a bitmask shifting on the condition index to flip bits
+    /// </summary>
+    public long Values;
 
-	/// <summary>
-	///     bitmask used to explicitly state false. We need a separate store for negatives because the absense of a value
-	///     doesnt necessarily mean
-	///     it is false.
-	/// </summary>
-	public long DontCare;
+    /// <summary>
+    ///     bitmask used to explicitly state false. We need a separate store for negatives because the absense of a value
+    ///     doesnt necessarily mean
+    ///     it is false.
+    /// </summary>
+    public long DontCare;
 
-	/// <summary>
-	///     required so that we can get the condition index from the string name
-	/// </summary>
-	internal ActionPlanner planner;
+    /// <summary>
+    ///     required so that we can get the condition index from the string name
+    /// </summary>
+    internal ActionPlanner planner;
 
 
     public static WorldState Create(ActionPlanner planner)

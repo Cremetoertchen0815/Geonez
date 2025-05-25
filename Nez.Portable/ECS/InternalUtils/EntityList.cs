@@ -5,28 +5,28 @@ namespace Nez;
 
 public class EntityList
 {
-	/// <summary>
-	///     list of entities added to the scene
-	/// </summary>
-	private readonly FastList<Entity> _entities = new();
+    /// <summary>
+    ///     list of entities added to the scene
+    /// </summary>
+    private readonly FastList<Entity> _entities = new();
 
-	/// <summary>
-	///     tracks entities by tag for easy retrieval
-	/// </summary>
-	private readonly Dictionary<int, FastList<Entity>> _entityDict = new();
+    /// <summary>
+    ///     tracks entities by tag for easy retrieval
+    /// </summary>
+    private readonly Dictionary<int, FastList<Entity>> _entityDict = new();
 
-    private readonly HashSet<int> _unsortedTags = new();
+    private readonly HashSet<int> _unsortedTags = [];
 
     /// <summary>
     ///     The list of entities that were added this frame. Used to group the entities so we can process them simultaneously
     /// </summary>
-    private HashSet<Entity> _entitiesToAdd = new();
+    private HashSet<Entity> _entitiesToAdd = [];
 
     /// <summary>
     ///     The list of entities that were marked for removal this frame. Used to group the entities so we can process them
     ///     simultaneously
     /// </summary>
-    private HashSet<Entity> _entitiesToRemove = new();
+    private HashSet<Entity> _entitiesToRemove = [];
 
     /// <summary>
     ///     flag used to determine if we need to sort our entities this frame
@@ -34,7 +34,7 @@ public class EntityList
     private bool _isEntityListUnsorted;
 
     // used in updateLists to double buffer so that the original lists can be modified elsewhere
-    private HashSet<Entity> _tempEntityList = new();
+    private HashSet<Entity> _tempEntityList = [];
     public Scene Scene;
 
 

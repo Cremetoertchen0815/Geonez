@@ -26,10 +26,10 @@ public class TextTooltip : Tooltip
 
 public class TextTooltipStyle
 {
-	/**
+    /**
      * Optional.
      */
-	public IDrawable Background;
+    public IDrawable Background;
 
     public LabelStyle LabelStyle;
 

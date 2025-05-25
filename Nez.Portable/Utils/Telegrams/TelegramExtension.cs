@@ -26,7 +26,7 @@ public static class TelegramExtension
 
     public static void TeleRegister(this ITelegramReceiver reg, params string[] AdditionalIDs)
     {
-        TelegramService.Register(reg, AdditionalIDs.Concat(new[] { reg.TelegramSender }).ToArray());
+        TelegramService.Register(reg, AdditionalIDs.Concat([reg.TelegramSender]).ToArray());
     }
 
     public static void TeleDeregister(this ITelegramReceiver reg)

@@ -8,8 +8,8 @@ namespace Nez.UI;
 public class Stage
 {
     public static bool Debug;
-    private static readonly Keys[] _emptyKeys = new Keys[0];
-    private readonly List<Element> _inputFocusListeners = new();
+    private static readonly Keys[] _emptyKeys = [];
+    private readonly List<Element> _inputFocusListeners = [];
     private readonly float _keyRepeatTime = 0.2f;
     private readonly Dictionary<int, Element> _touchOverElement = new();
     private readonly Group root;

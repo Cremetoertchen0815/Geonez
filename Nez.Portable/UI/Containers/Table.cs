@@ -1573,7 +1573,7 @@ public class Table : Group
     private void AddDebugRect(float x, float y, float w, float h, Color color)
     {
         if (_debugRects == null)
-            _debugRects = new List<DebugRectangleF>();
+            _debugRects = [];
 
         var rect = new DebugRectangleF(x, y, w, h, color);
         _debugRects.Add(rect);

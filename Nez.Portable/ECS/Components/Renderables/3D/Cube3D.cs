@@ -7,24 +7,24 @@ public class Cube3D : GeometricPrimitive3D
     public Cube3D()
     {
         Vector3[] normals =
-        {
+        [
             new(0, 0, 1),
             new(0, 0, -1),
             new(1, 0, 0),
             new(-1, 0, 0),
             new(0, 1, 0),
             new(0, -1, 0)
-        };
+        ];
 
         Color[] colors =
-        {
+        [
             Color.Red,
             Color.Yellow,
             Color.Blue,
             Color.Violet,
             Color.Green,
             Color.Orange
-        };
+        ];
 
         for (var i = 0; i < normals.Length; i++)
         {

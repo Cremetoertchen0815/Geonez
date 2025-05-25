@@ -12,16 +12,16 @@ namespace Nez;
 
 public class Batcher : GraphicsResource
 {
-	/// <summary>
-	///     Matrix to be used when creating the projection matrix
-	/// </summary>
-	/// <value>The transform matrix.</value>
-	public Matrix TransformMatrix => _transformMatrix;
+    /// <summary>
+    ///     Matrix to be used when creating the projection matrix
+    /// </summary>
+    /// <value>The transform matrix.</value>
+    public Matrix TransformMatrix => _transformMatrix;
 
-	/// <summary>
-	///     If true, destination positions will be rounded before being drawn.
-	/// </summary>
-	public bool ShouldRoundDestinations = true;
+    /// <summary>
+    ///     If true, destination positions will be rounded before being drawn.
+    /// </summary>
+    public bool ShouldRoundDestinations = true;
 
 
     #region variables
@@ -78,8 +78,8 @@ public class Batcher : GraphicsResource
     private const int MAX_INDICES = MAX_SPRITES * 6;
 
     // Used to calculate texture coordinates
-    private static readonly float[] _cornerOffsetX = new[] { 0.0f, 1.0f, 0.0f, 1.0f };
-    private static readonly float[] _cornerOffsetY = new[] { 0.0f, 0.0f, 1.0f, 1.0f };
+    private static readonly float[] _cornerOffsetX = [0.0f, 1.0f, 0.0f, 1.0f];
+    private static readonly float[] _cornerOffsetY = [0.0f, 0.0f, 1.0f, 1.0f];
     private static readonly short[] _indexData = GenerateIndexArray();
 
     #endregion

@@ -82,7 +82,7 @@ namespace Nez
         {
             if (_parameterType == null)
             {
-                (_memberInfo as MethodInfo).Invoke(_target, new object[] { });
+                (_memberInfo as MethodInfo).Invoke(_target, []);
             }
             else
             {

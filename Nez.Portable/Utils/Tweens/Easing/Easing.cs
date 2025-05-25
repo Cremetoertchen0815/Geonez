@@ -52,7 +52,7 @@ public static class Easing
 
         public static float EaseOut(float t, float d)
         {
-            return ((t = t / d - 1) * t * ((1.70158f + 1) * t + 1.70158f) + 1);
+            return (t = t / d - 1) * t * ((1.70158f + 1) * t + 1.70158f) + 1;
         }
 
 
@@ -129,7 +129,7 @@ public static class Easing
 
         public static float EaseOut(float t, float d)
         {
-            return ((t = t / d - 1) * t * t + 1);
+            return (t = t / d - 1) * t * t + 1;
         }
 
 
@@ -209,13 +209,13 @@ public static class Easing
     {
         public static float EaseIn(float t, float d)
         {
-            return (t == 0) ? 0 : Mathf.Pow(2, 10 * (t / d - 1));
+            return t == 0 ? 0 : Mathf.Pow(2, 10 * (t / d - 1));
         }
 
 
         public static float EaseOut(float t, float d)
         {
-            return t == d ? 1 : (-Mathf.Pow(2, -10 * t / d) + 1);
+            return t == d ? 1 : -Mathf.Pow(2, -10 * t / d) + 1;
         }
 
 
@@ -270,7 +270,7 @@ public static class Easing
 
         public static float EaseOut(float t, float d)
         {
-            return ((t = t / d - 1) * t * t * t * t + 1);
+            return (t = t / d - 1) * t * t * t * t + 1;
         }
 
 

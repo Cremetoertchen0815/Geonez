@@ -5,15 +5,15 @@
 /// </summary>
 public class BehaviorTree<T>
 {
-	/// <summary>
-	///     The context should contain all the data needed to run the tree
-	/// </summary>
-	private readonly T _context;
+    /// <summary>
+    ///     The context should contain all the data needed to run the tree
+    /// </summary>
+    private readonly T _context;
 
-	/// <summary>
-	///     root node of the tree
-	/// </summary>
-	private readonly Behavior<T> _root;
+    /// <summary>
+    ///     root node of the tree
+    /// </summary>
+    private readonly Behavior<T> _root;
 
     private float _elapsedTime;
 

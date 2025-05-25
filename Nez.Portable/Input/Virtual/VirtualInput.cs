@@ -9,22 +9,22 @@ public abstract class VirtualInput
 {
     public enum OverlapBehavior
     {
-	    /// <summary>
-	    ///     duplicate input will result in canceling each other out and no input will be recorded. Example: press left arrow
-	    ///     key and while
-	    ///     holding it down press right arrow. This will result in canceling each other out.
-	    /// </summary>
-	    CancelOut,
+        /// <summary>
+        ///     duplicate input will result in canceling each other out and no input will be recorded. Example: press left arrow
+        ///     key and while
+        ///     holding it down press right arrow. This will result in canceling each other out.
+        /// </summary>
+        CancelOut,
 
-	    /// <summary>
-	    ///     the first input found will be used
-	    /// </summary>
-	    TakeOlder,
+        /// <summary>
+        ///     the first input found will be used
+        /// </summary>
+        TakeOlder,
 
-	    /// <summary>
-	    ///     the last input found will be used
-	    /// </summary>
-	    TakeNewer
+        /// <summary>
+        ///     the last input found will be used
+        /// </summary>
+        TakeNewer
     }
 
 

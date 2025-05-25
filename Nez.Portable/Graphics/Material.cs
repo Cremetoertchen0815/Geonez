@@ -25,35 +25,35 @@ public class Material<T> : Material, IDisposable where T : Effect
 
 public class Material : IComparable<Material>, IDisposable
 {
-	/// <summary>
-	///     default Material instance
-	/// </summary>
-	public static Material DefaultMaterial = new();
+    /// <summary>
+    ///     default Material instance
+    /// </summary>
+    public static Material DefaultMaterial = new();
 
-	/// <summary>
-	///     default opaque Material used for PostProcessors
-	/// </summary>
-	public static Material DefaultOpaqueMaterial = new(BlendState.Opaque);
+    /// <summary>
+    ///     default opaque Material used for PostProcessors
+    /// </summary>
+    public static Material DefaultOpaqueMaterial = new(BlendState.Opaque);
 
-	/// <summary>
-	///     BlendState used by the Batcher for the current RenderableComponent
-	/// </summary>
-	public BlendState BlendState = BlendState.AlphaBlend;
+    /// <summary>
+    ///     BlendState used by the Batcher for the current RenderableComponent
+    /// </summary>
+    public BlendState BlendState = BlendState.AlphaBlend;
 
-	/// <summary>
-	///     DepthStencilState used by the Batcher for the current RenderableComponent
-	/// </summary>
-	public DepthStencilState DepthStencilState = DepthStencilState.None;
+    /// <summary>
+    ///     DepthStencilState used by the Batcher for the current RenderableComponent
+    /// </summary>
+    public DepthStencilState DepthStencilState = DepthStencilState.None;
 
-	/// <summary>
-	///     Effect used by the Batcher for the current RenderableComponent
-	/// </summary>
-	public Effect Effect;
+    /// <summary>
+    ///     Effect used by the Batcher for the current RenderableComponent
+    /// </summary>
+    public Effect Effect;
 
-	/// <summary>
-	///     SamplerState used by the Batcher for the current RenderableComponent
-	/// </summary>
-	public SamplerState SamplerState = Core.DefaultSamplerState;
+    /// <summary>
+    ///     SamplerState used by the Batcher for the current RenderableComponent
+    /// </summary>
+    public SamplerState SamplerState = Core.DefaultSamplerState;
 
 
     public Material()

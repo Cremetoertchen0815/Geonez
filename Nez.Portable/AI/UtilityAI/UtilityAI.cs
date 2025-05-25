@@ -2,10 +2,10 @@
 
 public class UtilityAI<T>
 {
-	/// <summary>
-	///     The context should contain all the data needed to run the tree
-	/// </summary>
-	private readonly T _context;
+    /// <summary>
+    ///     The context should contain all the data needed to run the tree
+    /// </summary>
+    private readonly T _context;
 
     private readonly Reasoner<T> _rootReasoner;
     private float _elapsedTime;

@@ -5,12 +5,12 @@ namespace Nez;
 
 public static class RectangleExt
 {
-	/// <summary>
-	///     gets the position of the specified side
-	/// </summary>
-	/// <returns>The side.</returns>
-	/// <param name="edge">Side.</param>
-	public static int GetSide(this Rectangle rect, Edge edge)
+    /// <summary>
+    ///     gets the position of the specified side
+    /// </summary>
+    /// <returns>The side.</returns>
+    /// <param name="edge">Side.</param>
+    public static int GetSide(this Rectangle rect, Edge edge)
     {
         switch (edge)
         {

@@ -8,12 +8,12 @@ namespace Nez.Timers;
 /// </summary>
 public class TimerManager : GlobalManager
 {
-	/// <summary>
-	///     if true, the timer list will be cleared when a new level loads
-	/// </summary>
-	public static bool RemoveAllTimersOnLevelLoad = false;
+    /// <summary>
+    ///     if true, the timer list will be cleared when a new level loads
+    /// </summary>
+    public static bool RemoveAllTimersOnLevelLoad = false;
 
-    private readonly List<Timer> _timers = new();
+    private readonly List<Timer> _timers = [];
     private Action _stalledMethods;
 
     public override void Update()

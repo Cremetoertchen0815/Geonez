@@ -11,14 +11,14 @@ namespace Nez.PhysicsShapes;
 /// </summary>
 public static partial class ShapeCollisions
 {
-	/// <summary>
-	///     swept collision check
-	/// </summary>
-	/// <param name="first">First.</param>
-	/// <param name="second">Second.</param>
-	/// <param name="deltaMovement">Delta movement.</param>
-	/// <param name="hit">Hit.</param>
-	public static bool Collide(Shape first, Shape second, Vector2 deltaMovement, out RaycastHit hit)
+    /// <summary>
+    ///     swept collision check
+    /// </summary>
+    /// <param name="first">First.</param>
+    /// <param name="second">Second.</param>
+    /// <param name="deltaMovement">Delta movement.</param>
+    /// <param name="hit">Hit.</param>
+    public static bool Collide(Shape first, Shape second, Vector2 deltaMovement, out RaycastHit hit)
     {
         hit = new RaycastHit();
         throw new NotImplementedException(
@@ -26,15 +26,15 @@ public static partial class ShapeCollisions
     }
 
 
-	/// <summary>
-	///     checks the result of a box being moved by deltaMovement with second
-	/// </summary>
-	/// <returns><c>true</c>, if to box cast was boxed, <c>false</c> otherwise.</returns>
-	/// <param name="first">First.</param>
-	/// <param name="second">Second.</param>
-	/// <param name="deltaMovement">Delta movement.</param>
-	/// <param name="hit">Hit.</param>
-	public static bool BoxToBoxCast(Box first, Box second, Vector2 movement, out RaycastHit hit)
+    /// <summary>
+    ///     checks the result of a box being moved by deltaMovement with second
+    /// </summary>
+    /// <returns><c>true</c>, if to box cast was boxed, <c>false</c> otherwise.</returns>
+    /// <param name="first">First.</param>
+    /// <param name="second">Second.</param>
+    /// <param name="deltaMovement">Delta movement.</param>
+    /// <param name="hit">Hit.</param>
+    public static bool BoxToBoxCast(Box first, Box second, Vector2 movement, out RaycastHit hit)
     {
         // http://hamaluik.com/posts/swept-aabb-collision-using-minkowski-difference/
         hit = new RaycastHit();
@@ -111,8 +111,8 @@ public static partial class ShapeCollisions
 
     #region Retired Polygon to Polygon
 
-    private static readonly Vector2[] _satAxisArray = new Vector2[0];
-    private static readonly float[] _satTimerPerAxis = new float[0];
+    private static readonly Vector2[] _satAxisArray = [];
+    private static readonly float[] _satTimerPerAxis = [];
 
     [Obsolete]
     public static bool PolygonToPolygonCast(Polygon first, Polygon second, Vector2 deltaMovement,

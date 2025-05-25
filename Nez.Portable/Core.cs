@@ -20,50 +20,50 @@ namespace Nez;
 
 public class Core : Game
 {
-	/// <summary>
-	///     core emitter. emits only Core level events.
-	/// </summary>
-	public static Emitter<CoreEvents> Emitter;
+    /// <summary>
+    ///     core emitter. emits only Core level events.
+    /// </summary>
+    public static Emitter<CoreEvents> Emitter;
 
-	/// <summary>
-	///     enables/disables if we should quit the app when escape is pressed
-	/// </summary>
-	public static bool ExitOnEscapeKeypress = true;
+    /// <summary>
+    ///     enables/disables if we should quit the app when escape is pressed
+    /// </summary>
+    public static bool ExitOnEscapeKeypress = true;
 
-	/// <summary>
-	///     enables/disables pausing when focus is lost. No update or render methods will be called if true when not in focus.
-	/// </summary>
-	public static bool PauseOnFocusLost = true;
+    /// <summary>
+    ///     enables/disables pausing when focus is lost. No update or render methods will be called if true when not in focus.
+    /// </summary>
+    public static bool PauseOnFocusLost = true;
 
-	/// <summary>
-	///     enables/disables debug rendering
-	/// </summary>
-	public static bool DebugRenderEnabled = false;
+    /// <summary>
+    ///     enables/disables debug rendering
+    /// </summary>
+    public static bool DebugRenderEnabled = false;
 
-	/// <summary>
-	///     global access to the graphicsDevice
-	/// </summary>
-	public new static GraphicsDevice GraphicsDevice;
+    /// <summary>
+    ///     global access to the graphicsDevice
+    /// </summary>
+    public new static GraphicsDevice GraphicsDevice;
 
-	/// <summary>
-	///     global content manager for loading any assets that should stick around between scenes
-	/// </summary>
-	public new static NezContentManager Content;
+    /// <summary>
+    ///     global content manager for loading any assets that should stick around between scenes
+    /// </summary>
+    public new static NezContentManager Content;
 
-	/// <summary>
-	///     default SamplerState used by Materials. Note that this must be set at launch! Changing it after that time will
-	///     result in only
-	///     Materials created after it was set having the new SamplerState
-	/// </summary>
-	public static SamplerState DefaultSamplerState = new()
+    /// <summary>
+    ///     default SamplerState used by Materials. Note that this must be set at launch! Changing it after that time will
+    ///     result in only
+    ///     Materials created after it was set having the new SamplerState
+    /// </summary>
+    public static SamplerState DefaultSamplerState = new()
     {
         Filter = TextureFilter.Point
     };
 
-	/// <summary>
-	///     facilitates easy access to the global Con tent instance for internal classes
-	/// </summary>
-	internal static Core _instance;
+    /// <summary>
+    ///     facilitates easy access to the global Con tent instance for internal classes
+    /// </summary>
+    internal static Core _instance;
 
     private readonly CoroutineManager _coroutineManager = new();
 

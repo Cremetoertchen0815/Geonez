@@ -7,15 +7,15 @@ namespace Nez;
 /// </summary>
 public class WaterReflectionMaterial : Material<WaterReflectionEffect>
 {
-	/// <summary>
-	///     cache the array so we dont have to recreate it every frame
-	/// </summary>
-	private readonly RenderTargetBinding[] _renderTargetBinding = new RenderTargetBinding[1];
+    /// <summary>
+    ///     cache the array so we dont have to recreate it every frame
+    /// </summary>
+    private readonly RenderTargetBinding[] _renderTargetBinding = new RenderTargetBinding[1];
 
-	/// <summary>
-	///     we store a reference to the RenderTarget so we can update the Effect when it changes
-	/// </summary>
-	private RenderTarget2D _renderTarget;
+    /// <summary>
+    ///     we store a reference to the RenderTarget so we can update the Effect when it changes
+    /// </summary>
+    private RenderTarget2D _renderTarget;
 
 
     public WaterReflectionMaterial() : base(new WaterReflectionEffect())

@@ -4,18 +4,18 @@ namespace Nez.Verlet;
 
 public class Cloth : Composite
 {
-	/// <summary>
-	///     creates a Cloth. If connectHorizontalParticles is false it will not link horizontal Particles and create a
-	///     hair-like cloth
-	/// </summary>
-	/// <param name="topLeftPosition">Top left position.</param>
-	/// <param name="width">Width.</param>
-	/// <param name="height">Height.</param>
-	/// <param name="segments">Segments.</param>
-	/// <param name="stiffness">Stiffness.</param>
-	/// <param name="tearSensitivity">Tear sensitivity.</param>
-	/// <param name="connectHorizontalParticles">If set to <c>true</c> connect horizontal particles.</param>
-	public Cloth(Vector2 topLeftPosition, float width, float height, int segments = 20, float stiffness = 0.25f,
+    /// <summary>
+    ///     creates a Cloth. If connectHorizontalParticles is false it will not link horizontal Particles and create a
+    ///     hair-like cloth
+    /// </summary>
+    /// <param name="topLeftPosition">Top left position.</param>
+    /// <param name="width">Width.</param>
+    /// <param name="height">Height.</param>
+    /// <param name="segments">Segments.</param>
+    /// <param name="stiffness">Stiffness.</param>
+    /// <param name="tearSensitivity">Tear sensitivity.</param>
+    /// <param name="connectHorizontalParticles">If set to <c>true</c> connect horizontal particles.</param>
+    public Cloth(Vector2 topLeftPosition, float width, float height, int segments = 20, float stiffness = 0.25f,
         float tearSensitivity = 5, bool connectHorizontalParticles = true)
     {
         var xStride = width / segments;

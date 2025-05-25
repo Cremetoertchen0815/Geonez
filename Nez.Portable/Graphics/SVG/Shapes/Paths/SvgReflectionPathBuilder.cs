@@ -13,12 +13,12 @@ namespace Nez.Svg;
 /// </summary>
 public class SvgReflectionPathBuilder : ISvgPathBuilder
 {
-	/// <summary>
-	///     takes in a parsed path and returns a list of points that can be used to draw the path
-	/// </summary>
-	/// <returns>The drawing points.</returns>
-	/// <param name="segments">Segments.</param>
-	public Vector2[] GetDrawingPoints(List<SvgPathSegment> segments, float flatness = 3)
+    /// <summary>
+    ///     takes in a parsed path and returns a list of points that can be used to draw the path
+    /// </summary>
+    /// <returns>The drawing points.</returns>
+    /// <param name="segments">Segments.</param>
+    public Vector2[] GetDrawingPoints(List<SvgPathSegment> segments, float flatness = 3)
     {
         var path = new FauxGraphicsPath();
         for (var j = 0; j < segments.Count; j++)
@@ -73,12 +73,12 @@ public class SvgReflectionPathBuilder : ISvgPathBuilder
         return path.PathPointsAsVectors();
     }
 
-	/// <summary>
-	///     helper to convert a Vector2 into a Point
-	/// </summary>
-	/// <returns>The draw point.</returns>
-	/// <param name="vec">Vec.</param>
-	private static object ToDrawPoint(Vector2 vec)
+    /// <summary>
+    ///     helper to convert a Vector2 into a Point
+    /// </summary>
+    /// <returns>The draw point.</returns>
+    /// <param name="vec">Vec.</param>
+    private static object ToDrawPoint(Vector2 vec)
     {
         var args = new object[] { (int)vec.X, (int)vec.Y };
         return Activator.CreateInstance(Type.GetType("System.Drawing.Point, System.Drawing"), args);

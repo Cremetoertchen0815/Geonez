@@ -19,7 +19,7 @@ public static class ListPool<T>
         cacheCount -= _objectQueue.Count;
         if (cacheCount > 0)
             for (var i = 0; i < cacheCount; i++)
-                _objectQueue.Enqueue(new List<T>());
+                _objectQueue.Enqueue([]);
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public static class ListPool<T>
         if (_objectQueue.Count > 0)
             return _objectQueue.Dequeue();
 
-        return new List<T>();
+        return [];
     }
 
     /// <summary>

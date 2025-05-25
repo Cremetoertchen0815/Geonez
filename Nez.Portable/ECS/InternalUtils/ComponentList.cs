@@ -17,10 +17,10 @@ public class ComponentList
     ///     The list of components that were marked for removal this frame. Used to group the components so we can process them
     ///     simultaneously
     /// </summary>
-    private readonly List<Component> _componentsToRemove = new();
+    private readonly List<Component> _componentsToRemove = [];
 
     private readonly Entity _entity;
-    private readonly List<Component> _tempBufferList = new();
+    private readonly List<Component> _tempBufferList = [];
 
     /// <summary>
     ///     list of all Components that want update called
@@ -31,7 +31,7 @@ public class ComponentList
     ///     The list of components that were added this frame. Used to group the components so we can process them
     ///     simultaneously
     /// </summary>
-    internal List<Component> _componentsToAdd = new();
+    internal List<Component> _componentsToAdd = [];
 
     /// <summary>
     ///     flag used to determine if we need to sort our Components this frame

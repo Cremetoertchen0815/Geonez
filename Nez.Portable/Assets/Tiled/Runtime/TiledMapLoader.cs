@@ -107,7 +107,7 @@ public static class TiledMapLoader
         if (drawOrderValue != null)
             group.DrawOrder = drawOrderDict[drawOrderValue];
 
-        group.Objects = new TmxList<TmxObject>();
+        group.Objects = [];
         foreach (var e in xObjectGroup.Elements("object"))
             group.Objects.Add(new TmxObject().LoadTmxObject(map, e));
 
@@ -254,11 +254,11 @@ public static class TiledMapLoader
 
         group.Properties = ParsePropertyDict(xGroup.Element("properties"));
 
-        group.Layers = new TmxList<ITmxLayer>();
-        group.TileLayers = new TmxList<TmxLayer>();
-        group.ObjectGroups = new TmxList<TmxObjectGroup>();
-        group.ImageLayers = new TmxList<TmxImageLayer>();
-        group.Groups = new TmxList<TmxGroup>();
+        group.Layers = [];
+        group.TileLayers = [];
+        group.ObjectGroups = [];
+        group.ImageLayers = [];
+        group.Groups = [];
 
         ParseLayers(group, xGroup, map, width, height, tmxDirectory);
 
@@ -287,7 +287,7 @@ public static class TiledMapLoader
         var xTerrainType = xTileset.Element("terraintypes");
         if (xTerrainType != null)
         {
-            tileset.Terrains = new TmxList<TmxTerrain>();
+            tileset.Terrains = [];
             foreach (var e in xTerrainType.Elements("terrain"))
                 tileset.Terrains.Add(ParseTmxTerrain(e));
         }
@@ -362,11 +362,11 @@ public static class TiledMapLoader
         if (xImage != null)
             tile.Image = new TmxImage().LoadTmxImage(xImage, tmxDir);
 
-        tile.ObjectGroups = new TmxList<TmxObjectGroup>();
+        tile.ObjectGroups = [];
         foreach (var e in xTile.Elements("objectgroup"))
             tile.ObjectGroups.Add(new TmxObjectGroup().LoadTmxObjectGroup(tileset.Map, e));
 
-        tile.AnimationFrames = new List<TmxAnimationFrame>();
+        tile.AnimationFrames = [];
         if (xTile.Element("animation") != null)
             foreach (var e in xTile.Element("animation").Elements("frame"))
                 tile.AnimationFrames.Add(new TmxAnimationFrame().LoadTmxAnimationFrame(e));
@@ -472,7 +472,7 @@ public static class TiledMapLoader
         map.MaxTileWidth = map.TileWidth;
         map.MaxTileHeight = map.TileHeight;
 
-        map.Tilesets = new TmxList<TmxTileset>();
+        map.Tilesets = [];
         foreach (var e in xMap.Elements("tileset"))
         {
             var tileset = ParseTmxTileset(map, e, map.TmxDirectory);
@@ -481,11 +481,11 @@ public static class TiledMapLoader
             UpdateMaxTileSizes(tileset);
         }
 
-        map.Layers = new TmxList<ITmxLayer>();
-        map.TileLayers = new TmxList<TmxLayer>();
-        map.ObjectGroups = new TmxList<TmxObjectGroup>();
-        map.ImageLayers = new TmxList<TmxImageLayer>();
-        map.Groups = new TmxList<TmxGroup>();
+        map.Layers = [];
+        map.TileLayers = [];
+        map.ObjectGroups = [];
+        map.ImageLayers = [];
+        map.Groups = [];
 
         ParseLayers(map, xMap, map, map.Width, map.Height, map.TmxDirectory);
 

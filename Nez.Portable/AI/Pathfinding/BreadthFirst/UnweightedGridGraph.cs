@@ -10,15 +10,15 @@ namespace Nez.AI.Pathfinding;
 public class UnweightedGridGraph : IUnweightedGraph<Point>
 {
     private static readonly Point[] CARDINAL_DIRS =
-    {
+    [
         new(1, 0),
         new(0, -1),
         new(-1, 0),
         new(0, 1)
-    };
+    ];
 
     private static readonly Point[] COMPASS_DIRS =
-    {
+    [
         new(1, 0),
         new(1, -1),
         new(0, -1),
@@ -27,14 +27,14 @@ public class UnweightedGridGraph : IUnweightedGraph<Point>
         new(-1, 1),
         new(0, 1),
         new(1, 1)
-    };
+    ];
 
     private readonly Point[] _dirs;
     private readonly int _height;
     private readonly List<Point> _neighbors = new(4);
     private readonly int _width;
 
-    public HashSet<Point> Walls = new();
+    public HashSet<Point> Walls = [];
 
 
     public UnweightedGridGraph(int width, int height, bool allowDiagonalSearch = false)

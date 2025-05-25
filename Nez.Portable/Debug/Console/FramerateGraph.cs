@@ -43,7 +43,7 @@ internal class FramerateGraph
     public Vector2 Size = new(1, 1);
     private short[] triangleStripIndices;
 
-    public List<(float, Color)> values = new();
+    public List<(float, Color)> values = [];
 
     private FramerateGraph(Vector2 size, Vector2 position)
     {

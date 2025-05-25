@@ -8,8 +8,8 @@ namespace Nez;
 public static partial class Debug
 {
     public static bool DrawTextFromBottom;
-    private static readonly List<DebugDrawItem> _debugDrawItems = new();
-    private static readonly List<DebugDrawItem> _screenSpaceDebugDrawItems = new();
+    private static readonly List<DebugDrawItem> _debugDrawItems = [];
+    private static readonly List<DebugDrawItem> _screenSpaceDebugDrawItems = [];
 
     [Conditional("TRACE")]
     internal static void Render()

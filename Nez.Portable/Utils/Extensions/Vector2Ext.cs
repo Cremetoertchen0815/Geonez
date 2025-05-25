@@ -5,11 +5,11 @@ namespace Nez;
 
 public static class Vector2Ext
 {
-	/// <summary>
-	///     temporary workaround to Vector2.Normalize screwing up the 0,0 vector
-	/// </summary>
-	/// <param name="vec">Vec.</param>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     temporary workaround to Vector2.Normalize screwing up the 0,0 vector
+    /// </summary>
+    /// <param name="vec">Vec.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Normalize(ref Vector2 vec)
     {
         var magnitude = Mathf.Sqrt(vec.X * vec.X + vec.Y * vec.Y);
@@ -20,11 +20,11 @@ public static class Vector2Ext
     }
 
 
-	/// <summary>
-	///     temporary workaround to Vector2.Normalize screwing up the 0,0 vector
-	/// </summary>
-	/// <param name="vec">Vec.</param>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     temporary workaround to Vector2.Normalize screwing up the 0,0 vector
+    /// </summary>
+    /// <param name="vec">Vec.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 Normalize(Vector2 vec)
     {
         var magnitude = Mathf.Sqrt(vec.X * vec.X + vec.Y * vec.Y);
@@ -37,22 +37,22 @@ public static class Vector2Ext
     }
 
 
-	/// <summary>
-	///     rounds the x and y values
-	/// </summary>
-	/// <param name="vec">Vec.</param>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     rounds the x and y values
+    /// </summary>
+    /// <param name="vec">Vec.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 Round(this Vector2 vec)
     {
         return new Vector2(Mathf.Round(vec.X), Mathf.Round(vec.Y));
     }
 
 
-	/// <summary>
-	///     rounds the x and y values in place
-	/// </summary>
-	/// <param name="vec">Vec.</param>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     rounds the x and y values in place
+    /// </summary>
+    /// <param name="vec">Vec.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Round(ref Vector2 vec)
     {
         vec.X = Mathf.Round(vec.X);

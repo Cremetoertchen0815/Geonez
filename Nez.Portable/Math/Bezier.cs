@@ -9,15 +9,15 @@ namespace Nez.Splines;
 /// </summary>
 public static class Bezier
 {
-	/// <summary>
-	///     evaluate quadratic bezier
-	/// </summary>
-	/// <returns>The point.</returns>
-	/// <param name="p0">P0.</param>
-	/// <param name="p1">P1.</param>
-	/// <param name="p2">P2.</param>
-	/// <param name="t">T.</param>
-	public static Vector2 GetPoint(Vector2 p0, Vector2 p1, Vector2 p2, float t)
+    /// <summary>
+    ///     evaluate quadratic bezier
+    /// </summary>
+    /// <returns>The point.</returns>
+    /// <param name="p0">P0.</param>
+    /// <param name="p1">P1.</param>
+    /// <param name="p2">P2.</param>
+    /// <param name="t">T.</param>
+    public static Vector2 GetPoint(Vector2 p0, Vector2 p1, Vector2 p2, float t)
     {
         t = Mathf.Clamp01(t);
         var oneMinusT = 1f - t;
@@ -27,31 +27,31 @@ public static class Bezier
     }
 
 
-	/// <summary>
-	///     gets the first derivative for a quadratic bezier
-	/// </summary>
-	/// <returns>The first derivative.</returns>
-	/// <param name="p0">P0.</param>
-	/// <param name="p1">P1.</param>
-	/// <param name="p2">P2.</param>
-	/// <param name="t">T.</param>
-	public static Vector2 GetFirstDerivative(Vector2 p0, Vector2 p1, Vector2 p2, float t)
+    /// <summary>
+    ///     gets the first derivative for a quadratic bezier
+    /// </summary>
+    /// <returns>The first derivative.</returns>
+    /// <param name="p0">P0.</param>
+    /// <param name="p1">P1.</param>
+    /// <param name="p2">P2.</param>
+    /// <param name="t">T.</param>
+    public static Vector2 GetFirstDerivative(Vector2 p0, Vector2 p1, Vector2 p2, float t)
     {
         return 2f * (1f - t) * (p1 - p0) +
                2f * t * (p2 - p1);
     }
 
 
-	/// <summary>
-	///     evaluate a cubic bezier
-	/// </summary>
-	/// <returns>The point.</returns>
-	/// <param name="start">P0.</param>
-	/// <param name="firstControlPoint">P1.</param>
-	/// <param name="secondControlPoint">P2.</param>
-	/// <param name="end">P3.</param>
-	/// <param name="t">T.</param>
-	public static Vector2 GetPoint(Vector2 start, Vector2 firstControlPoint, Vector2 secondControlPoint,
+    /// <summary>
+    ///     evaluate a cubic bezier
+    /// </summary>
+    /// <returns>The point.</returns>
+    /// <param name="start">P0.</param>
+    /// <param name="firstControlPoint">P1.</param>
+    /// <param name="secondControlPoint">P2.</param>
+    /// <param name="end">P3.</param>
+    /// <param name="t">T.</param>
+    public static Vector2 GetPoint(Vector2 start, Vector2 firstControlPoint, Vector2 secondControlPoint,
         Vector2 end, float t)
     {
         t = Mathf.Clamp01(t);
@@ -63,16 +63,16 @@ public static class Bezier
     }
 
 
-	/// <summary>
-	///     gets the first derivative for a cubic bezier
-	/// </summary>
-	/// <returns>The first derivative.</returns>
-	/// <param name="start">P0.</param>
-	/// <param name="firstControlPoint">P1.</param>
-	/// <param name="secondControlPoint">P2.</param>
-	/// <param name="end">P3.</param>
-	/// <param name="t">T.</param>
-	public static Vector2 GetFirstDerivative(Vector2 start, Vector2 firstControlPoint, Vector2 secondControlPoint,
+    /// <summary>
+    ///     gets the first derivative for a cubic bezier
+    /// </summary>
+    /// <returns>The first derivative.</returns>
+    /// <param name="start">P0.</param>
+    /// <param name="firstControlPoint">P1.</param>
+    /// <param name="secondControlPoint">P2.</param>
+    /// <param name="end">P3.</param>
+    /// <param name="t">T.</param>
+    public static Vector2 GetFirstDerivative(Vector2 start, Vector2 firstControlPoint, Vector2 secondControlPoint,
         Vector2 end, float t)
     {
         t = Mathf.Clamp01(t);
@@ -83,21 +83,21 @@ public static class Bezier
     }
 
 
-	/// <summary>
-	///     recursively subdivides a bezier curve until distanceTolerance is met. Flat sections will have less points then
-	///     curved with this
-	///     algorithm.
-	///     This image defines the midpoints calculated and makes the variable names sensical:
-	///     http://www.antigrain.com/research/adaptive_bezier/bezier09.gif
-	///     based on http://www.antigrain.com/research/adaptive_bezier/index.html
-	/// </summary>
-	/// <param name="start">Start.</param>
-	/// <param name="firstCtrlPoint">First ctrl point.</param>
-	/// <param name="secondCtrlPoint">Second ctrl point.</param>
-	/// <param name="end">End.</param>
-	/// <param name="points">Points.</param>
-	/// <param name="distanceTolerance">Distance tolerance.</param>
-	private static void RecursiveGetOptimizedDrawingPoints(Vector2 start, Vector2 firstCtrlPoint,
+    /// <summary>
+    ///     recursively subdivides a bezier curve until distanceTolerance is met. Flat sections will have less points then
+    ///     curved with this
+    ///     algorithm.
+    ///     This image defines the midpoints calculated and makes the variable names sensical:
+    ///     http://www.antigrain.com/research/adaptive_bezier/bezier09.gif
+    ///     based on http://www.antigrain.com/research/adaptive_bezier/index.html
+    /// </summary>
+    /// <param name="start">Start.</param>
+    /// <param name="firstCtrlPoint">First ctrl point.</param>
+    /// <param name="secondCtrlPoint">Second ctrl point.</param>
+    /// <param name="end">End.</param>
+    /// <param name="points">Points.</param>
+    /// <param name="distanceTolerance">Distance tolerance.</param>
+    private static void RecursiveGetOptimizedDrawingPoints(Vector2 start, Vector2 firstCtrlPoint,
         Vector2 secondCtrlPoint,
         Vector2 end, List<Vector2> points, float distanceTolerance)
     {
@@ -133,17 +133,17 @@ public static class Bezier
     }
 
 
-	/// <summary>
-	///     recursively subdivides a bezier curve until distanceTolerance is met. Flat sections will have less points then
-	///     curved with this
-	///     algorithm. Returns a pooled list that should be returned to the ListPool when done.
-	/// </summary>
-	/// <param name="start">Start.</param>
-	/// <param name="firstCtrlPoint">First ctrl point.</param>
-	/// <param name="secondCtrlPoint">Second ctrl point.</param>
-	/// <param name="end">End.</param>
-	/// <param name="distanceTolerance">Distance tolerance.</param>
-	public static List<Vector2> GetOptimizedDrawingPoints(Vector2 start, Vector2 firstCtrlPoint,
+    /// <summary>
+    ///     recursively subdivides a bezier curve until distanceTolerance is met. Flat sections will have less points then
+    ///     curved with this
+    ///     algorithm. Returns a pooled list that should be returned to the ListPool when done.
+    /// </summary>
+    /// <param name="start">Start.</param>
+    /// <param name="firstCtrlPoint">First ctrl point.</param>
+    /// <param name="secondCtrlPoint">Second ctrl point.</param>
+    /// <param name="end">End.</param>
+    /// <param name="distanceTolerance">Distance tolerance.</param>
+    public static List<Vector2> GetOptimizedDrawingPoints(Vector2 start, Vector2 firstCtrlPoint,
         Vector2 secondCtrlPoint, Vector2 end,
         float distanceTolerance = 1f)
     {

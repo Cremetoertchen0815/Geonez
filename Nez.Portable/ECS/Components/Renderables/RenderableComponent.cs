@@ -9,14 +9,14 @@ namespace Nez;
 /// </summary>
 public abstract class RenderableComponent : Component, IRenderable, IComparable<RenderableComponent>
 {
-	/// <Docs>To be added.</Docs>
-	/// <para>Returns the sort order of the current instance compared to the specified object.</para>
-	/// <summary>
-	///     sorted first by renderLayer, then layerDepth and finally material
-	/// </summary>
-	/// <returns>The to.</returns>
-	/// <param name="other">Other.</param>
-	public int CompareTo(RenderableComponent other)
+    /// <Docs>To be added.</Docs>
+    /// <para>Returns the sort order of the current instance compared to the specified object.</para>
+    /// <summary>
+    ///     sorted first by renderLayer, then layerDepth and finally material
+    /// </summary>
+    /// <returns>The to.</returns>
+    /// <param name="other">Other.</param>
+    public int CompareTo(RenderableComponent other)
     {
         var res = other.RenderLayer.CompareTo(RenderLayer);
         if (res == 0)

@@ -14,15 +14,15 @@ namespace System.Collections.Generic;
 /// </typeparam>
 public class Deque<T> : IList<T>
 {
-	/// <summary>
-	///     The default capacity of the deque.
-	/// </summary>
-	private const int defaultCapacity = 16;
+    /// <summary>
+    ///     The default capacity of the deque.
+    /// </summary>
+    private const int defaultCapacity = 16;
 
-	/// <summary>
-	///     The circular array holding the items.
-	/// </summary>
-	private T[] buffer;
+    /// <summary>
+    ///     The circular array holding the items.
+    /// </summary>
+    private T[] buffer;
 
     private int capacityClosestPowerOfTwoMinusOne;
 
@@ -686,7 +686,7 @@ public class Deque<T> : IList<T>
             return;
         }
 
-        InsertRange(index, new[] { item });
+        InsertRange(index, [item]);
     }
 
     /// <summary>

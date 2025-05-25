@@ -98,7 +98,7 @@ public static class BatcherDrawingExt
             DrawLine(batcher, position + points[i - 1], position + points[i], color, thickness);
 
         if (closePoly)
-            DrawLine(batcher, position + points[points.Length - 1], position + points[0], color, thickness);
+            DrawLine(batcher, position + points[^1], position + points[0], color, thickness);
         batcher.SetIgnoreRoundingDestinations(false);
     }
 
@@ -115,7 +115,7 @@ public static class BatcherDrawingExt
 
 
         if (closePoly)
-            DrawLine(batcher, position + points[points.Length - 1], position + points[0], color, thickness);
+            DrawLine(batcher, position + points[^1], position + points[0], color, thickness);
         batcher.SetIgnoreRoundingDestinations(false);
     }
 

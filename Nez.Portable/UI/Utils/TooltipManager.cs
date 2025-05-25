@@ -6,7 +6,7 @@ namespace Nez.UI;
 public class TooltipManager
 {
     private static TooltipManager instance;
-    private readonly List<Tooltip> _shownTooltips = new();
+    private readonly List<Tooltip> _shownTooltips = [];
     private Tooltip _shownTooltip;
     private ITimer _showTask, _resetTask;
     private float _time = 2;

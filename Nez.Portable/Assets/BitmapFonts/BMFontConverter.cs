@@ -10,12 +10,12 @@ namespace Nez.BitmapFonts;
 
 public static class BMFontConverter
 {
-	/// <summary>
-	///     Converts a BitmapFont to a SpriteFont
-	/// </summary>
-	/// <param name="filename"></param>
-	/// <returns></returns>
-	public static SpriteFont LoadSpriteFontFromBitmapFont(string filename)
+    /// <summary>
+    ///     Converts a BitmapFont to a SpriteFont
+    /// </summary>
+    /// <param name="filename"></param>
+    /// <returns></returns>
+    public static SpriteFont LoadSpriteFontFromBitmapFont(string filename)
     {
         var fontData = BitmapFontLoader.LoadFontFromFile(filename);
         if (fontData.Pages.Length > 1)
@@ -26,13 +26,13 @@ public static class BMFontConverter
         return LoadSpriteFontFromBitmapFont(fontData, texture);
     }
 
-	/// <summary>
-	///     converts a BitmapFont to a SpriteFont
-	/// </summary>
-	/// <param name="font"></param>
-	/// <param name="texture"></param>
-	/// <returns></returns>
-	public static SpriteFont LoadSpriteFontFromBitmapFont(BitmapFont font, Texture2D texture)
+    /// <summary>
+    ///     converts a BitmapFont to a SpriteFont
+    /// </summary>
+    /// <param name="font"></param>
+    /// <param name="texture"></param>
+    /// <returns></returns>
+    public static SpriteFont LoadSpriteFontFromBitmapFont(BitmapFont font, Texture2D texture)
     {
         var glyphBounds = new List<Rectangle>();
         var cropping = new List<Rectangle>();
@@ -50,11 +50,10 @@ public static class BMFontConverter
         }
 
         var constructorInfo = typeof(SpriteFont).GetTypeInfo().DeclaredConstructors.First();
-        var result = (SpriteFont)constructorInfo.Invoke(new object[]
-        {
-            texture, glyphBounds, cropping,
+        var result = (SpriteFont)constructorInfo.Invoke([
+	        texture, glyphBounds, cropping,
             chars, font.LineHeight, 0, kerning, ' '
-        });
+        ]);
 
         return result;
     }

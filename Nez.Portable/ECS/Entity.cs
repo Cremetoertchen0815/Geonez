@@ -140,7 +140,7 @@ public class Entity : IComparable<Entity>
 
     #region properties and fields
 
-    protected internal List<object> _additionalInspectables = new();
+    protected internal List<object> _additionalInspectables = [];
 
     /// <summary>
     ///     the scene this entity belongs to

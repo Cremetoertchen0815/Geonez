@@ -10,15 +10,15 @@ namespace Nez.Tiled;
 /// </summary>
 public static class TiledRendering
 {
-	/// <summary>
-	///     naively renders every layer present in the tilemap
-	/// </summary>
-	/// <param name="map"></param>
-	/// <param name="batcher"></param>
-	/// <param name="scale"></param>
-	/// <param name="layerDepth"></param>
-	/// <param name="cameraClipBounds"></param>
-	public static void RenderMap(TmxMap map, Batcher batcher, Vector2 position, Vector2 scale, float layerDepth,
+    /// <summary>
+    ///     naively renders every layer present in the tilemap
+    /// </summary>
+    /// <param name="map"></param>
+    /// <param name="batcher"></param>
+    /// <param name="scale"></param>
+    /// <param name="layerDepth"></param>
+    /// <param name="cameraClipBounds"></param>
+    public static void RenderMap(TmxMap map, Batcher batcher, Vector2 position, Vector2 scale, float layerDepth,
         RectangleF cameraClipBounds)
     {
         foreach (var layer in map.Layers)
@@ -32,10 +32,10 @@ public static class TiledRendering
                 RenderObjectGroup(tmxObjGroup, batcher, position, scale, layerDepth);
     }
 
-	/// <summary>
-	///     renders the ITmxLayer by calling through to the concrete type's render method
-	/// </summary>
-	public static void RenderLayer(ITmxLayer layer, Batcher batcher, Vector2 position, Vector2 scale, float layerDepth,
+    /// <summary>
+    ///     renders the ITmxLayer by calling through to the concrete type's render method
+    /// </summary>
+    public static void RenderLayer(ITmxLayer layer, Batcher batcher, Vector2 position, Vector2 scale, float layerDepth,
         RectangleF cameraClipBounds)
     {
         if (layer is TmxLayer tmxLayer && tmxLayer.Visible)
@@ -48,15 +48,15 @@ public static class TiledRendering
             RenderObjectGroup(tmxObjGroup, batcher, position, scale, layerDepth);
     }
 
-	/// <summary>
-	///     renders all tiles with no camera culling performed
-	/// </summary>
-	/// <param name="layer"></param>
-	/// <param name="batcher"></param>
-	/// <param name="position"></param>
-	/// <param name="scale"></param>
-	/// <param name="layerDepth"></param>
-	public static void RenderLayer(TmxLayer layer, Batcher batcher, Vector2 position, Vector2 scale, float layerDepth)
+    /// <summary>
+    ///     renders all tiles with no camera culling performed
+    /// </summary>
+    /// <param name="layer"></param>
+    /// <param name="batcher"></param>
+    /// <param name="position"></param>
+    /// <param name="scale"></param>
+    /// <param name="layerDepth"></param>
+    public static void RenderLayer(TmxLayer layer, Batcher batcher, Vector2 position, Vector2 scale, float layerDepth)
     {
         if (!layer.Visible)
             return;
@@ -77,16 +77,16 @@ public static class TiledRendering
         }
     }
 
-	/// <summary>
-	///     renders all tiles that are inside <paramref name="cameraClipBounds" />
-	/// </summary>
-	/// <param name="layer"></param>
-	/// <param name="batcher"></param>
-	/// <param name="position"></param>
-	/// <param name="scale"></param>
-	/// <param name="layerDepth"></param>
-	/// <param name="cameraClipBounds"></param>
-	public static void RenderLayer(TmxLayer layer, Batcher batcher, Vector2 position, Vector2 scale, float layerDepth,
+    /// <summary>
+    ///     renders all tiles that are inside <paramref name="cameraClipBounds" />
+    /// </summary>
+    /// <param name="layer"></param>
+    /// <param name="batcher"></param>
+    /// <param name="position"></param>
+    /// <param name="scale"></param>
+    /// <param name="layerDepth"></param>
+    /// <param name="cameraClipBounds"></param>
+    public static void RenderLayer(TmxLayer layer, Batcher batcher, Vector2 position, Vector2 scale, float layerDepth,
         RectangleF cameraClipBounds)
     {
         if (!layer.Visible)

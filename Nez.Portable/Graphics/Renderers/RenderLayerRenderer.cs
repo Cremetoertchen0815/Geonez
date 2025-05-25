@@ -9,10 +9,10 @@ namespace Nez;
 /// </summary>
 public class RenderLayerRenderer : Renderer
 {
-	/// <summary>
-	///     the renderLayers this Renderer will render
-	/// </summary>
-	public int[] RenderLayers;
+    /// <summary>
+    ///     the renderLayers this Renderer will render
+    /// </summary>
+    public int[] RenderLayers;
 
 
     public RenderLayerRenderer(int renderOrder, params int[] renderLayers) : base(renderOrder, null)

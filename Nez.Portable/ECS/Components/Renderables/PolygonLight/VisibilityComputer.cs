@@ -314,9 +314,9 @@ public class VisibilityComputer
 
         // add the two outer edges of the polygon but lerp them a bit so they dont start at the origin
         var first = Vector2.Lerp(_origin, _origin + points[1], 0.1f);
-        var second = Vector2.Lerp(_origin, _origin + points[points.Length - 1], 0.1f);
+        var second = Vector2.Lerp(_origin, _origin + points[^1], 0.1f);
         AddSegment(first, _origin + points[1]);
-        AddSegment(second, _origin + points[points.Length - 1]);
+        AddSegment(second, _origin + points[^1]);
 
         LoadRectangleBoundaries();
     }

@@ -28,7 +28,7 @@ internal static class TelegramService
             if (receivers.ContainsKey(ID))
                 receivers[ID].Add(reg);
             else
-                receivers.Add(ID, new List<ITelegramReceiver> { reg });
+                receivers.Add(ID, [reg]);
     }
 
     public static void Deregister(ITelegramReceiver reg)

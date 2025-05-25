@@ -4,24 +4,24 @@ namespace Nez.PhysicsShapes;
 
 public abstract class Shape
 {
-	/// <summary>
-	///     cached bounds for the Shape
-	/// </summary>
-	internal RectangleF bounds;
+    /// <summary>
+    ///     cached bounds for the Shape
+    /// </summary>
+    internal RectangleF bounds;
 
-	/// <summary>
-	///     center is kind of a misnomer. This value isnt necessarily the center of an object. It is more accurately the
-	///     Collider.localOffset
-	///     with any Transform rotations applied
-	/// </summary>
-	internal Vector2 center;
+    /// <summary>
+    ///     center is kind of a misnomer. This value isnt necessarily the center of an object. It is more accurately the
+    ///     Collider.localOffset
+    ///     with any Transform rotations applied
+    /// </summary>
+    internal Vector2 center;
 
-	/// <summary>
-	///     having a separate position field lets us alter the position of the shape for collisions checks as opposed to having
-	///     to change the
-	///     Entity.position which triggers collider/bounds/hash updates.
-	/// </summary>
-	internal Vector2 position;
+    /// <summary>
+    ///     having a separate position field lets us alter the position of the shape for collisions checks as opposed to having
+    ///     to change the
+    ///     Entity.position which triggers collider/bounds/hash updates.
+    /// </summary>
+    internal Vector2 position;
 
 
     internal abstract void RecalculateBounds(Collider collider);

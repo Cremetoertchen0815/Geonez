@@ -37,7 +37,7 @@ public class PropertyDict : Dictionary<string, string>
 
     public Telegram FetchTelegram(string index, Telegram errVal = default)
     {
-        return ContainsKey(index) ? (Telegram.Deserialize(base[index]) ?? errVal) : errVal;
+        return ContainsKey(index) ? Telegram.Deserialize(base[index]) ?? errVal : errVal;
     }
 
 

@@ -8,10 +8,10 @@ namespace Nez.Particles;
 /// </summary>
 public class Particle
 {
-	/// <summary>
-	///     shared Circle used for collisions checks
-	/// </summary>
-	private static readonly Circle _circleCollisionShape = new(0);
+    /// <summary>
+    ///     shared Circle used for collisions checks
+    /// </summary>
+    private static readonly Circle _circleCollisionShape = new(0);
 
     private float _angle;
 

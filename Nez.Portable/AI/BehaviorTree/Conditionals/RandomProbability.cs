@@ -7,10 +7,10 @@
 /// </summary>
 public class RandomProbability<T> : Behavior<T>, IConditional<T>
 {
-	/// <summary>
-	///     The chance that the task will return success
-	/// </summary>
-	private readonly int _successProbability;
+    /// <summary>
+    ///     The chance that the task will return success
+    /// </summary>
+    private readonly int _successProbability;
 
 
     public RandomProbability(int successProbability)

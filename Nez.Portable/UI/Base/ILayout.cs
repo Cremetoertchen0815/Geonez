@@ -5,24 +5,24 @@
 /// </summary>
 internal interface ILayout
 {
-	/// <summary>
-	///     If true, this element will be sized to the parent in {@link #validate()}. If the parent is the stage, the element
-	///     will be sized
-	///     to the stage. This method is for convenience only when the widget's parent does not set the size of its children
-	///     (such as
-	///     the stage).
-	/// </summary>
-	/// <value><c>true</c> if fill parent; otherwise, <c>false</c>.</value>
-	bool FillParent { get; set; }
+    /// <summary>
+    ///     If true, this element will be sized to the parent in {@link #validate()}. If the parent is the stage, the element
+    ///     will be sized
+    ///     to the stage. This method is for convenience only when the widget's parent does not set the size of its children
+    ///     (such as
+    ///     the stage).
+    /// </summary>
+    /// <value><c>true</c> if fill parent; otherwise, <c>false</c>.</value>
+    bool FillParent { get; set; }
 
-	/// <summary>
-	///     Enables or disables the layout for this element and all child elements, recursively. When false, {@link
-	///     #validate()} will not
-	///     cause a layout to occur. This can be useful when an element will be manipulated externally, such as with actions.
-	///     Default is true.
-	/// </summary>
-	/// <value><c>true</c> if layout enabled; otherwise, <c>false</c>.</value>
-	bool LayoutEnabled { get; set; }
+    /// <summary>
+    ///     Enables or disables the layout for this element and all child elements, recursively. When false, {@link
+    ///     #validate()} will not
+    ///     cause a layout to occur. This can be useful when an element will be manipulated externally, such as with actions.
+    ///     Default is true.
+    /// </summary>
+    /// <value><c>true</c> if layout enabled; otherwise, <c>false</c>.</value>
+    bool LayoutEnabled { get; set; }
 
     float MinWidth { get; }
 

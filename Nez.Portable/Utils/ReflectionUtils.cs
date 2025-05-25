@@ -162,7 +162,7 @@ public static class ReflectionUtils
     {
         var propInfo = GetPropertyInfo(targetObject, propertyName);
         var methodInfo = GetPropertyGetter(propInfo);
-        return methodInfo.Invoke(targetObject, new object[] { });
+        return methodInfo.Invoke(targetObject, []);
     }
 
     /// <summary>

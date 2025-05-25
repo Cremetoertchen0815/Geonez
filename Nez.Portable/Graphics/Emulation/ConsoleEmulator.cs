@@ -59,12 +59,12 @@ public class ConsoleEmulator : RenderableComponent, IUpdatable
         font = new NezSpriteFont(Core.Content.Load<SpriteFont>("font/ConsoleFont"));
 
         //Load default color Palette
-        colorPalette = new[]
-        {
+        colorPalette =
+        [
             Color.Black, Color.DarkBlue, Color.DarkGreen, Color.DarkCyan, Color.DarkRed, Color.DarkMagenta,
             Color.DarkOrange, Color.Gray, Color.DarkGray, Color.Blue, Color.Green, Color.Cyan, Color.Red, Color.Magenta,
             Color.Yellow, Color.White
-        };
+        ];
     }
     //public override void OnRemovedFromEntity() => gameThread.Suspend();
 

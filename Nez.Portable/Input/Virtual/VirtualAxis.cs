@@ -8,7 +8,7 @@ namespace Nez;
 /// </summary>
 public class VirtualAxis : VirtualInput
 {
-    public List<Node> Nodes = new();
+    public List<Node> Nodes = [];
 
 
     public VirtualAxis()

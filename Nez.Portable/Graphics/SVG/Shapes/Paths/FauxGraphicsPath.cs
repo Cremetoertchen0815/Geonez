@@ -54,28 +54,28 @@ public class FauxGraphicsPath
     public void StartFigure()
     {
         var method = ReflectionUtils.GetMethodInfo(_graphicsPath, "StartFigure");
-        method.Invoke(_graphicsPath, new object[0]);
+        method.Invoke(_graphicsPath, []);
     }
 
 
     public void CloseFigure()
     {
         var method = ReflectionUtils.GetMethodInfo(_graphicsPath, "CloseFigure");
-        method.Invoke(_graphicsPath, new object[0]);
+        method.Invoke(_graphicsPath, []);
     }
 
 
     public void AddBezier(object first, object second, object third, object fourth)
     {
         var method = ReflectionUtils.GetMethodInfo(_graphicsPath, "AddBezier");
-        method.Invoke(_graphicsPath, new[] { first, second, third, fourth });
+        method.Invoke(_graphicsPath, [first, second, third, fourth]);
     }
 
 
     public void AddLine(object first, object second)
     {
         var method = ReflectionUtils.GetMethodInfo(_graphicsPath, "AddLine");
-        method.Invoke(_graphicsPath, new[] { first, second });
+        method.Invoke(_graphicsPath, [first, second]);
     }
 
 
@@ -83,7 +83,7 @@ public class FauxGraphicsPath
     {
         var paramTypes = new[] { matrix.GetType(), flatness.GetType() };
         var method = ReflectionUtils.GetMethodInfo(_graphicsPath, "Flatten", paramTypes);
-        method.Invoke(_graphicsPath, new[] { matrix, flatness });
+        method.Invoke(_graphicsPath, [matrix, flatness]);
     }
 
 
@@ -91,7 +91,7 @@ public class FauxGraphicsPath
     {
         var pathPoints = PathPoints;
         if (pathPoints.Length == 0)
-            return new Vector2[0];
+            return [];
 
         var pts = new Vector2[pathPoints.Length];
         var getX = ReflectionUtils.GetPropertyInfo(pathPoints.GetValue(0), "X");

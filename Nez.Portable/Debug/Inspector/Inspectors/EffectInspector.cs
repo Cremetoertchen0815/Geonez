@@ -10,7 +10,7 @@ namespace Nez
 {
     public class EffectInspector : Inspector
     {
-        private readonly List<Inspector> _inspectors = new();
+        private readonly List<Inspector> _inspectors = [];
 
 
         public override void Initialize(Table table, Skin skin, float leftCellWidth)

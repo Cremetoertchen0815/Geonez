@@ -8,7 +8,7 @@ namespace Nez.AI.UtilityAI;
 /// </summary>
 public abstract class ActionWithOptions<T, U> : IAction<T>
 {
-    protected List<IActionOptionAppraisal<T, U>> _appraisals = new();
+    protected List<IActionOptionAppraisal<T, U>> _appraisals = [];
 
     public abstract void Execute(T context);
 

@@ -10,12 +10,12 @@
 /// </summary>
 public abstract class AbstractTweenable : ITweenable
 {
-	/// <summary>
-	///     AbstractTweenable are often kept around after they complete. This flag lets them know internally if they are
-	///     currently
-	///     being tweened by TweenManager so that they can re-add themselves if necessary.
-	/// </summary>
-	protected bool _isCurrentlyManagedByTweenManager;
+    /// <summary>
+    ///     AbstractTweenable are often kept around after they complete. This flag lets them know internally if they are
+    ///     currently
+    ///     being tweened by TweenManager so that they can re-add themselves if necessary.
+    /// </summary>
+    protected bool _isCurrentlyManagedByTweenManager;
 
     protected bool _isPaused;
 

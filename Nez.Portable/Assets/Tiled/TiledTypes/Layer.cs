@@ -4,10 +4,10 @@ namespace Nez.Tiled;
 
 public partial class TmxLayer : ITmxLayer
 {
-	/// <summary>
-	///     height in tiles for this layer. Always the same as the map height for fixed-size maps.
-	/// </summary>
-	public int Height;
+    /// <summary>
+    ///     height in tiles for this layer. Always the same as the map height for fixed-size maps.
+    /// </summary>
+    public int Height;
 
     public TmxMap Map;
     public TmxLayerTile[] Tiles;

@@ -5,10 +5,10 @@ namespace Nez.DeferredLighting;
 
 public class SpotLight : PointLight
 {
-	/// <summary>
-	///     angle in degrees of the cone
-	/// </summary>
-	public float ConeAngle = 90f;
+    /// <summary>
+    ///     angle in degrees of the cone
+    /// </summary>
+    public float ConeAngle = 90f;
 
 
     public SpotLight()

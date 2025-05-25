@@ -10,17 +10,17 @@ namespace Nez.BitmapFonts;
 /// </summary>
 public static class BitmapFontLoader
 {
-	/// <summary>
-	///     Loads a bitmap font from a file, attempting nto auto detect the file type
-	/// </summary>
-	/// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-	/// <exception cref="FileNotFoundException">Thrown when the requested file is not present.</exception>
-	/// <exception cref="InvalidDataException">Thrown when an Invalid Data error condition occurs.</exception>
-	/// <param name="filename">Name of the file to load.</param>
-	/// <returns>
-	///     A <see cref="BitmapFont" /> containing the loaded data.
-	/// </returns>
-	public static BitmapFont LoadFontFromFile(string filename, bool premultiplyAlpha = false)
+    /// <summary>
+    ///     Loads a bitmap font from a file, attempting nto auto detect the file type
+    /// </summary>
+    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+    /// <exception cref="FileNotFoundException">Thrown when the requested file is not present.</exception>
+    /// <exception cref="InvalidDataException">Thrown when an Invalid Data error condition occurs.</exception>
+    /// <param name="filename">Name of the file to load.</param>
+    /// <returns>
+    ///     A <see cref="BitmapFont" /> containing the loaded data.
+    /// </returns>
+    public static BitmapFont LoadFontFromFile(string filename, bool premultiplyAlpha = false)
     {
         using (var file = TitleContainer.OpenStream(filename))
         {
@@ -36,16 +36,16 @@ public static class BitmapFontLoader
         }
     }
 
-	/// <summary>
-	///     Loads a bitmap font from a file containing font data in text format.
-	/// </summary>
-	/// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-	/// <exception cref="FileNotFoundException">Thrown when the requested file is not present.</exception>
-	/// <param name="filename">Name of the file to load.</param>
-	/// <returns>
-	///     A <see cref="BitmapFont" /> containing the loaded data.
-	/// </returns>
-	public static BitmapFont LoadFontFromTextFile(string filename, bool premultiplyAlpha = false)
+    /// <summary>
+    ///     Loads a bitmap font from a file containing font data in text format.
+    /// </summary>
+    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+    /// <exception cref="FileNotFoundException">Thrown when the requested file is not present.</exception>
+    /// <param name="filename">Name of the file to load.</param>
+    /// <returns>
+    ///     A <see cref="BitmapFont" /> containing the loaded data.
+    /// </returns>
+    public static BitmapFont LoadFontFromTextFile(string filename, bool premultiplyAlpha = false)
     {
         var font = new BitmapFont();
         using (var stream = TitleContainer.OpenStream(filename))
@@ -59,16 +59,16 @@ public static class BitmapFontLoader
         return font;
     }
 
-	/// <summary>
-	///     Loads a bitmap font from a file containing font data in XML format.
-	/// </summary>
-	/// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-	/// <exception cref="FileNotFoundException">Thrown when the requested file is not present.</exception>
-	/// <param name="filename">Name of the file to load.</param>
-	/// <returns>
-	///     A <see cref="BitmapFont" /> containing the loaded data.
-	/// </returns>
-	public static BitmapFont LoadFontFromXmlFile(string filename, bool premultiplyAlpha = false)
+    /// <summary>
+    ///     Loads a bitmap font from a file containing font data in XML format.
+    /// </summary>
+    /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+    /// <exception cref="FileNotFoundException">Thrown when the requested file is not present.</exception>
+    /// <param name="filename">Name of the file to load.</param>
+    /// <returns>
+    ///     A <see cref="BitmapFont" /> containing the loaded data.
+    /// </returns>
+    public static BitmapFont LoadFontFromXmlFile(string filename, bool premultiplyAlpha = false)
     {
         var font = new BitmapFont();
         using (var stream = TitleContainer.OpenStream(filename))
@@ -82,14 +82,14 @@ public static class BitmapFontLoader
         return font;
     }
 
-	/// <summary>
-	///     Returns a boolean from an array of name/value pairs.
-	/// </summary>
-	/// <param name="parts">The array of parts.</param>
-	/// <param name="name">The name of the value to return.</param>
-	/// <param name="defaultValue">Default value(if the key doesnt exist or can't be parsed)</param>
-	/// <returns></returns>
-	internal static bool GetNamedBool(string[] parts, string name, bool defaultValue = false)
+    /// <summary>
+    ///     Returns a boolean from an array of name/value pairs.
+    /// </summary>
+    /// <param name="parts">The array of parts.</param>
+    /// <param name="name">The name of the value to return.</param>
+    /// <param name="defaultValue">Default value(if the key doesnt exist or can't be parsed)</param>
+    /// <returns></returns>
+    internal static bool GetNamedBool(string[] parts, string name, bool defaultValue = false)
     {
         var s = GetNamedString(parts, name);
         if (int.TryParse(s, out var v))
@@ -98,14 +98,14 @@ public static class BitmapFontLoader
         return defaultValue;
     }
 
-	/// <summary>
-	///     Returns an integer from an array of name/value pairs.
-	/// </summary>
-	/// <param name="parts">The array of parts.</param>
-	/// <param name="name">The name of the value to return.</param>
-	/// <param name="defaultValue">Default value(if the key doesnt exist or can't be parsed)</param>
-	/// <returns></returns>
-	internal static int GetNamedInt(string[] parts, string name, int defaultValue = 0)
+    /// <summary>
+    ///     Returns an integer from an array of name/value pairs.
+    /// </summary>
+    /// <param name="parts">The array of parts.</param>
+    /// <param name="name">The name of the value to return.</param>
+    /// <param name="defaultValue">Default value(if the key doesnt exist or can't be parsed)</param>
+    /// <returns></returns>
+    internal static int GetNamedInt(string[] parts, string name, int defaultValue = 0)
     {
         var s = GetNamedString(parts, name);
         if (!int.TryParse(s, out var result))
@@ -114,13 +114,13 @@ public static class BitmapFontLoader
         return result;
     }
 
-	/// <summary>
-	///     Returns a string from an array of name/value pairs.
-	/// </summary>
-	/// <param name="parts">The array of parts.</param>
-	/// <param name="name">The name of the value to return.</param>
-	/// <returns></returns>
-	internal static string GetNamedString(string[] parts, string name)
+    /// <summary>
+    ///     Returns a string from an array of name/value pairs.
+    /// </summary>
+    /// <param name="parts">The array of parts.</param>
+    /// <param name="name">The name of the value to return.</param>
+    /// <returns></returns>
+    internal static string GetNamedString(string[] parts, string name)
     {
         var result = string.Empty;
         foreach (var part in parts)
@@ -146,12 +146,12 @@ public static class BitmapFontLoader
         return result;
     }
 
-	/// <summary>
-	///     Creates a Padding object from a string representation
-	/// </summary>
-	/// <param name="s">The string.</param>
-	/// <returns></returns>
-	internal static Padding ParsePadding(string s)
+    /// <summary>
+    ///     Creates a Padding object from a string representation
+    /// </summary>
+    /// <param name="s">The string.</param>
+    /// <returns></returns>
+    internal static Padding ParsePadding(string s)
     {
         var parts = s.Split(',');
         return new Padding
@@ -163,12 +163,12 @@ public static class BitmapFontLoader
         };
     }
 
-	/// <summary>
-	///     Creates a Point object from a string representation
-	/// </summary>
-	/// <param name="s">The string.</param>
-	/// <returns></returns>
-	internal static Point ParseInt2(string s)
+    /// <summary>
+    ///     Creates a Point object from a string representation
+    /// </summary>
+    /// <param name="s">The string.</param>
+    /// <returns></returns>
+    internal static Point ParseInt2(string s)
     {
         var parts = s.Split(',');
         return new Point
@@ -178,12 +178,12 @@ public static class BitmapFontLoader
         };
     }
 
-	/// <summary>
-	///     Updates <see cref="Page" /> data with a fully qualified path
-	/// </summary>
-	/// <param name="font">The <see cref="BitmapFont" /> to update.</param>
-	/// <param name="resourcePath">The path where texture resources are located.</param>
-	internal static void QualifyResourcePaths(BitmapFont font, string resourcePath)
+    /// <summary>
+    ///     Updates <see cref="Page" /> data with a fully qualified path
+    /// </summary>
+    /// <param name="font">The <see cref="BitmapFont" /> to update.</param>
+    /// <param name="resourcePath">The path where texture resources are located.</param>
+    internal static void QualifyResourcePaths(BitmapFont font, string resourcePath)
     {
         var pages = font.Pages;
         for (var i = 0; i < pages.Length; i++)
@@ -196,14 +196,14 @@ public static class BitmapFontLoader
         font.Pages = pages;
     }
 
-	/// <summary>
-	///     Splits the specified string using a given delimiter, ignoring any instances of the delimiter as part of a quoted
-	///     string.
-	/// </summary>
-	/// <param name="s">The string to split.</param>
-	/// <param name="delimiter">The delimiter.</param>
-	/// <returns></returns>
-	internal static string[] Split(string s, char delimiter)
+    /// <summary>
+    ///     Splits the specified string using a given delimiter, ignoring any instances of the delimiter as part of a quoted
+    ///     string.
+    /// </summary>
+    /// <param name="s">The string to split.</param>
+    /// <param name="delimiter">The delimiter.</param>
+    /// <returns></returns>
+    internal static string[] Split(string s, char delimiter)
     {
         if (s.IndexOf('"') != -1)
         {
@@ -236,13 +236,13 @@ public static class BitmapFontLoader
         return s.Split(new[] { delimiter }, StringSplitOptions.RemoveEmptyEntries);
     }
 
-	/// <summary>
-	///     Converts the given collection into an array
-	/// </summary>
-	/// <typeparam name="T">Type of the items in the array</typeparam>
-	/// <param name="values">The values.</param>
-	/// <returns></returns>
-	internal static T[] ToArray<T>(ICollection<T> values)
+    /// <summary>
+    ///     Converts the given collection into an array
+    /// </summary>
+    /// <typeparam name="T">Type of the items in the array</typeparam>
+    /// <param name="values">The values.</param>
+    /// <returns></returns>
+    internal static T[] ToArray<T>(ICollection<T> values)
     {
         var result = new T[values.Count];
         values.CopyTo(result, 0);

@@ -4,12 +4,12 @@ namespace Nez;
 
 public class CircleCollider : Collider
 {
-	/// <summary>
-	///     zero param constructor requires that a RenderableComponent be on the entity so that the collider can size itself
-	///     when the
-	///     entity is added to the scene.
-	/// </summary>
-	public CircleCollider()
+    /// <summary>
+    ///     zero param constructor requires that a RenderableComponent be on the entity so that the collider can size itself
+    ///     when the
+    ///     entity is added to the scene.
+    /// </summary>
+    public CircleCollider()
     {
         // we stick a 1px circle in here as a placeholder until the next frame when the Collider is added to the Entity and can get more
         // accurate auto-sizing data
@@ -18,19 +18,19 @@ public class CircleCollider : Collider
     }
 
 
-	/// <summary>
-	///     creates a CircleCollider with radius. Note that when specifying a radius if using a RenderableComponent on the
-	///     Entity as well you
-	///     will need to set the origin to align the CircleCollider. For example, if the RenderableComponent has a 0,0 origin
-	///     and a CircleCollider
-	///     with a radius of 1.5f * renderable.width is created you can offset the origin by just setting the originNormalied
-	///     to the center
-	///     divided by the scaled size:
-	///     entity.collider = new CircleCollider( moonTexture.Width * 1.5f );
-	///     entity.collider.originNormalized = Vector2Extension.halfVector() / 1.5f;
-	/// </summary>
-	/// <param name="radius">Radius.</param>
-	public CircleCollider(float radius)
+    /// <summary>
+    ///     creates a CircleCollider with radius. Note that when specifying a radius if using a RenderableComponent on the
+    ///     Entity as well you
+    ///     will need to set the origin to align the CircleCollider. For example, if the RenderableComponent has a 0,0 origin
+    ///     and a CircleCollider
+    ///     with a radius of 1.5f * renderable.width is created you can offset the origin by just setting the originNormalied
+    ///     to the center
+    ///     divided by the scaled size:
+    ///     entity.collider = new CircleCollider( moonTexture.Width * 1.5f );
+    ///     entity.collider.originNormalized = Vector2Extension.halfVector() / 1.5f;
+    /// </summary>
+    /// <param name="radius">Radius.</param>
+    public CircleCollider(float radius)
     {
         Shape = new Circle(radius);
     }

@@ -6,13 +6,13 @@ namespace Nez.Textures;
 
 public class GaussianBlur
 {
-	/// <summary>
-	///     creates a new texture that is a gaussian blurred version of the original
-	/// </summary>
-	/// <returns>The blurred texture.</returns>
-	/// <param name="image">Image.</param>
-	/// <param name="deviation">Deviation.</param>
-	public static Texture2D CreateBlurredTexture(Texture2D image, double deviation = 1)
+    /// <summary>
+    ///     creates a new texture that is a gaussian blurred version of the original
+    /// </summary>
+    /// <returns>The blurred texture.</returns>
+    /// <param name="image">Image.</param>
+    /// <param name="deviation">Deviation.</param>
+    public static Texture2D CreateBlurredTexture(Texture2D image, double deviation = 1)
     {
         var resultTex = new Texture2D(Core.GraphicsDevice, image.Width, image.Height, false, SurfaceFormat.Color);
         var srcData = new Color[image.Width * image.Height];

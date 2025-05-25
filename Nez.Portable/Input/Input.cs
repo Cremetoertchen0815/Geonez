@@ -125,34 +125,34 @@ public static class Input
 		private static bool IsGameplayDisabled => Console.DebugConsole.Instance.IsOpen;
 #endif
 
-	/// <summary>
-	///     this takes into account the SceneResolutionPolicy and returns the value scaled to the RenderTargets coordinates
-	/// </summary>
-	/// <value>The scaled position.</value>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    ///     this takes into account the SceneResolutionPolicy and returns the value scaled to the RenderTargets coordinates
+    /// </summary>
+    /// <value>The scaled position.</value>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 ScaledPosition(Vector2 position)
     {
         var scaledPos = new Vector2(position.X - _resolutionOffset.X, position.Y - _resolutionOffset.Y);
         return scaledPos * _resolutionScale;
     }
 
-	/// <summary>
-	///     to be used with great care! This lets you override the current MouseState. This is useful
-	///     when the Nez render is embedded in a larger window so that mouse coordinates can be translated
-	///     to Nez space from the outer window coordinates and for simulating mouse input.
-	/// </summary>
-	/// <param name="state"></param>
-	public static void SetCurrentMouseState(MouseState state)
+    /// <summary>
+    ///     to be used with great care! This lets you override the current MouseState. This is useful
+    ///     when the Nez render is embedded in a larger window so that mouse coordinates can be translated
+    ///     to Nez space from the outer window coordinates and for simulating mouse input.
+    /// </summary>
+    /// <param name="state"></param>
+    public static void SetCurrentMouseState(MouseState state)
     {
         _currentMouseState = state;
     }
 
 
-	/// <summary>
-	///     useful for simulating keyboard input
-	/// </summary>
-	/// <param name="state">State.</param>
-	public static void SetCurrentKeyboardState(KeyboardState state)
+    /// <summary>
+    ///     useful for simulating keyboard input
+    /// </summary>
+    /// <param name="state">State.</param>
+    public static void SetCurrentKeyboardState(KeyboardState state)
     {
         _currentKbState = state;
     }

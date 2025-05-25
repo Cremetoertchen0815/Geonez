@@ -441,20 +441,20 @@ public class SelectBox<T> : Element, IInputListener where T : class
 
 public class SelectBoxStyle
 {
-	/**
+    /**
      * Optional
      */
-	public IDrawable Background;
+    public IDrawable Background;
 
-	/**
+    /**
      * Optional
      */
-	public IDrawable BackgroundOver, BackgroundOpen, BackgroundDisabled;
+    public IDrawable BackgroundOver, BackgroundOpen, BackgroundDisabled;
 
-	/**
+    /**
      * Optional
      */
-	public Color DisabledFontColor;
+    public Color DisabledFontColor;
 
     public BitmapFont Font;
 

@@ -5,27 +5,27 @@
 /// </summary>
 public interface ICoroutine
 {
-	/// <summary>
-	///     stops the Coroutine
-	/// </summary>
-	void Stop();
+    /// <summary>
+    ///     stops the Coroutine
+    /// </summary>
+    void Stop();
 
-	/// <summary>
-	///     sets whether the Coroutine should use deltaTime or unscaledDeltaTime for timing
-	/// </summary>
-	/// <returns>The use unscaled delta time.</returns>
-	/// <param name="useUnscaledDeltaTime">If set to <c>true</c> use unscaled delta time.</param>
-	ICoroutine SetUseUnscaledDeltaTime(bool useUnscaledDeltaTime);
+    /// <summary>
+    ///     sets whether the Coroutine should use deltaTime or unscaledDeltaTime for timing
+    /// </summary>
+    /// <returns>The use unscaled delta time.</returns>
+    /// <param name="useUnscaledDeltaTime">If set to <c>true</c> use unscaled delta time.</param>
+    ICoroutine SetUseUnscaledDeltaTime(bool useUnscaledDeltaTime);
 }
 
 public static class Coroutine
 {
-	/// <summary>
-	///     causes a Coroutine to pause for the specified duration. Yield on Coroutine.waitForSeconds in a coroutine to use.
-	/// </summary>
-	/// <returns>The for seconds.</returns>
-	/// <param name="seconds">Seconds.</param>
-	public static object WaitForSeconds(float seconds)
+    /// <summary>
+    ///     causes a Coroutine to pause for the specified duration. Yield on Coroutine.waitForSeconds in a coroutine to use.
+    /// </summary>
+    /// <returns>The for seconds.</returns>
+    /// <param name="seconds">Seconds.</param>
+    public static object WaitForSeconds(float seconds)
     {
         return Nez.WaitForSeconds.waiter.Wait(seconds);
     }

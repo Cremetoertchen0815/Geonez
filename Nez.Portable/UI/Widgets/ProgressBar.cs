@@ -117,7 +117,7 @@ public class ProgressBar : Element
 
     protected virtual IDrawable GetKnobDrawable()
     {
-        return (Disabled && style.DisabledKnob != null) ? style.DisabledKnob : style.Knob;
+        return Disabled && style.DisabledKnob != null ? style.DisabledKnob : style.Knob;
     }
 
 
@@ -324,25 +324,25 @@ public class ProgressBar : Element
 /// </summary>
 public class ProgressBarStyle
 {
-	/// <summary>
-	///     The progress bar background, stretched only in one direction. Optional.
-	/// </summary>
-	public IDrawable Background;
+    /// <summary>
+    ///     The progress bar background, stretched only in one direction. Optional.
+    /// </summary>
+    public IDrawable Background;
 
-	/// <summary>
-	///     Optional
-	/// </summary>
-	public IDrawable DisabledBackground;
+    /// <summary>
+    ///     Optional
+    /// </summary>
+    public IDrawable DisabledBackground;
 
-	/// <summary>
-	///     Optional, centered on the background.
-	/// </summary>
-	public IDrawable Knob, DisabledKnob;
+    /// <summary>
+    ///     Optional, centered on the background.
+    /// </summary>
+    public IDrawable Knob, DisabledKnob;
 
-	/// <summary>
-	///     Optional
-	/// </summary>
-	public IDrawable KnobBefore, KnobAfter, DisabledKnobBefore, DisabledKnobAfter;
+    /// <summary>
+    ///     Optional
+    /// </summary>
+    public IDrawable KnobBefore, KnobAfter, DisabledKnobBefore, DisabledKnobAfter;
 
 
     public ProgressBarStyle()

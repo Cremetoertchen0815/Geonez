@@ -13,10 +13,8 @@ public class SvgGroup : SvgElement
     [XmlElement("circle")] public SvgCircle[] Circles;
 
     [XmlElement("ellipse")] public SvgEllipse[] Ellipses;
-
     [XmlElement("title")] public string Title;
     [XmlElement("g")] public SvgGroup[] Groups;
-
     [XmlElement("polygon")] public SvgPolygon[] Polygons;
     [XmlElement("polyline")] public SvgPolyline[] Polylines;
     [XmlElement("image")] public SvgImage[] Images;

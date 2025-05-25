@@ -10,25 +10,25 @@ namespace Nez;
 [DebuggerDisplay("{DebugDisplayString,nq}")]
 public struct RectangleF : IEquatable<RectangleF>
 {
-	/// <summary>
-	///     The x coordinate of the top-left corner of this <see cref="RectangleF" />.
-	/// </summary>
-	public float X;
+    /// <summary>
+    ///     The x coordinate of the top-left corner of this <see cref="RectangleF" />.
+    /// </summary>
+    public float X;
 
-	/// <summary>
-	///     The y coordinate of the top-left corner of this <see cref="RectangleF" />.
-	/// </summary>
-	public float Y;
+    /// <summary>
+    ///     The y coordinate of the top-left corner of this <see cref="RectangleF" />.
+    /// </summary>
+    public float Y;
 
-	/// <summary>
-	///     The width of this <see cref="RectangleF" />.
-	/// </summary>
-	public float Width;
+    /// <summary>
+    ///     The width of this <see cref="RectangleF" />.
+    /// </summary>
+    public float Width;
 
-	/// <summary>
-	///     The height of this <see cref="RectangleF" />.
-	/// </summary>
-	public float Height;
+    /// <summary>
+    ///     The height of this <see cref="RectangleF" />.
+    /// </summary>
+    public float Height;
 
 
     #region Public Properties

@@ -9,10 +9,10 @@ namespace Nez;
 /// </summary>
 public class PostProcessor<T> : PostProcessor where T : Effect
 {
-	/// <summary>
-	///     The effect used to render the scene with
-	/// </summary>
-	public new T Effect;
+    /// <summary>
+    ///     The effect used to render the scene with
+    /// </summary>
+    public new T Effect;
 
 
     public PostProcessor(int executionOrder, T effect = null) : base(executionOrder, effect)

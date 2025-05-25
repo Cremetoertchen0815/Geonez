@@ -6,11 +6,11 @@ namespace Nez;
 
 public static class Storage
 {
-	/// <summary>
-	///     attempts to come up with a root folder you can use to save your data accross all (non-console) platforms
-	/// </summary>
-	/// <returns>The storage root.</returns>
-	public static string GetStorageRoot()
+    /// <summary>
+    ///     attempts to come up with a root folder you can use to save your data accross all (non-console) platforms
+    /// </summary>
+    /// <returns>The storage root.</returns>
+    public static string GetStorageRoot()
     {
         // Generate the path of the game's savefolder
         var exeName = Path.GetFileNameWithoutExtension(AppDomain.CurrentDomain.FriendlyName).Replace(".vshost", "");

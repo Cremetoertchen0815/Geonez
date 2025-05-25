@@ -32,9 +32,9 @@ public class DeltaAnalyzer
     private static DeltaDict _oldObjctDrawDeltaList = new();
 
 
-    public static (string, float, float)[] EntitiesUpdatePercentage = new (string, float, float)[] { };
-    public static (string, float, float)[] ComponentUpdatePercentage = new (string, float, float)[] { };
-    public static (string, float, float)[] ObjectsDrawPercentage = new (string, float, float)[] { };
+    public static (string, float, float)[] EntitiesUpdatePercentage = [];
+    public static (string, float, float)[] ComponentUpdatePercentage = [];
+    public static (string, float, float)[] ObjectsDrawPercentage = [];
 
     private static readonly Dictionary<string, List<(string, double)>> UpdateDeltas = new();
     private static DeltaDict DrawDeltas = new();
@@ -296,7 +296,7 @@ public class DeltaAnalyzer
                 var ComponLst = UpdateDeltas.ContainsKey(Entity) ? UpdateDeltas[Entity] : null;
                 if (ComponLst == null)
                 {
-                    ComponLst = new List<(string, double)>();
+                    ComponLst = [];
                     UpdateDeltas.Add(Entity, ComponLst);
                 }
 
