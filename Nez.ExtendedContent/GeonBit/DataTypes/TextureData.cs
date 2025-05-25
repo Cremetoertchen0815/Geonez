@@ -16,6 +16,6 @@ namespace Nez.ExtendedContent.DataTypes
 		/// <summary>Frame height, in percents relative to texture size (eg if texture height is 100 and frame height is 0.1, final frame height would be 10 pixels)</summary>
 		public float FrameHeight;
 
-		public int StainedCanvasId;
+		public int StainedCanvasID;
 	}
 }

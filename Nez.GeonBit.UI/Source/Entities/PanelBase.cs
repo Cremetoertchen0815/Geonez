@@ -112,7 +112,7 @@ public class PanelBase : Entity
             // get texture based on skin
             var data = Resources.PanelData[(int)_skin];
 
-            if (data.StainedCanvasId < 0)
+            if (data.StainedCanvasID < 0)
             {
                 var texture = Resources.PanelTextures[_skin];
                 var frameSize = new Vector2(data.FrameWidth, data.FrameHeight);
@@ -125,7 +125,7 @@ public class PanelBase : Entity
             {
                 if (UserInterface.StainedCanvasEnabled)
                 {
-                    var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasId);
+                    var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
                     var nuSize = new Vector2(data.FrameWidth, data.FrameHeight) * _destRect.Size.ToVector2();
                     var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
                         nuSize.ToPoint());

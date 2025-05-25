@@ -209,7 +209,7 @@ public class Button : Entity
         // get texture based on skin and state
         var data = Resources.ButtonData[(int)_skin];
 
-        if (data.StainedCanvasId < 0)
+        if (data.StainedCanvasID < 0)
         {
             var texture = _customSkin == null ? Resources.ButtonTextures[_skin, state] : _customSkin[(int)state];
 
@@ -233,7 +233,7 @@ public class Button : Entity
         {
             if (UserInterface.StainedCanvasEnabled)
             {
-                var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasId);
+                var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
                 var nuSize = new Vector2(data.FrameWidth, data.FrameHeight) * _destRect.Size.ToVector2();
                 var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
                     nuSize.ToPoint());
