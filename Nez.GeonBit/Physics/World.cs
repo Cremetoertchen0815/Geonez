@@ -282,7 +282,7 @@ public class PhysicsWorld : SceneComponent
 
         // create class to hold results
         RayResultCallback resultsCallback =
-            new KinematicClosestNotMeRayResultCallback(self._PhysicalBody._BulletEntity);
+            new KinematicClosestNotMeRayResultCallback(self.PhysicalBody._BulletEntity);
 
         // perform ray cast
         return Raycast(bStart, bEnd, resultsCallback);

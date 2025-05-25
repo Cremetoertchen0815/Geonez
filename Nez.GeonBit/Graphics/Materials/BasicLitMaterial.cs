@@ -91,7 +91,7 @@ public class BasicLitMaterial : MaterialAPI
 
     private Texture2D _normalTexture;
     private FXModes _oldShaderConfig;
-    private PCFQuality _oldShadowQuality;
+    private PcfQuality _oldShadowQuality;
     protected EffectParameter _paramActiveLights;
     protected EffectParameter _paramAlbedoEnabled;
     protected EffectParameter _paramAlbedoMap;
@@ -117,7 +117,7 @@ public class BasicLitMaterial : MaterialAPI
     /// <summary>
     ///     Create the lit material from an empty effect.
     /// </summary>
-    public BasicLitMaterial(PCFQuality? shadowQuality = null)
+    public BasicLitMaterial(PcfQuality? shadowQuality = null)
     {
         ShadowQuality = shadowQuality;
         _oldShadowQuality = ShadowQuality ?? LightsManager.ShadowQuality;
@@ -160,7 +160,7 @@ public class BasicLitMaterial : MaterialAPI
     /// </summary>
     /// <param name="fromEffect">Effect to create material from.</param>
     /// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-    public BasicLitMaterial(MaterialAPI fromEffect, PCFQuality? shadowQuality = null, bool copyEffectProperties = true)
+    public BasicLitMaterial(MaterialAPI fromEffect, PcfQuality? shadowQuality = null, bool copyEffectProperties = true)
     {
         // store effect and set default properties
         ShadowQuality = shadowQuality;
@@ -222,7 +222,7 @@ public class BasicLitMaterial : MaterialAPI
     }
 
 
-    public virtual PCFQuality? ShadowQuality { get; set; }
+    public virtual PcfQuality? ShadowQuality { get; set; }
 
     /// <summary>
     ///     Normal map texture.

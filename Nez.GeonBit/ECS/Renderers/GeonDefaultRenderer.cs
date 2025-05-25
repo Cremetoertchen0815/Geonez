@@ -287,7 +287,7 @@ public class GeonDefaultRenderer : Renderer
             var matrices = LightsManager.ShadowEffect as IEffectMatrices;
             matrices.View = item.ShadowViewMatrix;
             matrices.Projection = item.ShadowProjectionMatrix;
-            RenderingQueues.RenderShadows(item.ShadowSourceID);
+            RenderingQueues.RenderShadows(item.ShadowSourceId);
             if (item.ShadowStencil is not null)
             {
                 Nez.Graphics.Instance.Batcher.Begin();

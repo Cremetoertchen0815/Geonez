@@ -44,7 +44,7 @@ public class LightsManager
 
     public static bool ShadowsEnabed = true;
 
-    public static PCFQuality ShadowQuality = PCFQuality.MidPCF;
+    public static PcfQuality ShadowQuality = PcfQuality.MidPcf;
 
     public static Point DefaultShadowMapResolution = new(1024);
 
@@ -217,7 +217,7 @@ public class LightsManager
 
         // Note: For now only one shadowable light is supported anyway, so any other shadow-projecting lights get ignored.
         //		 Should be changed later, once I actually get how to combine/efficiently store multiple shadowed lights
-        var firstEnabledShadowLight = _shadowLights.FirstOrDefault(x => x.Enabled && x.ShadowSourceID == ShadowID);
+        var firstEnabledShadowLight = _shadowLights.FirstOrDefault(x => x.Enabled && x.ShadowSourceId == ShadowID);
         if (firstEnabledShadowLight is not null) _retLights.Add(firstEnabledShadowLight);
 
         // add all infinite lights first (directional lights etc)

@@ -18,7 +18,7 @@ public interface IShadowCaster
     /// <summary>
     ///     Determines which Level Of Detail Model to select, default is 0, so the regular model.
     /// </summary>
-    int ShadowCasterLOD { get; set; }
+    int ShadowCasterLod { get; set; }
 
     /// <summary>
     ///     The rasterizer state the shadow caster will be rendered with. If null, the default will be CullClockwise in order

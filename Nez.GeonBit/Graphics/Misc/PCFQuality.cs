@@ -1,8 +1,8 @@
 ﻿namespace Nez.GeonBit.Graphics.Misc;
 
-public enum PCFQuality
+public enum PcfQuality
 {
-    LoPCF,
-    MidPCF,
-    HiPCF
+    LoPcf,
+    MidPcf,
+    HiPcf
 }

@@ -37,7 +37,7 @@ public abstract class BasePhysicsComponent : GeonComponent
 {
     // are we currently in physics world?
     private bool _isInWorld;
-    protected PhysicsWorld _world;
+    protected PhysicsWorld World;
 
     /// <summary>
     ///     Optional user data you can attach to this physical component.
@@ -47,17 +47,17 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// <summary>
     ///     The physical body in the core layer.
     /// </summary>
-    internal virtual BasicPhysicalBody _PhysicalBody { get; }
+    internal virtual BasicPhysicalBody PhysicalBody { get; }
 
     /// <summary>
     ///     Return if this is a static object.
     /// </summary>
-    public bool IsStatic => _PhysicalBody.IsStatic;
+    public bool IsStatic => PhysicalBody.IsStatic;
 
     /// <summary>
     ///     Return if this is a kinematic object.
     /// </summary>
-    public bool IsKinematic => _PhysicalBody.IsKinematic;
+    public bool IsKinematic => PhysicalBody.IsKinematic;
 
     /// <summary>
     ///     Return true if you want this physical body to take over node transformations.
@@ -69,8 +69,8 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// </summary>
     public Vector3 Scale
     {
-        get => _PhysicalBody.Scale;
-        set => _PhysicalBody.Scale = value;
+        get => PhysicalBody.Scale;
+        set => PhysicalBody.Scale = value;
     }
 
     /// <summary>
@@ -80,8 +80,8 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// </summary>
     public bool EnableSimulation
     {
-        get => _PhysicalBody.EnableSimulation && Enabled;
-        set => _PhysicalBody.EnableSimulation = value;
+        get => PhysicalBody.EnableSimulation && Enabled;
+        set => PhysicalBody.EnableSimulation = value;
     }
 
     /// <summary>
@@ -90,8 +90,8 @@ public abstract class BasePhysicsComponent : GeonComponent
     [NotInspectable]
     public Matrix WorldTransform
     {
-        get => _PhysicalBody.WorldTransform;
-        set => _PhysicalBody.WorldTransform = value;
+        get => PhysicalBody.WorldTransform;
+        set => PhysicalBody.WorldTransform = value;
     }
 
     /// <summary>
@@ -99,8 +99,8 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// </summary>
     public Vector3 Position
     {
-        get => _PhysicalBody.Position;
-        set => _PhysicalBody.Position = value;
+        get => PhysicalBody.Position;
+        set => PhysicalBody.Position = value;
     }
 
     /// <summary>
@@ -109,8 +109,8 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// </summary>
     public short CollisionGroup
     {
-        get => _PhysicalBody.CollisionGroup;
-        set => _PhysicalBody.CollisionGroup = value;
+        get => PhysicalBody.CollisionGroup;
+        set => PhysicalBody.CollisionGroup = value;
     }
 
     /// <summary>
@@ -119,8 +119,8 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// </summary>
     public short CollisionMask
     {
-        get => _PhysicalBody.CollisionMask;
-        set => _PhysicalBody.CollisionMask = value;
+        get => PhysicalBody.CollisionMask;
+        set => PhysicalBody.CollisionMask = value;
     }
 
     /// <summary>
@@ -129,8 +129,8 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// </summary>
     public bool InvokeCollisionEvents
     {
-        get => _PhysicalBody.InvokeCollisionEvents;
-        set => _PhysicalBody.InvokeCollisionEvents = value;
+        get => PhysicalBody.InvokeCollisionEvents;
+        set => PhysicalBody.InvokeCollisionEvents = value;
     }
 
     /// <summary>
@@ -138,8 +138,8 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// </summary>
     public bool IsEthereal
     {
-        get => _PhysicalBody.IsEthereal;
-        set => _PhysicalBody.IsEthereal = value;
+        get => PhysicalBody.IsEthereal;
+        set => PhysicalBody.IsEthereal = value;
     }
 
     /// <summary>
@@ -147,8 +147,8 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// </summary>
     public float Restitution
     {
-        get => _PhysicalBody.Restitution;
-        set => _PhysicalBody.Restitution = value;
+        get => PhysicalBody.Restitution;
+        set => PhysicalBody.Restitution = value;
     }
 
     /// <summary>
@@ -156,8 +156,8 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// </summary>
     public float Friction
     {
-        get => _PhysicalBody.Friction;
-        set => _PhysicalBody.Friction = value;
+        get => PhysicalBody.Friction;
+        set => PhysicalBody.Friction = value;
     }
 
     /// <summary>
@@ -237,7 +237,7 @@ public abstract class BasePhysicsComponent : GeonComponent
         // remove from physics world
         if (_isInWorld)
         {
-            _world.RemoveBody(_PhysicalBody);
+            World.RemoveBody(PhysicalBody);
             _isInWorld = false;
         }
     }
@@ -250,12 +250,12 @@ public abstract class BasePhysicsComponent : GeonComponent
     {
         base.OnAddedToEntity();
 
-        _world = Entity.Scene.GetSceneComponent<PhysicsWorld>();
+        World = Entity.Scene.GetSceneComponent<PhysicsWorld>();
 
         // add to physics world
         if (!_isInWorld)
         {
-            _world.AddBody(_PhysicalBody);
+            World.AddBody(PhysicalBody);
             _isInWorld = true;
         }
     }

@@ -63,7 +63,7 @@ public class KinematicBody : BasePhysicsComponent
     /// <summary>
     ///     The physical body in the core layer.
     /// </summary>
-    internal override BasicPhysicalBody _PhysicalBody => _body;
+    internal override BasicPhysicalBody PhysicalBody => _body;
 
     /// <summary>
     ///     Create the actual collision body.

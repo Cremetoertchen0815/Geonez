@@ -245,19 +245,19 @@ internal class RenderingQueueInstance
 internal static class RenderingQueues
 {
     // List of built-in rendering queues.
-    private static readonly List<RenderingQueueInstance> _renderingQueues = new();
+    private static readonly List<RenderingQueueInstance> Queues = new();
 
-    private static readonly List<ShadowElement> _shadowEntities = new();
+    private static readonly List<ShadowElement> ShadowEntities = new();
 
     // default rasterizer state to reset to after every frame.
-    private static readonly RasterizerState _defaultRasterizerState = new();
+    private static readonly RasterizerState DefaultRasterizerState = new();
 
     /// <summary>
     ///     Init all built-in rendering queues.
     /// </summary>
     public static void Initialize()
     {
-        _renderingQueues.Clear();
+        Queues.Clear();
 
         // SolidBackNoCull
         {
@@ -268,7 +268,7 @@ internal static class RenderingQueues
             queue.RasterizerState.MultiSampleAntiAlias = true;
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = false;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // Solid No Cull
@@ -281,7 +281,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = true;
             queue.CanCastShadow = true;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // Solid
@@ -294,7 +294,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = true;
             queue.CanCastShadow = true;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // Terrain
@@ -307,7 +307,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = true;
             queue.CanCastShadow = true;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // Billboards
@@ -319,7 +319,7 @@ internal static class RenderingQueues
             queue.RasterizerState.MultiSampleAntiAlias = true;
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = true;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // Background
@@ -331,7 +331,7 @@ internal static class RenderingQueues
             queue.RasterizerState.MultiSampleAntiAlias = true;
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = false;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // BackgroundNoCull
@@ -343,7 +343,7 @@ internal static class RenderingQueues
             queue.RasterizerState.MultiSampleAntiAlias = true;
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = false;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // OpacityUnordered
@@ -356,7 +356,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = false;
             queue.CanCastShadow = true;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // Opacity
@@ -370,7 +370,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferWriteEnable = false;
             queue.SortByCamera = true;
             queue.CanCastShadow = true;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // Mixed
@@ -384,7 +384,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferWriteEnable = true;
             queue.SortByCamera = true;
             queue.CanCastShadow = true;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // Wireframe
@@ -396,7 +396,7 @@ internal static class RenderingQueues
             queue.RasterizerState.MultiSampleAntiAlias = true;
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = false;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // EffectsUnordered
@@ -409,7 +409,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = false;
             queue.SortByCamera = false;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // Effects
@@ -422,7 +422,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferEnable = true;
             queue.DepthStencilState.DepthBufferWriteEnable = false;
             queue.SortByCamera = true;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // EffectsOverlay
@@ -435,7 +435,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferEnable = false;
             queue.DepthStencilState.DepthBufferWriteEnable = false;
             queue.SortByCamera = false;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // Overlay
@@ -448,7 +448,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferEnable = false;
             queue.DepthStencilState.DepthBufferWriteEnable = false;
             queue.SortByCamera = false;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
 
         // debug stuff
@@ -461,7 +461,7 @@ internal static class RenderingQueues
             queue.DepthStencilState.DepthBufferEnable = false;
             queue.DepthStencilState.DepthBufferWriteEnable = false;
             queue.SortByCamera = false;
-            _renderingQueues.Add(queue);
+            Queues.Add(queue);
         }
     }
 
@@ -471,13 +471,13 @@ internal static class RenderingQueues
     public static void DrawQueues()
     {
         // reset device states
-        Core.GraphicsDevice.RasterizerState = _defaultRasterizerState;
+        Core.GraphicsDevice.RasterizerState = DefaultRasterizerState;
         Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
         // iterate drawing queues
-        for (var i = 0; i < _renderingQueues.Count; i++)
+        for (var i = 0; i < Queues.Count; i++)
         {
-            var queue = _renderingQueues[i];
+            var queue = Queues[i];
             // if no entities in queue, skip
             if (queue.Entities.Count == 0) continue;
 
@@ -489,13 +489,10 @@ internal static class RenderingQueues
             if (queue.SortByCamera)
             {
                 var camPos = GeonDefaultRenderer.ActiveCamera.Position;
-                queue.Entities.Sort(delegate(EntityInQueue x, EntityInQueue y)
-                {
-                    return (int)(Vector3.Distance(camPos, y.World.Translation) * 100f -
-                                 Math.Floor(y.Entity.CameraDistanceBias)) -
-                           (int)(Vector3.Distance(camPos, x.World.Translation) * 100f -
-                                 Math.Floor(x.Entity.CameraDistanceBias));
-                });
+                queue.Entities.Sort((x, y) => (int)(Vector3.Distance(camPos, y.World.Translation) * 100f -
+                                                    Math.Floor(y.Entity.CameraDistanceBias)) -
+                                              (int)(Vector3.Distance(camPos, x.World.Translation) * 100f -
+                                                    Math.Floor(x.Entity.CameraDistanceBias)));
             }
 
             // draw all entities in queue
@@ -507,11 +504,11 @@ internal static class RenderingQueues
 
             // clear queue
             queue.Entities.Clear();
-            _shadowEntities.Clear();
+            ShadowEntities.Clear();
         }
 
         // reset device states
-        Core.GraphicsDevice.RasterizerState = _defaultRasterizerState;
+        Core.GraphicsDevice.RasterizerState = DefaultRasterizerState;
         Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
     }
 
@@ -520,9 +517,9 @@ internal static class RenderingQueues
         Core.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
         // draw all entities in queue
-        for (var j = 0; j < _shadowEntities.Count; j++)
+        for (var j = 0; j < ShadowEntities.Count; j++)
         {
-            var entityData = _shadowEntities[j];
+            var entityData = ShadowEntities[j];
             if (entityData.ShadowEntity.PrimaryLight != key) continue;
 
             Core.GraphicsDevice.RasterizerState =
@@ -542,10 +539,10 @@ internal static class RenderingQueues
         if (entity.RenderingQueue == RenderingQueue.Debug && !Core.DebugRenderEnabled) return;
 
         // add to the rendering queue
-        _renderingQueues[(int)entity.RenderingQueue].Entities.Add(new EntityInQueue(entity, world));
+        Queues[(int)entity.RenderingQueue].Entities.Add(new EntityInQueue(entity, world));
 
         // Skip rendering shadows if disabled or not implemented
         if (!LightsManager.ShadowsEnabed || entity is not IShadowCaster se || !se.CastsShadow) return;
-        _shadowEntities.Add(new ShadowElement(se, world));
+        ShadowEntities.Add(new ShadowElement(se, world));
     }
 }

@@ -5,7 +5,7 @@ namespace Nez.GeonBit.Graphics.Lights;
 
 public interface IShadowedLight : ILightSource
 {
-    int ShadowSourceID { get; }
+    int ShadowSourceId { get; }
     Matrix ShadowViewMatrix { get; }
     Matrix ShadowProjectionMatrix { get; }
     RenderTarget2D ShadowMap { get; }

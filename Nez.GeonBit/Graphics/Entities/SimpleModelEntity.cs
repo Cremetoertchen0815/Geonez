@@ -72,7 +72,7 @@ public class SimpleModelEntity : BaseRenderableEntity, IShadowCaster
 
     public int PrimaryLight { get; set; }
     public bool CastsShadow { get; set; }
-    public int ShadowCasterLOD { get; set; }
+    public int ShadowCasterLod { get; set; }
     public RasterizerState ShadowRasterizerState { get; set; }
 
     void IShadowCaster.RenderShadows(Matrix worldTransform)

@@ -23,6 +23,8 @@
 
 #endregion
 
+using System.Linq;
+
 namespace Nez.GeonBit.Physics;
 
 /// <summary>
@@ -109,27 +111,25 @@ public static class CollisionGroups
     /// <summary>
     ///     Used for collision with any projectiles.
     /// </summary>
-    public static readonly short AllProjectiles = OR(EnemyProjectiles, FriendProjectiles, PlayerProjectiles);
+    public static readonly short AllProjectiles = Or(EnemyProjectiles, FriendProjectiles, PlayerProjectiles);
 
     /// <summary>
     ///     Used for collision with any characters.
     /// </summary>
-    public static readonly short AllCharacters = OR(Enemies, Friends, Player, Neutrals);
+    public static readonly short AllCharacters = Or(Enemies, Friends, Player, Neutrals);
 
     /// <summary>
     ///     Combine collision flags using OR operator.
     /// </summary>
-    public static short OR(params short[] args)
+    public static short Or(params short[] args)
     {
-        short ret = 0;
-        foreach (var i in args) ret |= i;
-        return ret;
+        return args.Aggregate<short, short>(0, (current, i) => (short)(current | i));
     }
 
     /// <summary>
     ///     Combine collision flags using AND operator.
     /// </summary>
-    public static short AND(params short[] args)
+    public static short And(params short[] args)
     {
         short ret = 0;
         foreach (var i in args) ret &= i;
@@ -153,7 +153,7 @@ public static class CollisionMasks
     ///     Default collision mask for valid targets.
     ///     For example, you can use this for projectiles that can hit stuff.
     /// </summary>
-    public static readonly short Targets = CollisionGroups.OR(
+    public static readonly short Targets = CollisionGroups.Or(
         CollisionGroups.AllCharacters,
         CollisionGroups.PowerUps,
         CollisionGroups.Pickables,
@@ -166,7 +166,7 @@ public static class CollisionMasks
     ///     Default collision mask for valid dynamic targets.
     ///     For example, you can use this for projectiles that can hit stuff.
     /// </summary>
-    public static readonly short DynamicTargets = CollisionGroups.OR(
+    public static readonly short DynamicTargets = CollisionGroups.Or(
         CollisionGroups.AllCharacters,
         CollisionGroups.PowerUps,
         CollisionGroups.Pickables,
@@ -175,7 +175,7 @@ public static class CollisionMasks
     /// <summary>
     ///     All non-character dynamic and static targets.
     /// </summary>
-    public static readonly short NonCharacterTargets = CollisionGroups.OR(
+    public static readonly short NonCharacterTargets = CollisionGroups.Or(
         CollisionGroups.PowerUps,
         CollisionGroups.Pickables,
         CollisionGroups.DynamicObjects,
@@ -186,7 +186,7 @@ public static class CollisionMasks
     /// <summary>
     ///     Default collision mask for targets associated with the player and his allies.
     /// </summary>
-    public static readonly short FriendlyTargets = CollisionGroups.OR(
+    public static readonly short FriendlyTargets = CollisionGroups.Or(
         CollisionGroups.Player,
         CollisionGroups.Friends,
         CollisionGroups.Neutrals);
@@ -194,14 +194,14 @@ public static class CollisionMasks
     /// <summary>
     ///     Default collision mask for stuff you can pick up.
     /// </summary>
-    public static readonly short Pickups = CollisionGroups.OR(
+    public static readonly short Pickups = CollisionGroups.Or(
         CollisionGroups.PowerUps,
         CollisionGroups.Pickables);
 
     /// <summary>
     ///     Default collision mask for all static objects.
     /// </summary>
-    public static readonly short Statics = CollisionGroups.OR(
+    public static readonly short Statics = CollisionGroups.Or(
         CollisionGroups.StaticObjects,
         CollisionGroups.ForceField,
         CollisionGroups.Terrain);
@@ -209,7 +209,7 @@ public static class CollisionMasks
     /// <summary>
     ///     Default collision mask for everything that should block movement.
     /// </summary>
-    public static readonly short Blocking = CollisionGroups.OR(
+    public static readonly short Blocking = CollisionGroups.Or(
         CollisionGroups.AllCharacters,
         CollisionGroups.DynamicObjects,
         CollisionGroups.StaticObjects,

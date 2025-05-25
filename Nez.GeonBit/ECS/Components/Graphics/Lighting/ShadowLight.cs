@@ -20,7 +20,7 @@ public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
 
     public ShadowLight(int id, Point shadowMapResolution = default)
     {
-        ShadowSourceID = id;
+        ShadowSourceId = id;
         if (shadowMapResolution == default) shadowMapResolution = LightsManager.DefaultShadowMapResolution;
         _aspectRatio = (float)shadowMapResolution.X / shadowMapResolution.Y;
         ShadowMap = new RenderTarget2D(Core.GraphicsDevice, shadowMapResolution.X, shadowMapResolution.Y, false,
@@ -57,7 +57,7 @@ public abstract class ShadowLight : GeonComponent, IUpdatable, IShadowedLight
         }
     }
 
-    public int ShadowSourceID { get; }
+    public int ShadowSourceId { get; }
 
     //Shadow Properties
     public RenderTarget2D ShadowMap

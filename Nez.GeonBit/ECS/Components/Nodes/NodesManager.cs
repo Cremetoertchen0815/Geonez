@@ -35,7 +35,7 @@ public static class NodesManager
     /// <summary>
     ///     Queue of nodes that require update at the end of the loop.
     /// </summary>
-    private static readonly List<Node> _nodesUpdateQueue = new();
+    private static readonly List<Node> NodesUpdateQueue = new();
 
     /// <summary>
     ///     Frame identifier. Used for internal caching mechanisms.
@@ -57,10 +57,10 @@ public static class NodesManager
     public static void EndFrame()
     {
         // update nodes
-        foreach (var node in _nodesUpdateQueue) node?.UpdateTransformations(true);
+        foreach (var node in NodesUpdateQueue) node?.UpdateTransformations(true);
 
         // clear nodes update queue
-        _nodesUpdateQueue.Clear();
+        NodesUpdateQueue.Clear();
     }
 
     /// <summary>
@@ -69,6 +69,6 @@ public static class NodesManager
     /// <param name="node">GeonNode to update when frame ends.</param>
     public static void AddNodeToUpdateQueue(Node node)
     {
-        _nodesUpdateQueue.Add(node);
+        NodesUpdateQueue.Add(node);
     }
 }

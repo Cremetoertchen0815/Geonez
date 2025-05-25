@@ -1,10 +1,10 @@
 ﻿#region License
 
-/// -------------------------------------------------------------------------------------
-/// Notice: This file had been edited to integrate as core inside GeonBit.
-/// Original license and attributes below. The license and copyright notice below affect
-/// this file and this file only. https://github.com/tainicom/Aether.Extras
-/// -------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
+// Notice: This file had been edited to integrate as core inside GeonBit.
+// Original license and attributes below. The license and copyright notice below affect
+// this file and this file only. https://github.com/tainicom/Aether.Extras
+// -------------------------------------------------------------------------------------
 //   Copyright 2011-2016 Kastellanos Nikolaos
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
@@ -98,11 +98,11 @@ public class CpuAnimatedVertexBufferReader : ContentTypeReader<CpuAnimatedVertex
 
 
         // read extras
-        var IsWriteOnly = input.ReadBoolean();
+        var isWriteOnly = input.ReadBoolean();
 
         if (buffer == null)
         {
-            var usage = IsWriteOnly ? BufferUsage.WriteOnly : BufferUsage.None;
+            var usage = isWriteOnly ? BufferUsage.WriteOnly : BufferUsage.None;
             buffer = new CpuAnimatedVertexBuffer(device, VertexPositionNormalTexture.VertexDeclaration, vertexCount,
                 usage);
         }

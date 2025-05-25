@@ -68,11 +68,11 @@ public abstract class BaseRendererComponent : GeonComponent
 
     public virtual int ShadowCasterLOD
     {
-        get => (RenderableEntity as IShadowCaster)?.ShadowCasterLOD ?? 0;
+        get => (RenderableEntity as IShadowCaster)?.ShadowCasterLod ?? 0;
         set
         {
             if (RenderableEntity is not IShadowCaster shadowEntity) return;
-            shadowEntity.ShadowCasterLOD = value;
+            shadowEntity.ShadowCasterLod = value;
         }
     }
 

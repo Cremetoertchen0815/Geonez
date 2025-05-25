@@ -105,7 +105,7 @@ public class RigidBody : BasePhysicsComponent, IUpdatable
     /// <summary>
     ///     The physical body in the core layer.
     /// </summary>
-    internal override BasicPhysicalBody _PhysicalBody => _body;
+    internal override BasicPhysicalBody PhysicalBody => _body;
 
     /// <summary>
     ///     Return true if you want this physical body to take over node transformations.

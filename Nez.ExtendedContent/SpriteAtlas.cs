@@ -33,7 +33,7 @@ public class SpriteAtlasData
         var parsingSprites = true;
         var commaSplitter = new[] { ',' };
 
-        string line = null;
+        string line;
         using var streamFile = File.OpenRead(dataFile);
         using var stream = new StreamReader(streamFile);
         while ((line = stream.ReadLine()) != null)

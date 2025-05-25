@@ -28,8 +28,8 @@ namespace Nez.GeonBit.Animation;
 
 public class CpuAnimatedVertexBuffer : DynamicVertexBuffer
 {
-    private VertexIndicesWeightsPositionNormal[] cpuVertices;
-    private VertexPositionNormalTexture[] gpuVertices;
+    private VertexIndicesWeightsPositionNormal[] _cpuVertices;
+    private VertexPositionNormalTexture[] _gpuVertices;
 
     public CpuAnimatedVertexBuffer(GraphicsDevice graphicsDevice, VertexDeclaration vertexDeclaration, int vertexCount,
         BufferUsage bufferUsage) :
@@ -39,12 +39,12 @@ public class CpuAnimatedVertexBuffer : DynamicVertexBuffer
 
     internal void SetGpuVertices(VertexPositionNormalTexture[] vertices)
     {
-        gpuVertices = vertices;
+        _gpuVertices = vertices;
     }
 
     internal void SetCpuVertices(VertexIndicesWeightsPositionNormal[] vertices)
     {
-        cpuVertices = vertices;
+        _cpuVertices = vertices;
     }
 
     internal void UpdateVertices(Matrix[] boneTransforms, int startIndex, int elementCount)
@@ -54,15 +54,15 @@ public class CpuAnimatedVertexBuffer : DynamicVertexBuffer
         // skin all of the vertices
         for (var i = startIndex; i < startIndex + elementCount; i++)
         {
-            int b0 = cpuVertices[i].BlendIndex0;
-            int b1 = cpuVertices[i].BlendIndex1;
-            int b2 = cpuVertices[i].BlendIndex2;
-            int b3 = cpuVertices[i].BlendIndex3;
+            int b0 = _cpuVertices[i].BlendIndex0;
+            int b1 = _cpuVertices[i].BlendIndex1;
+            int b2 = _cpuVertices[i].BlendIndex2;
+            int b3 = _cpuVertices[i].BlendIndex3;
 
-            var w1 = cpuVertices[i].BlendWeights.X;
-            var w2 = cpuVertices[i].BlendWeights.Y;
-            var w3 = cpuVertices[i].BlendWeights.Z;
-            var w4 = cpuVertices[i].BlendWeights.W;
+            var w1 = _cpuVertices[i].BlendWeights.X;
+            var w2 = _cpuVertices[i].BlendWeights.Y;
+            var w3 = _cpuVertices[i].BlendWeights.Z;
+            var w4 = _cpuVertices[i].BlendWeights.W;
 
 #if (WP7_1)
                 // Moblunatic claims ~40% faster.
@@ -103,11 +103,11 @@ public class CpuAnimatedVertexBuffer : DynamicVertexBuffer
 #endif
 
             // Support the 4 Bone Influences - Position then Normal
-            Vector3.Transform(ref cpuVertices[i].Position, ref transformSum, out gpuVertices[i].Position);
-            Vector3.TransformNormal(ref cpuVertices[i].Normal, ref transformSum, out gpuVertices[i].Normal);
+            Vector3.Transform(ref _cpuVertices[i].Position, ref transformSum, out _gpuVertices[i].Position);
+            Vector3.TransformNormal(ref _cpuVertices[i].Normal, ref transformSum, out _gpuVertices[i].Normal);
         }
 
         // put the vertices into our vertex buffer
-        SetData(gpuVertices, 0, VertexCount, SetDataOptions.NoOverwrite);
+        SetData(_gpuVertices, 0, VertexCount, SetDataOptions.NoOverwrite);
     }
 }

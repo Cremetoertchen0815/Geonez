@@ -18,7 +18,7 @@ public class MetallicLitMaterial : BasicLitMaterial
 
     private float _fresnelFactor;
     private FXModes _oldShaderConfig;
-    private PCFQuality _oldShadowQuality;
+    private PcfQuality _oldShadowQuality;
 
     protected EffectParameter _paramEnvMap;
     protected EffectParameter _paramEnvMapAmount;
@@ -34,7 +34,7 @@ public class MetallicLitMaterial : BasicLitMaterial
     /// <summary>
     ///     Create the lit material from an empty effect.
     /// </summary>
-    public MetallicLitMaterial(PCFQuality? shadowQuality = null)
+    public MetallicLitMaterial(PcfQuality? shadowQuality = null)
     {
         ShadowQuality = shadowQuality;
         _oldShadowQuality = ShadowQuality ?? LightsManager.ShadowQuality;
@@ -77,7 +77,7 @@ public class MetallicLitMaterial : BasicLitMaterial
     /// </summary>
     /// <param name="fromEffect">Effect to create material from.</param>
     /// <param name="copyEffectProperties">If true, will copy initial properties from effect.</param>
-    public MetallicLitMaterial(BasicEffect fromEffect, PCFQuality? shadowQuality = null,
+    public MetallicLitMaterial(BasicEffect fromEffect, PcfQuality? shadowQuality = null,
         bool copyEffectProperties = true)
     {
         // store effect and set default properties
