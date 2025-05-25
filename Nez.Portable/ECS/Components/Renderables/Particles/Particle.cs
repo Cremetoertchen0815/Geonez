@@ -167,13 +167,12 @@ public class Particle
                 }
                 else
                 {
-                    Vector2 tmp, radial, tangential;
-                    radial = Vector2.Zero;
+                    var radial = Vector2.Zero;
 
                     if (position.X != 0 || position.Y != 0)
                         Vector2.Normalize(ref position, out radial);
 
-                    tangential = radial;
+                    var tangential = radial;
                     radial = radial * _radialAcceleration;
 
                     var newy = tangential.X;
@@ -181,7 +180,7 @@ public class Particle
                     tangential.Y = newy;
                     tangential = tangential * _tangentialAcceleration;
 
-                    tmp = radial + tangential + emitterConfig.Gravity;
+                    var tmp = radial + tangential + emitterConfig.Gravity;
                     tmp = tmp * Time.DeltaTime;
                     _direction = _direction + tmp;
                     tmp = _direction * Time.DeltaTime;

@@ -219,7 +219,7 @@ public abstract class BaseAnimator : GeonComponent
 
         // check if should die due to time to live
         if ((BaseProperties.TimeToLive != 0f && TimeAnimated > BaseProperties.TimeToLive) ||
-            (BaseProperties.TimeToLive == 0f && BaseProperties.DestroyObjectOnFinish && finished))
+            (BaseProperties is { TimeToLive: 0f, DestroyObjectOnFinish: true } && finished))
         {
             // destroy parent game object if needed
             if (BaseProperties.DestroyObjectOnFinish && !Entity.IsDestroyed) Entity.Destroy();

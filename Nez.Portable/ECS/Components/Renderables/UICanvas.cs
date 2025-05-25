@@ -93,7 +93,7 @@ public class UICanvas : RenderableComponent, IUpdatable
         dialog.GetTitleLabel().GetStyle().Background = new PrimitiveDrawable(new Color(55, 100, 100));
         dialog.Pad(20, 5, 5, 5);
         dialog.AddText(messageText);
-        dialog.AddButton(new TextButton(closeButtonText, skin)).OnClicked += butt => dialog.Hide();
+        dialog.AddButton(new TextButton(closeButtonText, skin)).OnClicked += _ => dialog.Hide();
         dialog.Show(Stage);
 
         return dialog;

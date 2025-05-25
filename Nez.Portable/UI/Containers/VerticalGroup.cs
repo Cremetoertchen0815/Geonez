@@ -69,7 +69,7 @@ public class VerticalGroup : Group
         for (var i = 0; i < children.Count; i++)
         {
             var child = children[i];
-            if (child is ILayout)
+            if (child is not null)
             {
                 var layout = (ILayout)child;
                 _prefWidth = Math.Max(_prefWidth, layout.PreferredWidth);
@@ -102,7 +102,7 @@ public class VerticalGroup : Group
             float width, height;
 
             ILayout layout = null;
-            if (child is ILayout)
+            if (child is not null)
             {
                 layout = child;
                 if (_fill > 0)

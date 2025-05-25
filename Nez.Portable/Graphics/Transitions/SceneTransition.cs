@@ -136,7 +136,7 @@ public abstract class SceneTransition
                 // get back to the main thread before setting the new Scene active. This isnt fantastic seeing as how
                 // the scheduler is not thread-safe but it should be empty between Scenes and SynchronizationContext.Current
                 // is null for some reason
-                Core.Schedule(0, false, null, timer =>
+                Core.Schedule(0, false, null, _ =>
                 {
                     Core.Scene = scene;
                     _isNewSceneLoaded = true;

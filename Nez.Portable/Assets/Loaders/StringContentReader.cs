@@ -28,7 +28,7 @@ internal class StringContentReader : ContentTypeReader<string>
         using (var msi = new MemoryStream(data))
         using (var gs = new GZipStream(msi, CompressionMode.Decompress))
         {
-            gs.Read(decomp, 0, data.Length);
+            gs.ReadExactly(decomp, 0, data.Length);
         }
 
         return Encoding.UTF8.GetString(decomp);

@@ -11,20 +11,15 @@ namespace Nez;
 ///     - render all normal objects in standard fashion
 ///     - add this PostProcessor with the RenderTarget from your lights Renderer
 /// </summary>
-public class PolyLightPostProcessor : PostProcessor
+public class PolyLightPostProcessor(int executionOrder, RenderTexture lightsRenderTexture)
+    : PostProcessor(executionOrder)
 {
-    private readonly RenderTexture _lightsRenderTexture;
     private GaussianBlurEffect _blurEffect;
     private bool _blurEnabled;
     private float _blurRenderTargetScale = 0.5f;
 
     private float _multiplicativeFactor = 1f;
 
-
-    public PolyLightPostProcessor(int executionOrder, RenderTexture lightsRenderTexture) : base(executionOrder)
-    {
-        _lightsRenderTexture = lightsRenderTexture;
-    }
 
     /// <summary>
     ///     multiplicative factor for the blend of the base and light render targets. Defaults to 1.
@@ -88,7 +83,7 @@ public class PolyLightPostProcessor : PostProcessor
         base.OnAddedToScene(scene);
 
         Effect = scene.Content.LoadEffect<Effect>("spriteLightMultiply", EffectResource.SpriteLightMultiplyBytes);
-        Effect.Parameters["_lightTexture"].SetValue(_lightsRenderTexture);
+        Effect.Parameters["_lightTexture"].SetValue(lightsRenderTexture);
         Effect.Parameters["_multiplicativeFactor"].SetValue(_multiplicativeFactor);
 
         if (_blurEnabled)
@@ -97,8 +92,8 @@ public class PolyLightPostProcessor : PostProcessor
 
     public override void Unload()
     {
-        if (_lightsRenderTexture != null)
-            _lightsRenderTexture.Dispose();
+        if (lightsRenderTexture != null)
+            lightsRenderTexture.Dispose();
 
         if (_blurEffect != null)
             _scene.Content.UnloadEffect(_blurEffect);
@@ -122,11 +117,11 @@ public class PolyLightPostProcessor : PostProcessor
 
             // Pass 1: draw from _lightsRenderTexture into tempRenderTarget, applying a horizontal gaussian blur filter
             _blurEffect.PrepareForHorizontalBlur();
-            DrawFullscreenQuad(_lightsRenderTexture, tempRenderTarget, _blurEffect);
+            DrawFullscreenQuad(lightsRenderTexture, tempRenderTarget, _blurEffect);
 
             // Pass 2: draw from tempRenderTarget back into _lightsRenderTexture, applying a vertical gaussian blur filter
             _blurEffect.PrepareForVerticalBlur();
-            DrawFullscreenQuad(tempRenderTarget, _lightsRenderTexture, _blurEffect);
+            DrawFullscreenQuad(tempRenderTarget, lightsRenderTexture, _blurEffect);
 
             RenderTarget.ReleaseTemporary(tempRenderTarget);
         }
@@ -141,7 +136,7 @@ public class PolyLightPostProcessor : PostProcessor
     public override void OnSceneBackBufferSizeChanged(int newWidth, int newHeight)
     {
         // when the RenderTexture changes we have to reset the shader param since the underlying RenderTarget will be different
-        Effect.Parameters["_lightTexture"].SetValue(_lightsRenderTexture);
+        Effect.Parameters["_lightTexture"].SetValue(lightsRenderTexture);
 
         if (_blurEnabled)
             UpdateBlurEffectDeltas();

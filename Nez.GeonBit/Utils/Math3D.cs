@@ -99,7 +99,7 @@ public static class Math3D
     /// <returns>Matrix scale.</returns>
     public static Vector3 GetScale(ref Matrix mat)
     {
-        mat.Decompose(out var scale, out var rot, out var pos);
+        mat.Decompose(out var scale, out _, out _);
         return scale;
     }
 
@@ -110,7 +110,7 @@ public static class Math3D
     /// <returns>Matrix rotation.</returns>
     public static Quaternion GetRotation(ref Matrix mat)
     {
-        mat.Decompose(out var scale, out var rot, out var pos);
+        mat.Decompose(out _, out var rot, out _);
         return rot;
     }
 

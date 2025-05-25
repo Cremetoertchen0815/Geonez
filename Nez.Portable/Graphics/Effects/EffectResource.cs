@@ -86,14 +86,10 @@ public static class EffectResource
     private static byte[] GetEmbeddedResourceBytes(string name)
     {
         var assembly = typeof(EffectResource).Assembly;
-        using (var stream = assembly.GetManifestResourceStream(name))
-        {
-            using (var ms = new MemoryStream())
-            {
-                stream.CopyTo(ms);
-                return ms.ToArray();
-            }
-        }
+        using var stream = assembly.GetManifestResourceStream(name);
+        using var ms = new MemoryStream();
+        stream.CopyTo(ms);
+        return ms.ToArray();
     }
 
 
@@ -108,14 +104,10 @@ public static class EffectResource
             name = name.Replace(".Framework", ".Framework.Platform");
 #endif
 
-        using (var stream = assembly.GetManifestResourceStream(name))
-        {
-            using (var ms = new MemoryStream())
-            {
-                stream.CopyTo(ms);
-                return ms.ToArray();
-            }
-        }
+        using var stream = assembly.GetManifestResourceStream(name);
+        using var ms = new MemoryStream();
+        stream.CopyTo(ms);
+        return ms.ToArray();
     }
 
     public static byte[] GetFileResourceBytes(string path)

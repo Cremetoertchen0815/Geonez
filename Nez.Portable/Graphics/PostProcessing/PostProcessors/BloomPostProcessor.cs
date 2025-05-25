@@ -78,11 +78,8 @@ public class BloomPostProcessor : PostProcessor, IDisposable
     //Objects
     private readonly GraphicsDevice _graphicsDev;
     private readonly QuadRenderer _quadRenderer;
-    private BlendState BlendStateBloom;
 
     //Shader + variables
-    private readonly Effect _bloomEffect;
-    private readonly Texture2D black;
 
     private readonly EffectPass _bloomPassExtract;
     private readonly EffectPass _bloomPassExtractLuminance;
@@ -110,7 +107,7 @@ public class BloomPostProcessor : PostProcessor, IDisposable
     private float _bloomStrength4 = 1.0f;
     private float _bloomStrength5 = 1.0f;
 
-    public float BloomStrengthMultiplier = 1.0f;
+    public float BloomStrengthMultiplier;
 
     private readonly float _radiusMultiplier = 1.0f;
 
@@ -268,37 +265,34 @@ public class BloomPostProcessor : PostProcessor, IDisposable
         //UpdateResolution(scene.SceneRenderTargetSize.X, scene.SceneRenderTargetSize.Y);
 
         //if quadRenderer == null -> new, otherwise not
-        _quadRenderer = new QuadRenderer(_graphicsDev);
+        _quadRenderer = new QuadRenderer();
         Color[] tmp = [Color.Black];
-        black = new Texture2D(_graphicsDev, 1, 1);
-        black.SetData(tmp);
+        var black1 = new Texture2D(_graphicsDev, 1, 1);
+        black1.SetData(tmp);
 
         _renderTargetFormat = SurfaceFormat.Color;
 
         //Load the shader parameters and passes for cheap and easy access
-        _bloomEffect = content.LoadEffect<Effect>("qualityBloom", EffectResource.QualityBloom);
-        _bloomInverseResolutionParameter = _bloomEffect.Parameters["InverseResolution"];
-        _bloomRadiusParameter = _bloomEffect.Parameters["Radius"];
-        _bloomStrengthParameter = _bloomEffect.Parameters["Strength"];
-        _bloomStreakLengthParameter = _bloomEffect.Parameters["StreakLength"];
-        _bloomThresholdParameter = _bloomEffect.Parameters["Threshold"];
+        var bloomEffect = content.LoadEffect<Effect>("qualityBloom", EffectResource.QualityBloom);
+        _bloomInverseResolutionParameter = bloomEffect.Parameters["InverseResolution"];
+        _bloomRadiusParameter = bloomEffect.Parameters["Radius"];
+        _bloomStrengthParameter = bloomEffect.Parameters["Strength"];
+        _bloomStreakLengthParameter = bloomEffect.Parameters["StreakLength"];
+        _bloomThresholdParameter = bloomEffect.Parameters["Threshold"];
 
         //For DirectX / Windows
-        _bloomParameterScreenTexture = _bloomEffect.Parameters["ScreenTexture"];
+        _bloomParameterScreenTexture = bloomEffect.Parameters["ScreenTexture"];
 
         //If we are on OpenGL it's different, load the other one then!
         if (_bloomParameterScreenTexture == null)
             //for OpenGL / CrossPlatform
-            _bloomParameterScreenTexture = _bloomEffect.Parameters["LinearSampler+ScreenTexture"];
+            _bloomParameterScreenTexture = bloomEffect.Parameters["LinearSampler+ScreenTexture"];
 
-        _bloomPassExtract = _bloomEffect.Techniques["Extract"].Passes[0];
-        _bloomPassExtractLuminance = _bloomEffect.Techniques["ExtractLuminance"].Passes[0];
-        _bloomPassDownsample = _bloomEffect.Techniques["Downsample"].Passes[0];
-        _bloomPassUpsample = _bloomEffect.Techniques["Upsample"].Passes[0];
-        _bloomPassUpsampleLuminance = _bloomEffect.Techniques["UpsampleLuminance"].Passes[0];
-
-        //An interesting blendstate for merging the initial image with the bloom.
-        BlendStateBloom = BlendState.Additive;
+        _bloomPassExtract = bloomEffect.Techniques["Extract"].Passes[0];
+        _bloomPassExtractLuminance = bloomEffect.Techniques["ExtractLuminance"].Passes[0];
+        _bloomPassDownsample = bloomEffect.Techniques["Downsample"].Passes[0];
+        _bloomPassUpsample = bloomEffect.Techniques["Upsample"].Passes[0];
+        _bloomPassUpsampleLuminance = bloomEffect.Techniques["UpsampleLuminance"].Passes[0];
 
         //Setup the default preset values.
         //BloomPreset = BloomPresets.One;

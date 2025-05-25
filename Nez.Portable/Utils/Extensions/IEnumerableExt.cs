@@ -29,11 +29,9 @@ public static class IEnumerableExt
         checked
         {
             var count = 0;
-            using (var iterator = source.GetEnumerator())
-            {
-                while (iterator.MoveNext())
-                    count++;
-            }
+            using var iterator = source.GetEnumerator();
+            while (iterator.MoveNext())
+                count++;
 
             return count;
         }

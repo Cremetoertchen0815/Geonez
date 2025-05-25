@@ -90,11 +90,11 @@ public class SceneManager : GlobalManager, ITelegramReceiver
         var ID = int.Parse(IDstr);
 
         //Is scene being called parameterless
-        if (Scenes.ContainsKey(ID))
+        if (Scenes.TryGetValue(ID, out var scene1))
         {
             //Create object with parameterless constructor
             var constructor =
-                Scenes[ID].Item1.GetConstructors().Where(x => x.GetParameters().Length == 0)
+                scene1.Item1.GetConstructors().Where(x => x.GetParameters().Length == 0)
                     .ToArray(); //Grab parameterless constructors
             if (constructor.Length == 1)
                 Core.Scene =

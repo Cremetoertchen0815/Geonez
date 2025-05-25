@@ -62,8 +62,8 @@ public delegate MaterialAPI MaterialGenerator(Effect mgEffect);
 public static class DefaultMaterialsFactory
 {
     // all material generators
-    private static readonly MaterialGenerator[] generators = new MaterialGenerator[]
-    {
+    private static readonly MaterialGenerator[] generators =
+    [
         // Basic
         mgEffect => { return new BasicMaterial((BasicEffect)mgEffect); },
 
@@ -72,7 +72,7 @@ public static class DefaultMaterialsFactory
 
         // Alpha test
         mgEffect => { return new AlphaTestMaterial((AlphaTestEffect)mgEffect); }
-    };
+    ];
 
     /// <summary>
     ///     Function to generate default materials to newly-loaded models.
@@ -114,7 +114,7 @@ public static class DefaultMaterialsFactory
         // create skinned effects
         if (effect.GetType() == typeof(AlphaTestEffect)) return AlphaTest(effect);
         // unknown type!
-        throw new ArgumentOutOfRangeException("Model had unsuporrted effect type!");
+        throw new ArgumentOutOfRangeException(nameof(effect));
     }
 
     /// <summary>

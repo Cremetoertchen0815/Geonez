@@ -177,20 +177,20 @@ public class PolyLight : RenderableComponent
 
     public override void Render(Batcher batcher, Camera camera)
     {
-        RenderImpl(batcher, camera, false);
+        RenderImpl(camera, false);
     }
 
     public override void DebugRender(Batcher batcher)
     {
         // here, we just assume the Camera being used by the Renderer is the standard Scene Camera
-        RenderImpl(batcher, Entity.Scene.Camera, true);
+        RenderImpl(Entity.Scene.Camera, true);
 
         // draw a square for our pivot/origin and draw our bounds
         batcher.DrawPixel(Entity.Transform.Position + _localOffset, Debug.Colors.RenderableCenter, 4);
         batcher.DrawHollowRect(Bounds, Debug.Colors.RenderableBounds);
     }
 
-    private void RenderImpl(Batcher batcher, Camera camera, bool debugDraw)
+    private void RenderImpl(Camera camera, bool debugDraw)
     {
         if (Power > 0 && IsVisibleFromCamera(camera))
         {

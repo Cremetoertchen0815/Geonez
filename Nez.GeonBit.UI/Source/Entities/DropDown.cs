@@ -264,7 +264,7 @@ public class DropDown : Entity
     private void InitEvents()
     {
         // add callback on list value change
-        SelectList.OnValueChange = entity =>
+        SelectList.OnValueChange = _ =>
         {
             // hide list
             ListVisible = false;
@@ -274,13 +274,13 @@ public class DropDown : Entity
         };
 
         // on click, always hide the selectlist
-        SelectList.OnClick = entity => { ListVisible = false; };
+        SelectList.OnClick = _ => { ListVisible = false; };
 
         // hide the list by default
         SelectList.Visible = false;
 
         // setup the callback to show / hide the list when clicking the dropbox
-        SelectedTextPanel.OnClick = self =>
+        SelectedTextPanel.OnClick = _ =>
         {
             // change visibility
             ListVisible = !ListVisible;

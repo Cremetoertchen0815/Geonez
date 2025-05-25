@@ -78,7 +78,7 @@ public abstract class SvgElement
     public Matrix2D GetCombinedMatrix()
     {
         var m = Matrix2D.Identity;
-        if (_transforms != null && _transforms.Count > 0)
+        if (_transforms is { Count: > 0 })
             foreach (var trans in _transforms)
                 m = Matrix2D.Multiply(m, trans.Matrix);
 

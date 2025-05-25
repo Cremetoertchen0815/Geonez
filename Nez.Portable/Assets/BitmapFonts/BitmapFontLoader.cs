@@ -22,18 +22,14 @@ public static class BitmapFontLoader
     /// </returns>
     public static BitmapFont LoadFontFromFile(string filename, bool premultiplyAlpha = false)
     {
-        using (var file = TitleContainer.OpenStream(filename))
-        {
-            using (var reader = new StreamReader(file))
-            {
-                var line = reader.ReadLine();
-                if (line.StartsWith("info "))
-                    return LoadFontFromTextFile(filename, premultiplyAlpha);
-                if (line.StartsWith("<?xml") || line.StartsWith("<font"))
-                    return LoadFontFromXmlFile(filename, premultiplyAlpha);
-                throw new InvalidDataException("Unknown file format.");
-            }
-        }
+        using var file = TitleContainer.OpenStream(filename);
+        using var reader = new StreamReader(file);
+        var line = reader.ReadLine();
+        if (line.StartsWith("info "))
+            return LoadFontFromTextFile(filename, premultiplyAlpha);
+        if (line.StartsWith("<?xml") || line.StartsWith("<font"))
+            return LoadFontFromXmlFile(filename, premultiplyAlpha);
+        throw new InvalidDataException("Unknown file format.");
     }
 
     /// <summary>

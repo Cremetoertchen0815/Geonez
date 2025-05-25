@@ -152,7 +152,6 @@ public class MarkupText : RenderableComponent
         var lineBuffer = new List<ICompiledElement>();
         var currentLineHeight = 0f;
         var currentTotalHeight = 0f;
-        var currentLineWidth = 0f;
 
         while (reader.Read())
             if (reader.NodeType == XmlNodeType.Element)
@@ -229,8 +228,6 @@ public class MarkupText : RenderableComponent
                             currentTotalHeight += currentFormatting.Font.LineSpacing * currentFormatting.Scale.Y;
                         }
 
-                        currentLineWidth = 0;
-
                         if (reader.Name == "p")
                         {
                             var value = reader.GetAttribute("align");
@@ -274,7 +271,6 @@ public class MarkupText : RenderableComponent
 
                         lineBuffer.Add(new CompiledImageElement(image, color, position, scale));
                         position.X += imageWidth;
-                        currentLineWidth += imageWidth;
                         break;
                     }
 
@@ -285,7 +281,6 @@ public class MarkupText : RenderableComponent
                         if (position.X + spaceX < TextWidth)
                         {
                             position.X += spaceX;
-                            currentLineWidth += spaceX;
                         }
 
                         break;
@@ -338,7 +333,6 @@ public class MarkupText : RenderableComponent
                         textRun.Clear();
 
                         position.X += wordRunSize;
-                        currentLineWidth += wordRunSize;
                         wordRunSize = 0;
                     }
 
@@ -347,7 +341,6 @@ public class MarkupText : RenderableComponent
                     {
                         position = WrapLine(position, lineBuffer, alignStack.Peek(), out currentLineHeight);
                         currentTotalHeight += currentLineHeight;
-                        currentLineWidth = 0;
                     }
                 }
             }
@@ -380,7 +373,6 @@ public class MarkupText : RenderableComponent
                             currentTotalHeight += currentFormatting.Font.LineSpacing * currentFormatting.Scale.Y;
                         }
 
-                        currentLineWidth = 0;
                         alignStack.Pop();
                         break;
                     }

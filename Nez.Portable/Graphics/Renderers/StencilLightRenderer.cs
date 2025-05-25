@@ -27,7 +27,6 @@ public class StencilLightRenderer : Renderer
     private readonly DepthStencilState _depthStencilState;
     private readonly PrimitiveBatch _primitiveBatch;
     private readonly BlendState _stencilOnlyBlendState;
-    private readonly Vector2[] _vertBuffer = new Vector2[4];
 
     /// <summary>
     ///     layer mask of all the layers this light should interact with. defaults to all layers.
@@ -156,10 +155,6 @@ public class StencilLightRenderer : Renderer
                 var point2 = vertex + Vector2.Normalize(vertex - lightPos) * Screen.BackbufferWidth;
 
                 var poly = new[] { nextVertex, point1, point2, vertex };
-                _vertBuffer[0] = nextVertex;
-                _vertBuffer[1] = point1;
-                _vertBuffer[2] = point2;
-                _vertBuffer[3] = vertex;
                 _primitiveBatch.DrawPolygon(poly, 4, Color.Black);
             }
         }

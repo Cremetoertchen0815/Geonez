@@ -451,7 +451,7 @@ public class ScrollPane : Group, IInputListener
     {
         get
         {
-            if (_widget is ILayout)
+            if (_widget is not null)
             {
                 var width = ((ILayout)_widget).PreferredWidth;
                 if (_style.Background != null) width += _style.Background.LeftWidth + _style.Background.RightWidth;
@@ -474,7 +474,7 @@ public class ScrollPane : Group, IInputListener
     {
         get
         {
-            if (_widget is ILayout)
+            if (_widget is not null)
             {
                 var height = ((ILayout)_widget).PreferredHeight;
                 if (_style.Background != null)
@@ -528,18 +528,9 @@ public class ScrollPane : Group, IInputListener
             return;
 
         // Get widget's desired width.
-        float widgetWidth, widgetHeight;
-        if (_widget is ILayout)
-        {
-            var layout = _widget as ILayout;
-            widgetWidth = layout.PreferredWidth;
-            widgetHeight = layout.PreferredHeight;
-        }
-        else
-        {
-            widgetWidth = _widget.GetWidth();
-            widgetHeight = _widget.GetHeight();
-        }
+        ILayout layout = _widget!;
+        var widgetWidth = layout.PreferredWidth;
+        var widgetHeight = layout.PreferredHeight;
 
         // Determine if horizontal/vertical scrollbars are needed.
         _scrollX = _forceScrollX || (widgetWidth > _areaWidth && !_disableX);
@@ -687,7 +678,7 @@ public class ScrollPane : Group, IInputListener
         }
 
         _widget.SetSize(widgetWidth, widgetHeight);
-        if (_widget is ILayout)
+        if (_widget is not null)
             ((ILayout)_widget).Validate();
     }
 
@@ -737,7 +728,6 @@ public class ScrollPane : Group, IInputListener
             }
 
             SetScrollY(_amountY + _areaHeight * (mousePos.Y > _vKnobBounds.Y ? 1 : -1));
-            return true;
         }
 
         return true;

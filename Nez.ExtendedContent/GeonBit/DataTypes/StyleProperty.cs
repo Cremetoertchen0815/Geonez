@@ -26,34 +26,34 @@ namespace Nez.ExtendedContent.DataTypes
 		private float? _float;
 
 		/// <summary>helper function to get / set color value.</summary>
-		[ContentSerializerAttribute(Optional = true)]
+		[ContentSerializer(Optional = true)]
 		[System.Xml.Serialization.XmlIgnore]
-		public Color asColor { get => _color != null ? (Color)_color : Color.White; set => _color = value; }
+		public Color asColor { get => _color ?? Color.White; set => _color = value; }
 
 		/// <summary>helper function to get / set vector value.</summary>
-		[ContentSerializerAttribute(Optional = true)]
+		[ContentSerializer(Optional = true)]
 		[System.Xml.Serialization.XmlIgnore]
-		public Vector2 asVector { get => _vector != null ? (Vector2)_vector : Vector2.One; set => _vector = value; }
+		public Vector2 asVector { get => _vector ?? Vector2.One; set => _vector = value; }
 
 		/// <summary>helper function to get / set float value.</summary>
-		[ContentSerializerAttribute(Optional = true)]
+		[ContentSerializer(Optional = true)]
 		[System.Xml.Serialization.XmlIgnore]
-		public float asFloat { get => _float.Value; set => _float = value; }
+		public float asFloat { get => _float!.Value; set => _float = value; }
 
 		/// <summary>helper function to get / set int value.</summary>
-		[ContentSerializerAttribute(Optional = true)]
+		[ContentSerializer(Optional = true)]
 		[System.Xml.Serialization.XmlIgnore]
-		public int asInt { get => (int)_float.Value; set => _float = value; }
+		public int asInt { get => (int)_float!.Value; set => _float = value; }
 
 		/// <summary>helper function to get / set bool value.</summary>
-		[ContentSerializerAttribute(Optional = true)]
+		[ContentSerializer(Optional = true)]
 		[System.Xml.Serialization.XmlIgnore]
-		public bool asBool { get => _float.Value > 0f; set => _float = value ? 1f : 0f; }
+		public bool asBool { get => _float!.Value > 0f; set => _float = value ? 1f : 0f; }
 
 		/// <summary>
 		/// Get/set currently-set value, for serialization.
 		/// </summary>
-		[ContentSerializerAttribute(Optional = true)]
+		[ContentSerializer(Optional = true)]
 		public object _Value
 		{
 			get
@@ -65,18 +65,22 @@ namespace Nez.ExtendedContent.DataTypes
 					return _vector.Value;
 
 				else
-					return _float.Value;
+					return _float!.Value;
 			}
 			set
 			{
-				if (value is Color)
-					_color = (Color)value;
-
-				else if (value is Vector2)
-					_vector = (Vector2)value;
-
-				else
-					_float = (float)value;
+				switch (value)
+				{
+					case Color coco:
+						_color = coco;
+						break;
+					case Vector2 vector2:
+						_vector = vector2;
+						break;
+					default:
+						_float = (float)value;
+						break;
+				}
 			}
 		}
 

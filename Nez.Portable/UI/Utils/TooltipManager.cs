@@ -205,7 +205,7 @@ public class TooltipManager
         {
             PropertyTweens.FloatPropertyTo(container, "scaleX", 0.2f, 0.2f).SetEaseType(EaseType.QuintOut).Start();
             PropertyTweens.FloatPropertyTo(container, "scaleY", 0.2f, 0.2f).SetEaseType(EaseType.QuintOut)
-                .SetCompletionHandler(t => container.Remove())
+                .SetCompletionHandler(_ => container.Remove())
                 .Start();
         }
         else

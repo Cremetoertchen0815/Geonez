@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using Microsoft.Xna.Framework;
 
@@ -108,9 +109,9 @@ public class DeltaAnalyzer
 
             batcher.DrawString(Graphics.Instance.BitmapFont, el.Item1,
                 new Vector2(offsetX + 20, offsetY + (i + 3) * 10), chlor);
-            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item2.ToString(),
+            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item2.ToString(CultureInfo.InvariantCulture),
                 new Vector2(offsetX + 120, offsetY + (i + 3) * 10), chlor);
-            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item3.ToString(),
+            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item3.ToString(CultureInfo.InvariantCulture),
                 new Vector2(offsetX + 160, offsetY + (i + 3) * 10), chlor);
         }
 
@@ -123,9 +124,9 @@ public class DeltaAnalyzer
 
             batcher.DrawString(Graphics.Instance.BitmapFont, el.Item1,
                 new Vector2(offsetX + 20 + 250, offsetY + (i + 3) * 10), chlor);
-            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item2.ToString(),
+            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item2.ToString(CultureInfo.InvariantCulture),
                 new Vector2(offsetX + 120 + 250, offsetY + (i + 3) * 10), chlor);
-            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item3.ToString(),
+            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item3.ToString(CultureInfo.InvariantCulture),
                 new Vector2(offsetX + 160 + 250, offsetY + (i + 3) * 10), chlor);
         }
 
@@ -138,9 +139,9 @@ public class DeltaAnalyzer
 
             batcher.DrawString(Graphics.Instance.BitmapFont, el.Item1,
                 new Vector2(offsetX + 20, offsetY2 + (i + 2) * 10), chlor);
-            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item2.ToString(),
+            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item2.ToString(CultureInfo.InvariantCulture),
                 new Vector2(offsetX + 120, offsetY2 + (i + 2) * 10), chlor);
-            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item3.ToString(),
+            batcher.DrawString(Graphics.Instance.BitmapFont, el.Item3.ToString(CultureInfo.InvariantCulture),
                 new Vector2(offsetX + 160, offsetY2 + (i + 2) * 10), chlor);
         }
 
@@ -148,14 +149,14 @@ public class DeltaAnalyzer
 
         batcher.DrawString(Graphics.Instance.BitmapFont, "Update", new Vector2(offsetX + 20 + 250, offsetY2 + 20),
             Color.Orange);
-        batcher.DrawString(Graphics.Instance.BitmapFont, Math.Round(_oldUpdateTotalTime, 3).ToString(),
+        batcher.DrawString(Graphics.Instance.BitmapFont, Math.Round(_oldUpdateTotalTime, 3).ToString(CultureInfo.InvariantCulture),
             new Vector2(offsetX + 120 + 250, offsetY2 + 20), Color.Orange);
         batcher.DrawString(Graphics.Instance.BitmapFont, $"{Math.Round(_oldUpdateTotalTime / add * 100, 2)}%",
             new Vector2(offsetX + 160 + 250, offsetY2 + 20), Color.Orange);
 
         batcher.DrawString(Graphics.Instance.BitmapFont, "Draw", new Vector2(offsetX + 20 + 250, offsetY2 + 30),
             Color.Lime);
-        batcher.DrawString(Graphics.Instance.BitmapFont, Math.Round(_oldDrawTotalTime, 3).ToString(),
+        batcher.DrawString(Graphics.Instance.BitmapFont, Math.Round(_oldDrawTotalTime, 3).ToString(CultureInfo.InvariantCulture),
             new Vector2(offsetX + 120 + 250, offsetY2 + 30), Color.Lime);
         batcher.DrawString(Graphics.Instance.BitmapFont, $"{Math.Round(_oldDrawTotalTime / add * 100, 2)}%",
             new Vector2(offsetX + 160 + 250, offsetY2 + 30), Color.Lime);
@@ -180,13 +181,13 @@ public class DeltaAnalyzer
         //Fill lists with new data
         foreach (var item in UpdateDeltas)
         {
-            if (!entitiesUpdateList.ContainsKey(item.Key)) entitiesUpdateList.Add(item.Key, 0);
+            entitiesUpdateList.TryAdd(item.Key, 0);
             foreach (var element in item.Value)
             {
                 entitiesUpdateList[item.Key] += element.Item2;
                 UpdateTotalTime += element.Item2;
 
-                if (!compnentUpdateList.ContainsKey(element.Item1)) compnentUpdateList.Add(element.Item1, 0);
+                compnentUpdateList.TryAdd(element.Item1, 0);
                 compnentUpdateList[element.Item1] += element.Item2;
             }
 
@@ -200,17 +201,17 @@ public class DeltaAnalyzer
         var compnentUpdateNames = compnentUpdateList.Select(x => x.Key).ToArray();
         var objectsDrawingNames = DrawDeltas.Select(x => x.Key).ToArray();
         foreach (var element in entitiesUpdateNames)
-            if (_oldEntitiesUpdateList.ContainsKey(element))
+            if (_oldEntitiesUpdateList.TryGetValue(element, out var value))
                 entitiesUpdateList[element] = MathHelper.LerpPrecise((float)entitiesUpdateList[element],
-                    (float)_oldEntitiesUpdateList[element], 0.92F);
+                    (float)value, 0.92F);
         foreach (var element in compnentUpdateNames)
-            if (_oldCompnentUpdateList.ContainsKey(element))
+            if (_oldCompnentUpdateList.TryGetValue(element, out var value))
                 compnentUpdateList[element] = MathHelper.LerpPrecise((float)compnentUpdateList[element],
-                    (float)_oldCompnentUpdateList[element], 0.92F);
+                    (float)value, 0.92F);
         foreach (var element in objectsDrawingNames)
-            if (_oldObjctDrawDeltaList.ContainsKey(element))
+            if (_oldObjctDrawDeltaList.TryGetValue(element, out var value))
                 DrawDeltas[element] = MathHelper.LerpPrecise((float)DrawDeltas[element],
-                    (float)_oldObjctDrawDeltaList[element], 0.92F);
+                    (float)value, 0.92F);
         UpdateTotalTime = MathHelper.Lerp((float)UpdateTotalTime, _oldUpdateTotalTime, 0.92F);
         DrawTotalTime = MathHelper.Lerp((float)DrawTotalTime, _oldDrawTotalTime, 0.92F);
 
@@ -255,7 +256,7 @@ public class DeltaAnalyzer
 
     public class DeltaSegment : IPoolable
     {
-        private Stopwatch _s;
+        private Stopwatch _ss;
         public string Component;
         public double Delta;
         public string Entity;
@@ -270,13 +271,13 @@ public class DeltaAnalyzer
             Component = string.Empty;
             Status = DeltaSegmentState.Idle;
             Delta = 0F;
-            _s = null;
+            _ss = null;
         }
 
         public static DeltaSegment Start(string entity, string component, DeltaSegmentType type, Stopwatch s)
         {
             var sg = Pool<DeltaSegment>.Obtain();
-            sg._s = s;
+            sg._ss = s;
             sg.Entity = entity;
             sg.Component = component;
             sg.Type = type;
@@ -288,12 +289,12 @@ public class DeltaAnalyzer
         public void Stop()
         {
             Status = DeltaSegmentState.HasEnded;
-            SpanEnd = _s.Elapsed;
+            SpanEnd = _ss.Elapsed;
             Delta = (float)(SpanEnd - SpanStart).TotalSeconds;
 
             if (Type == DeltaSegmentType.Update)
             {
-                var ComponLst = UpdateDeltas.ContainsKey(Entity) ? UpdateDeltas[Entity] : null;
+                var ComponLst = UpdateDeltas.GetValueOrDefault(Entity);
                 if (ComponLst == null)
                 {
                     ComponLst = [];
@@ -304,8 +305,7 @@ public class DeltaAnalyzer
             }
             else
             {
-                if (DrawDeltas.ContainsKey(Entity)) DrawDeltas[Entity] += Delta;
-                else DrawDeltas.Add(Entity, Delta);
+                if (!DrawDeltas.TryAdd(Entity, Delta)) DrawDeltas[Entity] += Delta;
             }
 
             Pool<DeltaSegment>.Free(this);

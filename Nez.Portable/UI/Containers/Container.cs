@@ -180,7 +180,7 @@ public class Container : Group
         }
 
         _element.SetBounds(x, y, width, height);
-        if (_element is ILayout)
+        if (_element is not null)
             ((ILayout)_element).Validate();
     }
 

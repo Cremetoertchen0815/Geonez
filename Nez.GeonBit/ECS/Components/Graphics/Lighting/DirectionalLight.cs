@@ -57,7 +57,7 @@ public class DirectionalLight : GeonComponent, ILightSource
     {
         // if didn't really change skip
         // break transformation into components
-        worldTransformations.Decompose(out var scale, out var rotation, out var position);
+        worldTransformations.Decompose(out _, out _, out var position);
 
         // set world position. this will also recalc bounding sphere and update lights manager, if needed.
         Entity.Node.Position = position;

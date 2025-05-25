@@ -112,7 +112,7 @@ public abstract class Value
     {
         public override float Get(Element context)
         {
-            if (context is ILayout)
+            if (context is not null)
                 return ((ILayout)context).MinWidth;
 
             return context == null ? 0 : context.width;
@@ -126,7 +126,7 @@ public abstract class Value
     {
         public override float Get(Element context)
         {
-            if (context is ILayout)
+            if (context is not null)
                 return ((ILayout)context).MinHeight;
 
             return context == null ? 0 : context.height;
@@ -140,7 +140,7 @@ public abstract class Value
     {
         public override float Get(Element context)
         {
-            if (context is ILayout)
+            if (context is not null)
                 return ((ILayout)context).PreferredWidth;
 
             return context == null ? 0 : context.width;
@@ -154,7 +154,7 @@ public abstract class Value
     {
         public override float Get(Element context)
         {
-            if (context is ILayout)
+            if (context is not null)
                 return ((ILayout)context).PreferredHeight;
 
             return context == null ? 0 : context.height;
@@ -168,7 +168,7 @@ public abstract class Value
     {
         public override float Get(Element context)
         {
-            if (context is ILayout)
+            if (context is not null)
                 return ((ILayout)context).MaxWidth;
 
             return context == null ? 0 : context.width;
@@ -182,7 +182,7 @@ public abstract class Value
     {
         public override float Get(Element context)
         {
-            if (context is ILayout)
+            if (context is not null)
                 return ((ILayout)context).MaxHeight;
 
             return context == null ? 0 : context.height;

@@ -11,17 +11,11 @@ namespace Nez;
 ///     - render all normal objects in standard fashion
 ///     - add this PostProcessor with the RenderTarget from your lights Renderer
 /// </summary>
-public class SpriteLightPostProcessor : PostProcessor
+public class SpriteLightPostProcessor(int executionOrder, RenderTexture lightsRenderTexture)
+    : PostProcessor(executionOrder)
 {
-    private readonly RenderTexture _lightsRenderTexture;
-
     private float _multiplicativeFactor = 1f;
 
-
-    public SpriteLightPostProcessor(int executionOrder, RenderTexture lightsRenderTexture) : base(executionOrder)
-    {
-        _lightsRenderTexture = lightsRenderTexture;
-    }
 
     /// <summary>
     ///     multiplicative factor for the blend of the base and light render targets. Defaults to 1.
@@ -43,7 +37,7 @@ public class SpriteLightPostProcessor : PostProcessor
         base.OnAddedToScene(scene);
 
         Effect = scene.Content.LoadEffect<Effect>("spriteLightMultiply", EffectResource.SpriteLightMultiplyBytes);
-        Effect.Parameters["_lightTexture"].SetValue(_lightsRenderTexture);
+        Effect.Parameters["_lightTexture"].SetValue(lightsRenderTexture);
         Effect.Parameters["_multiplicativeFactor"].SetValue(_multiplicativeFactor);
     }
 
@@ -51,7 +45,7 @@ public class SpriteLightPostProcessor : PostProcessor
     {
         _scene.Content.UnloadEffect(Effect);
         Effect = null;
-        _lightsRenderTexture.Dispose();
+        lightsRenderTexture.Dispose();
 
         base.Unload();
     }
@@ -67,6 +61,6 @@ public class SpriteLightPostProcessor : PostProcessor
     public override void OnSceneBackBufferSizeChanged(int newWidth, int newHeight)
     {
         // when the RenderTexture changes we have to reset the shader param since the underlying RenderTarget will be different
-        Effect.Parameters["_lightTexture"].SetValue(_lightsRenderTexture);
+        Effect.Parameters["_lightTexture"].SetValue(lightsRenderTexture);
     }
 }

@@ -330,7 +330,7 @@ public class SelectList : PanelBase
     /// </summary>
     public void ScrollToSelected()
     {
-        if (_scrollbar != null && _scrollbar.Visible) _scrollbar.Value = SelectedIndex;
+        if (_scrollbar is { Visible: true }) _scrollbar.Value = SelectedIndex;
     }
 
     /// <summary>
@@ -338,7 +338,7 @@ public class SelectList : PanelBase
     /// </summary>
     public void scrollToEnd()
     {
-        if (_scrollbar != null && _scrollbar.Visible) _scrollbar.Value = _list.Count;
+        if (_scrollbar is { Visible: true }) _scrollbar.Value = _list.Count;
     }
 
     /// <summary>
@@ -458,7 +458,7 @@ public class SelectList : PanelBase
     public void PropagateEventsTo(SelectList other)
     {
         PropagateEventsTo((Entity)other);
-        OnListChange += entity => { other.OnListChange?.Invoke(other); };
+        OnListChange += _ => { other.OnListChange?.Invoke(other); };
     }
 
     /// <summary>
@@ -469,7 +469,7 @@ public class SelectList : PanelBase
     public void PropagateEventsTo(DropDown other)
     {
         PropagateEventsTo((Entity)other);
-        OnListChange += entity => { other.OnListChange?.Invoke(other); };
+        OnListChange += _ => { other.OnListChange?.Invoke(other); };
     }
 
     /// <summary>
@@ -615,7 +615,7 @@ public class SelectList : PanelBase
             {
                 // add background to selected paragraph
                 var paragraph = _paragraphs[i];
-                var destRect = paragraph.GetActualDestRect();
+                paragraph.GetActualDestRect();
                 paragraph.State = EntityState.MouseDown;
                 paragraph.BackgroundColor = GetActiveStyle("SelectedHighlightColor").asColor;
             }

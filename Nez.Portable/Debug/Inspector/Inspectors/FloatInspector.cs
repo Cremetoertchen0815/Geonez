@@ -25,7 +25,7 @@ namespace Nez
             var label = CreateNameLabel(table, skin, leftCellWidth);
             _textField = new TextField(GetValue<float>().ToString(CultureInfo.InvariantCulture), skin);
             _textField.SetTextFieldFilter(new FloatFilter());
-            _textField.OnTextChanged += (field, str) =>
+            _textField.OnTextChanged += (_, str) =>
             {
                 if (float.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture, out var newValue))
                     SetValue(newValue);

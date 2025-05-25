@@ -109,7 +109,7 @@ public class PhysicsDebugDraw : DebugDraw
     /// <param name="color">Color.</param>
     public override void DrawLine(ref Vector3 from, ref Vector3 to, ref Vector3 color)
     {
-        var col = new Color((float)color.X, (float)color.Y, (float)color.Z);
+        var col = new Color(color.X, color.Y, color.Z);
         var vertices = new[]
         {
             new VertexPositionColor(ToMonoGame.Vector(from), col),

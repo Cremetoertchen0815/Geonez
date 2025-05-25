@@ -171,11 +171,11 @@ public static class ColorExt
             var deltaG = ((max - g) / 6f + delta / 2f) / delta;
             var deltaB = ((max - b) / 6f + delta / 2f) / delta;
 
-            if (r == max)
+            if (Math.Abs(r - max) < float.Epsilon)
                 h = deltaB - deltaG;
-            else if (g == max)
+            else if (Math.Abs(g - max) < float.Epsilon)
                 h = 1f / 3f + deltaR - deltaB;
-            else if (b == max)
+            else if (Math.Abs(b - max) < float.Epsilon)
                 h = 2f / 3f + deltaG - deltaR;
 
             if (h < 0)

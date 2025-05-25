@@ -93,13 +93,11 @@ public class SvgImage : SvgElement
             var imageContents = Href.Substring(startIndex);
             var bytes = Convert.FromBase64String(imageContents);
 
-            using (var m = new MemoryStream())
-            {
-                m.Write(bytes, 0, bytes.Length);
-                m.Seek(0, SeekOrigin.Begin);
+            using var m = new MemoryStream();
+            m.Write(bytes, 0, bytes.Length);
+            m.Seek(0, SeekOrigin.Begin);
 
-                _texture = Texture2D.FromStream(Core.GraphicsDevice, m);
-            }
+            _texture = Texture2D.FromStream(Core.GraphicsDevice, m);
         }
 
         _didAttemptTextureLoad = true;

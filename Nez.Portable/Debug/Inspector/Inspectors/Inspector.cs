@@ -330,7 +330,7 @@ namespace Nez
         {
             var attributes = _memberInfo.GetCustomAttributes<T>();
             foreach (var attr in attributes)
-                if (attr is T)
+                if (attr is not null)
                     return attr;
 
             return null;

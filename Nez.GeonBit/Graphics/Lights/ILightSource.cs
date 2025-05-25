@@ -17,7 +17,7 @@ public interface ILightSource
     /// <summary>
     ///     Return if this light is a directional light.
     /// </summary>
-    public virtual bool IsDirectionalLight => Direction != null;
+    public bool IsDirectionalLight => Direction != null;
 
     /// <summary>
     ///     Light position in world space.

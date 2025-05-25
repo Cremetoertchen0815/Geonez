@@ -85,7 +85,7 @@ public class TextField : Element, IInputListener, IKeyboardListener
 
     public override float PreferredWidth => _preferredWidth;
 
-    public override float PreferredHeight
+    public sealed override float PreferredHeight
     {
         get
         {
@@ -124,7 +124,7 @@ public class TextField : Element, IInputListener, IKeyboardListener
 
     protected bool IsWordCharacter(char c)
     {
-        return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
+        return c is >= 'A' and <= 'Z' || c is >= 'a' and <= 'z' || c is >= '0' and <= '9';
     }
 
 
@@ -575,9 +575,7 @@ public class TextField : Element, IInputListener, IKeyboardListener
 
     #region IInputListener
 
-    private readonly float _clickCountInterval = 0.2f;
-    private int _clickCount;
-    private float _lastClickTime;
+    private const float _clickCountInterval = 0.2f;
 
     void IInputListener.OnMouseEnter()
     {
@@ -601,8 +599,7 @@ public class TextField : Element, IInputListener, IKeyboardListener
         selectionStart = cursor;
         hasSelection = true;
         var stage = GetStage();
-        if (stage != null)
-            stage.SetKeyboardFocus(this);
+        stage?.SetKeyboardFocus(this);
 
         return true;
     }
@@ -627,10 +624,6 @@ public class TextField : Element, IInputListener, IKeyboardListener
         if (selectionStart == cursor)
             hasSelection = false;
 
-        if (Time.TotalTime - _lastClickTime > _clickCountInterval)
-            _clickCount = 0;
-        _clickCount++;
-        _lastClickTime = Time.TotalTime;
         _isPressed = _isOver = false;
     }
 
@@ -752,7 +745,7 @@ public class TextField : Element, IInputListener, IKeyboardListener
             if (_keyRepeatTimer != null)
                 _keyRepeatTimer.Abort();
             _keyRepeatTimer = Core.Schedule(_keyRepeatTime, true, this,
-                t => (t.Context as IKeyboardListener).KeyDown(key));
+                t => (t.Context as IKeyboardListener)?.KeyDown(key));
         }
     }
 
@@ -798,41 +791,39 @@ public class TextField : Element, IInputListener, IKeyboardListener
             if (enterPressed)
                 OnEnterPressed(this);
 
-            if (add || remove)
+            if (!add && !remove) return;
+            var oldText = text;
+            if (hasSelection)
             {
-                var oldText = text;
-                if (hasSelection)
-                {
-                    cursor = Delete(false);
-                }
-                else
-                {
-                    if (backspacePressed && cursor > 0)
-                    {
-                        text = text.Substring(0, cursor - 1) + text.Substring(cursor--);
-                        renderOffset = 0;
-                    }
-
-                    if (deletePressed && cursor < text.Length)
-                        text = text.Substring(0, cursor) + text.Substring(cursor + 1);
-                }
-
-                if (add && !remove)
-                {
-                    // character may be added to the text.
-                    if (!enterPressed && filter != null && !filter.AcceptChar(this, character))
-                        return;
-
-                    if (!WithinMaxLength(text.Length))
-                        return;
-
-                    var insertion = enterPressed ? "\n" : character.ToString();
-                    text = Insert(cursor++, insertion, text);
-                }
-
-                ChangeText(oldText, text);
-                UpdateDisplayText();
+                cursor = Delete(false);
             }
+            else
+            {
+                if (backspacePressed && cursor > 0)
+                {
+                    text = text.Substring(0, cursor - 1) + text.Substring(cursor--);
+                    renderOffset = 0;
+                }
+
+                if (deletePressed && cursor < text.Length)
+                    text = text.Substring(0, cursor) + text.Substring(cursor + 1);
+            }
+
+            if (add && !remove)
+            {
+                // character may be added to the text.
+                if (!enterPressed && filter != null && !filter.AcceptChar(this, character))
+                    return;
+
+                if (!WithinMaxLength(text.Length))
+                    return;
+
+                var insertion = enterPressed ? "\n" : character.ToString();
+                text = Insert(cursor++, insertion, text);
+            }
+
+            ChangeText(oldText, text);
+            UpdateDisplayText();
         }
     }
 
@@ -889,12 +880,11 @@ public class TextField : Element, IInputListener, IKeyboardListener
         var width = GetWidth();
         var height = GetHeight();
 
-        float bgLeftWidth = 0, bgRightWidth = 0;
+        float bgLeftWidth = 0;
         if (background != null)
         {
             background.Draw(batcher, x, y, width, height, ColorExt.Create(color, (int)(color.A * parentAlpha)));
             bgLeftWidth = background.LeftWidth;
-            bgRightWidth = background.RightWidth;
         }
 
         var textY = GetTextY(font, background);
@@ -987,12 +977,10 @@ public class TextField : Element, IInputListener, IKeyboardListener
     /// </summary>
     public void Copy()
     {
-        if (hasSelection && !passwordMode)
-        {
-            var start = Math.Min(cursor, selectionStart);
-            var length = Math.Max(cursor, selectionStart) - start;
-            Clipboard.SetContents(text.Substring(start, length));
-        }
+        if (!hasSelection || passwordMode) return;
+        var start = Math.Min(cursor, selectionStart);
+        var length = Math.Max(cursor, selectionStart) - start;
+        Clipboard.SetContents(text.Substring(start, length));
     }
 
 
@@ -1132,10 +1120,10 @@ public class TextField : Element, IInputListener, IKeyboardListener
                 var elementCoords = element.GetParent()
                     .LocalToStageCoordinates(new Vector2(element.GetX(), element.GetY()));
                 if ((elementCoords.Y < currentCoords.Y ||
-                     (elementCoords.Y == currentCoords.Y && elementCoords.X > currentCoords.X)) ^ up)
+                     (Math.Abs(elementCoords.Y - currentCoords.Y) < float.Epsilon && elementCoords.X > currentCoords.X)) ^ up)
                     if (best == null
                         || (elementCoords.Y > bestCoords.Y ||
-                            (elementCoords.Y == bestCoords.Y && elementCoords.X < bestCoords.X)) ^ up)
+                            (Math.Abs(elementCoords.Y - bestCoords.Y) < float.Epsilon && elementCoords.X < bestCoords.X)) ^ up)
                     {
                         best = (TextField)element;
                         bestCoords = elementCoords;

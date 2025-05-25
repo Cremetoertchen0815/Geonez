@@ -49,14 +49,14 @@ public class Window : Table, IInputListener
     }
 
 
-    public Window SetStyle(WindowStyle style)
+    public Window SetStyle(WindowStyle windowStyle)
     {
-        this.style = style;
-        SetBackground(style.Background);
+        this.style = windowStyle;
+        SetBackground(windowStyle.Background);
 
         var labelStyle = titleLabel.GetStyle();
-        labelStyle.Font = style.TitleFont ?? labelStyle.Font;
-        labelStyle.FontColor = style.TitleFontColor;
+        labelStyle.Font = windowStyle.TitleFont ?? labelStyle.Font;
+        labelStyle.FontColor = windowStyle.TitleFontColor;
         titleLabel.SetStyle(labelStyle);
 
         InvalidateHierarchy();

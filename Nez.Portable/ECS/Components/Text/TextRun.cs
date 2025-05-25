@@ -162,7 +162,6 @@ public class TextRun
 
             // Batcher calculations
             var sourceRectangle = currentCharacter.Bounds;
-            float sourceX, sourceY, sourceW, sourceH;
             var destW = destination.Z;
             var destH = destination.W;
 
@@ -170,10 +169,10 @@ public class TextRun
             var inverseTexW = 1.0f / currentCharacter.Bounds.Width;
             var inverseTexH = 1.0f / currentCharacter.Bounds.Height;
 
-            sourceX = sourceRectangle.X * inverseTexW;
-            sourceY = sourceRectangle.Y * inverseTexH;
-            sourceW = Math.Max(sourceRectangle.Width, float.Epsilon) * inverseTexW;
-            sourceH = Math.Max(sourceRectangle.Height, float.Epsilon) * inverseTexH;
+            var sourceX = sourceRectangle.X * inverseTexW;
+            var sourceY = sourceRectangle.Y * inverseTexH;
+            var sourceW = Math.Max(sourceRectangle.Width, float.Epsilon) * inverseTexW;
+            var sourceH = Math.Max(sourceRectangle.Height, float.Epsilon) * inverseTexH;
 
             // Rotation Calculations
             float rotationMatrix1X;

@@ -241,7 +241,7 @@ public class DynamicParagraph : Entity
     /// <returns>Actual size, in pixels, of a single character.</returns>
     public Vector2 GetCharacterActualSize()
     {
-        var font = GetCurrFont();
+        GetCurrFont();
         var scale = Scale * BaseSize * GlobalScale;
         return SingleCharacterSize * scale;
     }

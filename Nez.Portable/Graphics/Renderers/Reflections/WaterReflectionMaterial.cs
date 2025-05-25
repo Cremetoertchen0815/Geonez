@@ -5,7 +5,7 @@ namespace Nez;
 /// <summary>
 ///     used by the WaterReflectionPlane
 /// </summary>
-public class WaterReflectionMaterial : Material<WaterReflectionEffect>
+public class WaterReflectionMaterial() : Material<WaterReflectionEffect>(new WaterReflectionEffect())
 {
     /// <summary>
     ///     cache the array so we dont have to recreate it every frame
@@ -17,10 +17,6 @@ public class WaterReflectionMaterial : Material<WaterReflectionEffect>
     /// </summary>
     private RenderTarget2D _renderTarget;
 
-
-    public WaterReflectionMaterial() : base(new WaterReflectionEffect())
-    {
-    }
 
     public override void OnPreRender(Camera camera)
     {

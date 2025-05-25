@@ -144,7 +144,6 @@ public class LineRenderer : RenderableComponent
         }
 
         var distanceSoFar = 0f;
-        var fusedPoint = Vector2.Zero;
         var vertIndex = 0;
         var thirdPoint = new SegmentPoint();
 

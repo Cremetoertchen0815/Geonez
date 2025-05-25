@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
@@ -63,7 +64,7 @@ internal class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsCon
     public override AnimationsContent Process(NodeContent input, ContentProcessorContext context)
     {
         if (_fixRealBoneRoot)
-            MGFixRealBoneRoot(input, context);
+            MGFixRealBoneRoot(input);
 
         ValidateMesh(input, context, null);
 
@@ -99,7 +100,7 @@ internal class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsCon
 
         // Convert animation data to our runtime format.
         Dictionary<string, ClipContent> clips;
-        clips = ProcessAnimations(input, context, skeleton.Animations, bones, GenerateKeyframesFrequency);
+        clips = ProcessAnimations(context, skeleton.Animations, bones, GenerateKeyframesFrequency);
 
         return new AnimationsContent(bindPose, invBindPose, skeletonHierarchy, boneNames, clips);
     }
@@ -109,40 +110,37 @@ internal class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsCon
     ///     Here we revert that to get the original Skeleton and
     ///     add the real boneroot to the root node.
     /// </summary>
-    private void MGFixRealBoneRoot(NodeContent input, ContentProcessorContext context)
+    private void MGFixRealBoneRoot(NodeContent input)
     {
         for (var i = input.Children.Count - 1; i >= 0; i--)
         {
             var node = input.Children[i];
-            if (node is BoneContent &&
-                node.AbsoluteTransform == Matrix.Identity &&
-                node.Children.Count == 1 &&
-                node.Children[0] is BoneContent &&
-                node.Children[0].AbsoluteTransform == Matrix.Identity
-               )
+            if (node is not BoneContent ||
+                node.AbsoluteTransform != Matrix.Identity ||
+                node.Children.Count != 1 ||
+                node.Children[0] is not BoneContent ||
+                node.Children[0].AbsoluteTransform != Matrix.Identity) continue;
+            //dettach real boneRoot
+            var realBoneRoot = node.Children[0];
+            node.Children.RemoveAt(0);
+            //copy animation from node to boneRoot
+            foreach (var animation in node.Animations)
+                realBoneRoot.Animations.Add(animation.Key, animation.Value);
+            // convert fake BoneContent back to NodeContent
+            input.Children[i] = new NodeContent
             {
-                //dettach real boneRoot
-                var realBoneRoot = node.Children[0];
-                node.Children.RemoveAt(0);
-                //copy animation from node to boneRoot
-                foreach (var animation in node.Animations)
-                    realBoneRoot.Animations.Add(animation.Key, animation.Value);
-                // convert fake BoneContent back to NodeContent
-                input.Children[i] = new NodeContent
-                {
-                    Name = node.Name,
-                    Identity = node.Identity,
-                    Transform = node.Transform
-                };
-                foreach (var animation in node.Animations)
-                    input.Children[i].Animations.Add(animation.Key, animation.Value);
-                foreach (var opaqueData in node.OpaqueData)
-                    input.Children[i].OpaqueData.Add(opaqueData.Key, opaqueData.Value);
-                //attach real boneRoot to the root node
-                input.Children.Add(realBoneRoot);
+                Name = node.Name,
+                Identity = node.Identity,
+                Transform = node.Transform
+            };
+            foreach (var animation in node.Animations)
+                input.Children[i].Animations.Add(animation.Key, animation.Value);
+            foreach (var opaqueData in node.OpaqueData)
+                input.Children[i].OpaqueData.Add(opaqueData.Key, opaqueData.Value);
+            //attach real boneRoot to the root node
+            input.Children.Add(realBoneRoot);
 
-                break;
-            }
+            break;
         }
     }
 
@@ -224,7 +222,7 @@ internal class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsCon
     ///     Converts an intermediate format content pipeline AnimationContentDictionary
     ///     object to our runtime AnimationClip format.
     /// </summary>
-    private Dictionary<string, ClipContent> ProcessAnimations(NodeContent input, ContentProcessorContext context,
+    private Dictionary<string, ClipContent> ProcessAnimations(ContentProcessorContext context,
         AnimationContentDictionary animations, IList<BoneContent> bones, int generateKeyframesFrequency)
     {
         // Build up a table mapping bone names to indices.
@@ -244,7 +242,7 @@ internal class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsCon
 
         foreach (var animation in animations)
         {
-            var clip = ProcessAnimation(input, context, animation.Value, boneMap, generateKeyframesFrequency);
+            var clip = ProcessAnimation(context, animation.Value, boneMap, generateKeyframesFrequency);
 
             animationClips.Add(animation.Key, clip);
         }
@@ -260,7 +258,7 @@ internal class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsCon
     ///     Converts an intermediate format content pipeline AnimationContent
     ///     object to our runtime AnimationClip format.
     /// </summary>
-    private ClipContent ProcessAnimation(NodeContent input, ContentProcessorContext context, AnimationContent animation,
+    private ClipContent ProcessAnimation(ContentProcessorContext context, AnimationContent animation,
         Dictionary<string, int> boneMap, int generateKeyframesFrequency)
     {
         var keyframes = new List<KeyframeContent>();
@@ -280,8 +278,7 @@ internal class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsCon
                 continue;
             }
 
-            foreach (var keyframe in channel.Value)
-                keyframes.Add(new KeyframeContent(boneIndex, keyframe.Time, keyframe.Transform));
+            keyframes.AddRange(channel.Value.Select(keyframe => new KeyframeContent(boneIndex, keyframe.Time, keyframe.Transform)));
         }
 
         // Sort the merged keyframes by time.
@@ -350,7 +347,7 @@ internal class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsCon
 
         var frames = keyframeCount / boneCount;
 
-        var checkDuration = TimeSpan.FromSeconds((frames - 1) / generateKeyframesFrequency);
+        var checkDuration = TimeSpan.FromSeconds((frames - 1f) / generateKeyframesFrequency);
         if (duration == checkDuration) return keyframes;
 
         var newKeyframes = new List<KeyframeContent>();
@@ -370,12 +367,12 @@ internal class AnimationsProcessor : ContentProcessor<NodeContent, AnimationsCon
         if (frames == null)
         {
             Debug.WriteLine("Frames: " + "null");
-            return frames;
+            return null;
         }
 
         Debug.WriteLine("Frames: " + frames.Count);
         Debug.WriteLine("MinTime: " + frames[0].Time);
-        Debug.WriteLine("MaxTime: " + frames[frames.Count - 1].Time);
+        Debug.WriteLine("MaxTime: " + frames[^1].Time);
 
         for (var i = 0; i < frames.Count - 1; ++i) InterpolateFrames(bone, frames, keySpan, i);
 

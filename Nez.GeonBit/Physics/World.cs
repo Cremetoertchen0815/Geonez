@@ -125,15 +125,10 @@ public class PhysicsWorld : SceneComponent
     /// </summary>
     public static float FixedTimeStep = 1f / 32f;
 
-    private readonly BroadphaseInterface _broadphase;
-
     // physical world components
-    private readonly CollisionConfiguration _config;
 
     // debug renderer
     private readonly PhysicsDebugDraw _debugDraw;
-    private readonly Dispatcher _dispatcher;
-    private readonly ConstraintSolver _solver;
 
     // current gravity vector
     private BulletSharp.Math.Vector3 _gravity;
@@ -146,18 +141,19 @@ public class PhysicsWorld : SceneComponent
     /// </summary>
     public PhysicsWorld()
     {
-        // init components
-        _config = new DefaultCollisionConfiguration();
-        _dispatcher = new CollisionDispatcher(_config);
-        _broadphase = new DbvtBroadphase();
-        _solver = new SequentialImpulseConstraintSolver();
+        CollisionConfiguration config =
+            // init components
+            new DefaultCollisionConfiguration();
+        Dispatcher dispatcher = new CollisionDispatcher(config);
+        BroadphaseInterface broadphase = new DbvtBroadphase();
+        ConstraintSolver solver = new SequentialImpulseConstraintSolver();
 
         // create world instance
         _world = new DiscreteDynamicsWorld(
-            _dispatcher,
-            _broadphase,
-            _solver,
-            _config)
+            dispatcher,
+            broadphase,
+            solver,
+            config)
         {
             // for better performance
             ForceUpdateAllAabbs = false
@@ -325,42 +321,33 @@ public class PhysicsWorld : SceneComponent
 
         // parse data based on type
         // closest result / closest but not me types:
-        if (resultsCallback is ClosestRayResultCallback)
+        if (resultsCallback is ClosestRayResultCallback closestResults)
         {
-            // convert to closest results type
-            var closestReults = resultsCallback as ClosestRayResultCallback;
-
             // set results data
-            results.HasHit = closestReults.HasHit;
-            if (results.HasHit)
-            {
-                results.Collisions = new RaycastResults.SingleResult[1];
-                results.Collisions[0].HitFraction = closestReults.ClosestHitFraction;
-                results.Collisions[0].CollisionNormal = ToMonoGame.Vector(closestReults.HitNormalWorld);
-                results.Collisions[0].CollisionPoint = ToMonoGame.Vector(closestReults.HitPointWorld);
-                results.Collisions[0].CollisionBody =
-                    (closestReults.CollisionObject.UserObject as BasicPhysicalBody).EcsComponent;
-            }
+            results.HasHit = closestResults.HasHit;
+            if (!results.HasHit) return results;
+            results.Collisions = new RaycastResults.SingleResult[1];
+            results.Collisions[0].HitFraction = closestResults.ClosestHitFraction;
+            results.Collisions[0].CollisionNormal = ToMonoGame.Vector(closestResults.HitNormalWorld);
+            results.Collisions[0].CollisionPoint = ToMonoGame.Vector(closestResults.HitPointWorld);
+            results.Collisions[0].CollisionBody =
+                ((BasicPhysicalBody)closestResults.CollisionObject.UserObject).EcsComponent;
         }
         // all results type
-        else if (resultsCallback is AllHitsRayResultCallback)
+        else if (resultsCallback is AllHitsRayResultCallback allResults)
         {
-            // convert to all results type
-            var allResults = resultsCallback as AllHitsRayResultCallback;
-
             // set results data
             results.HasHit = allResults.HasHit;
-            if (results.HasHit)
+            if (!results.HasHit) return results;
+            
+            results.Collisions = new RaycastResults.SingleResult[allResults.CollisionObjects.Count];
+            for (var i = 0; i < allResults.CollisionObjects.Count; ++i)
             {
-                results.Collisions = new RaycastResults.SingleResult[allResults.CollisionObjects.Count];
-                for (var i = 0; i < allResults.CollisionObjects.Count; ++i)
-                {
-                    results.Collisions[i].HitFraction = allResults.HitFractions[i];
-                    results.Collisions[i].CollisionNormal = ToMonoGame.Vector(allResults.HitNormalWorld[i]);
-                    results.Collisions[i].CollisionPoint = ToMonoGame.Vector(allResults.HitPointWorld[i]);
-                    results.Collisions[i].CollisionBody =
-                        (allResults.CollisionObjects[i].UserObject as BasicPhysicalBody).EcsComponent;
-                }
+                results.Collisions[i].HitFraction = allResults.HitFractions[i];
+                results.Collisions[i].CollisionNormal = ToMonoGame.Vector(allResults.HitNormalWorld[i]);
+                results.Collisions[i].CollisionPoint = ToMonoGame.Vector(allResults.HitPointWorld[i]);
+                results.Collisions[i].CollisionBody =
+                    ((BasicPhysicalBody)allResults.CollisionObjects[i].UserObject).EcsComponent;
             }
         }
 

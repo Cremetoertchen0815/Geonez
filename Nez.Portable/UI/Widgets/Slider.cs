@@ -55,7 +55,7 @@ public class Slider : ProgressBar, IInputListener, IGamepadFocusable
 
     public Slider SetStyle(SliderStyle style)
     {
-        Insist.IsTrue(style is SliderStyle, "style must be a SliderStyle");
+        Insist.IsTrue(style is not null, "style must be a SliderStyle");
 
         base.SetStyle(style);
         this.style = style;

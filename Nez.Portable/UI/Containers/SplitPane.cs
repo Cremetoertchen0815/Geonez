@@ -47,12 +47,12 @@ public class SplitPane : Group, IInputListener
         {
             var first = _firstWidget == null
                 ? 0
-                : _firstWidget is ILayout
+                : _firstWidget is not null
                     ? ((ILayout)_firstWidget).PreferredWidth
                     : _firstWidget.width;
             var second = _secondWidget == null
                 ? 0
-                : _secondWidget is ILayout
+                : _secondWidget is not null
                     ? ((ILayout)_secondWidget).PreferredWidth
                     : _secondWidget.width;
 
@@ -69,12 +69,12 @@ public class SplitPane : Group, IInputListener
         {
             var first = _firstWidget == null
                 ? 0
-                : _firstWidget is ILayout
+                : _firstWidget is not null
                     ? ((ILayout)_firstWidget).PreferredHeight
                     : _firstWidget.height;
             var second = _secondWidget == null
                 ? 0
-                : _secondWidget is ILayout
+                : _secondWidget is not null
                     ? ((ILayout)_secondWidget).PreferredHeight
                     : _secondWidget.height;
 
@@ -99,7 +99,7 @@ public class SplitPane : Group, IInputListener
             _firstWidget.SetBounds(firstWidgetBounds.X, firstWidgetBounds.Y, firstWidgetBounds.Width,
                 firstWidgetBounds.Height);
 
-            if (_firstWidget is ILayout)
+            if (_firstWidget is not null)
                 ((ILayout)_firstWidget).Validate();
         }
 

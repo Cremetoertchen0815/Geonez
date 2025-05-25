@@ -176,7 +176,7 @@ public class DistanceConstraint : Constraint
         var maxY = Math.Max(_particleOne.Position.Y, _particleTwo.Position.Y);
         _polygon.bounds = RectangleF.FromMinMax(minX, minY, maxX, maxY);
 
-        PreparePolygonForCollisionChecks(out var midPoint);
+        PreparePolygonForCollisionChecks(out _);
 
         var colliders = Physics.BoxcastBroadphase(ref _polygon.bounds, collidesWithLayers);
         foreach (var collider in colliders)

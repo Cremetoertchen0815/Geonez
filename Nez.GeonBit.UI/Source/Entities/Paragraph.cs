@@ -271,7 +271,7 @@ public class Paragraph : Entity
     /// <returns>Actual size, in pixels, of a single character.</returns>
     public Vector2 GetCharacterActualSize()
     {
-        var font = GetCurrFont();
+        GetCurrFont();
         var scale = Scale * BaseSize * GlobalScale;
         return SingleCharacterSize * scale;
     }
@@ -309,7 +309,7 @@ public class Paragraph : Entity
 
         // if got here it means we are processing a single line. break it into words.
         // note: we use a list so we can push words in the middle while iterating (to handle words too long).
-        var words = new List<string>(text?.Split(' ') ?? new string[0]);
+        var words = new List<string>(text?.Split(' ') ?? []);
 
         // iterate words
         var currWidth = 0;

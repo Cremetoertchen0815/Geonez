@@ -35,73 +35,73 @@ namespace Nez.ExtendedContent.DataTypes
 		/// Entity scale.
 		/// </summary>
 		[XmlElement(IsNullable = true)]
-		public float? Scale = null;
+		public float? Scale;
 
 		/// <summary>
 		/// Fill color.
 		/// </summary>
 		[XmlElement("Color", IsNullable = true)]
-		public Color? FillColor = null;
+		public Color? FillColor;
 
 		/// <summary>
 		/// Outline color.
 		/// </summary>
 		[XmlElement("Color", IsNullable = true)]
-		public Color? OutlineColor = null;
+		public Color? OutlineColor;
 
 		/// <summary>
 		/// Outline width.
 		/// </summary>
 		[XmlElement(IsNullable = true)]
-		public int? OutlineWidth = null;
+		public int? OutlineWidth;
 
 		/// <summary>
 		/// For paragraph only - align to center.
 		/// </summary>
 		[XmlElement(IsNullable = true)]
-		public bool? ForceAlignCenter = null;
+		public bool? ForceAlignCenter;
 
 		/// <summary>
 		/// For paragraph only - font style.
 		/// </summary>
 		[XmlElement(IsNullable = true)]
-		public _FontStyle? FontStyle = null;
+		public _FontStyle? FontStyle;
 
 		/// <summary>
 		/// For lists and containers: selected highlight background color.
 		/// </summary>
 		[XmlElement("Color", IsNullable = true)]
-		public Color? SelectedHighlightColor = null;
+		public Color? SelectedHighlightColor;
 
 		/// <summary>
 		/// Shadow color (set to 00000000 for no shadow).
 		/// </summary>
 		[XmlElement("Color", IsNullable = true)]
-		public Color? ShadowColor = null;
+		public Color? ShadowColor;
 
 		/// <summary>
 		/// Shadow offset.
 		/// </summary>
 		[XmlElement("Vector", IsNullable = true)]
-		public Vector2? ShadowOffset = null;
+		public Vector2? ShadowOffset;
 
 		/// <summary>
 		/// Entity padding.
 		/// </summary>
 		[XmlElement("Vector", IsNullable = true)]
-		public Vector2? Padding = null;
+		public Vector2? Padding;
 
 		/// <summary>
 		/// Space before the entity.
 		/// </summary>
 		[XmlElement("Vector", IsNullable = true)]
-		public Vector2? SpaceBefore = null;
+		public Vector2? SpaceBefore;
 
 		/// <summary>
 		/// Space after the entity.
 		/// </summary>
 		[XmlElement("Vector", IsNullable = true)]
-		public Vector2? SpaceAfter = null;
+		public Vector2? SpaceAfter;
 
 		/// <summary>
 		/// Shadow scale.
@@ -112,6 +112,6 @@ namespace Nez.ExtendedContent.DataTypes
 		/// Default entity size.
 		/// </summary>
 		[XmlElement("Vector", IsNullable = true)]
-		public Vector2? DefaultSize = null;
+		public Vector2? DefaultSize;
 	}
 }

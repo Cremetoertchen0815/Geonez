@@ -65,8 +65,7 @@ public class TmxLayerTile
         var rawGid = id;
 
         // Scan for tile flip bit flags
-        bool flip;
-        flip = (rawGid & FLIPPED_HORIZONTALLY_FLAG) != 0;
+        var flip = (rawGid & FLIPPED_HORIZONTALLY_FLAG) != 0;
         HorizontalFlip = flip;
 
         flip = (rawGid & FLIPPED_VERTICALLY_FLAG) != 0;
@@ -98,7 +97,7 @@ public class TmxLayerTile
             {
                 _tilesetTileIndex = -1;
                 if (Tileset.FirstGid <= Gid)
-                    if (Tileset.Tiles.TryGetValue(Gid - Tileset.FirstGid, out var tilesetTile))
+                    if (Tileset.Tiles.TryGetValue(Gid - Tileset.FirstGid, out _))
                         _tilesetTileIndex = Gid - Tileset.FirstGid;
             }
 

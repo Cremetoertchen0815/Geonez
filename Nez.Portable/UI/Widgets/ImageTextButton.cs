@@ -39,7 +39,7 @@ public class ImageTextButton : Button
 
     public void SetStyle(ImageTextButtonStyle style)
     {
-        Insist.IsTrue(style is ImageTextButtonStyle, "style must be a ImageTextButtonStyle");
+        Insist.IsTrue(style is not null, "style must be a ImageTextButtonStyle");
 
         base.SetStyle(style);
 

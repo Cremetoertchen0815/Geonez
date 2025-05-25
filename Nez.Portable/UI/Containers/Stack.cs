@@ -42,7 +42,7 @@ public class Stack : Group
         {
             var child = children[i];
             float childMaxWidth, childMaxHeight;
-            if (child is ILayout)
+            if (child is not null)
             {
                 var layout = (ILayout)child;
                 _prefWidth = Math.Max(_prefWidth, layout.PreferredWidth);
@@ -85,7 +85,7 @@ public class Stack : Group
         {
             var child = children[i];
             child.SetBounds(0, 0, width, height);
-            if (child is ILayout)
+            if (child is not null)
                 ((ILayout)child).Validate();
         }
     }

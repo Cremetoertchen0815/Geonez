@@ -85,17 +85,15 @@ public class NezContentManager : ContentManager
             if (asset is Texture2D tex)
                 return tex;
 
-        using (var stream = Path.IsPathRooted(name) ? File.OpenRead(name) : TitleContainer.OpenStream(name))
-        {
-            var texture = premultiplyAlpha
-                ? TextureUtils.TextureFromStreamPreMultiplied(stream)
-                : Texture2D.FromStream(Core.GraphicsDevice, stream);
-            texture.Name = name;
-            LoadedAssets[name] = texture;
-            DisposableAssets.Add(texture);
+        using var stream = Path.IsPathRooted(name) ? File.OpenRead(name) : TitleContainer.OpenStream(name);
+        var texture = premultiplyAlpha
+            ? TextureUtils.TextureFromStreamPreMultiplied(stream)
+            : Texture2D.FromStream(Core.GraphicsDevice, stream);
+        texture.Name = name;
+        LoadedAssets[name] = texture;
+        DisposableAssets.Add(texture);
 
-            return texture;
-        }
+        return texture;
     }
 
     /// <summary>
@@ -106,13 +104,12 @@ public class NezContentManager : ContentManager
     public Model LoadModel(string path, Func<Effect, object> tagProcessor)
     {
         // model to return
-        Model ret;
 
         // try to get from cache of processed models (means we already processed this one)
         if (LoadedAssets.TryGetValue(path, out var a)) return (Model)a;
 
         // if we got here it means its a model we didn't load and process yet. load it.
-        ret = base.Load<Model>(path);
+        var ret = base.Load<Model>(path);
 
         // create GeonBit material per effect and set it as the tag property
         foreach (var mesh in ret.Meshes)
@@ -140,13 +137,11 @@ public class NezContentManager : ContentManager
             if (asset is SoundEffect sfx)
                 return sfx;
 
-        using (var stream = Path.IsPathRooted(name) ? File.OpenRead(name) : TitleContainer.OpenStream(name))
-        {
-            var sfx = SoundEffect.FromStream(stream);
-            LoadedAssets[name] = sfx;
-            DisposableAssets.Add(sfx);
-            return sfx;
-        }
+        using var stream = Path.IsPathRooted(name) ? File.OpenRead(name) : TitleContainer.OpenStream(name);
+        var streamSfx = SoundEffect.FromStream(stream);
+        LoadedAssets[name] = streamSfx;
+        DisposableAssets.Add(streamSfx);
+        return streamSfx;
     }
 
     /// <summary>
@@ -255,8 +250,8 @@ public class NezContentManager : ContentManager
     /// <param name="name">Name.</param>
     public T LoadEffect<T>(string name, byte[] effectCode) where T : Effect
     {
-        var effect = Activator.CreateInstance(typeof(T), Core.GraphicsDevice, effectCode) as T;
-        effect.Name = name + "-" + Utils.RandomString(5);
+        var effect = (T)Activator.CreateInstance(typeof(T), Core.GraphicsDevice, effectCode);
+        effect!.Name = name + "-" + Utils.RandomString(5);
         _loadedEffects[effect.Name] = effect;
 
         return effect;
@@ -273,8 +268,8 @@ public class NezContentManager : ContentManager
     /// <typeparam name="T">The 1st type parameter.</typeparam>
     public T LoadMonoGameEffect<T>() where T : Effect
     {
-        var effect = Activator.CreateInstance(typeof(T), Core.GraphicsDevice) as T;
-        effect.Name = typeof(T).Name + "-" + Utils.RandomString(5);
+        var effect = (T)Activator.CreateInstance(typeof(T), Core.GraphicsDevice);
+        effect!.Name = typeof(T).Name + "-" + Utils.RandomString(5);
         _loadedEffects[effect.Name] = effect;
 
         return effect;
@@ -297,7 +292,7 @@ public class NezContentManager : ContentManager
             var asset = Load<T>(assetName);
 
             // if we have a callback do it on the main thread
-            if (onLoaded != null) syncContext.Post(d => { onLoaded(asset); }, null);
+            if (onLoaded != null) syncContext!.Post(_ => { onLoaded(asset); }, null);
         });
     }
 
@@ -317,7 +312,7 @@ public class NezContentManager : ContentManager
         {
             var asset = Load<T>(assetName);
 
-            if (onLoaded != null) syncContext.Post(d => { onLoaded(context, asset); }, null);
+            if (onLoaded != null) syncContext!.Post(_ => { onLoaded(context, asset); }, null);
         });
     }
 
@@ -336,7 +331,7 @@ public class NezContentManager : ContentManager
                 Load<T>(assetNames[i]);
 
             // if we have a callback do it on the main thread
-            if (onLoaded != null) syncContext.Post(d => { onLoaded(); }, null);
+            if (onLoaded != null) syncContext!.Post(_ => { onLoaded(); }, null);
         });
     }
 

@@ -40,7 +40,7 @@ namespace Nez.GeonBit.Lights;
 public class LightsManager
 {
     // to return empty lights array.
-    private static readonly ILightSource[] EmptyLightsArray = new ILightSource[0];
+    private static readonly ILightSource[] EmptyLightsArray = [];
 
     public static bool ShadowsEnabed = true;
 
@@ -51,13 +51,13 @@ public class LightsManager
     internal static readonly Effect ShadowEffect = new DepthPlaneEffect(Core.GraphicsDevice);
 
     // list with all lights currently in manager.
-    private readonly List<ILightSource> _allLights = new();
+    private readonly List<ILightSource> _allLights = [];
 
     // list of lights that are infinite, eg have no range limit.
-    private readonly List<ILightSource> _infiniteLights = new();
+    private readonly List<ILightSource> _infiniteLights = [];
 
     // list of lights that are infinite, eg have no range limit.
-    private readonly List<IRangedLight> _rangedLights = new();
+    private readonly List<IRangedLight> _rangedLights = [];
 
     // dictionary of regions and the lights they contain.
     private readonly Dictionary<Vector3, List<IRangedLight>> _regions = new();
@@ -65,7 +65,7 @@ public class LightsManager
     private readonly ResizableRentedArray<ILightSource> _retLights = new();
 
     // list of lights that throw shadows
-    private readonly List<IShadowedLight> _shadowLights = new();
+    private readonly List<IShadowedLight> _shadowLights = [];
 
 
     // ambient light value
@@ -239,7 +239,7 @@ public class LightsManager
                     index.Z = z;
 
                     // try to fetch region lights
-                    if (_regions.TryGetValue(index, out var regionLights))
+                    if (_regions.TryGetValue(index, out _))
                     {
                         // iterate lights in region
                         foreach (var light in _regions[index])
@@ -349,7 +349,7 @@ public class LightsManager
                     index.Z = z;
 
                     // if region don't exist, create it
-                    if (!_regions.ContainsKey(index)) _regions[index] = new List<IRangedLight>();
+                    if (!_regions.ContainsKey(index)) _regions[index] = [];
 
                     // add light to region
                     _regions[index].Add(light);

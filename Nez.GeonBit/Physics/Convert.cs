@@ -82,7 +82,7 @@ public static class ToMonoGame
     /// <returns>MonoGame vector</returns>
     public static Microsoft.Xna.Framework.Vector3 Vector(Vector3 vec)
     {
-        return new Microsoft.Xna.Framework.Vector3((float)vec.X, (float)vec.Y, (float)vec.Z);
+        return new Microsoft.Xna.Framework.Vector3(vec.X, vec.Y, vec.Z);
     }
 
     /// <summary>
@@ -106,9 +106,9 @@ public static class ToMonoGame
     public static Microsoft.Xna.Framework.Matrix Matrix(Matrix matrix)
     {
         return new Microsoft.Xna.Framework.Matrix(
-            (float)matrix.M11, (float)matrix.M12, (float)matrix.M13, (float)matrix.M14,
-            (float)matrix.M21, (float)matrix.M22, (float)matrix.M23, (float)matrix.M24,
-            (float)matrix.M31, (float)matrix.M32, (float)matrix.M33, (float)matrix.M34,
-            (float)matrix.M41, (float)matrix.M42, (float)matrix.M43, (float)matrix.M44);
+            matrix.M11, matrix.M12, matrix.M13, matrix.M14,
+            matrix.M21, matrix.M22, matrix.M23, matrix.M24,
+            matrix.M31, matrix.M32, matrix.M33, matrix.M34,
+            matrix.M41, matrix.M42, matrix.M43, matrix.M44);
     }
 }

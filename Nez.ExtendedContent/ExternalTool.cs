@@ -48,52 +48,49 @@ internal class ExternalTool
 
         EnsureExecutable(fullPath);
 
-        using (var process = new Process())
+        var process = new Process();
+        process.StartInfo = processInfo;
+        process.Start();
+
+        // We have to run these in threads, because using ReadToEnd
+        // on one stream can deadlock if the other stream's buffer is
+        // full.
+        var stdoutThread = new Thread(() =>
         {
-            process.StartInfo = processInfo;
+            var memory = new MemoryStream();
+            process.StandardOutput.BaseStream.CopyTo(memory);
+            var bytes = new byte[memory.Position];
+            memory.Seek(0, SeekOrigin.Begin);
+            memory.ReadExactly(bytes, 0, bytes.Length);
+            stdoutTemp = Encoding.ASCII.GetString(bytes);
+        });
+        var stderrThread = new Thread(() =>
+        {
+            var memory = new MemoryStream();
+            process.StandardError.BaseStream.CopyTo(memory);
+            var bytes = new byte[memory.Position];
+            memory.Seek(0, SeekOrigin.Begin);
+            memory.ReadExactly(bytes, 0, bytes.Length);
+            stderrTemp = Encoding.ASCII.GetString(bytes);
+        });
 
-            process.Start();
+        stdoutThread.Start();
+        stderrThread.Start();
 
-            // We have to run these in threads, because using ReadToEnd
-            // on one stream can deadlock if the other stream's buffer is
-            // full.
-            var stdoutThread = new Thread(() =>
-            {
-                var memory = new MemoryStream();
-                process.StandardOutput.BaseStream.CopyTo(memory);
-                var bytes = new byte[memory.Position];
-                memory.Seek(0, SeekOrigin.Begin);
-                memory.Read(bytes, 0, bytes.Length);
-                stdoutTemp = Encoding.ASCII.GetString(bytes);
-            });
-            var stderrThread = new Thread(() =>
-            {
-                var memory = new MemoryStream();
-                process.StandardError.BaseStream.CopyTo(memory);
-                var bytes = new byte[memory.Position];
-                memory.Seek(0, SeekOrigin.Begin);
-                memory.Read(bytes, 0, bytes.Length);
-                stderrTemp = Encoding.ASCII.GetString(bytes);
-            });
+        if (stdin != null) process.StandardInput.Write(Encoding.ASCII.GetBytes(stdin));
 
-            stdoutThread.Start();
-            stderrThread.Start();
+        // Make sure interactive prompts don't block.
+        process.StandardInput.Close();
 
-            if (stdin != null) process.StandardInput.Write(Encoding.ASCII.GetBytes(stdin));
+        process.WaitForExit();
 
-            // Make sure interactive prompts don't block.
-            process.StandardInput.Close();
+        stdoutThread.Join();
+        stderrThread.Join();
 
-            process.WaitForExit();
+        stdout = stdoutTemp;
+        stderr = stderrTemp;
 
-            stdoutThread.Join();
-            stderrThread.Join();
-
-            stdout = stdoutTemp;
-            stderr = stderrTemp;
-
-            return process.ExitCode;
-        }
+        return process.ExitCode;
     }
 
     /// <summary>
@@ -158,7 +155,7 @@ internal class ExternalTool
         try
         {
             var p = Process.Start("chmod", "u+x \"" + path + "\"");
-            p.WaitForExit();
+            p?.WaitForExit();
         }
         catch
         {

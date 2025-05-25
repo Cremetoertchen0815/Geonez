@@ -6,7 +6,7 @@ namespace Nez;
 /// <summary>
 ///     convenience subclass with a single property that casts the Effect for cleaner configuration
 /// </summary>
-public class Material<T> : Material, IDisposable where T : Effect
+public class Material<T> : Material where T : Effect
 {
     public Material()
     {

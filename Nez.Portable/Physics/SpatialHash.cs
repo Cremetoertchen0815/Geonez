@@ -177,7 +177,7 @@ public class SpatialHash
         for (var y = GridBounds.Y; y <= GridBounds.Bottom; y++)
         {
             var cell = CellAtPosition(x, y);
-            if (cell != null && cell.Count > 0)
+            if (cell is { Count: > 0 })
                 DebugDrawCellDetails(x, y, cell.Count, secondsToDisplay, textScale);
         }
     }

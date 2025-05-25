@@ -25,8 +25,8 @@ internal static class TelegramService
     public static void Register(ITelegramReceiver reg, params string[] IDs)
     {
         foreach (var ID in IDs)
-            if (receivers.ContainsKey(ID))
-                receivers[ID].Add(reg);
+            if (receivers.TryGetValue(ID, out var receiver))
+                receiver.Add(reg);
             else
                 receivers.Add(ID, [reg]);
     }
@@ -53,9 +53,9 @@ internal static class TelegramService
     {
         if (message == Telegram.Empty) return false; //Ignore empty message
 
-        if (receivers.ContainsKey(message.Receiver))
+        if (receivers.TryGetValue(message.Receiver, out var receiver))
         {
-            foreach (var cp in receivers[message.Receiver]) cp.MessageReceived(message);
+            foreach (var cp in receiver) cp.MessageReceived(message);
             if (LogToConsole)
                 DebugConsole.Instance.Log("Telegram transmitted: " + message.Sender + " -> " + message.Receiver + "; " +
                                           message.Head +

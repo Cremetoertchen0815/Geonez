@@ -127,7 +127,7 @@ public class Slider : Entity
     {
     }
 
-    public bool UseDottedDesign { get; set; } = false;
+    public bool UseDottedDesign { get; set; }
 
     /// <summary>
     ///     Get the mark of the slider as a Rectangle
@@ -391,10 +391,10 @@ public class Slider : Entity
 
         var testValue = _value + stepDirection * GetStepSize();
 
-        if (testValue <= Max || testValue >= 0)
+        if (testValue <= Max && testValue >= 0)
             Value = testValue;
         else if (testValue <= Max)
             Value = (int)Max;
-        else if (testValue >= 0) Value = 0;
+        else Value = 0;
     }
 }

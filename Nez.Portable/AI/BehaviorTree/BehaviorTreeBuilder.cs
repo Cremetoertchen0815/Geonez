@@ -9,10 +9,8 @@ namespace Nez.AI.BehaviorTrees;
 ///     Decorators. Decorators are automatically closed when a leaf node is added. Composites must have endComposite called
 ///     to close them.
 /// </summary>
-public class BehaviorTreeBuilder<T>
+public class BehaviorTreeBuilder<T>(T context)
 {
-    private readonly T _context;
-
     /// <summary>
     ///     Stack nodes that we are build via the fluent API.
     /// </summary>
@@ -22,12 +20,6 @@ public class BehaviorTreeBuilder<T>
     ///     Last node created.
     /// </summary>
     private Behavior<T> _currentNode;
-
-
-    public BehaviorTreeBuilder(T context)
-    {
-        _context = context;
-    }
 
 
     public static BehaviorTreeBuilder<T> Begin(T context)
@@ -77,7 +69,7 @@ public class BehaviorTreeBuilder<T>
     public BehaviorTree<T> Build(float updatePeriod = 0.2f)
     {
         Insist.IsNotNull(_currentNode, "Can't create a behaviour tree with zero nodes");
-        return new BehaviorTree<T>(_context, _currentNode, updatePeriod);
+        return new BehaviorTree<T>(context, _currentNode, updatePeriod);
     }
 
 

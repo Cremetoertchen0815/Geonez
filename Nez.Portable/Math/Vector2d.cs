@@ -6,25 +6,8 @@ namespace Nez;
 /// <summary>
 ///     An exact copy of the MonoGame Vector2 structure, but using a 64-Bit floating point number.
 /// </summary>
-public struct Vector2d
+public record struct Vector2d(double X, double Y)
 {
-    #region Public Fields
-
-    public double X;
-
-    public double Y;
-
-    #endregion Public Fields
-
-    #region Public Constructors
-
-    public Vector2d(double X, double Y)
-    {
-        this.X = X;
-        this.Y = Y;
-    }
-
-    #endregion Public Constructors
 
     #region Public Methods
 
@@ -36,16 +19,6 @@ public struct Vector2d
     public static Vector2d operator -(Vector2d a, Vector2d b)
     {
         return new Vector2d(a.X - b.X, a.Y - b.Y);
-    }
-
-    public static bool operator ==(Vector2d a, Vector2d b)
-    {
-        return a.X == b.X && a.Y == b.Y;
-    }
-
-    public static bool operator !=(Vector2d a, Vector2d b)
-    {
-        return !(a == b);
     }
 
     public static implicit operator Vector2(Vector2d icke)
@@ -108,16 +81,6 @@ public struct Vector2d
             (Y - axis.Y) * (float)Math.Sin(degrees / 180.0 * Math.PI) + axis.X,
             (X - axis.X) * (float)Math.Sin(degrees / 180.0F * Math.PI) +
             (float)Math.Cos(degrees / 180.0 * Math.PI) * (Y - axis.Y) + axis.Y);
-    }
-
-    public override bool Equals(object obj)
-    {
-        return base.Equals(obj);
-    }
-
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
     }
 
     #endregion Public Methods

@@ -32,7 +32,7 @@ public partial class BitmapFont
         // read the first five bytes so we can try and work out what the format is
         // then reset the position so the format loaders can work
         var buffer = new byte[5];
-        stream.Read(buffer, 0, 5);
+        stream.ReadExactly(buffer, 0, 5);
         stream.Seek(0, SeekOrigin.Begin);
         var header = Encoding.ASCII.GetString(buffer);
 
@@ -78,10 +78,8 @@ public partial class BitmapFont
     /// <remarks>The source data must be in BMFont text format.</remarks>
     public void LoadText(string text)
     {
-        using (var reader = new StringReader(text))
-        {
-            LoadText(reader);
-        }
+        using var reader = new StringReader(text);
+        LoadText(reader);
     }
 
     /// <summary>
@@ -97,10 +95,8 @@ public partial class BitmapFont
         if (stream == null)
             throw new ArgumentNullException(nameof(stream));
 
-        using (var reader = new StreamReader(stream))
-        {
-            LoadText(reader);
-        }
+        using var reader = new StreamReader(stream);
+        LoadText(reader);
     }
 
     /// <summary>
@@ -202,10 +198,8 @@ public partial class BitmapFont
     /// <remarks>The source data must be in BMFont XML format.</remarks>
     public void LoadXml(string xml)
     {
-        using (var reader = new StringReader(xml))
-        {
-            LoadXml(reader);
-        }
+        using var reader = new StringReader(xml);
+        LoadXml(reader);
     }
 
     /// <summary>
@@ -214,12 +208,10 @@ public partial class BitmapFont
     public void LoadXml(Stream stream)
     {
         if (stream == null)
-            throw new ArgumentNullException("stream");
+            throw new ArgumentNullException(nameof(stream));
 
-        using (var reader = new StreamReader(stream))
-        {
-            LoadXml(reader);
-        }
+        using var reader = new StreamReader(stream);
+        LoadXml(reader);
     }
 
     /// <summary>
@@ -228,7 +220,7 @@ public partial class BitmapFont
     public void LoadXml(TextReader reader)
     {
         if (reader == null)
-            throw new ArgumentNullException("reader");
+            throw new ArgumentNullException(nameof(reader));
 
         var document = new XmlDocument();
         var pageData = new SortedDictionary<int, Page>();
@@ -239,29 +231,29 @@ public partial class BitmapFont
         var root = document.DocumentElement;
 
         // load the basic attributes
-        var properties = root.SelectSingleNode("info");
-        FamilyName = properties.Attributes["face"].Value;
-        FontSize = Convert.ToInt32(properties.Attributes["size"].Value);
-        Bold = Convert.ToInt32(properties.Attributes["bold"].Value) != 0;
-        Italic = Convert.ToInt32(properties.Attributes["italic"].Value) != 0;
-        Unicode = properties.Attributes["unicode"].Value != "0";
-        StretchedHeight = Convert.ToInt32(properties.Attributes["stretchH"].Value);
-        Charset = properties.Attributes["charset"].Value;
-        Smoothed = Convert.ToInt32(properties.Attributes["smooth"].Value) != 0;
-        SuperSampling = Convert.ToInt32(properties.Attributes["aa"].Value);
-        Padding = BitmapFontLoader.ParsePadding(properties.Attributes["padding"].Value);
-        Spacing = BitmapFontLoader.ParseInt2(properties.Attributes["spacing"].Value);
-        OutlineSize = properties.Attributes["outline"] != null
+        var properties = root?.SelectSingleNode("info");
+        FamilyName = properties?.Attributes?["face"]?.Value;
+        FontSize = Convert.ToInt32(properties?.Attributes?["size"]?.Value);
+        Bold = Convert.ToInt32(properties?.Attributes?["bold"]?.Value) != 0;
+        Italic = Convert.ToInt32(properties?.Attributes?["italic"]?.Value) != 0;
+        Unicode = properties?.Attributes?["unicode"]?.Value != "0";
+        StretchedHeight = Convert.ToInt32(properties?.Attributes?["stretchH"]?.Value);
+        Charset = properties?.Attributes?["charset"]?.Value;
+        Smoothed = Convert.ToInt32(properties?.Attributes?["smooth"]?.Value) != 0;
+        SuperSampling = Convert.ToInt32(properties?.Attributes?["aa"]?.Value);
+        Padding = BitmapFontLoader.ParsePadding(properties?.Attributes?["padding"]?.Value);
+        Spacing = BitmapFontLoader.ParseInt2(properties?.Attributes?["spacing"]?.Value);
+        OutlineSize = properties?.Attributes?["outline"] != null
             ? Convert.ToInt32(properties.Attributes["outline"].Value)
             : 0;
 
         // common attributes
-        properties = root.SelectSingleNode("common");
-        BaseHeight = Convert.ToInt32(properties.Attributes["base"].Value);
-        LineHeight = Convert.ToInt32(properties.Attributes["lineHeight"].Value);
-        TextureSize = new Point(Convert.ToInt32(properties.Attributes["scaleW"].Value),
-            Convert.ToInt32(properties.Attributes["scaleH"].Value));
-        Packed = Convert.ToInt32(properties.Attributes["packed"].Value) != 0;
+        properties = root!.SelectSingleNode("common")!;
+        BaseHeight = Convert.ToInt32(properties.Attributes!["base"]!.Value);
+        LineHeight = Convert.ToInt32(properties.Attributes!["lineHeight"]!.Value);
+        TextureSize = new Point(Convert.ToInt32(properties.Attributes!["scaleW"]!.Value),
+            Convert.ToInt32(properties.Attributes!["scaleH"]!.Value));
+        Packed = Convert.ToInt32(properties.Attributes!["packed"]!.Value) != 0;
 
         AlphaChannel = properties.Attributes["alphaChnl"] != null
             ? Convert.ToInt32(properties.Attributes["alphaChnl"].Value)
@@ -277,12 +269,12 @@ public partial class BitmapFont
             : 0;
 
         // load texture information
-        foreach (XmlNode node in root.SelectNodes("pages/page"))
+        foreach (XmlNode node in root.SelectNodes("pages/page")!)
         {
             var page = new Page
             {
-                Id = Convert.ToInt32(node.Attributes["id"].Value),
-                Filename = node.Attributes["file"].Value
+                Id = Convert.ToInt32(node.Attributes!["id"]!.Value),
+                Filename = node.Attributes!["file"]!.Value
             };
 
             pageData.Add(page.Id, page);
@@ -291,20 +283,21 @@ public partial class BitmapFont
         Pages = BitmapFontLoader.ToArray(pageData.Values);
 
         // load character information
-        foreach (XmlNode node in root.SelectNodes("chars/char"))
+        foreach (XmlNode node in root.SelectNodes("chars/char")!)
         {
+            if (node.Attributes is null) continue;
             var character = new Character
             {
-                Char = (char)Convert.ToInt32(node.Attributes["id"].Value),
-                Bounds = new Rectangle(Convert.ToInt32(node.Attributes["x"].Value),
-                    Convert.ToInt32(node.Attributes["y"].Value),
-                    Convert.ToInt32(node.Attributes["width"].Value),
-                    Convert.ToInt32(node.Attributes["height"].Value)),
-                Offset = new Point(Convert.ToInt32(node.Attributes["xoffset"].Value),
-                    Convert.ToInt32(node.Attributes["yoffset"].Value)),
-                XAdvance = Convert.ToInt32(node.Attributes["xadvance"].Value),
-                TexturePage = Convert.ToInt32(node.Attributes["page"].Value),
-                Channel = Convert.ToInt32(node.Attributes["chnl"].Value)
+                Char = (char)Convert.ToInt32(node.Attributes["id"]!.Value),
+                Bounds = new Rectangle(Convert.ToInt32(node.Attributes["x"]!.Value),
+                    Convert.ToInt32(node.Attributes["y"]!.Value),
+                    Convert.ToInt32(node.Attributes["width"]!.Value),
+                    Convert.ToInt32(node.Attributes["height"]!.Value)),
+                Offset = new Point(Convert.ToInt32(node.Attributes["xoffset"]!.Value),
+                    Convert.ToInt32(node.Attributes["yoffset"]!.Value)),
+                XAdvance = Convert.ToInt32(node.Attributes["xadvance"]!.Value),
+                TexturePage = Convert.ToInt32(node.Attributes["page"]!.Value),
+                Channel = Convert.ToInt32(node.Attributes["chnl"]!.Value)
             };
 
             charDictionary[character.Char] = character;
@@ -313,11 +306,11 @@ public partial class BitmapFont
         Characters = charDictionary;
 
         // loading kerning information
-        foreach (XmlNode node in root.SelectNodes("kernings/kerning"))
+        foreach (XmlNode node in root.SelectNodes("kernings/kerning")!)
         {
-            var key = new Kerning((char)Convert.ToInt32(node.Attributes["first"].Value),
-                (char)Convert.ToInt32(node.Attributes["second"].Value),
-                Convert.ToInt32(node.Attributes["amount"].Value));
+            var key = new Kerning((char)Convert.ToInt32(node.Attributes!["first"]!.Value),
+                (char)Convert.ToInt32(node.Attributes["second"]!.Value),
+                Convert.ToInt32(node.Attributes["amount"]!.Value));
 
             if (!kerningDictionary.ContainsKey(key))
                 kerningDictionary.Add(key, key.Amount);
@@ -330,11 +323,11 @@ public partial class BitmapFont
     {
         Textures = new Texture2D[Pages.Length];
         for (var i = 0; i < Textures.Length; i++)
-            using (var stream = TitleContainer.OpenStream(Pages[i].Filename))
-            {
-                Textures[i] = premultiplyAlpha
-                    ? TextureUtils.TextureFromStreamPreMultiplied(stream)
-                    : Texture2D.FromStream(Core.GraphicsDevice, stream);
-            }
+        {
+            using var stream = TitleContainer.OpenStream(Pages[i].Filename);
+            Textures[i] = premultiplyAlpha
+                ? TextureUtils.TextureFromStreamPreMultiplied(stream)
+                : Texture2D.FromStream(Core.GraphicsDevice, stream);
+        }
     }
 }

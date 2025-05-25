@@ -64,7 +64,7 @@ public class VisibilityComputer
 
         if (collider is PolygonCollider)
         {
-            var poly = collider.Shape as Polygon;
+            var poly = (Polygon)collider.Shape;
             for (var i = 0; i < poly.Points.Length; i++)
             {
                 var firstIndex = i - 1;
@@ -212,7 +212,7 @@ public class VisibilityComputer
         for (var pass = 0; pass < 2; pass++)
             foreach (var p in _endpoints)
             {
-                var currentOld = _openSegments.Count == 0 ? null : _openSegments.First.Value;
+                var currentOld = _openSegments.Count == 0 ? null : _openSegments.First?.Value;
 
                 if (p.begin)
                 {
@@ -233,18 +233,16 @@ public class VisibilityComputer
 
 
                 Segment currentNew = null;
-                if (_openSegments.Count != 0)
-                    currentNew = _openSegments.First.Value;
+                if (_openSegments.Count != 0 && _openSegments.First != null)
+                        currentNew = _openSegments.First.Value;
 
-                if (currentOld != currentNew)
-                {
-                    if (pass == 1)
-                        if (!_isSpotLight || (Between(currentAngle, _spotStartAngle, _spotEndAngle) &&
-                                              Between(p.angle, _spotStartAngle, _spotEndAngle)))
-                            AddTriangle(output, currentAngle, p.angle, currentOld);
+                if (ReferenceEquals(currentOld, currentNew)) continue;
+                if (pass == 1)
+                    if (!_isSpotLight || (Between(currentAngle, _spotStartAngle, _spotEndAngle) &&
+                                          Between(p.angle, _spotStartAngle, _spotEndAngle)))
+                        AddTriangle(output, currentAngle, p.angle, currentOld);
 
-                    currentAngle = p.angle;
-                }
+                currentAngle = p.angle;
             }
 
         _openSegments.Clear();
@@ -386,15 +384,13 @@ public class VisibilityComputer
             return true;
         if (a1 == a2 && a2 == a3)
             return true;
-        if (a1 == a2 && a2 != a3)
+        if (a1 == a2)
             return false;
-        if (b1 == b2 && b2 == b3)
-            return false;
+        
+        return false;
 
         // If A1 != A2 and B1 != B2 then we have an intersection. A more robust implementation would split segments at intersections so that
         // part of the segment is in front and part is behind but we shouldnt have overlapping colliders anyway so it isnt too important.
-
-        return false;
 
         // NOTE: previous implementation was a.d < b.d. That's simpler but trouble when the segments are of dissimilar sizes. If
         // you're on a grid and the segments are similarly sized, then using distance will be a simpler and faster implementation.

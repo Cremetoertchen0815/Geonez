@@ -73,7 +73,7 @@ public abstract class CullingNode : Node
         // if camera frustum is not defined, draw this node without culling
         if (DisableCulling || CameraFrustum == null)
         {
-            base.DrawSpecific();
+            base.DrawSpecific(forceEvenIfAlreadyDrawn);
             return;
         }
 

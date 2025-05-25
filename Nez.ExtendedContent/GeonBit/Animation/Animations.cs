@@ -138,10 +138,7 @@ public class Animations
     /// <param name="clip">Clip instance.</param>
     private void SetClip(Clip clip)
     {
-        if (clip == null)
-            throw new ArgumentNullException("clip");
-
-        CurrentClip = clip;
+        CurrentClip = clip ?? throw new ArgumentNullException(nameof(clip));
         CurrentTime = 0;
         _currentKeyframe = 0;
 
@@ -165,7 +162,7 @@ public class Animations
     /// <returns>Bone index.</returns>
     public int GetBoneIndex(string boneName)
     {
-        if (!_boneMap.TryGetValue(boneName, out var boneIndex)) boneIndex = -1;
+        var boneIndex = _boneMap.GetValueOrDefault(boneName, -1);
         return boneIndex;
     }
 
@@ -207,7 +204,7 @@ public class Animations
         }
 
         // assert on illegal time
-        if (time < 0) throw new ArgumentOutOfRangeException("time out of range");
+        ArgumentOutOfRangeException.ThrowIfNegative(time);
 
         // if got value too big, clip to animation duration
         if (time > CurrentClip.Duration.TotalSeconds) time = (float)CurrentClip.Duration.TotalSeconds;

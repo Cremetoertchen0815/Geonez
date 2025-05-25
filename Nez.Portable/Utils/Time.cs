@@ -54,7 +54,6 @@ public static class Time
     /// </summary>
     public static uint FrameCount;
 
-    private static float lastTotalGameTime;
     private static float ScaledTimeStep;
     private static float accumulator;
 
@@ -92,7 +91,6 @@ public static class Time
     {
         TotalTime = (float)gt.TotalGameTime.TotalSeconds;
         OriginalDeltaTime = UnscaledDeltaTime = (float)gt.ElapsedGameTime.TotalSeconds;
-        lastTotalGameTime = TotalTime;
         DeltaTime = UnscaledDeltaTime * TimeScale;
         Alpha = 1;
 
@@ -122,7 +120,6 @@ public static class Time
 
                 Input.Update();
 
-                var DidUpdateHappen = accumulator >= ScaledTimeStep;
                 while (accumulator >= ScaledTimeStep)
                 {
                     Core.Instance.FixedUpdate();

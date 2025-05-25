@@ -1,5 +1,4 @@
 ﻿using Nez;
-using Nez.IEnumerableExtensions;
 
 namespace System.Collections.Generic;
 
@@ -48,7 +47,7 @@ public class Deque<T> : IList<T>
     {
         if (capacity < 0)
             throw new ArgumentOutOfRangeException(
-                "capacity", "capacity is less than 0.");
+                nameof(capacity), "capacity is less than 0.");
 
         Capacity = capacity;
     }
@@ -58,7 +57,7 @@ public class Deque<T> : IList<T>
     ///     from the specified collection.
     /// </summary>
     /// <param name="collection">The co</param>
-    public Deque(IEnumerable<T> collection) : this(collection.Count())
+    public Deque(T[] collection) : this(collection.Length)
     {
         InsertRange(0, collection);
     }
@@ -75,7 +74,7 @@ public class Deque<T> : IList<T>
         {
             if (value < 0)
                 throw new ArgumentOutOfRangeException(
-                    "value",
+                    nameof(value),
                     "Capacity is less than 0.");
 
             if (value < Count)
@@ -116,10 +115,8 @@ public class Deque<T> : IList<T>
 
     private int ToBufferIndex(int index)
     {
-        int bufferIndex;
-
-        bufferIndex = (index + startOffset)
-                      & capacityClosestPowerOfTwoMinusOne;
+        var bufferIndex = (index + startOffset)
+                          & capacityClosestPowerOfTwoMinusOne;
 
         return bufferIndex;
     }
@@ -133,9 +130,9 @@ public class Deque<T> : IList<T>
 
     private static void CheckArgumentsOutOfRange(int length, int offset, int count)
     {
-        if (offset < 0) throw new ArgumentOutOfRangeException("offset", "Invalid offset " + offset);
+        if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Invalid offset " + offset);
 
-        if (count < 0) throw new ArgumentOutOfRangeException("count", "Invalid count " + count);
+        if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "Invalid count " + count);
 
         if (length - offset < count)
             throw new ArgumentException(
@@ -221,7 +218,7 @@ public class Deque<T> : IList<T>
     ///     Adds a collection of items to the Deque.
     /// </summary>
     /// <param name="collection">The collection to add.</param>
-    public void AddRange(IEnumerable<T> collection)
+    public void AddRange(T[] collection)
     {
         AddBackRange(collection);
     }
@@ -230,9 +227,9 @@ public class Deque<T> : IList<T>
     ///     Adds a collection of items to the front of the Deque.
     /// </summary>
     /// <param name="collection">The collection to add.</param>
-    public void AddFrontRange(IEnumerable<T> collection)
+    public void AddFrontRange(T[] collection)
     {
-        AddFrontRange(collection, 0, collection.Count());
+        AddFrontRange(collection, 0, collection.Length);
     }
 
     /// <summary>
@@ -255,9 +252,9 @@ public class Deque<T> : IList<T>
     ///     Adds a collection of items to the back of the Deque.
     /// </summary>
     /// <param name="collection">The collection to add.</param>
-    public void AddBackRange(IEnumerable<T> collection)
+    public void AddBackRange(T[] collection)
     {
-        AddBackRange(collection, 0, collection.Count());
+        AddBackRange(collection, 0, collection.Length);
     }
 
     /// <summary>
@@ -284,9 +281,9 @@ public class Deque<T> : IList<T>
     ///     The index in the Deque to insert the collection.
     /// </param>
     /// <param name="collection">The collection to add.</param>
-    public void InsertRange(int index, IEnumerable<T> collection)
+    public void InsertRange(int index, T[] collection)
     {
-        var count = collection.Count();
+        var count = collection.Length;
         InsertRange(index, collection, 0, count);
     }
 
@@ -591,7 +588,7 @@ public class Deque<T> : IList<T>
     /// </exception>
     public void CopyTo(T[] array, int arrayIndex)
     {
-        if (null == array) throw new ArgumentNullException("array", "Array is null");
+        if (null == array) throw new ArgumentNullException(nameof(array), "Array is null");
 
         // Nothing to copy
         if (null == buffer) return;

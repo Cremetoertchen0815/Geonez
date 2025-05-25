@@ -94,7 +94,7 @@ public class PostProcessor : IComparable<PostProcessor>
     public virtual void Unload()
     {
         // Nez-specific Effects will have a null name. We don't want to try to remove them.
-        if (Effect != null && Effect.Name != null)
+        if (Effect is { Name: not null })
         {
             _scene.Content.UnloadEffect(Effect);
             Effect = null;

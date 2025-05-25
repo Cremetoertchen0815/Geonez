@@ -15,6 +15,5 @@ public class ScanlinesPostProcessor : PostProcessor<ScanlinesEffect>
     public override void Unload()
     {
         _scene.Content.UnloadEffect(Effect);
-        base.Unload();
     }
 }

@@ -137,7 +137,7 @@ public class TexturesGetter<TEnum> where TEnum : IConvertible
         if (typeof(TEnum) == typeof(IconType)) return e.ToString();
 
         // all other type of enums
-        return e.ToString().ToLower();
+        return e.ToString()!.ToLower();
     }
 
     /// <summary>

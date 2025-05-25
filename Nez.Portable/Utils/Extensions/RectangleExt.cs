@@ -542,11 +542,11 @@ public static class RectangleExt
             var db = rect.Bottom - res.Y;
 
             var min = Mathf.MinOf(dl, dr, dt, db);
-            if (min == dt)
+            if (Math.Abs(min - dt) < float.Epsilon)
                 res.Y = rect.Top;
-            else if (min == db)
+            else if (Math.Abs(min - db) < float.Epsilon)
                 res.Y = rect.Bottom;
-            else if (min == dl)
+            else if (Math.Abs(min - dl) < float.Epsilon)
                 res.X = rect.Left;
             else
                 res.X = rect.Right;

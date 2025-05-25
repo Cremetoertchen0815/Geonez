@@ -484,7 +484,7 @@ public class Table : Group
         for (int i = 0, n = children.Count; i < n; i++)
         {
             var child = children[i];
-            if (child is ILayout)
+            if (child is not null)
                 ((ILayout)child).Validate();
         }
     }

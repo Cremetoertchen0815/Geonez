@@ -72,7 +72,7 @@ public class BinaryEffectsProcessor : ContentProcessor<EffectContent, ProcessedB
 
         File.Delete(destFile);
 
-        var stdOutLines = stdout.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        var stdOutLines = stdout.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
         foreach (var line in stdOutLines)
             if (line.StartsWith("Dependency:") && line.Length > 12)
                 context.AddDependency(line.Substring(12));
@@ -103,7 +103,7 @@ public class BinaryEffectsProcessor : ContentProcessor<EffectContent, ProcessedB
         ContentProcessorContext context)
     {
         // Split the errors and warnings into individual lines.
-        var errorsAndWarningArray = shaderErrorsAndWarnings.Split(new[] { "\n", "\r", Environment.NewLine },
+        var errorsAndWarningArray = shaderErrorsAndWarnings.Split(["\n", "\r", Environment.NewLine],
             StringSplitOptions.RemoveEmptyEntries);
 
         var errorOrWarning = new Regex(@"(.*)\(([0-9]*(,[0-9]+(-[0-9]+)?)?)\)\s*:\s*(.*)", RegexOptions.Compiled);

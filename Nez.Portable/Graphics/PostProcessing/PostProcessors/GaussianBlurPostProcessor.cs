@@ -3,16 +3,12 @@ using Nez.Textures;
 
 namespace Nez;
 
-public class GaussianBlurPostProcessor : PostProcessor<GaussianBlurEffect>
+public class GaussianBlurPostProcessor(int executionOrder) : PostProcessor<GaussianBlurEffect>(executionOrder)
 {
     private float _blurAmount = 2f;
 
     private float _renderTargetScale = 1f;
 
-
-    public GaussianBlurPostProcessor(int executionOrder) : base(executionOrder)
-    {
-    }
 
     /// <summary>
     ///     scale of the internal RenderTargets. For high resolution renders a half sized RT is usually more than enough.

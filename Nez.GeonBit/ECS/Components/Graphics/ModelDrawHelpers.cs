@@ -8,7 +8,6 @@ public static class ModelDrawHelpers
 {
     public static void Draw(this Model m, Effect effect, Matrix world)
     {
-        var fx = effect as IEffectMatrices;
         foreach (var mesh in m.Meshes)
         {
             var obj = effect as IEffectMatrices ?? throw new InvalidOperationException();

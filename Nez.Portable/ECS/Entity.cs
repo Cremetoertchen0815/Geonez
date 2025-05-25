@@ -93,7 +93,7 @@ public class Entity : IComparable<Entity>
     public virtual Entity Clone(Vector2 position = default)
     {
         var entity = Activator.CreateInstance(GetType()) as Entity;
-        entity.Name = Name + "(clone)";
+        entity!.Name = Name + "(clone)";
         entity.CopyFrom(this);
         entity.Transform.Position = position;
 
@@ -449,8 +449,8 @@ public class Entity : IComparable<Entity>
     {
         var cmp = Components.GetArray();
         for (var i = 0; i < cmp.Length; i++)
-            if (cmp[i] is IVariableUpdatable)
-                (cmp[i] as IVariableUpdatable).VariableUpdate();
+            if (cmp[i] is IVariableUpdatable ua)
+                ua.VariableUpdate();
 
         Transform.VariableUpdate();
     }

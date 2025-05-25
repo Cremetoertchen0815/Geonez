@@ -80,7 +80,7 @@ public class Circle : Shape
         {
             // we only scale lineraly being a circle so we'll use the max value
             var scale = collider.Entity.Transform.Scale;
-            var hasUnitScale = scale.X == 1 && scale.Y == 1;
+            var hasUnitScale = scale is { X: 1, Y: 1 };
             var maxScale = Math.Max(scale.X, scale.Y);
             Radius = _originalRadius * maxScale;
 
@@ -111,7 +111,7 @@ public class Circle : Shape
             return Collisions.CircleToCircle(position, Radius, other.position, (other as Circle).Radius);
 
         if (other is Polygon)
-            return ShapeCollisions.CircleToPolygon(this, other as Polygon, out var result);
+            return ShapeCollisions.CircleToPolygon(this, other as Polygon, out _);
 
         throw new NotImplementedException(string.Format("overlaps of Circle to {0} are not supported", other));
     }

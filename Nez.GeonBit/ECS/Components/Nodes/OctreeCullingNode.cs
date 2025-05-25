@@ -204,7 +204,6 @@ internal class OctreeCullingNode : Node
             var step = (max - min) * 0.5f;
 
             // init bounding boxes
-            var center = LastBoundingBox.Max - LastBoundingBox.Min;
             for (var x = 0; x < 2; ++x)
             for (var y = 0; y < 2; ++y)
             for (var z = 0; z < 2; ++z)

@@ -17,12 +17,12 @@ namespace Nez;
 ///     (http://gamedev.stackexchange.com/questions/90396/monogame-setrendertarget-is-wiping-the-backbuffer).
 ///     Giving them a negative renderOrder is a good strategy to deal with this.
 /// </summary>
-public abstract class Renderer : IComparable<Renderer>
+public abstract class Renderer(int renderOrder, Camera camera) : IComparable<Renderer>
 {
     /// <summary>
     ///     specifies the order in which the Renderers will be called by the scene
     /// </summary>
-    public readonly int RenderOrder;
+    public readonly int RenderOrder = renderOrder;
 
     /// <summary>
     ///     holds the current Material of the last rendered Renderable (or the Renderer.material if no changes were made)
@@ -34,7 +34,7 @@ public abstract class Renderer : IComparable<Renderer>
     ///     convenience field and isnt
     ///     required. Renderer subclasses can pick the camera used when calling beginRender.
     /// </summary>
-    public Camera Camera;
+    public Camera Camera = camera;
 
     public bool Enabled = true;
 
@@ -76,12 +76,6 @@ public abstract class Renderer : IComparable<Renderer>
 
     protected Renderer(int renderOrder) : this(renderOrder, null)
     {
-    }
-
-    protected Renderer(int renderOrder, Camera camera)
-    {
-        Camera = camera;
-        RenderOrder = renderOrder;
     }
 
     /// <summary>

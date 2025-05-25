@@ -157,7 +157,7 @@ public abstract class BasePhysicsComponent : GeonComponent
     public float Friction
     {
         get => _PhysicalBody.Friction;
-        set => _PhysicalBody.Friction = Friction;
+        set => _PhysicalBody.Friction = value;
     }
 
     /// <summary>
@@ -267,7 +267,7 @@ public abstract class BasePhysicsComponent : GeonComponent
     /// <returns>The object we are copying properties to.</returns>
     public override GeonComponent CopyBasics(GeonComponent copyTo)
     {
-        var ret = copyTo as BasePhysicsComponent;
+        var ret = (BasePhysicsComponent)copyTo;
         ret.InvokeCollisionEvents = InvokeCollisionEvents;
         ret.IsEthereal = IsEthereal;
         ret.CollisionGroup = CollisionGroup;

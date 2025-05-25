@@ -89,7 +89,7 @@ public class SkinnedModelRenderer : CompositeModelRenderer
     public bool LockWhileTransitioning
     {
         get => _skinnedEntity.LockWhileTransitioning;
-        set => _skinnedEntity.LockWhileTransitioning = true;
+        set => _skinnedEntity.LockWhileTransitioning = value;
     }
 
     /// <summary>

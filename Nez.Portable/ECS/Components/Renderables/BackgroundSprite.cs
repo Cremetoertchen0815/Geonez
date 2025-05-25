@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.Sprites;
 
-internal class BackgroundSprite : RenderableComponent
+internal class BackgroundSprite(Texture2D texture, Rectangle destination, Vector2 parallax) : RenderableComponent
 {
     public enum LoopMode
     {
@@ -22,20 +22,12 @@ internal class BackgroundSprite : RenderableComponent
     //Fields
     private Rectangle rectangleOriginal = new(0, 0, 1, 1);
 
-    public BackgroundSprite(Texture2D texture, Rectangle destination, Vector2 parallax)
-    {
-        Texture = texture;
-        Position = destination.Location;
-        Size = destination.Size;
-        Parallax = parallax;
-    }
-
     //Properties
-    public Point Position { get; set; }
-    public Point Size { get; set; }
+    public Point Position { get; set; } = destination.Location;
+    public Point Size { get; set; } = destination.Size;
     public Vector2 Origin { get; set; }
-    public Texture2D Texture { get; set; }
-    public Vector2 Parallax { get; set; }
+    public Texture2D Texture { get; set; } = texture;
+    public Vector2 Parallax { get; set; } = parallax;
     public LoopMode LoopHorizontal { get; set; }
     public LoopMode LoopVertical { get; set; }
 

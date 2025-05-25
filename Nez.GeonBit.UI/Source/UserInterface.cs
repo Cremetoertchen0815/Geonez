@@ -443,7 +443,7 @@ public class UserInterface : IDisposable
         };
 
         // add callback to update tooltip position
-        tooltip.BeforeDraw += ent =>
+        tooltip.BeforeDraw += _ =>
         {
             // get dest rect and calculate tooltip position based on size and mouse position
             var destRect = tooltip.GetActualDestRect();
@@ -656,7 +656,7 @@ public class UserInterface : IDisposable
     private void UpdateTooltipText(GameTime gameTime, UIEntity target)
     {
         // fix tooltip target to be an actual entity
-        while (target != null && target._hiddenInternalEntity)
+        while (target is { _hiddenInternalEntity: true })
             target = target.Parent;
 
         // if target entity changed, zero time to show tooltip text
@@ -666,7 +666,7 @@ public class UserInterface : IDisposable
             _timeUntilTooltip = 0f;
 
             // if we currently have a tooltip we show, remove it
-            if (_tooltipEntity != null && _tooltipEntity.Parent != null)
+            if (_tooltipEntity is { Parent: not null })
             {
                 _tooltipEntity.RemoveFromParent();
                 _tooltipEntity = null;
@@ -796,7 +796,7 @@ public class UserInterface : IDisposable
     public void DrawMainRenderTarget(SpriteBatch spriteBatch, Rectangle screenSpace)
     {
         // draw the main render target
-        if (RenderTarget != null && !RenderTarget.IsDisposed)
+        if (RenderTarget is { IsDisposed: false })
         {
             // draw render target
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,

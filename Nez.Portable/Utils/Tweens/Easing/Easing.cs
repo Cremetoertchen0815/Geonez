@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 
 namespace Nez.Tweens;
@@ -150,7 +151,7 @@ public static class Easing
             if (t == 0)
                 return 0;
 
-            if ((t /= d) == 1)
+            if (Math.Abs((t /= d) - 1) < 0.001)
                 return 1;
 
             var p = d * .3f;
@@ -164,7 +165,7 @@ public static class Easing
             if (t == 0)
                 return 0;
 
-            if ((t /= d) == 1)
+            if (Math.Abs((t /= d) - 1) < 0.001)
                 return 1;
 
             var p = d * .3f;
@@ -178,7 +179,7 @@ public static class Easing
             if (t == 0)
                 return 0;
 
-            if ((t /= d / 2) == 2)
+            if (Math.Abs((t /= d / 2) - 2) < 0.001)
                 return 1;
 
             var p = d * (.3f * 1.5f);
@@ -196,7 +197,7 @@ public static class Easing
             if (t == 0)
                 return 0;
 
-            if ((t /= d) == 1)
+            if (Math.Abs((t /= d) - 1) < 0.001)
                 return 0;
 
             const float p = 0.3f;
@@ -215,7 +216,7 @@ public static class Easing
 
         public static float EaseOut(float t, float d)
         {
-            return t == d ? 1 : -Mathf.Pow(2, -10 * t / d) + 1;
+            return Math.Abs(t - d) < 0.001 ? 1 : -Mathf.Pow(2, -10 * t / d) + 1;
         }
 
 
@@ -224,7 +225,7 @@ public static class Easing
             if (t == 0)
                 return 0;
 
-            if (t == d)
+            if (Math.Abs(t - d) < 0.001)
                 return 1;
 
             if ((t /= d / 2) < 1) return 0.5f * Mathf.Pow(2, 10 * (t - 1));

@@ -20,7 +20,7 @@ public class GeonUIManager : GlobalManager, IFinalRenderDelegate
         if (UserInterface.Active == null) UserInterface.Initialize(Core.Content);
         _ui = UserInterface.Active;
         _ui.UseRenderTarget = true;
-        Core.Instance.Window.TextInput += (o, e) =>
+        Core.Instance.Window.TextInput += (_, e) =>
             UserInterface.Input.TextInput(_charFilter.Replace(e.Character.ToString(), "#")[0]);
         //Let the 
         Core.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);

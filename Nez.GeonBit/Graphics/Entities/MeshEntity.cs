@@ -98,7 +98,7 @@ public class MeshEntity : BaseRenderableEntity, IShadowCaster
     /// <param name="material">Material to set.</param>
     public void SetMaterial(MaterialAPI material)
     {
-        _materials = new[] { material };
+        _materials = [material];
     }
 
     /// <summary>

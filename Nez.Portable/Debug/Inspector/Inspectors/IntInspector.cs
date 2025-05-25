@@ -24,7 +24,7 @@ namespace Nez
             var label = CreateNameLabel(table, skin, leftCellWidth);
             _textField = new TextField(GetValue<int>().ToString(), skin);
             _textField.SetTextFieldFilter(new FloatFilter());
-            _textField.OnTextChanged += (field, str) =>
+            _textField.OnTextChanged += (_, str) =>
             {
                 if (int.TryParse(str, out var newValue))
                     SetValue(newValue);

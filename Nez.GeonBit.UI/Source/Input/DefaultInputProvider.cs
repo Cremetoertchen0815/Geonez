@@ -528,8 +528,6 @@ public class DefaultInputProvider : IMouseInput, IKeyboardInput
                 break;
         }
 
-        ;
-
         // get current key thats getting pressed as a string
         var lastCharPressedStr = key.ToString();
 

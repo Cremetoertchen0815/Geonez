@@ -3,37 +3,29 @@ using System.Text;
 
 namespace Nez.AI.GOAP;
 
-public struct WorldState : IEquatable<WorldState>
+public struct WorldState(ActionPlanner planner, long values, long dontcare) : IEquatable<WorldState>
 {
     /// <summary>
     ///     we use a bitmask shifting on the condition index to flip bits
     /// </summary>
-    public long Values;
+    public long Values = values;
 
     /// <summary>
     ///     bitmask used to explicitly state false. We need a separate store for negatives because the absense of a value
     ///     doesnt necessarily mean
     ///     it is false.
     /// </summary>
-    public long DontCare;
+    public long DontCare = dontcare;
 
     /// <summary>
     ///     required so that we can get the condition index from the string name
     /// </summary>
-    internal ActionPlanner planner;
+    internal ActionPlanner planner = planner;
 
 
     public static WorldState Create(ActionPlanner planner)
     {
         return new WorldState(planner, 0, -1);
-    }
-
-
-    public WorldState(ActionPlanner planner, long values, long dontcare)
-    {
-        this.planner = planner;
-        Values = values;
-        DontCare = dontcare;
     }
 
 
@@ -61,14 +53,14 @@ public struct WorldState : IEquatable<WorldState>
     /// <summary>
     ///     for debugging purposes. Provides a human readable string of all the preconditions.
     /// </summary>
-    /// <param name="planner">Planner.</param>
-    public string Describe(ActionPlanner planner)
+    /// <param name="plannerA">Planner.</param>
+    public string Describe(ActionPlanner plannerA)
     {
         var sb = new StringBuilder();
         for (var i = 0; i < ActionPlanner.MAX_CONDITIONS; i++)
             if ((DontCare & (1L << i)) == 0)
             {
-                var val = planner.ConditionNames[i];
+                var val = plannerA.ConditionNames[i];
                 if (val == null)
                     continue;
 

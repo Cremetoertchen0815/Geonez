@@ -82,7 +82,7 @@ public class SpriteSheet
     /// <returns>Spritesheet step.</returns>
     public SpriteSheetStep GetStep(int index)
     {
-        if (index >= _steps.Count) throw new ArgumentOutOfRangeException("Spritesheet step out of range!");
+        if (index >= _steps.Count) throw new ArgumentOutOfRangeException(nameof(index));
         return _steps[index];
     }
 
@@ -284,7 +284,7 @@ public class SpriteAnimationClipPlay
     /// <summary>
     ///     Speed factor for this specific animation play.
     /// </summary>
-    public float SpeedFactor = 1f;
+    public float SpeedFactor;
 
     /// <summary>
     ///     Create a new animation clip play instance.

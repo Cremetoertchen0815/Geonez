@@ -509,8 +509,7 @@ public abstract class MaterialAPI
     {
         var states = Core.GraphicsDevice.SamplerStates;
         for (var i = 0; i < SamplersCount; ++i)
-            if (states[i] != SamplerState)
-                states[i] = SamplerState;
+            states[i] = SamplerState;
     }
 
     /// <summary>

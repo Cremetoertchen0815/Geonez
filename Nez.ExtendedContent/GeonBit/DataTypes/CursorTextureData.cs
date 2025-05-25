@@ -10,10 +10,10 @@ namespace Nez.ExtendedContent.DataTypes
 	public class CursorTextureData
 	{
 		/// <summary>Cursor offset from mouse position, on X axis, in texture pixels.</summary>
-		public int OffsetX = 0;
+		public int OffsetX;
 
 		/// <summary>Cursor offset from mouse position, on Y axis, in texture pixels.</summary>
-		public int OffsetY = 0;
+		public int OffsetY;
 
 		/// <summary>Width, in pixels, to draw this cursor. The height will be calculated automatically to fit texture propotions.</summary>
 		public int DrawWidth = 64;

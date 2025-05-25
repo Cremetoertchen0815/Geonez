@@ -80,7 +80,7 @@ public class CombinedMeshesEntity<VertexType> : BaseRenderableEntity, IShadowCas
     private readonly VertexTypes _vtype;
 
     // store all vertices positions - needed to calculate bounding box / sphere. This list is cleared once built.
-    private List<Vector3> _allPoints = new();
+    private List<Vector3> _allPoints = [];
 
     /// <summary>
     ///     Combined mesh bounding box, in local space.
@@ -157,7 +157,7 @@ public class CombinedMeshesEntity<VertexType> : BaseRenderableEntity, IShadowCas
         {
             _localBoundingBox = _localBoundingBox,
             _localBoundingSphere = _localBoundingSphere,
-            _allPoints = new List<Vector3>(_allPoints),
+            _allPoints = [.._allPoints],
             _parts = new Dictionary<MaterialAPI, CombinedMeshesPart>(_parts),
             _wasBuilt = _wasBuilt
         };
@@ -686,7 +686,7 @@ public class CombinedMeshesEntity<VertexType> : BaseRenderableEntity, IShadowCas
 
                 // make sure didn't overflow
                 if (absIndex < IndexOffset)
-                    throw new ArgumentOutOfRangeException("Too many vertices were pushed into combined mesh!");
+                    throw new ArgumentOutOfRangeException(nameof(drawOrder), "Too many vertices were pushed into combined mesh!");
 
                 // add to indexes array
                 Indexes.Add(absIndex);

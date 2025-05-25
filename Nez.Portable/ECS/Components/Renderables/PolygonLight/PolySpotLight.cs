@@ -155,7 +155,7 @@ public class PolySpotLight : PolyLight
             if (neighbor.IsTrigger)
                 continue;
 
-            if (_polygon.CollidesWithShape(neighbor.Shape, out var result))
+            if (_polygon.CollidesWithShape(neighbor.Shape, out _))
             {
                 _colliderCache[totalCollisions++] = neighbor;
                 if (totalCollisions == _colliderCache.Length)

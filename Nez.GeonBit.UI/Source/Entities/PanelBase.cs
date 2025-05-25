@@ -100,13 +100,6 @@ public class PanelBase : Entity
     }
 
     /// <summary>
-    ///     Panel destructor.
-    /// </summary>
-    ~PanelBase()
-    {
-    }
-
-    /// <summary>
     ///     Draw the entity.
     /// </summary>
     /// <param name="spriteBatch">Sprite batch to draw on.</param>

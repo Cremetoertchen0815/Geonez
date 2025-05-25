@@ -16,7 +16,6 @@ public class Sphere3D : GeometricPrimitive3D
         var latitudeBands = tessellation;
         var longitudeBands = tessellation * 2;
         var normal = new Vector3();
-        var uv = new Vector3();
 
         for (var latNumber = 0; latNumber <= latitudeBands; latNumber++)
         {
@@ -33,8 +32,6 @@ public class Sphere3D : GeometricPrimitive3D
                 normal.X = cosPhi * sinTheta;
                 normal.Y = cosTheta;
                 normal.Z = sinPhi * sinTheta;
-                uv.X = 1.0f - longNumber / (float)longitudeBands;
-                uv.Y = latNumber / (float)latitudeBands;
 
                 _vertices.Add(new VertexPositionColorNormal(normal * radius, color, normal));
             }

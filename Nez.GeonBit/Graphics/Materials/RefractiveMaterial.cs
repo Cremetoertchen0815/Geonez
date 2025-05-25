@@ -341,7 +341,6 @@ public class RefractiveMaterial : MaterialAPI
         ref BoundingSphere boundingSphere)
     {
         // set global light params
-        var nuAmbient = GeonDefaultRenderer.ActiveLightsManager.AmbientLight;
 
         if (IsDirty(MaterialDirtyFlags.EmissiveLight) || IsDirty(MaterialDirtyFlags.AmbientLight))
             _paramEmissiveColor.SetValue(

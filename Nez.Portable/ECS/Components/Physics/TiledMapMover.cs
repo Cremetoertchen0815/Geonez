@@ -77,7 +77,7 @@ public class TiledMapMover :
             BecameGroundedThisFrame = IsGroundedOnOneWayPlatform = false;
             SlopeAngle = 0f;
 
-            // deal with subpixel movement, storing off any non-integar remainder for the next frame
+            // deal with subpixel movement, storing off any non-integer remainder for the next frame
             _movementRemainderX.Update(ref motion.X);
             _movementRemainderY.Update(ref motion.Y);
 
@@ -196,11 +196,11 @@ public class TiledMapMover :
             sweptBounds.X += (int)motion.X;
 
             if (direction == Edge.Bottom &&
-                TestMapCollision(sweptBounds, direction, collisionState, out var collisionResponse))
+                TestMapCollision(sweptBounds, direction, collisionState, out _))
             {
                 // react to collision. get the distance between our leading edge and what we collided with
                 motion.Y = 0.01F;
-                collisionState.Below = direction == Edge.Bottom;
+                collisionState.Below = true;
             }
 
             // set our becameGrounded state based on the previous and current collision state
@@ -291,7 +291,7 @@ public class TiledMapMover :
     {
         collisionResponse = 0;
         var side = direction.OppositeEdge();
-        var perpindicularPosition = side.IsVertical() ? collisionRect.Center.X : collisionRect.Center.Y;
+        var perpendicularPosition = side.IsVertical() ? collisionRect.Center.X : collisionRect.Center.Y;
         var leadingPosition = collisionRect.GetSide(direction);
         var shouldTestSlopes = side.IsVertical();
         PopulateCollidingTiles(collisionRect, direction);
@@ -307,7 +307,7 @@ public class TiledMapMover :
                 collisionState._lastGroundTile.IsSlope() && IsSlopeCollisionRow(_collidingTiles[i].Y))
                 continue;
 
-            if (TestTileCollision(_collidingTiles[i], side, perpindicularPosition, leadingPosition,
+            if (TestTileCollision(_collidingTiles[i], side, perpendicularPosition, leadingPosition,
                     shouldTestSlopes, out collisionResponse))
             {
                 // store off our last ground tile if we collided below
@@ -326,7 +326,7 @@ public class TiledMapMover :
                 // if grounded on a slope and intersecting a slope or if grounded on a wall and intersecting a tall slope we go sticky.
                 // tall slope here means one where the the slopeTopLeft/Right is 0, i.e. it connects to a wall
                 var isHighSlopeNearest = _collidingTiles[i].IsSlope() &&
-                                         _collidingTiles[i].GetNearestEdge(perpindicularPosition) ==
+                                         _collidingTiles[i].GetNearestEdge(perpendicularPosition) ==
                                          _collidingTiles[i].GetHighestSlopeEdge();
                 if ((collisionState._lastGroundTile.IsSlope() && _collidingTiles[i].IsSlope()) ||
                     (!collisionState._lastGroundTile.IsSlope() && isHighSlopeNearest))
@@ -525,14 +525,10 @@ public class TiledMapMover :
     /// <param name="motion">Motion.</param>
     private Rectangle CollisionRectForSide(Edge side, int motion)
     {
-        Rectangle bounds;
-
-        // for horizontal collision checks we use just a sliver for our bounds. Vertical gets the half rect so that it can properly push
-        // up when intersecting a slope which is ignored when moving horizontally.
-        if (side.IsHorizontal())
-            bounds = _boxColliderBounds.GetRectEdgePortion(side);
-        else
-            bounds = _boxColliderBounds.GetHalfRect(side);
+        var bounds =
+            // for horizontal collision checks we use just a sliver for our bounds. Vertical gets the half rect so that it can properly push
+            // up when intersecting a slope which is ignored when moving horizontally.
+            side.IsHorizontal() ? _boxColliderBounds.GetRectEdgePortion(side) : _boxColliderBounds.GetHalfRect(side);
 
         // we contract horizontally for vertical movement and vertically for horizontal movement
         if (side.IsVertical())

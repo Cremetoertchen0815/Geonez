@@ -171,11 +171,6 @@ public class SpriteTrail : RenderableComponent, IUpdatable
                 _availableSpriteTrailInstances.Push(new SpriteTrailInstance());
     }
 
-    public override bool IsVisibleFromCamera(Camera camera)
-    {
-        return base.IsVisibleFromCamera(camera);
-    }
-
     /// <summary>
     ///     stores the last position for distance calculations and spawns a new trail instance if there is one available in the
     ///     stack
@@ -197,7 +192,7 @@ public class SpriteTrail : RenderableComponent, IUpdatable
     public override void Render(Batcher batcher, Camera camera)
     {
         for (var i = 0; i < _liveSpriteTrailInstances.Count; i++)
-            _liveSpriteTrailInstances[i].Render(batcher, camera);
+            _liveSpriteTrailInstances[i].Render(batcher);
     }
 
     /// <summary>
@@ -271,7 +266,7 @@ public class SpriteTrail : RenderableComponent, IUpdatable
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Render(Batcher batcher, Camera camera)
+        public void Render(Batcher batcher)
         {
             batcher.Draw(_sprite, DestRect, _sprite.SourceRect, _renderColor, _rotation, _origin, _spriteEffects,
                 _layerDepth);

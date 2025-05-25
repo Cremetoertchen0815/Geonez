@@ -24,11 +24,9 @@ internal class BinaryContentReader : ContentTypeReader<byte[]>
         if (!compressed) return data;
 
         //Decompress byte stream via gzip
-        using (var msi = new MemoryStream(data))
-        using (var gs = new GZipStream(msi, CompressionMode.Decompress))
-        {
-            gs.Read(decomp, 0, data.Length);
-        }
+        using var msi = new MemoryStream(data);
+        using var gs = new GZipStream(msi, CompressionMode.Decompress);
+        gs.ReadExactly(decomp, 0, data.Length);
 
         return decomp;
     }

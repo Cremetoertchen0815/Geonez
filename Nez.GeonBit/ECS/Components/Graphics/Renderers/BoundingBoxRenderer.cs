@@ -61,6 +61,6 @@ public class BoundingBoxRenderer : BaseRendererComponent, IUpdatable
     /// <returns>Cloned copy of this component.</returns>
     public override Component CopyBasics(Component copyTo)
     {
-        return CopyBasics(new BoundingBoxRenderer());
+        return base.CopyBasics(new BoundingBoxRenderer());
     }
 }

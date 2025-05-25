@@ -13,31 +13,21 @@ namespace Nez;
 ///     - configure the material (you can fetch it via component.getMaterial
 ///     <WaterReflectionMaterial>()). Be sure to set the normalMap property.
 /// </summary>
-public class WaterReflectionPlane : RenderableComponent
+public class WaterReflectionPlane(float width, float height) : RenderableComponent
 {
-    private readonly float _height;
-    private readonly Texture2D _texture;
+    private readonly Texture2D _texture = Graphics.CreateSingleColorTexture(1, 1, Color.Bisque);
 
-    private readonly float _width;
-    private WaterReflectionMaterial _waterReflectionMaterial;
+    private WaterReflectionMaterial _waterReflectionMaterial = new();
 
 
     public WaterReflectionPlane() : this(Screen.BackbufferWidth, Screen.BackbufferHeight)
     {
     }
 
-    public WaterReflectionPlane(float width, float height)
-    {
-        // we need a separate texture (not part of an atlas) so that we get uvs in the 0 - 1 range that the Effect requires
-        _texture = Graphics.CreateSingleColorTexture(1, 1, Color.Bisque);
-        _width = width;
-        _height = height;
+    // we need a separate texture (not part of an atlas) so that we get uvs in the 0 - 1 range that the Effect requires
 
-        _waterReflectionMaterial = new WaterReflectionMaterial();
-    }
-
-    public override float Width => _width;
-    public override float Height => _height;
+    public override float Width => width;
+    public override float Height => height;
 
     public override Material Material
     {

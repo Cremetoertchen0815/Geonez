@@ -63,27 +63,15 @@ public class HorizontalGroup : Group
         _prefHeight = 0;
         for (var i = 0; i < children.Count; i++)
         {
-            var child = children[i];
-            if (child is ILayout)
-            {
-                var layout = (ILayout)child;
-                _prefWidth += layout.PreferredWidth;
-                _prefHeight = Math.Max(_prefHeight, layout.PreferredHeight);
-            }
-            else
-            {
-                _prefWidth += child.width;
-                _prefHeight += Math.Max(_prefHeight, child.height);
-                ;
-            }
+            ILayout layout = children[i];
+            _prefWidth += layout.PreferredWidth;
+            _prefHeight = Math.Max(_prefHeight, layout.PreferredHeight);
         }
 
         _prefHeight += _padTop + _padBottom;
-        if (_round)
-        {
-            _prefWidth = Mathf.Round(_prefWidth);
-            _prefHeight = Mathf.Round(_prefHeight);
-        }
+        if (!_round) return;
+        _prefWidth = Mathf.Round(_prefWidth);
+        _prefHeight = Mathf.Round(_prefHeight);
     }
 
 
@@ -95,31 +83,18 @@ public class HorizontalGroup : Group
         for (var i = 0; i < children.Count; i++)
         {
             var child = children[i];
-            float width, height;
-            ILayout layout = null;
-
-            if (child is ILayout)
-            {
-                layout = child;
-                if (_fill > 0)
-                    height = groupHeight * _fill;
-                else
-                    height = Math.Min(layout.PreferredHeight, groupHeight);
-                height = Math.Max(height, layout.MinHeight);
-
-                var maxheight = layout.MaxHeight;
-                if (maxheight > 0 && height > MaxHeight)
-                    height = maxheight;
-                width = layout.PreferredWidth;
-            }
+            float height;
+            ILayout layout = child;
+            if (_fill > 0)
+                height = groupHeight * _fill;
             else
-            {
-                width = child.width;
-                height = child.height;
+                height = Math.Min(layout.PreferredHeight, groupHeight);
+            height = Math.Max(height, layout.MinHeight);
 
-                if (_fill > 0)
-                    height *= _fill;
-            }
+            var maxheight = layout.MaxHeight;
+            if (maxheight > 0 && height > MaxHeight)
+                height = maxheight;
+            var width = layout.PreferredWidth;
 
             var y = _padTop;
             if ((_align & AlignInternal.Bottom) != 0)
@@ -138,8 +113,7 @@ public class HorizontalGroup : Group
             if (!_reverse)
                 x += width + _spacing;
 
-            if (layout != null)
-                layout.Validate();
+            layout.Validate();
         }
     }
 

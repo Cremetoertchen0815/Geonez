@@ -232,7 +232,7 @@ public class SpriteEntity : BaseRenderableEntity
         base.DoEntityDraw(ref worldTransformations);
 
         // decompose transformations
-        worldTransformations.Decompose(out var scale, out var rotation, out var position);
+        worldTransformations.Decompose(out var scale, out _, out var position);
 
         // add position offset
         position += PositionOffset;
@@ -291,7 +291,7 @@ public class SpriteEntity : BaseRenderableEntity
         ref Matrix worldTransformations)
     {
         // decompose transformations
-        worldTransformations.Decompose(out var scale, out var rotation, out var position);
+        worldTransformations.Decompose(out var scale, out _, out var position);
 
         // add position offset
         position += PositionOffset;
@@ -314,7 +314,7 @@ public class SpriteEntity : BaseRenderableEntity
         ref Matrix worldTransformations)
     {
         // decompose transformations
-        worldTransformations.Decompose(out var scale, out var rotation, out var position);
+        worldTransformations.Decompose(out var scale, out _, out var position);
 
         // add position offset
         position += PositionOffset;

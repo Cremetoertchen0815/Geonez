@@ -107,7 +107,6 @@ public class GaussianBlur
     private static double[,] Calculate1DSampleKernel(double deviation, int size)
     {
         var ret = new double[size, 1];
-        double sum = 0;
 
         //int half = size / 2; // originally used this but I dont think it is correct since it creates incorrect half values
         double half = (size - 1) / 2;
@@ -115,7 +114,6 @@ public class GaussianBlur
         {
             ret[i, 0] = 1 / (Math.Sqrt(2 * Math.PI) * deviation) *
                         Math.Exp(-(i - half) * (i - half) / (2 * deviation * deviation));
-            sum += ret[i, 0];
         }
 
         return ret;

@@ -10,16 +10,14 @@ public class BinaryGZipProcessor : ContentProcessor<byte[], ProcessedBinaryData>
 {
     public override ProcessedBinaryData Process(byte[] input, ContentProcessorContext context)
     {
-        using (var msi = new MemoryStream(input))
-        using (var mso = new MemoryStream())
+        using var msi = new MemoryStream(input);
+        using var mso = new MemoryStream();
+        using (var gs = new GZipStream(mso, CompressionMode.Compress))
         {
-            using (var gs = new GZipStream(mso, CompressionMode.Compress))
-            {
-                msi.CopyTo(gs);
-            }
-
-            return new ProcessedBinaryData { Compressed = true, Data = mso.ToArray() };
+            msi.CopyTo(gs);
         }
+
+        return new ProcessedBinaryData { Compressed = true, Data = mso.ToArray() };
     }
 }
 

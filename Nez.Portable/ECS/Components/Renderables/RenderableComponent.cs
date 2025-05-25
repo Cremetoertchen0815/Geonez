@@ -250,7 +250,7 @@ public abstract class RenderableComponent : Component, IRenderable, IComparable<
     public RenderableComponent SetMaterial(Material material)
     {
         Material = material;
-        if (Entity != null && Entity.Scene != null)
+        if (Entity is { Scene: not null })
             Entity.Scene.RenderableComponents.SetRenderLayerNeedsComponentSort(RenderLayer);
         return this;
     }
@@ -265,7 +265,7 @@ public abstract class RenderableComponent : Component, IRenderable, IComparable<
     {
         _layerDepth = Mathf.Clamp01(layerDepth);
 
-        if (Entity != null && Entity.Scene != null)
+        if (Entity is { Scene: not null })
             Entity.Scene.RenderableComponents.SetRenderLayerNeedsComponentSort(RenderLayer);
         return this;
     }
@@ -285,7 +285,7 @@ public abstract class RenderableComponent : Component, IRenderable, IComparable<
             _renderLayer = renderLayer;
 
             // if we have an entity then we are being managed by a ComponentList so we need to let it know that we changed renderLayers
-            if (Entity != null && Entity.Scene != null)
+            if (Entity is { Scene: not null })
                 Entity.Scene.RenderableComponents.UpdateRenderableRenderLayer(this, oldRenderLayer, _renderLayer);
         }
 

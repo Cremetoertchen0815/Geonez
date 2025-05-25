@@ -66,7 +66,7 @@ public class Model3D : Renderable3D
             var mesh = _model.Meshes[i];
             for (var j = 0; j < mesh.Effects.Count; j++)
             {
-                var effect = mesh.Effects[j] as BasicEffect;
+                var effect = (BasicEffect)mesh.Effects[j];
                 effect.World = WorldMatrix;
                 effect.View = camera.ViewMatrix3D;
                 effect.Projection = camera.ProjectionMatrix3D;

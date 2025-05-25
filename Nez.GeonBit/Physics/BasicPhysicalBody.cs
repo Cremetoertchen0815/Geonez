@@ -100,7 +100,7 @@ public class BasicPhysicalBody
             _BulletEntity.WorldTransform = btMatrix;
 
             // set scale
-            value.Decompose(out var scale, out var rotation, out var position);
+            value.Decompose(out var scale, out _, out _);
             _BulletEntity.CollisionShape.LocalScaling = ToBullet.Vector(scale);
             UpdateAABB();
         }
@@ -143,7 +143,7 @@ public class BasicPhysicalBody
     public float Friction
     {
         get => _BulletEntity.Friction;
-        set => _BulletEntity.Friction = Friction;
+        set => _BulletEntity.Friction = value;
     }
 
     /// <summary>

@@ -22,13 +22,13 @@ public static class TiledRendering
         RectangleF cameraClipBounds)
     {
         foreach (var layer in map.Layers)
-            if (layer is TmxLayer tmxLayer && tmxLayer.Visible)
+            if (layer is TmxLayer { Visible: true } tmxLayer)
                 RenderLayer(tmxLayer, batcher, position, scale, layerDepth, cameraClipBounds);
-            else if (layer is TmxImageLayer tmxImageLayer && tmxImageLayer.Visible)
+            else if (layer is TmxImageLayer { Visible: true } tmxImageLayer)
                 RenderImageLayer(tmxImageLayer, batcher, position, scale, true, layerDepth, cameraClipBounds);
-            else if (layer is TmxGroup tmxGroup && tmxGroup.Visible)
+            else if (layer is TmxGroup { Visible: true } tmxGroup)
                 RenderGroup(tmxGroup, batcher, position, scale, layerDepth);
-            else if (layer is TmxObjectGroup tmxObjGroup && tmxObjGroup.Visible)
+            else if (layer is TmxObjectGroup { Visible: true } tmxObjGroup)
                 RenderObjectGroup(tmxObjGroup, batcher, position, scale, layerDepth);
     }
 
@@ -38,13 +38,13 @@ public static class TiledRendering
     public static void RenderLayer(ITmxLayer layer, Batcher batcher, Vector2 position, Vector2 scale, float layerDepth,
         RectangleF cameraClipBounds)
     {
-        if (layer is TmxLayer tmxLayer && tmxLayer.Visible)
+        if (layer is TmxLayer { Visible: true } tmxLayer)
             RenderLayer(tmxLayer, batcher, position, scale, layerDepth, cameraClipBounds);
-        else if (layer is TmxImageLayer tmxImageLayer && tmxImageLayer.Visible)
+        else if (layer is TmxImageLayer { Visible: true } tmxImageLayer)
             RenderImageLayer(tmxImageLayer, batcher, position, scale, true, layerDepth, cameraClipBounds);
-        else if (layer is TmxGroup tmxGroup && tmxGroup.Visible)
+        else if (layer is TmxGroup { Visible: true } tmxGroup)
             RenderGroup(tmxGroup, batcher, position, scale, layerDepth);
-        else if (layer is TmxObjectGroup tmxObjGroup && tmxObjGroup.Visible)
+        else if (layer is TmxObjectGroup { Visible: true } tmxObjGroup)
             RenderObjectGroup(tmxObjGroup, batcher, position, scale, layerDepth);
     }
 
@@ -236,8 +236,6 @@ public static class TiledRendering
                     batcher.DrawPixel(pos, objGroup.Color, (int)size);
                     goto default;
                 case TmxObjectType.Tile:
-                    var tx = obj.Tile.X * objGroup.Map.TileWidth * scale.X;
-                    var ty = obj.Tile.Y * objGroup.Map.TileHeight * scale.Y;
 
                     var spriteEffects = SpriteEffects.None;
                     if (obj.Tile.HorizontalFlip)

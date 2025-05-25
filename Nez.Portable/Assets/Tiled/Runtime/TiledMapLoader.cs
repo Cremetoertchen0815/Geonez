@@ -29,7 +29,7 @@ public static class TiledMapLoader
         layer.Height = (int)xLayer.Attribute("height");
 
         var xData = xLayer.Element("data");
-        var encoding = (string)xData.Attribute("encoding");
+        var encoding = (string)xData!.Attribute("encoding");
 
         layer.Tiles = new TmxLayerTile[width * height];
         if (encoding == "base64")
@@ -38,14 +38,12 @@ public static class TiledMapLoader
             var stream = decodedStream.Data;
 
             var index = 0;
-            using (var br = new BinaryReader(stream))
+            using var br = new BinaryReader(stream);
+            for (var j = 0; j < height; j++)
+            for (var i = 0; i < width; i++)
             {
-                for (var j = 0; j < height; j++)
-                for (var i = 0; i < width; i++)
-                {
-                    var gid = br.ReadUInt32();
-                    layer.Tiles[index++] = gid != 0 ? new TmxLayerTile(map, gid, i, j) : null;
-                }
+                var gid = br.ReadUInt32();
+                layer.Tiles[index++] = gid != 0 ? new TmxLayerTile(map, gid, i, j) : null;
             }
         }
         else if (encoding == "csv")
@@ -368,7 +366,7 @@ public static class TiledMapLoader
 
         tile.AnimationFrames = [];
         if (xTile.Element("animation") != null)
-            foreach (var e in xTile.Element("animation").Elements("frame"))
+            foreach (var e in xTile.Element("animation")!.Elements("frame"))
                 tile.AnimationFrames.Add(new TmxAnimationFrame().LoadTmxAnimationFrame(e));
 
         tile.Properties = ParsePropertyDict(xTile.Element("properties"));
@@ -395,8 +393,8 @@ public static class TiledMapLoader
         {
             // Append directory if present
             var pt = (string)xSource;
-            var absolutePath = Path.IsPathRooted(pt) ? pt : Path.GetFullPath(Path.Combine(tmxDir, pt));
-            image.Source = absolutePath.Substring(absolutePath.LastIndexOf(referenceContent.RootDirectory) +
+            var absolutePath = Path.IsPathRooted(pt) ? pt : Path.GetFullPath(Path.Combine(tmxDir, pt!));
+            image.Source = absolutePath.Substring(absolutePath.LastIndexOf(referenceContent.RootDirectory, StringComparison.Ordinal) +
                                                   referenceContent.RootDirectory.Length + 1); //Get asset path
             image.Texture = referenceContent.Load<Texture2D>(image.Source);
         }
@@ -420,16 +418,14 @@ public static class TiledMapLoader
 
     public static TmxMap LoadTmxMap(this TmxMap map, string filepath, NezContentManager content)
     {
-        using (var stream = TitleContainer.OpenStream(filepath))
-        {
-            var xDoc = XDocument.Load(stream);
-            referenceContent = content;
-            map.TmxDirectory = Path.GetDirectoryName(filepath);
-            map.LoadTmxMap(xDoc);
-            referenceContent = null; //Remove static reference to prevent memory leak
+        using var stream = TitleContainer.OpenStream(filepath);
+        var xDoc = XDocument.Load(stream);
+        referenceContent = content;
+        map.TmxDirectory = Path.GetDirectoryName(filepath);
+        map.LoadTmxMap(xDoc);
+        referenceContent = null; //Remove static reference to prevent memory leak
 
-            return map;
-        }
+        return map;
     }
 
     public static TmxMap LoadCompressedTmxMap(this TmxMap map, string asset, NezContentManager content)
@@ -448,7 +444,7 @@ public static class TiledMapLoader
     public static TmxMap LoadTmxMap(this TmxMap map, XDocument xDoc)
     {
         var xMap = xDoc.Element("map");
-        map.Version = (string)xMap.Attribute("version");
+        map.Version = (string)xMap!.Attribute("version");
         map.TiledVersion = (string)xMap.Attribute("tiledversion");
 
         map.Width = (int)xMap.Attribute("width");
@@ -568,22 +564,19 @@ public static class TiledMapLoader
         var source = (string)xTileset.Attribute("source");
 
         // source will be null if this is an embedded TmxTileset, i.e. not external
-        if (source != null)
-        {
-            // Prepend the parent TMX directory
-            source = Path.Combine(tmxDir, source);
+        if (source == null) return new TmxTileset().LoadTmxTileset(map, xTileset, firstGid, tmxDir);
+        // Prepend the parent TMX directory
+        source = Path.Combine(tmxDir, source);
 
-            // Everything else is in the TSX file
-            var xDocTileset = XDocument.Parse(referenceContent.Load<string>(source));
+        // Everything else is in the TSX file
+        var xDocTileset = XDocument.Parse(referenceContent.Load<string>(source));
 
-            var tsxDir = Path.GetDirectoryName(source);
-            var tileset = new TmxTileset().LoadTmxTileset(map, xDocTileset.Element("tileset"), firstGid, tsxDir);
-            tileset.TmxDirectory = tsxDir;
+        var tsxDir = Path.GetDirectoryName(source);
+        var tileset = new TmxTileset().LoadTmxTileset(map, xDocTileset.Element("tileset"), firstGid, tsxDir);
+        tileset.TmxDirectory = tsxDir;
 
-            return tileset;
-        }
+        return tileset;
 
-        return new TmxTileset().LoadTmxTileset(map, xTileset, firstGid, tmxDir);
     }
 
     public static PropertyDict ParsePropertyDict(XContainer xmlProp)
@@ -594,7 +587,7 @@ public static class TiledMapLoader
         var dict = new PropertyDict();
         foreach (var p in xmlProp.Elements("property"))
         {
-            var pname = p.Attribute("name").Value;
+            var pname = p.Attribute("name")!.Value;
 
             // Fallback to element value if no "value"
             var valueAttr = p.Attribute("value");
@@ -611,7 +604,7 @@ public static class TiledMapLoader
         if (xColor == null)
             return Color.White;
 
-        var colorStr = ((string)xColor).TrimStart("#".ToCharArray());
+        var colorStr = ((string)xColor)!.TrimStart("#".ToCharArray());
         return ColorExt.HexToColor(colorStr);
     }
 
@@ -626,7 +619,7 @@ public static class TiledMapLoader
     public static Vector2[] ParsePoints(XElement xPoints)
     {
         var pointString = (string)xPoints.Attribute("points");
-        var pointStringPair = pointString.Split(' ');
+        var pointStringPair = pointString!.Split(' ');
         var points = new Vector2[pointStringPair.Length];
 
         var index = 0;

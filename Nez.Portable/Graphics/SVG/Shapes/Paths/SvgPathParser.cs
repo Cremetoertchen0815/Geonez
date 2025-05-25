@@ -252,9 +252,9 @@ public static class SvgPathParser
 
     private static Vector2 Reflect(Vector2 point, Vector2 mirror)
     {
-        float x, y, dx, dy;
-        dx = Math.Abs(mirror.X - point.X);
-        dy = Math.Abs(mirror.Y - point.Y);
+        float x, y;
+        var dx = Math.Abs(mirror.X - point.X);
+        var dy = Math.Abs(mirror.Y - point.Y);
 
         if (mirror.X >= point.X)
             x = mirror.X + dx;

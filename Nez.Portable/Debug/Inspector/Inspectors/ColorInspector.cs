@@ -18,7 +18,7 @@ namespace Nez
             _textFieldR = new TextField(value.R.ToString(), skin);
             _textFieldR.SetMaxLength(3);
             _textFieldR.SetTextFieldFilter(new DigitsOnlyFilter()).SetPreferredWidth(28);
-            _textFieldR.OnTextChanged += (field, str) =>
+            _textFieldR.OnTextChanged += (_, str) =>
             {
                 if (int.TryParse(str, out var newR))
                 {
@@ -32,7 +32,7 @@ namespace Nez
             _textFieldG = new TextField(value.G.ToString(), skin);
             _textFieldG.SetMaxLength(3);
             _textFieldG.SetTextFieldFilter(new DigitsOnlyFilter()).SetPreferredWidth(28);
-            _textFieldG.OnTextChanged += (field, str) =>
+            _textFieldG.OnTextChanged += (_, str) =>
             {
                 if (int.TryParse(str, out var newG))
                 {
@@ -46,7 +46,7 @@ namespace Nez
             _textFieldB = new TextField(value.B.ToString(), skin);
             _textFieldB.SetMaxLength(3);
             _textFieldB.SetTextFieldFilter(new DigitsOnlyFilter()).SetPreferredWidth(28);
-            _textFieldB.OnTextChanged += (field, str) =>
+            _textFieldB.OnTextChanged += (_, str) =>
             {
                 if (int.TryParse(str, out var newB))
                 {
@@ -60,7 +60,7 @@ namespace Nez
             _textFieldA = new TextField(value.A.ToString(), skin);
             _textFieldA.SetMaxLength(3);
             _textFieldA.SetTextFieldFilter(new DigitsOnlyFilter()).SetPreferredWidth(28);
-            _textFieldA.OnTextChanged += (field, str) =>
+            _textFieldA.OnTextChanged += (_, str) =>
             {
                 if (int.TryParse(str, out var newA))
                 {

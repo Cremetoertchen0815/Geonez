@@ -93,7 +93,7 @@ public class CompositeModelEntity : BaseRenderableEntity, IShadowCaster
     void IShadowCaster.RenderShadows(Matrix worldTransform)
     {
         for (var i = 0; i < _meshAccess.Count; i++)
-            if (_meshAccess[i] is IShadowCaster se && se.CastsShadow)
+            if (_meshAccess[i] is IShadowCaster { CastsShadow: true } se)
                 se.RenderShadows(worldTransform);
     }
 

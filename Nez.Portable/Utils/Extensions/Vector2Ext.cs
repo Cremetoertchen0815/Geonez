@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 
 namespace Nez;
@@ -178,7 +179,7 @@ public static class Vector2Ext
         var dy2 = d.Y - c.Y;
         var dx2 = d.X - c.X;
 
-        if (dy1 * dx2 == dy2 * dx1)
+        if (Math.Abs(dy1 * dx2 - dy2 * dx1) < float.Epsilon)
         {
             intersection = new Vector2(float.NaN, float.NaN);
             return false;

@@ -6,16 +6,11 @@ namespace Nez;
 /// <summary>
 ///     used in conjunction with the ReflectionRenderer
 /// </summary>
-public class ReflectionMaterial : Material<ReflectionEffect>
+public class ReflectionMaterial(ReflectionRenderer reflectionRenderer)
+    : Material<ReflectionEffect>(new ReflectionEffect())
 {
     private RenderTarget2D _renderTarget;
-    public RenderTexture RenderTexture;
-
-
-    public ReflectionMaterial(ReflectionRenderer reflectionRenderer) : base(new ReflectionEffect())
-    {
-        RenderTexture = reflectionRenderer.RenderTexture;
-    }
+    public RenderTexture RenderTexture = reflectionRenderer.RenderTexture;
 
 
     public override void OnPreRender(Camera camera)

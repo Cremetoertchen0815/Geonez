@@ -226,7 +226,7 @@ public class Transformations
                            Matrix.CreateRotationX(Rotation.X);
 
                 default:
-                    throw new ArgumentOutOfRangeException("Unknown rotation order!");
+                    throw new ArgumentOutOfRangeException(nameof(RotationOrder));
             }
 
         // handle quaternion rotation
@@ -273,7 +273,7 @@ public class Transformations
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException("Unknown rotation order!");
+                    throw new ArgumentOutOfRangeException(nameof(RotationOrder));
             }
 
             // convert to a matrix and return
@@ -281,7 +281,7 @@ public class Transformations
         }
         // should never happen.
 
-        throw new ArgumentOutOfRangeException("Unknown rotation type!");
+        throw new ArgumentOutOfRangeException(nameof(RotationType));
     }
 
     /// <summary>
@@ -317,7 +317,7 @@ public class Transformations
                 return rot * pos * scale;
 
             default:
-                throw new ArgumentOutOfRangeException("Unknown build matrix order!");
+                throw new ArgumentOutOfRangeException(nameof(TransformOrder));
         }
     }
 }

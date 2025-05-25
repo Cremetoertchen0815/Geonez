@@ -32,7 +32,7 @@ public class RenderTexture : IDisposable
 
     public void Dispose()
     {
-        if (RenderTarget != null && !RenderTarget.IsDisposed)
+        if (RenderTarget is { IsDisposed: false })
         {
             RenderTarget.Dispose();
             RenderTarget = null;

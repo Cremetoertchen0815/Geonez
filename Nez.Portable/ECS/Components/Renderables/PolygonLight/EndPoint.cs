@@ -41,9 +41,8 @@ internal class EndPoint
 
     public override bool Equals(object obj)
     {
-        if (obj is EndPoint)
+        if (obj is EndPoint other)
         {
-            var other = obj as EndPoint;
             return position.Equals(other.position) && begin.Equals(other.begin) && angle.Equals(other.angle);
 
             // We do not care about the segment being the same since that would create a circular reference

@@ -122,7 +122,7 @@ public class ModelEntity : BaseRenderableEntity, IShadowCaster
     /// <param name="meshId">Mesh name. If empty string is provided, this material will be used for all meshes.</param>
     public void SetMaterial(MaterialAPI material, string meshId = "")
     {
-        _materials[meshId] = new[] { material };
+        _materials[meshId] = [material];
     }
 
     /// <summary>

@@ -27,7 +27,7 @@ public abstract class Agent
 
         Actions = _planner.Plan(GetWorldState(), GetGoalState(), nodes);
 
-        if (nodes != null && nodes.Count > 0)
+        if (nodes is { Count: > 0 })
         {
             Debug.Log("---- ActionPlanner plan ----");
             Debug.Log("plan cost = {0}\n", nodes[^1].CostSoFar);
@@ -46,7 +46,7 @@ public abstract class Agent
 
     public bool HasActionPlan()
     {
-        return Actions != null && Actions.Count > 0;
+        return Actions is { Count: > 0 };
     }
 
 

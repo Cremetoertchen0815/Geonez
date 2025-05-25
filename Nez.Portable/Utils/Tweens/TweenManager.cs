@@ -145,8 +145,8 @@ public class TweenManager : GlobalManager
         var foundTweens = new List<ITweenable>();
 
         for (var i = 0; i < _instance._activeTweens.Length; i++)
-            if (_instance._activeTweens.Buffer[i] is ITweenable &&
-                (_instance._activeTweens.Buffer[i] as ITweenControl).Context == context)
+            if (_instance._activeTweens.Buffer[i] is not null &&
+                (_instance._activeTweens.Buffer[i] as ITweenControl)?.Context == context)
                 foundTweens.Add(_instance._activeTweens.Buffer[i]);
 
         return foundTweens;
@@ -161,8 +161,8 @@ public class TweenManager : GlobalManager
     public static void StopAllTweensWithContext(object context, bool bringToCompletion = false)
     {
         for (var i = _instance._activeTweens.Length - 1; i >= 0; --i)
-            if (_instance._activeTweens.Buffer[i] is ITweenable &&
-                (_instance._activeTweens.Buffer[i] as ITweenControl).Context == context)
+            if (_instance._activeTweens.Buffer[i] is not null &&
+                (_instance._activeTweens.Buffer[i] as ITweenControl)?.Context == context)
                 _instance._activeTweens.Buffer[i].Stop(bringToCompletion);
     }
 
@@ -179,8 +179,7 @@ public class TweenManager : GlobalManager
         for (var i = 0; i < _instance._activeTweens.Length; i++)
             if (_instance._activeTweens[i] is ITweenControl)
             {
-                var tweenControl = _instance._activeTweens.Buffer[i] as ITweenControl;
-                if (tweenControl.GetTargetObject() == target)
+                if (_instance._activeTweens.Buffer[i] is ITweenControl tweenControl && tweenControl.GetTargetObject() == target)
                     foundTweens.Add(_instance._activeTweens[i]);
             }
 
@@ -220,8 +219,7 @@ public class TweenManager : GlobalManager
         for (var i = _instance._activeTweens.Length - 1; i >= 0; --i)
             if (_instance._activeTweens[i] is ITweenControl)
             {
-                var tweenControl = _instance._activeTweens.Buffer[i] as ITweenControl;
-                if (tweenControl.GetTargetObject() == target)
+                if (_instance._activeTweens.Buffer[i] is ITweenControl tweenControl && tweenControl.GetTargetObject() == target)
                     tweenControl.Stop(bringToCompletion);
             }
     }

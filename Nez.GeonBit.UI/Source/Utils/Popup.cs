@@ -104,10 +104,9 @@ public static class Popup
     public static Panel Show(string header, string text, string closeButtonTxt = null, Vector2? size = null)
     {
         UserInterface.GetCursorMode = UserInterface.CursorMode.Roaming;
-        return Show(header, text, new[]
-        {
+        return Show(header, text, [
             new PopupButton(closeButtonTxt ?? DefaultOkButtonText, null)
-        }, size: size ?? DefaultMsgBoxSize);
+        ], size: size ?? DefaultMsgBoxSize);
     }
 
     /// <summary>
@@ -170,7 +169,7 @@ public static class Popup
                 { Selectable = true, IsFirstSelection = i == 0 };
 
             // set click event
-            button.OnClick += ent =>
+            button.OnClick += _ =>
             {
                 // if need to close message box after clicking this button, close it:
                 if (option.Callback == null || option.Callback())
@@ -202,8 +201,7 @@ public static class Popup
         string cancelText)
     {
         var cs = new TaskCompletionSource<string>();
-        ShowInput(header, text, defValue, new[]
-        {
+        ShowInput(header, text, defValue, [
             new PopupInputOption(cancelText, _ =>
             {
                 cs.SetResult(null);
@@ -214,7 +212,7 @@ public static class Popup
                 cs.SetResult(x);
                 return true;
             }, ButtonType.Confirm)
-        }, null);
+        ], null);
         return cs.Task;
     }
 
@@ -296,7 +294,7 @@ public static class Popup
                 { Selectable = true, IsFirstSelection = i == 0 };
 
             // set click event
-            button.OnClick += ent =>
+            button.OnClick += _ =>
             {
                 // if need to close message box after clicking this button, close it:
                 if (option.Callback == null || option.Callback(txt.Value))

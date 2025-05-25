@@ -160,13 +160,12 @@ namespace Nez
 
         private void Dispose(bool disposing)
         {
-            if (!_disposedValue)
-            {
-                Core.Emitter.RemoveObserver(CoreEvents.GraphicsDeviceReset, OnGraphicsDeviceReset);
-                Core.Emitter.RemoveObserver(CoreEvents.SceneChanged, OnSceneChanged);
-                _entity = null;
-                _disposedValue = true;
-            }
+            if (_disposedValue) return;
+            
+            Core.Emitter.RemoveObserver(CoreEvents.GraphicsDeviceReset, OnGraphicsDeviceReset);
+            Core.Emitter.RemoveObserver(CoreEvents.SceneChanged, OnSceneChanged);
+            _entity = null;
+            _disposedValue = true;
         }
 
 

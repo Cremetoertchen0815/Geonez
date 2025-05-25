@@ -10,7 +10,7 @@ public static class TmxLayerTileExt
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSlope(this TmxLayerTile self)
     {
-        return self.TilesetTile != null && self.TilesetTile.IsSlope;
+        return self.TilesetTile is { IsSlope: true };
     }
 
     /// <summary>
@@ -19,7 +19,7 @@ public static class TmxLayerTileExt
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsOneWayPlatform(this TmxLayerTile self)
     {
-        return self.TilesetTile != null && self.TilesetTile.IsOneWayPlatform;
+        return self.TilesetTile is { IsOneWayPlatform: true };
     }
 
 

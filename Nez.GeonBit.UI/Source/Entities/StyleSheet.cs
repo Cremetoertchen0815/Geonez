@@ -28,11 +28,11 @@ public class StyleSheet : SerializableDictionary<string, StyleProperty>
 {
     // caching of states as strings, to eliminate state.ToString() calls
     private static readonly string[] StateAsString =
-    {
+    [
         "Default",
         "MouseHover",
         "MouseDown"
-    };
+    ];
 
     // internal mechanism to reduce memory usage.
     private static Dictionary<(string, EntityState), string> _identifiersCache = new();
@@ -52,8 +52,8 @@ public class StyleSheet : SerializableDictionary<string, StyleProperty>
     {
         // get identifier from cache
         var pair = (property, state);
-        if (_identifiersCache.ContainsKey(pair))
-            return _identifiersCache[pair];
+        if (_identifiersCache.TryGetValue(pair, out var id))
+            return id;
 
         // build and return new identifier
         var fullPropertyIdentifier = new StringBuilder(StateAsString[(int)state]);

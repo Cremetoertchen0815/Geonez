@@ -12,7 +12,7 @@ public static class Screen
 
     public static Point[] AvailableResolutions { get; set; } = GraphicsAdapter.DefaultAdapter.SupportedDisplayModes
         .Select(x => new Point(x.Width, x.Height)).GroupBy(x => x).Select(x => x.First()).OrderBy(x => x.Y)
-        .OrderBy(x => x.X).ToArray();
+        .ThenBy(x => x.X).ToArray();
 
     /// <summary>
     ///     width of the GraphicsDevice back buffer

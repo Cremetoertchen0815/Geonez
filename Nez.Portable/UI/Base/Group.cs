@@ -88,7 +88,7 @@ public class Group : Element, ICullable
     private void SetLayoutEnabled(Group parent, bool enabled)
     {
         for (var i = 0; i < parent.children.Count; i++)
-            if (parent.children[i] is ILayout)
+            if (parent.children[i] is not null)
                 ((ILayout)parent.children[i]).LayoutEnabled = enabled;
             else if (parent.children[i] is Group)
                 SetLayoutEnabled(parent.children[i] as Group, enabled);
@@ -383,12 +383,13 @@ public class Group : Element, ICullable
     public void SetDebug(bool enabled, bool recursively)
     {
         _debug = enabled;
-        if (recursively)
-            foreach (var child in children)
-                if (child is Group)
-                    ((Group)child).SetDebug(enabled, recursively);
-                else
-                    child.SetDebug(enabled);
+        if (!recursively) return;
+        
+        foreach (var child in children)
+            if (child is Group group)
+                group.SetDebug(enabled, true);
+            else
+                child.SetDebug(enabled);
     }
 
 

@@ -100,7 +100,7 @@ public partial class DebugConsole
                     else
                     {
                         _tabIndex--;
-                        if (_tabIndex < 0 || (_tabSearch != "" && _sorted[_tabIndex].IndexOf(_tabSearch) != 0))
+                        if (_tabIndex < 0 || (_tabSearch != "" && _sorted[_tabIndex].IndexOf(_tabSearch, StringComparison.Ordinal) != 0))
                             FindLastTab();
                     }
                 }
@@ -115,7 +115,7 @@ public partial class DebugConsole
                     {
                         _tabIndex++;
                         if (_tabIndex >= _sorted.Count ||
-                            (_tabSearch != "" && _sorted[_tabIndex].IndexOf(_tabSearch) != 0))
+                            (_tabSearch != "" && _sorted[_tabIndex].IndexOf(_tabSearch, StringComparison.Ordinal) != 0))
                             FindFirstTab();
                     }
                 }
@@ -155,10 +155,10 @@ public partial class DebugConsole
         Log(e.Message);
 
         var str = e.StackTrace;
-        var parts = str.Split(["\n"], StringSplitOptions.RemoveEmptyEntries);
+        var parts = str!.Split(["\n"], StringSplitOptions.RemoveEmptyEntries);
         foreach (var line in parts)
         {
-            var lineWithoutPath = Regex.Replace(line, @"in\s\/.*?\/.*?(\w+\.cs)", "$1");
+            var lineWithoutPath = MyRegex().Replace(line, "$1");
             Log(lineWithoutPath);
         }
     }
@@ -282,7 +282,7 @@ public partial class DebugConsole
     private void FindFirstTab()
     {
         for (var i = 0; i < _sorted.Count; i++)
-            if (_tabSearch == "" || _sorted[i].IndexOf(_tabSearch) == 0)
+            if (_tabSearch == "" || _sorted[i].IndexOf(_tabSearch, StringComparison.Ordinal) == 0)
             {
                 _tabIndex = i;
                 break;
@@ -292,7 +292,7 @@ public partial class DebugConsole
     private void FindLastTab()
     {
         for (var i = 0; i < _sorted.Count; i++)
-            if (_tabSearch == "" || _sorted[i].IndexOf(_tabSearch) == 0)
+            if (_tabSearch == "" || _sorted[i].IndexOf(_tabSearch, StringComparison.Ordinal) == 0)
                 _tabIndex = i;
     }
 
@@ -350,7 +350,7 @@ public partial class DebugConsole
                 var yPosCurrentLineAddition = i * LINE_HEIGHT * RenderScale + i * TEXT_PADDING_Y;
                 var position = new Vector2(HORIZONTAL_PADDING + TEXT_PADDING_X,
                     yPosFirstLine - yPosCurrentLineAddition);
-                var color = _drawCommands[i].IndexOf(">") == 0 ? Color.Yellow : Color.White;
+                var color = _drawCommands[i].IndexOf(">", StringComparison.Ordinal) == 0 ? Color.Yellow : Color.White;
                 Graphics.Instance.Batcher.DrawString(Graphics.Instance.BitmapFont, _drawCommands[i], position,
                     color, 0, Vector2.Zero, new Vector2(RenderScale), SpriteEffects.None, 0);
             }
@@ -366,8 +366,8 @@ public partial class DebugConsole
 
     private void ExecuteCommand(string command, string[] args)
     {
-        if (_commands.ContainsKey(command))
-            _commands[command].Action(args);
+        if (_commands.TryGetValue(command, out var command1))
+            command1.Action(args);
         else
             Log("Command '" + command + "' not found! Type 'help' for list of commands");
     }
@@ -414,24 +414,24 @@ public partial class DebugConsole
             // this is a nasty hack that lets us get at all the assemblies. It is only allowed to exist because this will never get
             // hit in a release build.
             var appDomainType = typeof(string).GetTypeInfo().Assembly.GetType("System.AppDomain");
-            var domain = appDomainType.GetRuntimeProperty("CurrentDomain").GetMethod
-                .Invoke(null, []);
+            var domain = appDomainType?.GetRuntimeProperty("CurrentDomain")
+                ?.GetMethod?.Invoke(null, []);
             var assembliesMethod = ReflectionUtils.GetMethodInfo(domain, "GetAssemblies", []);
 
             // not sure about arguments, detect in runtime
             var methodCallParams = assembliesMethod.GetParameters().Length == 0
                 ? Array.Empty<object>()
                 : new object[] { false };
-            var assemblies = assembliesMethod.Invoke(domain, methodCallParams) as Assembly[];
+            var assemblies = (Assembly[])assembliesMethod.Invoke(domain, methodCallParams);
 
             var ignoredAssemblies = new[]
             {
                 "mscorlib", "MonoMac", "MonoGame.Framework", "Mono.Security", "System", "OpenTK",
                 "ObjCImplementations", "Nez", "Steamworks.NET"
             };
-            foreach (var assembly in assemblies)
+            foreach (var assembly in assemblies!)
             {
-                var name = assembly.GetName().Name;
+                var name = assembly.GetName().Name!;
                 if (name.StartsWith("System.") || ignoredAssemblies.Contains(name))
                     continue;
 
@@ -472,7 +472,7 @@ public partial class DebugConsole
     private void ProcessMethod(MethodInfo method, CommandAttribute attr)
     {
         if (!method.IsStatic)
-            throw new Exception(method.DeclaringType.Name + "." + method.Name +
+            throw new Exception(method.DeclaringType!.Name + "." + method.Name +
                                 " is marked as a command, but is not static");
 
         var info = new CommandInfo
@@ -498,11 +498,11 @@ public partial class DebugConsole
             else if (p.ParameterType == typeof(bool))
                 usage[i] += "bool";
             else
-                throw new Exception(method.DeclaringType.Name + "." + method.Name +
+                throw new Exception(method.DeclaringType!.Name + "." + method.Name +
                                     " is marked as a command, but has an invalid parameter type. Allowed types are: string, int, float, and bool");
 
             // no System.DBNull in PCL so we fake it
-            if (p.DefaultValue.GetType().FullName == "System.DBNull")
+            if (p.DefaultValue!.GetType().FullName == "System.DBNull")
             {
                 defaults[i] = null;
             }
@@ -606,6 +606,9 @@ public partial class DebugConsole
             return 0;
         }
     }
+
+    [GeneratedRegex(@"in\s\/.*?\/.*?(\w+\.cs)")]
+    private static partial Regex MyRegex();
 
     #endregion
 

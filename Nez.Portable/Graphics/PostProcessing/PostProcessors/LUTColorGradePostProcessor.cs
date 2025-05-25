@@ -9,8 +9,6 @@ public class LUTColorGradePostProcessor : PostProcessor
     private readonly EffectParameter _SizeParameter;
     private readonly EffectParameter _SizeRootParameter;
     private readonly EffectParameter _WidthParameter;
-    private float _Size;
-    private float _SizeRoot;
 
     public LUTColorGradePostProcessor(int execOrder) : base(execOrder)
     {
@@ -31,7 +29,6 @@ public class LUTColorGradePostProcessor : PostProcessor
         get => _SizeParameter.GetValueSingle();
         set
         {
-            _Size = value;
             _SizeParameter.SetValue(value);
             RecalcSize();
         }
@@ -42,7 +39,6 @@ public class LUTColorGradePostProcessor : PostProcessor
         get => _SizeRootParameter.GetValueSingle();
         set
         {
-            _SizeRoot = value;
             _SizeRootParameter.SetValue(value);
             RecalcSize();
         }

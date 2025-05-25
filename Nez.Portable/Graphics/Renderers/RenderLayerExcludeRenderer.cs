@@ -7,15 +7,11 @@
 ///     shouldn't be passed to
 ///     Batcher.Begin.
 /// </summary>
-public class RenderLayerExcludeRenderer : Renderer
+public class RenderLayerExcludeRenderer(int renderOrder, params int[] excludedRenderLayers)
+    : Renderer(renderOrder, null)
 {
-    public int[] ExcludedRenderLayers;
+    public int[] ExcludedRenderLayers = excludedRenderLayers;
 
-
-    public RenderLayerExcludeRenderer(int renderOrder, params int[] excludedRenderLayers) : base(renderOrder, null)
-    {
-        ExcludedRenderLayers = excludedRenderLayers;
-    }
 
     public override void Render(Scene scene)
     {

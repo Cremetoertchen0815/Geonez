@@ -14,7 +14,7 @@ public class QuadRenderer
     //buffers for rendering the quad
     private readonly VertexPositionTexture[] _vertexBuffer;
 
-    public QuadRenderer(GraphicsDevice graphicsDevice)
+    public QuadRenderer()
     {
         _vertexBuffer = new VertexPositionTexture[4];
         _vertexBuffer[0] = new VertexPositionTexture(new Vector3(-1, 1, 1), new Vector2(0, 0));

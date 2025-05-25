@@ -715,7 +715,7 @@ public abstract class Entity
         get => _background;
         set
         {
-            if (value != null && value._parent != null)
+            if (value is { _parent: not null })
                 throw new InvalidStateException("Cannot set background entity that have a parent!");
             _background = value;
         }
@@ -1368,7 +1368,7 @@ public abstract class Entity
     public void PopulateDict(ref Dictionary<string, Entity> dict)
     {
         // add self if got identifier
-        if (Identifier != null && Identifier.Length > 0)
+        if (Identifier is { Length: > 0 })
             dict[Identifier] = this;
 
         // iterate children
@@ -1455,7 +1455,6 @@ public abstract class Entity
     protected virtual void DrawEntityOutline(SpriteBatch spriteBatch)
     {
         // get outline width and if 0 return
-        var outlineWidth = OutlineWidth;
         if (OutlineWidth == 0) return;
 
         // get outline color
@@ -1658,7 +1657,7 @@ public abstract class Entity
     protected Point CalcActualSizeInPixels(Vector2 size)
     {
         // simple case: if size is not in percents, just return as-is
-        if (size.X > 1f && size.Y > 1f)
+        if (size is { X: > 1f, Y: > 1f })
             return size.ToPoint();
 
         // get parent internal destination rectangle
@@ -1668,9 +1667,9 @@ public abstract class Entity
         // calc and return size
         return new Point(
             size.X == 0f ? parentDest.Width :
-            size.X > 0f && size.X < 1f ? (int)(parentDest.Width * size.X) : (int)size.X,
+            size.X is > 0f and < 1f ? (int)(parentDest.Width * size.X) : (int)size.X,
             size.Y == 0f ? parentDest.Height :
-            size.Y > 0f && size.Y < 1f ? (int)(parentDest.Height * size.Y) : (int)size.Y);
+            size.Y is > 0f and < 1f ? (int)(parentDest.Height * size.Y) : (int)size.Y);
     }
 
     /// <summary>
@@ -1866,7 +1865,6 @@ public abstract class Entity
                 if (ret.Right > parent_right)
                 {
                     _dragOffset.X -= ret.Right - parent_right;
-                    ;
                     ret.X -= ret.Right - parent_right;
                 }
 
@@ -1927,26 +1925,26 @@ public abstract class Entity
     /// <param name="other">Entity to propagate events to.</param>
     public virtual void PropagateEventsTo(Entity other)
     {
-        OnMouseDown += entity => { other.OnMouseDown?.Invoke(other); };
-        OnRightMouseDown += entity => { other.OnRightMouseDown?.Invoke(other); };
-        OnMouseReleased += entity => { other.OnMouseReleased?.Invoke(other); };
-        WhileMouseDown += entity => { other.WhileMouseDown?.Invoke(other); };
-        WhileRightMouseDown += entity => { other.WhileRightMouseDown?.Invoke(other); };
-        WhileMouseHover += entity => { other.WhileMouseHover?.Invoke(other); };
-        WhileMouseHoverOrDown += entity => { other.WhileMouseHoverOrDown?.Invoke(other); };
-        OnRightClick += entity => { other.OnRightClick?.Invoke(other); };
-        OnClick += entity => { other.OnClick?.Invoke(other); };
-        OnValueChange += entity => { other.OnValueChange?.Invoke(other); };
-        OnMouseEnter += entity => { other.OnMouseEnter?.Invoke(other); };
-        OnMouseLeave += entity => { other.OnMouseLeave?.Invoke(other); };
-        OnMouseWheelScroll += entity => { other.OnMouseWheelScroll?.Invoke(other); };
-        OnStartDrag += entity => { other.OnStartDrag?.Invoke(other); };
-        OnStopDrag += entity => { other.OnStopDrag?.Invoke(other); };
-        WhileDragging += entity => { other.WhileDragging?.Invoke(other); };
-        BeforeDraw += entity => { other.BeforeDraw?.Invoke(other); };
-        AfterDraw += entity => { other.AfterDraw?.Invoke(other); };
-        BeforeUpdate += entity => { other.BeforeUpdate?.Invoke(other); };
-        AfterUpdate += entity => { other.AfterUpdate?.Invoke(other); };
+        OnMouseDown += _ => { other.OnMouseDown?.Invoke(other); };
+        OnRightMouseDown += _ => { other.OnRightMouseDown?.Invoke(other); };
+        OnMouseReleased += _ => { other.OnMouseReleased?.Invoke(other); };
+        WhileMouseDown += _ => { other.WhileMouseDown?.Invoke(other); };
+        WhileRightMouseDown += _ => { other.WhileRightMouseDown?.Invoke(other); };
+        WhileMouseHover += _ => { other.WhileMouseHover?.Invoke(other); };
+        WhileMouseHoverOrDown += _ => { other.WhileMouseHoverOrDown?.Invoke(other); };
+        OnRightClick += _ => { other.OnRightClick?.Invoke(other); };
+        OnClick += _ => { other.OnClick?.Invoke(other); };
+        OnValueChange += _ => { other.OnValueChange?.Invoke(other); };
+        OnMouseEnter += _ => { other.OnMouseEnter?.Invoke(other); };
+        OnMouseLeave += _ => { other.OnMouseLeave?.Invoke(other); };
+        OnMouseWheelScroll += _ => { other.OnMouseWheelScroll?.Invoke(other); };
+        OnStartDrag += _ => { other.OnStartDrag?.Invoke(other); };
+        OnStopDrag += _ => { other.OnStopDrag?.Invoke(other); };
+        WhileDragging += _ => { other.WhileDragging?.Invoke(other); };
+        BeforeDraw += _ => { other.BeforeDraw?.Invoke(other); };
+        AfterDraw += _ => { other.AfterDraw?.Invoke(other); };
+        BeforeUpdate += _ => { other.BeforeUpdate?.Invoke(other); };
+        AfterUpdate += _ => { other.AfterUpdate?.Invoke(other); };
     }
 
     /// <summary>
@@ -2014,9 +2012,8 @@ public abstract class Entity
                     _children.ForEach(a => a.IsFirstSelection = false);
 
                 // if we came from PanelTabs, we need to reset their IsFirstSelection status too
-                if (entity.AttachedData != null && entity.AttachedData is TabData)
-                    if (((TabData)entity.AttachedData).button.AttachedData != null &&
-                        ((TabData)entity.AttachedData).button.AttachedData is PanelTabs)
+                if (entity.AttachedData is TabData)
+                    if (((TabData)entity.AttachedData).button.AttachedData is PanelTabs)
                     {
                         // resetting the IsFirstSelection status of all tabs 
                         ((PanelTabs)((TabData)entity.AttachedData).button.AttachedData)._children[0]._children
@@ -2036,7 +2033,7 @@ public abstract class Entity
                 // if it's a button then we want to directly select the corresponding tab
                 if (sibling is Button)
                 {
-                    if (sibling.AttachedData != null && sibling.AttachedData is PanelTabs)
+                    if (sibling.AttachedData is PanelTabs)
                     {
                         // reset the "_isFirstAfterDraw" value of the current tab so the first selection can happen one more time
                         ((PanelTabs)sibling.AttachedData).ActiveTab.panel._isFirstAfterDraw = true;
@@ -2060,7 +2057,7 @@ public abstract class Entity
 
         // if no first selectable entity was found then fallback to the panel tab if possible
         if (firstSelectableEntityFound == false)
-            if (entity.AttachedData != null && entity.AttachedData is TabData)
+            if (entity.AttachedData is TabData)
                 SetCursorPosition(((TabData)entity.AttachedData).button);
     }
 
@@ -2085,7 +2082,7 @@ public abstract class Entity
             // if it's a button then we want to directly select the corresponding tab
             if (entityLast is Button)
             {
-                if (entityLast.AttachedData != null && entityLast.AttachedData is PanelTabs)
+                if (entityLast.AttachedData is PanelTabs)
                 {
                     // resetting the IsFirstSelection status of the current tab 
                     ((PanelTabs)entityLast.AttachedData).ActiveTab.button.IsFirstSelection = false;
@@ -2135,7 +2132,7 @@ public abstract class Entity
     /// </summary>
     private void SelectNextEntity(Entity parent)
     {
-        if (Parent != null && Parent._children != null && Parent is RootPanel == false)
+        if (Parent is { _children: not null } && Parent is RootPanel == false)
         {
             // find the first selection
             var currentEntity = parent._children.Find(x => x.IsFirstSelection);
@@ -2153,10 +2150,7 @@ public abstract class Entity
                 var nextEntity = parent._children[i];
 
                 // check if the next entity is not null, but visible, selectable and enabled
-                if (nextEntity != null &&
-                    nextEntity.Visible &&
-                    nextEntity.Selectable &&
-                    nextEntity.Enabled)
+                if (nextEntity is { Visible: true, Selectable: true, Enabled: true })
                 {
                     nextSelectionFound = true;
 
@@ -2202,7 +2196,7 @@ public abstract class Entity
     /// </summary>
     private void SelectPreviousEntity(Entity parent)
     {
-        if (parent != null && parent._children != null && parent is RootPanel == false)
+        if (parent is { _children: not null } && parent is RootPanel == false)
         {
             // find the first selection
             var currentEntity = parent._children.Find(e => e.IsFirstSelection);
@@ -2220,10 +2214,7 @@ public abstract class Entity
                 var previousEntity = parent._children[i];
 
                 // check if the previous entity is not null, but visible, selectable and enabled
-                if (previousEntity != null &&
-                    previousEntity.Visible &&
-                    previousEntity.Selectable &&
-                    previousEntity.Enabled)
+                if (previousEntity is { Visible: true, Selectable: true, Enabled: true })
                 {
                     previousSelectionFound = true;
 
@@ -2325,25 +2316,23 @@ public abstract class Entity
     /// </summary>
     private void SetCursorPosition(Entity entity)
     {
-        if (UserInterface.GetCursorMode == UserInterface.CursorMode.Snapping)
+        if (UserInterface.GetCursorMode != UserInterface.CursorMode.Snapping) return;
+        var ptA = Vector2.Transform(entity._destRect.Location.ToVector2(), Core.Scene.ScreenTransformMatrix);
+        var ptD = Vector2.Transform((entity._destRect.Location + entity._destRect.Size).ToVector2(),
+            Core.Scene.ScreenTransformMatrix);
+        var transRect = new Rectangle((int)ptA.X, (int)ptA.Y, (int)(ptD.X - ptA.X), (int)(ptD.Y - ptA.Y));
+        if (entity is Slider == false || entity is ProgressBar)
         {
-            var ptA = Vector2.Transform(entity._destRect.Location.ToVector2(), Core.Scene.ScreenTransformMatrix);
-            var ptD = Vector2.Transform((entity._destRect.Location + entity._destRect.Size).ToVector2(),
-                Core.Scene.ScreenTransformMatrix);
-            var transRect = new Rectangle((int)ptA.X, (int)ptA.Y, (int)(ptD.X - ptA.X), (int)(ptD.Y - ptA.Y));
-            if ((entity is Slider == false || entity is ProgressBar) && entity is VerticalScrollbar == false)
-            {
-                var cursorDestination = new Vector2(transRect.Center.X, transRect.Center.Y + transRect.Height / 4);
+            var cursorDestination = new Vector2(transRect.Center.X, transRect.Center.Y + transRect.Height / 4);
 
-                // Set the cursor position on the center of the entity if it's not a slider or vertical scrollbar
-                UserInterface.SetCursorPosition(cursorDestination);
-            }
-            else if (entity is Slider && entity is ProgressBar == false)
-            {
-                // Set the cursor position on the center of the mark of the entity if it's a slider or vertical scrollbar
-                UserInterface.SetCursorPosition(new Vector2(
-                    ((Slider)entity).MarkRec.Center.X, ((Slider)entity).MarkRec.Center.Y + transRect.Height / 4));
-            }
+            // Set the cursor position on the center of the entity if it's not a slider or vertical scrollbar
+            UserInterface.SetCursorPosition(cursorDestination);
+        }
+        else
+        {
+            // Set the cursor position on the center of the mark of the entity if it's a slider or vertical scrollbar
+            UserInterface.SetCursorPosition(new Vector2(
+                ((Slider)entity).MarkRec.Center.X, ((Slider)entity).MarkRec.Center.Y + transRect.Height / 4));
         }
     }
 

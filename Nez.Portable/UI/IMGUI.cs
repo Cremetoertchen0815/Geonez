@@ -49,7 +49,9 @@ public class IMGUI
         Center,
         Right
     }
+    
 #pragma warning disable 0414
+    // ReSharper disable once NotAccessedField.Local
     private static float _windowHeight;
     private static float _elementWidth;
     private static Point _mouseInWorldCoords;

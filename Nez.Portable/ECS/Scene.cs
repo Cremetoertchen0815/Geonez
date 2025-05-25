@@ -467,12 +467,12 @@ public class Scene
 
         // update our renderers
         for (var i = _renderers.Length - 1; i >= 0; i--)
-            if (_renderers.Buffer[i] is IUpdatable up && up.Enabled)
+            if (_renderers.Buffer[i] is IUpdatable { Enabled: true } up)
                 up.Update();
 
         // update our post processors
         for (var i = _postProcessors.Length - 1; i >= 0; i--)
-            if (_postProcessors.Buffer[i] is IUpdatable up && up.Enabled)
+            if (_postProcessors.Buffer[i] is IUpdatable { Enabled: true } up)
                 up.Update();
 
         // update our Entities

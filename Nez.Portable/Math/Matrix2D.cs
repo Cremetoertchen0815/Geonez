@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 
@@ -8,7 +7,6 @@ namespace Nez;
 /// <summary>
 ///     Represents the right-handed 3x3 floating point matrix, which can store translation, scale and rotation information.
 /// </summary>
-[DebuggerDisplay("{debugDisplayString,nq}")]
 public struct Matrix2D : IEquatable<Matrix2D>
 {
     #region Public Fields

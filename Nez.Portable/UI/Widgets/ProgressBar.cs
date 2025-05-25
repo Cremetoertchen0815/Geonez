@@ -25,7 +25,7 @@ public class ProgressBar : Element
     {
     }
 
-    public ProgressBar(Skin skin, string styleName = null) : this(0, 1, 0.01f, false, skin)
+    public ProgressBar(Skin skin) : this(0, 1, 0.01f, false, skin)
     {
     }
 

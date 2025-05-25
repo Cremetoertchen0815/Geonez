@@ -36,11 +36,11 @@ public class BoundingBoxEntity : BaseRenderableEntity
 {
     // Initialize an array of indices for the box. 12 lines require 24 indices
     private static readonly short[] _bBoxIndices =
-    {
+    [
         0, 1, 1, 2, 2, 3, 3, 0, // Front edges
         4, 5, 5, 6, 6, 7, 7, 4, // Back edges
         0, 4, 1, 5, 2, 6, 3, 7 // Side edges connecting front and back
-    };
+    ];
 
     // drawing effect
 

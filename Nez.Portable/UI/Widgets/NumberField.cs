@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.Xna.Framework;
 using Nez.BitmapFonts;
 
@@ -9,7 +10,6 @@ public class NumberField : Table, IInputListener
     private readonly TextButton decrease;
     private readonly TextField field;
     private readonly TextButton increase;
-    private readonly NumberFieldStyle style;
     private float maximum;
     private float minimum;
     private float number;
@@ -17,13 +17,12 @@ public class NumberField : Table, IInputListener
 
     public NumberField(float initial, float min, float max, float step, bool showButtons, NumberFieldStyle style)
     {
-        this.style = style;
         Defaults().Space(0);
         SetMin(min);
         SetMax(max);
         SetStep(step);
 
-        field = new TextField(initial.ToString(), this.style);
+        field = new TextField(initial.ToString(CultureInfo.InvariantCulture), style);
         field.SetAlignment(UI.Align.Center);
         SetNumber(initial);
 
@@ -32,12 +31,12 @@ public class NumberField : Table, IInputListener
             decrease = new TextButton("", style.DecreaseButtonStyle);
 
             increase = new TextButton("", style.IncreaseButtonStyle);
-            increase.OnClicked += button => { IncreaseNumber(); };
+            increase.OnClicked += _ => { IncreaseNumber(); };
 
-            decrease.OnClicked += button => { DecreaseNumber(); };
+            decrease.OnClicked += _ => { DecreaseNumber(); };
         }
 
-        field.OnTextChanged += (field, s) =>
+        field.OnTextChanged += (_, s) =>
         {
             if (float.TryParse(s, out var n))
                 SetNumber(n >= maximum ? maximum : n);
@@ -142,7 +141,7 @@ public class NumberField : Table, IInputListener
 
     public void SetNumber(float value)
     {
-        field.SetTextForced(value.ToString());
+        field.SetTextForced(value.ToString(CultureInfo.InvariantCulture));
         number = value;
 
         OnNumberChanged(this, value);

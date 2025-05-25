@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 
 namespace Nez;
@@ -19,7 +20,6 @@ public static class ConsoleInterface
     internal static bool shiftP;
     internal static bool ctrlP;
     internal static bool altP;
-    internal static bool readKey;
     private static int x;
     private static int y;
 
@@ -105,8 +105,7 @@ public static class ConsoleInterface
         {
             for (var x = 0; x < Width; x++)
             for (var y = 0; y < Height; y++)
-                if (Characters[x, y] != ' ')
-                    Characters[x, y] = ' ';
+                Characters[x, y] = ' ';
         }
     }
 
@@ -175,12 +174,12 @@ public static class ConsoleInterface
 
     public static void Write(float value)
     {
-        Write(value.ToString());
+        Write(value.ToString(CultureInfo.InvariantCulture));
     }
 
     public static void Write(double value)
     {
-        Write(value.ToString());
+        Write(value.ToString(CultureInfo.InvariantCulture));
     }
 
     public static void WriteLine(string value)

@@ -66,7 +66,7 @@ public class NezSpriteFont : IFont
     /// <param name="c">C.</param>
     public bool HasCharacter(char c)
     {
-        return TryGetFontRegionForChar(c, out var fontGlyph);
+        return TryGetFontRegionForChar(c, out _);
     }
 
     private void MeasureString(ref FontCharacterSource text, out Vector2 size)
@@ -109,7 +109,7 @@ public class NezSpriteFont : IFont
             if (!_glyphs.TryGetValue(c, out currentGlyph))
             {
                 if (!defaultGlyph.HasValue)
-                    throw new ArgumentException("Errors.TextContainsUnresolvableCharacters", "text");
+                    throw new ArgumentException("Errors.TextContainsUnresolvableCharacters", nameof(text));
 
                 currentGlyph = defaultGlyph.Value;
             }
@@ -154,18 +154,11 @@ public class NezSpriteFont : IFont
     public bool TryGetFontRegionForChar(char c, out SpriteFont.Glyph fontGlyph,
         bool useDefaultRegionIfNotPresent = false)
     {
-        if (!_glyphs.TryGetValue(c, out fontGlyph))
-        {
-            if (useDefaultRegionIfNotPresent)
-            {
-                fontGlyph = _glyphs[_font.DefaultCharacter.Value];
-                return true;
-            }
-
-            return false;
-        }
-
+        if (_glyphs.TryGetValue(c, out fontGlyph)) return true;
+        if (!useDefaultRegionIfNotPresent) return false;
+        if (_font.DefaultCharacter != null) fontGlyph = _glyphs[_font.DefaultCharacter.Value];
         return true;
+
     }
 
 
@@ -254,7 +247,7 @@ public class NezSpriteFont : IFont
             if (!_glyphs.TryGetValue(c, out currentGlyph))
             {
                 if (!defaultGlyph.HasValue)
-                    throw new ArgumentException("Errors.TextContainsUnresolvableCharacters", "text");
+                    throw new ArgumentException("Errors.TextContainsUnresolvableCharacters", nameof(text));
 
                 currentGlyph = defaultGlyph.Value;
             }

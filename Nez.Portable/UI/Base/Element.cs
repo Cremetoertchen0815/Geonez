@@ -865,7 +865,7 @@ public class Element : ILayout
 
         Invalidate();
 
-        if (parent is ILayout)
+        if (parent is not null)
             ((ILayout)parent).InvalidateHierarchy();
     }
 

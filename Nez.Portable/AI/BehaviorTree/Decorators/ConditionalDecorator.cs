@@ -13,7 +13,7 @@ public class ConditionalDecorator<T> : Decorator<T>, IConditional<T>
 
     public ConditionalDecorator(IConditional<T> conditional, bool shouldReevalute)
     {
-        Insist.IsTrue(conditional is IConditional<T>, "conditional must implment IConditional");
+        Insist.IsTrue(conditional is not null, "conditional must implment IConditional");
         _conditional = conditional;
         _shouldReevaluate = shouldReevalute;
     }

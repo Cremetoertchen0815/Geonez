@@ -353,10 +353,10 @@ public class Skin
         if (!_resources.TryGetValue(typeof(T), out var typedResources))
             return default;
 
-        if (!typedResources.ContainsKey(name))
+        if (!typedResources.TryGetValue(name, out var resource))
             return default;
 
-        return (T)typedResources[name];
+        return (T)resource;
     }
 
     public Color GetColor(string name)

@@ -21,18 +21,14 @@ internal static class SpriteAtlasLoader
         bool premultiplyAlpha)
     {
         var contentData = content.Load<byte[]>(dataFile);
-        using (var str = new MemoryStream(contentData))
-        {
-            SpriteAtlasData spriteAtlas;
-            using (var reader = new BinaryReader(str))
-            {
-                spriteAtlas = ParseBinarySpriteAtlasData(reader);
-                return spriteAtlas.AsSpriteAtlas(
-                    premultiplyAlpha
-                        ? TextureUtils.TextureFromStreamPreMultiplied(str)
-                        : Texture2D.FromStream(Core.GraphicsDevice, str), generateStencil);
-            }
-        }
+        using var str = new MemoryStream(contentData);
+        SpriteAtlasData spriteAtlas;
+        using var reader = new BinaryReader(str);
+        spriteAtlas = ParseBinarySpriteAtlasData(reader);
+        return spriteAtlas.AsSpriteAtlas(
+            premultiplyAlpha
+                ? TextureUtils.TextureFromStreamPreMultiplied(str)
+                : Texture2D.FromStream(Core.GraphicsDevice, str), generateStencil);
     }
 
     internal static SpriteAtlasData ParseBinarySpriteAtlasData(BinaryReader r)
@@ -77,63 +73,59 @@ internal static class SpriteAtlasLoader
         var commaSplitter = new[] { ',' };
 
         string line = null;
-        using (var streamFile = File.OpenRead(dataFile))
+        using var streamFile = File.OpenRead(dataFile);
+        using var stream = new StreamReader(streamFile);
+        while ((line = stream.ReadLine()) != null)
         {
-            using (var stream = new StreamReader(streamFile))
+            // once we hit an empty line we are done parsing sprites so we move on to parsing animations
+            if (parsingSprites && string.IsNullOrWhiteSpace(line))
             {
-                while ((line = stream.ReadLine()) != null)
-                {
-                    // once we hit an empty line we are done parsing sprites so we move on to parsing animations
-                    if (parsingSprites && string.IsNullOrWhiteSpace(line))
-                    {
-                        parsingSprites = false;
-                        continue;
-                    }
+                parsingSprites = false;
+                continue;
+            }
 
-                    if (parsingSprites)
-                    {
-                        spriteAtlas.Names.Add(line);
+            if (parsingSprites)
+            {
+                spriteAtlas.Names.Add(line);
 
-                        // source rect
-                        line = stream.ReadLine();
-                        var lineParts = line.Split(commaSplitter, StringSplitOptions.RemoveEmptyEntries);
-                        var rect = new Rectangle(int.Parse(lineParts[0]), int.Parse(lineParts[1]),
-                            int.Parse(lineParts[2]), int.Parse(lineParts[3]));
-                        spriteAtlas.SourceRects.Add(rect);
+                // source rect
+                line = stream.ReadLine();
+                var lineParts = line.Split(commaSplitter, StringSplitOptions.RemoveEmptyEntries);
+                var rect = new Rectangle(int.Parse(lineParts[0]), int.Parse(lineParts[1]),
+                    int.Parse(lineParts[2]), int.Parse(lineParts[3]));
+                spriteAtlas.SourceRects.Add(rect);
 
-                        // origin
-                        line = stream.ReadLine();
-                        lineParts = line.Split(commaSplitter, StringSplitOptions.RemoveEmptyEntries);
-                        var origin = new Vector2(float.Parse(lineParts[0], CultureInfo.InvariantCulture),
-                            float.Parse(lineParts[1], CultureInfo.InvariantCulture));
+                // origin
+                line = stream.ReadLine();
+                lineParts = line.Split(commaSplitter, StringSplitOptions.RemoveEmptyEntries);
+                var origin = new Vector2(float.Parse(lineParts[0], CultureInfo.InvariantCulture),
+                    float.Parse(lineParts[1], CultureInfo.InvariantCulture));
 
-                        if (leaveOriginsRelative)
-                            spriteAtlas.Origins.Add(origin);
-                        else
-                            spriteAtlas.Origins.Add(origin * new Vector2(rect.Width, rect.Height));
-                    }
-                    else
-                    {
-                        // catch the case of a newline at the end of the file
-                        if (string.IsNullOrWhiteSpace(line))
-                            break;
+                if (leaveOriginsRelative)
+                    spriteAtlas.Origins.Add(origin);
+                else
+                    spriteAtlas.Origins.Add(origin * new Vector2(rect.Width, rect.Height));
+            }
+            else
+            {
+                // catch the case of a newline at the end of the file
+                if (string.IsNullOrWhiteSpace(line))
+                    break;
 
-                        spriteAtlas.AnimationNames.Add(line);
+                spriteAtlas.AnimationNames.Add(line);
 
-                        // animation fps
-                        line = stream.ReadLine();
-                        spriteAtlas.AnimationFps.Add(int.Parse(line));
+                // animation fps
+                line = stream.ReadLine();
+                spriteAtlas.AnimationFps.Add(int.Parse(line));
 
-                        // animation frames
-                        line = stream.ReadLine();
-                        var frames = new List<int>();
-                        spriteAtlas.AnimationFrames.Add(frames);
-                        var lineParts = line.Split(commaSplitter, StringSplitOptions.RemoveEmptyEntries);
+                // animation frames
+                line = stream.ReadLine();
+                var frames = new List<int>();
+                spriteAtlas.AnimationFrames.Add(frames);
+                var lineParts = line.Split(commaSplitter, StringSplitOptions.RemoveEmptyEntries);
 
-                        foreach (var part in lineParts)
-                            frames.Add(int.Parse(part));
-                    }
-                }
+                foreach (var part in lineParts)
+                    frames.Add(int.Parse(part));
             }
         }
 

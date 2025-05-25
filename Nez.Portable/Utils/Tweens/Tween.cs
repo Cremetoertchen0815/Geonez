@@ -10,7 +10,7 @@ public enum LoopType
     PingPong
 }
 
-public abstract class Tween<T> : ITweenable, ITween<T> where T : struct
+public abstract class Tween<T> : ITween<T> where T : struct
 {
     protected Action<ITween<T>> _completionHandler;
     protected float _delay;
