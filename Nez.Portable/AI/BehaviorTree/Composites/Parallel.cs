@@ -1,4 +1,4 @@
-﻿namespace Nez.AI.BehaviorTree.Composites;
+﻿namespace Nez.AI.BehaviorTrees;
 
 /// <summary>
 ///     the parallel task will run each child task until a child task returns failure. The difference is that the parallel
@@ -14,9 +14,9 @@ public class Parallel<T> : Composite<T>
     public override TaskStatus Update(T context)
     {
         var didAllSucceed = true;
-        for (var i = 0; i < Children.Count; i++)
+        for (var i = 0; i < _children.Count; i++)
         {
-            var child = Children[i];
+            var child = _children[i];
             child.Tick(context);
 
             // if any child fails the whole branch fails
@@ -28,6 +28,9 @@ public class Parallel<T> : Composite<T>
                 didAllSucceed = false;
         }
 
-        return didAllSucceed ? TaskStatus.Success : TaskStatus.Running;
+        if (didAllSucceed)
+            return TaskStatus.Success;
+
+        return TaskStatus.Running;
     }
 }

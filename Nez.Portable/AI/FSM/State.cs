@@ -1,18 +1,15 @@
-﻿using JetBrains.Annotations;
+﻿namespace Nez.AI.FSM;
 
-namespace Nez.AI.FSM;
-
-[PublicAPI]
-public abstract class State<T>(StateMachine<T> machine)
+public abstract class State<T>
 {
-    protected T? Context;
-    protected StateMachine<T> Machine = machine;
+    protected T _context;
+    protected StateMachine<T> _machine;
 
 
     public void SetMachineAndContext(StateMachine<T> machine, T context)
     {
-        Machine = machine;
-        Context = context;
+        _machine = machine;
+        _context = context;
         OnInitialized();
     }
 

@@ -1,33 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using Nez.Debugging;
 
 namespace Nez.AI.FSM;
 
-[PublicAPI]
 public class StateMachine<T>
 {
     private readonly Dictionary<Type, State<T>> _states = new();
-    protected T Context;
+    protected T _context;
 
-    public State<T>? CurrentState { get; protected set; }
+    protected State<T> _currentState;
     public float ElapsedTimeInState;
 
-    public State<T>? PreviousState;
+    public State<T> PreviousState;
 
 
     public StateMachine(T context, State<T> initialState)
     {
-        Context = context;
+        _context = context;
 
         // setup our initial state
         AddState(initialState);
-        CurrentState = initialState;
-        CurrentState.Begin();
+        _currentState = initialState;
+        _currentState.Begin();
     }
 
-    public event Action? OnStateChanged;
+    public State<T> CurrentState => _currentState;
+    public event Action OnStateChanged;
 
 
     /// <summary>
@@ -35,7 +33,7 @@ public class StateMachine<T>
     /// </summary>
     public void AddState(State<T> state)
     {
-        state.SetMachineAndContext(this, Context);
+        state.SetMachineAndContext(this, _context);
         _states[state.GetType()] = state;
     }
 
@@ -46,49 +44,51 @@ public class StateMachine<T>
     public virtual void Update(float deltaTime)
     {
         ElapsedTimeInState += deltaTime;
-        CurrentState?.Reason();
-        CurrentState?.Update(deltaTime);
+        _currentState.Reason();
+        _currentState.Update(deltaTime);
     }
 
     /// <summary>
     ///     Gets a specific state from the machine without having to
     ///     change to it.
     /// </summary>
-    public virtual TR GetState<TR>() where TR : State<T>
+    public virtual R GetState<R>() where R : State<T>
     {
-        var type = typeof(TR);
+        var type = typeof(R);
         Insist.IsTrue(_states.ContainsKey(type),
             "{0}: state {1} does not exist. Did you forget to add it by calling addState?", GetType(), type);
 
-        return (TR)_states[type];
+        return (R)_states[type];
     }
 
 
     /// <summary>
     ///     changes the current state
     /// </summary>
-    public TR? ChangeState<TR>() where TR : State<T>
+    public R ChangeState<R>() where R : State<T>
     {
         // avoid changing to the same state
-        var newType = typeof(TR);
-        if (CurrentState is TR rstate)
-            return rstate;
+        var newType = typeof(R);
+        if (_currentState.GetType() == newType)
+            return _currentState as R;
 
         // only call end if we have a currentState
-        CurrentState?.End();
+        if (_currentState != null)
+            _currentState.End();
 
         Insist.IsTrue(_states.ContainsKey(newType),
             "{0}: state {1} does not exist. Did you forget to add it by calling addState?", GetType(), newType);
 
         // swap states and call begin
         ElapsedTimeInState = 0f;
-        PreviousState = CurrentState;
-        CurrentState = _states[newType];
-        CurrentState.Begin();
+        PreviousState = _currentState;
+        _currentState = _states[newType];
+        _currentState.Begin();
 
         // fire the changed event if we have a listener
-        OnStateChanged?.Invoke();
+        if (OnStateChanged != null)
+            OnStateChanged();
 
-        return CurrentState as TR;
+        return _currentState as R;
     }
 }

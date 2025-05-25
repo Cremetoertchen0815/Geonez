@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
 
-namespace Nez.Utils;
+namespace Nez;
 
 /// <summary>
 ///     helper class to fetch property delegates
 /// </summary>
-[PublicAPI]
 public static class ReflectionUtils
 {
     public static T CreateDelegate<T>(object targetObject, MethodInfo methodInfo)
@@ -22,7 +19,6 @@ public static class ReflectionUtils
     ///     <paramref name="baseClassType">
     ///         optionally filtering only for those with
     ///         a parameterless constructor. Abstract Types will not be returned.
-    /// </paramref>
     /// </summary>
     /// <param name="baseClassType"></param>
     /// <param name="onlyIncludeParameterlessConstructors"></param>
@@ -52,7 +48,6 @@ public static class ReflectionUtils
     ///     <paramref name="baseClassType">
     ///         optionally filtering only for those with
     ///         a parameterless constructor. Abstract Types will not be returned.
-    /// </paramref>
     /// </summary>
     /// <param name="baseClassType"></param>
     /// <param name="onlyIncludeParameterlessConstructors"></param>
@@ -96,7 +91,13 @@ public static class ReflectionUtils
 
     public static List<Type> GetAllTypesWithAttribute<T>() where T : Attribute
     {
-        return AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes()).ToList();
+        var typeList = new List<Type>();
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        foreach (var type in assembly.GetTypes())
+            if (type.GetAttribute<T>() != null)
+                typeList.Add(type);
+
+        return typeList;
     }
 
     #region Fields
@@ -108,15 +109,14 @@ public static class ReflectionUtils
 
     public static FieldInfo GetFieldInfo(Type type, string fieldName)
     {
-        FieldInfo? fieldInfo;
-        var nullableType = type;
+        FieldInfo fieldInfo = null;
         do
         {
-            fieldInfo = nullableType.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            nullableType = type.BaseType;
-        } while (fieldInfo == null && nullableType != null);
+            fieldInfo = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            type = type.BaseType;
+        } while (fieldInfo == null && type != null);
 
-        return fieldInfo!;
+        return fieldInfo;
     }
 
     public static IEnumerable<FieldInfo> GetFields(Type type)
@@ -124,7 +124,7 @@ public static class ReflectionUtils
         return type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
     }
 
-    public static object? GetFieldValue(object targetObject, string fieldName)
+    public static object GetFieldValue(object targetObject, string fieldName)
     {
         return GetFieldInfo(targetObject, fieldName).GetValue(targetObject);
     }
@@ -133,12 +133,12 @@ public static class ReflectionUtils
 
     #region Properties
 
-    public static PropertyInfo? GetPropertyInfo(object targetObject, string propertyName)
+    public static PropertyInfo GetPropertyInfo(object targetObject, string propertyName)
     {
         return GetPropertyInfo(targetObject.GetType(), propertyName);
     }
 
-    public static PropertyInfo? GetPropertyInfo(Type type, string propertyName)
+    public static PropertyInfo GetPropertyInfo(Type type, string propertyName)
     {
         return type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
     }
@@ -148,49 +148,43 @@ public static class ReflectionUtils
         return type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
     }
 
-    public static MethodInfo? GetPropertyGetter(PropertyInfo prop)
+    public static MethodInfo GetPropertyGetter(PropertyInfo prop)
     {
         return prop.GetGetMethod(true);
     }
 
-    public static MethodInfo? GetPropertySetter(PropertyInfo prop)
+    public static MethodInfo GetPropertySetter(PropertyInfo prop)
     {
         return prop.GetSetMethod(true);
     }
 
-    public static object? GetPropertyValue(object targetObject, string propertyName)
+    public static object GetPropertyValue(object targetObject, string propertyName)
     {
         var propInfo = GetPropertyInfo(targetObject, propertyName);
-
-        if (propInfo is null)
-        {
-            return null;
-        }
-        
         var methodInfo = GetPropertyGetter(propInfo);
-        return methodInfo?.Invoke(targetObject, []);
+        return methodInfo.Invoke(targetObject, new object[] { });
     }
 
     /// <summary>
     ///     either returns a super fast Delegate to set the given property or null if it couldn't be found
     ///     via reflection
     /// </summary>
-    public static T? SetterForProperty<T>(object targetObject, string propertyName) where T : class
+    public static T SetterForProperty<T>(object targetObject, string propertyName)
     {
         // first get the property
         var propInfo = GetPropertyInfo(targetObject, propertyName);
-        return propInfo?.SetMethod != null ? CreateDelegate<T>(targetObject, propInfo.SetMethod) : null;
+        return propInfo == null ? default : CreateDelegate<T>(targetObject, propInfo.SetMethod);
     }
 
     /// <summary>
     ///     either returns a super fast Delegate to get the given property or null if it couldn't be found
     ///     via reflection
     /// </summary>
-    public static T? GetterForProperty<T>(object targetObject, string propertyName) where T : class
+    public static T GetterForProperty<T>(object targetObject, string propertyName)
     {
         // first get the property
         var propInfo = GetPropertyInfo(targetObject, propertyName);
-        return propInfo?.GetMethod != null ? CreateDelegate<T>(targetObject, propInfo.GetMethod) : null;
+        return propInfo == null ? default : CreateDelegate<T>(targetObject, propInfo.GetMethod);
     }
 
     #endregion
@@ -202,19 +196,19 @@ public static class ReflectionUtils
         return type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
     }
 
-    public static MethodInfo? GetMethodInfo(object targetObject, string methodName)
+    public static MethodInfo GetMethodInfo(object targetObject, string methodName)
     {
         return GetMethodInfo(targetObject.GetType(), methodName);
     }
 
-    public static MethodInfo? GetMethodInfo(object targetObject, string methodName, Type[] parameters)
+    public static MethodInfo GetMethodInfo(object targetObject, string methodName, Type[] parameters)
     {
         return GetMethodInfo(targetObject.GetType(), methodName, parameters);
     }
 
-    public static MethodInfo? GetMethodInfo(Type type, string methodName, Type[]? parameters = null)
+    public static MethodInfo GetMethodInfo(Type type, string methodName, Type[] parameters = null)
     {
-        if (parameters is null)
+        if (parameters == null)
             return type.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
         return type.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
             Type.DefaultBinder, parameters, null);

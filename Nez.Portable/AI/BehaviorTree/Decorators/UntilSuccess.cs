@@ -1,6 +1,4 @@
-﻿using Nez.Debugging;
-
-namespace Nez.AI.BehaviorTree.Decorators;
+﻿namespace Nez.AI.BehaviorTrees;
 
 /// <summary>
 ///     will keep executing its child task until the child task returns success
@@ -11,8 +9,11 @@ public class UntilSuccess<T> : Decorator<T>
     {
         Insist.IsNotNull(Child, "child must not be null");
 
-        var status = Child!.Tick(context);
+        var status = Child.Tick(context);
 
-        return status != TaskStatus.Success ? TaskStatus.Running : TaskStatus.Success;
+        if (status != TaskStatus.Success)
+            return TaskStatus.Running;
+
+        return TaskStatus.Success;
     }
 }

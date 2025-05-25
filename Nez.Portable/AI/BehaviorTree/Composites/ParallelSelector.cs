@@ -1,4 +1,4 @@
-﻿namespace Nez.AI.BehaviorTree.Composites;
+﻿namespace Nez.AI.BehaviorTrees;
 
 /// <summary>
 ///     Similar to the selector task, the ParallelSelector task will return success as soon as a child task returns
@@ -14,9 +14,9 @@ public class ParallelSelector<T> : Composite<T>
     public override TaskStatus Update(T context)
     {
         var didAllFail = true;
-        for (var i = 0; i < Children.Count; i++)
+        for (var i = 0; i < _children.Count; i++)
         {
-            var child = Children[i];
+            var child = _children[i];
             child.Tick(context);
 
             // if any child succeeds we return success
@@ -28,6 +28,9 @@ public class ParallelSelector<T> : Composite<T>
                 didAllFail = false;
         }
 
-        return didAllFail ? TaskStatus.Failure : TaskStatus.Running;
+        if (didAllFail)
+            return TaskStatus.Failure;
+
+        return TaskStatus.Running;
     }
 }

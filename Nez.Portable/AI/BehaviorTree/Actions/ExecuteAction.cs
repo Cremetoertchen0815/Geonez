@@ -1,15 +1,25 @@
 ﻿using System;
-using Nez.Debugging;
 
-namespace Nez.AI.BehaviorTree.Actions;
+namespace Nez.AI.BehaviorTrees;
 
 /// <summary>
-/// Wraps a Func so that you can avoid having to subclass to create new actions
+///     wraps a Func so that you can avoid having to subclass to create new actions
 /// </summary>
-public class ExecuteAction<T>(Func<T, TaskStatus> action) : Behavior<T>
+public class ExecuteAction<T> : Behavior<T>
 {
+    private readonly Func<T, TaskStatus> _action;
+
+
+    public ExecuteAction(Func<T, TaskStatus> action)
+    {
+        _action = action;
+    }
+
+
     public override TaskStatus Update(T context)
     {
-        return action(context);
+        Insist.IsNotNull(_action, "action must not be null");
+
+        return _action(context);
     }
 }

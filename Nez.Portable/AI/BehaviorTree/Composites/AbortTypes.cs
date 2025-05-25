@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Nez.AI.BehaviorTree.Composites;
+namespace Nez.AI.BehaviorTrees;
 
 [Flags]
 public enum AbortTypes
 {
 	/// <summary>
-	/// No abort type. the current action will always run even if other conditionals change state
+	///     no abort type. the current action will always run even if other conditionals change state
 	/// </summary>
 	None = 0,
 

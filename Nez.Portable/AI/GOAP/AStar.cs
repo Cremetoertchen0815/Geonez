@@ -8,7 +8,7 @@ public class AStarNode : IComparable<AStarNode>, IEquatable<AStarNode>, IPoolabl
 	/// <summary>
 	///     the Action associated with this node
 	/// </summary>
-	public Action? Action;
+	public Action Action;
 
 	/// <summary>
 	///     The cost so far.
@@ -28,7 +28,7 @@ public class AStarNode : IComparable<AStarNode>, IEquatable<AStarNode>, IPoolabl
     public int HeuristicCost;
 
     // Where did we come from?
-    public AStarNode? Parent;
+    public AStarNode Parent;
     public WorldState ParentWorldState;
 
     /// <summary>
@@ -58,21 +58,16 @@ public class AStarNode : IComparable<AStarNode>, IEquatable<AStarNode>, IPoolabl
 
     #region IEquatable and IComparable
 
-    public bool Equals(AStarNode? other)
+    public bool Equals(AStarNode other)
     {
         var care = WorldState.DontCare ^ -1L;
         return (WorldState.Values & care) == (other.WorldState.Values & care);
     }
 
 
-    public int CompareTo(AStarNode? other)
+    public int CompareTo(AStarNode other)
     {
         return CostSoFarAndHeuristicCost.CompareTo(other.CostSoFarAndHeuristicCost);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as AStarNode);
     }
 
     #endregion
@@ -80,7 +75,7 @@ public class AStarNode : IComparable<AStarNode>, IEquatable<AStarNode>, IPoolabl
 
 public class AStar
 {
-    private static readonly AStarStorage Storage = new();
+    private static readonly AStarStorage storage = new();
 
     /* from: http://theory.stanford.edu/~amitp/GameProgramming/ImplementationNotes.html
     OPEN = priority queue containing START
@@ -109,9 +104,9 @@ public class AStar
     /// <param name="goal">Goal.</param>
     /// <param name="storage">Storage.</param>
     public static Stack<Action> Plan(ActionPlanner ap, WorldState start, WorldState goal,
-        List<AStarNode>? selectedNodes = null)
+        List<AStarNode> selectedNodes = null)
     {
-        Storage.Clear();
+        storage.Clear();
 
         var currentNode = Pool<AStarNode>.Obtain();
         currentNode.WorldState = start;
@@ -121,26 +116,26 @@ public class AStar
         currentNode.CostSoFarAndHeuristicCost = currentNode.CostSoFar + currentNode.HeuristicCost; // f
         currentNode.Depth = 1;
 
-        Storage.AddToOpenList(currentNode);
+        storage.AddToOpenList(currentNode);
 
         while (true)
         {
             // nothing left open so we failed to find a path
-            if (!Storage.HasOpened())
+            if (!storage.HasOpened())
             {
-                Storage.Clear();
+                storage.Clear();
                 return null;
             }
 
-            currentNode = Storage.RemoveCheapestOpenNode();
+            currentNode = storage.RemoveCheapestOpenNode();
 
-            Storage.AddToClosedList(currentNode);
+            storage.AddToClosedList(currentNode);
 
             // all done. we reached our goal
             if (goal.Equals(currentNode.WorldState))
             {
                 var plan = ReconstructPlan(currentNode, selectedNodes);
-                Storage.Clear();
+                storage.Clear();
                 return plan;
             }
 
@@ -148,22 +143,22 @@ public class AStar
             for (var i = 0; i < neighbors.Count; i++)
             {
                 var cur = neighbors[i];
-                var opened = Storage.FindOpened(cur);
-                var closed = Storage.FindClosed(cur);
+                var opened = storage.FindOpened(cur);
+                var closed = storage.FindClosed(cur);
                 var cost = currentNode.CostSoFar + cur.CostSoFar;
 
                 // if neighbor in OPEN and cost less than g(neighbor):
                 if (opened != null && cost < opened.CostSoFar)
                 {
                     // remove neighbor from OPEN, because new path is better
-                    Storage.RemoveOpened(opened);
+                    storage.RemoveOpened(opened);
                     opened = null;
                 }
 
                 // if neighbor in CLOSED and cost less than g(neighbor):
                 if (closed != null && cost < closed.CostSoFar)
                     // remove neighbor from CLOSED
-                    Storage.RemoveClosed(closed);
+                    storage.RemoveClosed(closed);
 
                 // if neighbor not in OPEN and neighbor not in CLOSED:
                 if (opened == null && closed == null)
@@ -177,7 +172,7 @@ public class AStar
                     nb.ParentWorldState = currentNode.WorldState;
                     nb.Parent = currentNode;
                     nb.Depth = currentNode.Depth + 1;
-                    Storage.AddToOpenList(nb);
+                    storage.AddToOpenList(nb);
                 }
             }
 

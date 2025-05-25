@@ -1,4 +1,4 @@
-﻿namespace Nez.AI.BehaviorTree;
+﻿namespace Nez.AI.BehaviorTrees;
 
 public enum TaskStatus
 {

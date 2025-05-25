@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Nez.Utils;
+namespace Nez;
 
 /// <summary>
 ///     utility methods that don't yet have a proper home that makes sense
