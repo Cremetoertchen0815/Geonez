@@ -9,7 +9,6 @@ public static class Insist
     public static void Fail()
     {
         System.Diagnostics.Debug.Assert(false);
-        Debugger.Break();
     }
 
 
@@ -18,7 +17,6 @@ public static class Insist
     public static void Fail(string message, params object[] args)
     {
         System.Diagnostics.Debug.Assert(false, string.Format(message, args));
-        Debugger.Break();
     }
 
 

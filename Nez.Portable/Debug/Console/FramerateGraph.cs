@@ -19,7 +19,6 @@ internal class FramerateGraph
     public static readonly FramerateGraph Instance = new(new Vector2(200, 100), new Vector2(100, 200));
 
     private readonly BasicEffect _effect;
-    private readonly Vector2 _pos;
     private float fr;
     private short[] lineListIndices;
 
@@ -40,7 +39,7 @@ internal class FramerateGraph
     /// </summary>
     public Vector3 Scale = new(80f);
 
-    public Vector2 Size = new(1, 1);
+    public Vector2 Size;
     private short[] triangleStripIndices;
 
     public List<(float, Color)> values = [];
@@ -50,7 +49,6 @@ internal class FramerateGraph
         Size = size;
         MaxValue = 1;
         Type = GraphType.Fill;
-        _pos = position;
 
 
         _effect = new BasicEffect(Core.GraphicsDevice)
@@ -63,7 +61,7 @@ internal class FramerateGraph
             VertexColorEnabled = true
         };
         Rotation = new Vector3(MathHelper.Pi, 0, 0);
-        Position = new Vector3(_pos.X, -_pos.Y, 0);
+        Position = new Vector3(position.X, -position.Y, 0);
     }
 
     public static bool Active { get; set; }
