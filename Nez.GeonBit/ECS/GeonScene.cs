@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using JetBrains.Annotations;
+using Microsoft.Xna.Framework;
 using Nez.GeonBit.Lights;
 
 namespace Nez.GeonBit;
@@ -68,7 +69,8 @@ public class GeonScene : Scene
     }
 
 
-    public GeonEntity CreateGeonEntity(string name, Vector3 position, NodeType nodeType = NodeType.Simple)
+    public GeonEntity CreateGeonEntity(string name, Vector3 position = default, Vector3? scale = null,
+        Vector3? rotation = null, [CanBeNull] GeonEntity parent = null, NodeType nodeType = NodeType.Simple)
     {
         var entity = AddEntity(new GeonEntity(name));
 
@@ -100,14 +102,12 @@ public class GeonScene : Scene
         }
 
         entity.Node.Position = position;
-        entity.Node.Entity = entity;
+        if (scale != null) entity.Node.Scale = scale.Value;
+        if (rotation != null) entity.Node.Scale = rotation.Value;
+        parent?.Node.AddChildNode(entity.Node);
         entity.Scene = this;
+        entity.Node.Entity = entity;
 
         return entity;
-    }
-
-    public GeonEntity CreateGeonEntity(string name, NodeType nodeType = NodeType.Simple)
-    {
-        return CreateGeonEntity(name, Vector3.Zero, nodeType);
     }
 }

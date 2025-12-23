@@ -81,8 +81,7 @@ public class NezContentManager : ContentManager
         if (string.IsNullOrEmpty(Path.GetExtension(name)))
             return Load<Texture2D>(name);
 
-        if (LoadedAssets.TryGetValue(name, out var asset))
-            if (asset is Texture2D tex)
+        if (LoadedAssets.TryGetValue(name, out var asset) && asset is Texture2D { IsDisposed: false } tex)
                 return tex;
 
         using var stream = Path.IsPathRooted(name) ? File.OpenRead(name) : TitleContainer.OpenStream(name);
