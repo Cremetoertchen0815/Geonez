@@ -426,10 +426,6 @@ public class Paragraph : Entity
             // set font and get single character size
             _currFont = font;
             SingleCharacterSize = _currFont.MeasureString(" ");
-
-            // sanity test
-            if (SingleCharacterSize.X * 2 != _currFont.MeasureString("!.").X)
-                throw new InvalidValueException("Cannot use non-monospace fonts!");
         }
     }
 
