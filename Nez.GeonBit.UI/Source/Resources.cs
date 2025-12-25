@@ -341,7 +341,6 @@ public static class Resources
         LoadDefaultStyles(ref ColoredRectangle.DefaultStyle, "ColoredRectangle", _root, content);
         LoadDefaultStyles(ref DropDown.DefaultStyle, "DropDown", _root, content);
         LoadDefaultStyles(ref DropDown.DefaultParagraphStyle, "DropDownParagraph", _root, content);
-        LoadDefaultStyles(ref DropDown.DefaultSelectedParagraphStyle, "DropDownSelectedParagraph", _root, content);
         LoadDefaultStyles(ref Header.DefaultStyle, "Header", _root, content);
         LoadDefaultStyles(ref HorizontalLine.DefaultStyle, "HorizontalLine", _root, content);
         LoadDefaultStyles(ref Icon.DefaultStyle, "Icon", _root, content);

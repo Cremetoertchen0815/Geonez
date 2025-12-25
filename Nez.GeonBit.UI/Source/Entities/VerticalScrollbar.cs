@@ -28,7 +28,7 @@ public class VerticalScrollbar : Slider
 
     // frame and mark actual height
     private float _frameActualHeight;
-    private int _markHeight = 20;
+    private int _markHeight = 30;
 
     /// <summary>
     ///     If true, will adjust max value automatically based on entities in parent.

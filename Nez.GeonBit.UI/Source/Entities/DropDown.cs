@@ -31,11 +31,8 @@ public class DropDown : Entity
     /// <summary>Default style for the dropdown itself. Note: loaded from UI theme xml file.</summary>
     public new static StyleSheet DefaultStyle = new();
 
-    /// <summary>Default styling for dropdown labels. Note: loaded from UI theme xml file.</summary>
-    public static StyleSheet DefaultParagraphStyle = new();
-
     /// <summary>Default styling for the dropdown currently-selected label. Note: loaded from UI theme xml file.</summary>
-    public static StyleSheet DefaultSelectedParagraphStyle = new();
+    public static StyleSheet DefaultParagraphStyle = new();
 
     /// <summary>Default select list size in pixels.</summary>
     public new static Vector2 DefaultSize = new(0f, 220f);
@@ -43,7 +40,7 @@ public class DropDown : Entity
     /// <summary>
     ///     Default height, in pixels, of the selected text panel.
     /// </summary>
-    public static int SelectedPanelHeight = 67;
+    public static int SelectedPanelHeight = 52;
 
     /// <summary>
     ///     Size of the arrow to show on the side of the Selected Text Panel.
@@ -109,12 +106,11 @@ public class DropDown : Entity
             SelectedTextPanel = new Panel(new Vector2(0, SelectedPanelHeight), skin, Anchor.TopLeft);
             SelectedTextPanelParagraph = UserInterface.DefaultParagraph(string.Empty, Anchor.CenterLeft);
             SelectedTextPanelParagraph.UseActualSizeForCollision = false;
-            SelectedTextPanelParagraph.UpdateStyle(SelectList.DefaultParagraphStyle);
             SelectedTextPanelParagraph.UpdateStyle(DefaultParagraphStyle);
-            SelectedTextPanelParagraph.UpdateStyle(DefaultSelectedParagraphStyle);
             SelectedTextPanelParagraph.Identifier = "_selectedTextParagraph";
             SelectedTextPanel.AddChild(SelectedTextPanelParagraph, true);
             SelectedTextPanel._hiddenInternalEntity = true;
+            SelectedTextPanel.UpdateStyle(DefaultStyle);
             SelectedTextPanel.Identifier = "_selectedTextPanel";
 
             // create the arrow down icon
@@ -288,9 +284,6 @@ public class DropDown : Entity
 
         // set starting text
         SelectedTextPanelParagraph.Text = SelectedValue ?? DefaultText;
-
-        // update styles
-        SelectList.UpdateStyle(DefaultStyle);
 
         // make the list events trigger the dropdown events
         SelectList.PropagateEventsTo(this);

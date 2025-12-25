@@ -26,17 +26,11 @@ public enum PanelSkin
     /// <summary>Default panel texture.</summary>
     Default = 0,
 
-    /// <summary>Alternative panel texture.</summary>
-    Fancy = 1,
-
     /// <summary>Simple, grey panel. Useful for internal frames, eg when inside another panel.</summary>
-    Simple = 2,
-
-    /// <summary>Shiny golden panel.</summary>
-    Golden = 3,
+    Simple = 1,
 
     /// <summary>Special panel skin used for lists and input background.</summary>
-    ListBackground = 4
+    ListBackground = 2
 }
 
 /// <summary>
@@ -76,7 +70,7 @@ public class PanelBase : Entity
             OutlineColor = Color.Transparent;
             OutlineWidth = 0;
         }
-        else
+        else if (_skin is not PanelSkin.None and not PanelSkin.Simple)
         {
             MilkFactor = 0.65f;
         }
