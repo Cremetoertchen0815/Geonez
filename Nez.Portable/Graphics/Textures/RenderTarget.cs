@@ -144,7 +144,7 @@ public class RenderTarget : GlobalManager
     /// </summary>
     /// <param name="width">Width.</param>
     /// <param name="height">Height.</param>
-    public static RenderTarget2D Create(int width, int height, bool supportAA = false)
+    public static RenderTarget2D Create(int width, int height, bool supportAA = true)
     {
         return Create(width, height, Screen.BackBufferFormat, Screen.PreferredDepthStencilFormat, supportAA);
     }
@@ -173,7 +173,7 @@ public class RenderTarget : GlobalManager
         DepthFormat preferredDepthFormat, bool supportAA = false)
     {
         return new RenderTarget2D(Core.GraphicsDevice, width, height, false, preferredFormat, preferredDepthFormat,
-            Screen.AASamples, RenderTargetUsage.DiscardContents, supportAA);
+            supportAA ? Screen.AASamples : 0, RenderTargetUsage.DiscardContents);
     }
 
     #endregion

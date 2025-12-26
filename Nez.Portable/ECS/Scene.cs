@@ -117,6 +117,11 @@ public class Scene
     ///     if the ResolutionPolicy is pixel perfect this will be set to the scale calculated for it
     /// </summary>
     public int PixelPerfectScale = 1;
+    
+    /// <summary>
+    /// Whether anti aliasing should be enabled for the scene's backbuffer.
+    /// </summary>
+    public bool AllowAAForBackbuffer { get; set; }
 
     /// <summary>
     ///     SamplerState used for the final draw of the RenderTarget to the framebuffer
@@ -413,7 +418,6 @@ public class Scene
 
         // prep our render textures
         UpdateResolutionScaler();
-        Core.GraphicsDevice.SetRenderTarget(_sceneRenderTarget);
         Core.Emitter.AddObserver(CoreEvents.GraphicsDeviceReset, OnGraphicsDeviceReset);
         Core.Emitter.AddObserver(CoreEvents.OrientationChanged, OnOrientationChanged);
 
@@ -442,7 +446,10 @@ public class Scene
 
         Camera = null;
         Content.Dispose();
+
+        Core.GraphicsDevice.SetRenderTarget(null);
         _sceneRenderTarget.Dispose();
+
         Physics.Clear();
 
         if (_destinationRenderTarget != null)
@@ -840,10 +847,16 @@ public class Scene
         Input._resolutionScale = new Vector2(scaleX, scaleY);
         Input._resolutionOffset = _finalRenderDestinationRect.Location;
 
+        
         // resize our RenderTargets
         if (_sceneRenderTarget != null)
+        {
+            // Clearing the old render target is VERY IMPORTANT if MSAA is activated. If not, if will throw an exception
+            // the next time the render target is set.
+            Core.GraphicsDevice.SetRenderTarget(null);
             _sceneRenderTarget.Dispose();
-        _sceneRenderTarget = RenderTarget.Create(renderTargetWidth, renderTargetHeight, true);
+        }
+        _sceneRenderTarget = RenderTarget.Create(renderTargetWidth, renderTargetHeight, AllowAAForBackbuffer);
 
         // only create the destinationRenderTarget if it already exists, which would indicate we have PostProcessors
         if (_destinationRenderTarget != null)

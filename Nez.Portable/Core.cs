@@ -103,10 +103,12 @@ public class Core : Game
                 SynchronizeWithVerticalRetrace = true,
                 PreferHalfPixelOffset = true,
                 GraphicsProfile = GraphicsProfile.HiDef,
-                PreferMultiSampling = false
+                PreferMultiSampling = true
             };
             graphicsManager.DeviceReset += OnGraphicsDeviceReset;
             graphicsManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
+            graphicsManager.PreparingDeviceSettings += (_, e) =>
+                e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 0;
             graphicsManager.ApplyChanges();
 
             Screen.Initialize(graphicsManager);
