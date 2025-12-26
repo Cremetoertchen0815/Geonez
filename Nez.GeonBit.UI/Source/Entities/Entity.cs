@@ -614,8 +614,6 @@ public abstract class Entity
 
     private bool _selectionOnDstCalc { get; set; }
 
-    public float MilkFactor { get; set; } = 0f;
-
     /// <summary>
     ///     Return the default size for this entity.
     /// </summary>

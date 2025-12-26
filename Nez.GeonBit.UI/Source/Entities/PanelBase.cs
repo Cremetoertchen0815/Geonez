@@ -23,14 +23,17 @@ public enum PanelSkin
     /// <summary>No skin, eg panel itself is invisible.</summary>
     None = -1,
 
-    /// <summary>Default panel texture.</summary>
+    /// <summary>Default panel texture, can be used for f.e. dialogs.</summary>
     Default = 0,
 
-    /// <summary>Simple, grey panel. Useful for internal frames, eg when inside another panel.</summary>
+    /// <summary>Simple, light grey panel. Useful for internal frames, eg when inside another panel.</summary>
     Simple = 1,
 
     /// <summary>Special panel skin used for lists and input background.</summary>
-    ListBackground = 2
+    ListBackground = 2,
+
+    /// <summary>Panel skin with a blank white background. Can be used in combination with the FillColor to freely set the background color.</summary>
+    Blank = 3
 }
 
 /// <summary>
@@ -70,10 +73,6 @@ public class PanelBase : Entity
             OutlineColor = Color.Transparent;
             OutlineWidth = 0;
         }
-        else if (_skin is not PanelSkin.None and not PanelSkin.Simple)
-        {
-            MilkFactor = 0.65f;
-        }
     }
 
     /// <summary>
@@ -106,31 +105,20 @@ public class PanelBase : Entity
             // get texture based on skin
             var data = Resources.PanelData[(int)_skin];
 
-            if (data.StainedCanvasID < 0)
+            if (data.StainedCanvasID >= 0 && UserInterface.StainedCanvasEnabled)
             {
-                var texture = Resources.PanelTextures[_skin];
-                var frameSize = new Vector2(data.FrameWidth, data.FrameHeight);
+                var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
+                var nuSize = new Vector2(0.95f) * _destRect.Size.ToVector2();
+                var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
+                    nuSize.ToPoint());
+                UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, Color.White, 1, srcRect);
+            }
 
-                // draw panel
-                UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1f, FillColor,
-                    Scale);
-            }
-            else
-            {
-                if (UserInterface.StainedCanvasEnabled)
-                {
-                    var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
-                    var nuSize = new Vector2(data.FrameWidth, data.FrameHeight) * _destRect.Size.ToVector2();
-                    var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
-                        nuSize.ToPoint());
-                    UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, FillColor, 1, srcRect);
-                    spriteBatch.DrawRect(_destRect, FillColor with { A = 255 } * MilkFactor);
-                }
-                else
-                {
-                    spriteBatch.DrawRect(_destRect, FillColor with { A = 255 });
-                }
-            }
+            var texture = Resources.PanelTextures[_skin];
+            var frameSize = new Vector2(data.FrameWidth, data.FrameHeight);
+
+            // draw panel
+            UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1f, FillColor, Scale);
         }
 
         // call base draw function

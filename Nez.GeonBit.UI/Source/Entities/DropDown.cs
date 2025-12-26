@@ -90,8 +90,7 @@ public class DropDown : Entity
     /// <param name="skin">Panel skin to use for this DropDown list and header.</param>
     /// <param name="listSkin">An optional skin to use for the dropdown list only (if you want a different skin for the list).</param>
     /// <param name="showArrow">If true, will show an up/down arrow next to the dropdown text.</param>
-    public DropDown(Vector2 size, Anchor anchor = Anchor.Auto, Vector2? offset = null,
-        PanelSkin skin = PanelSkin.ListBackground, PanelSkin? listSkin = null, bool showArrow = true) :
+    public DropDown(Vector2 size, Anchor anchor = Anchor.Auto, Vector2? offset = null, bool showArrow = true) :
         base(size, anchor, offset)
     {
         // default padding of self is 0
@@ -103,7 +102,7 @@ public class DropDown : Entity
         if (!UserInterface.Active._isDeserializing)
         {
             // create the panel and paragraph used to show currently selected value (what's shown when drop-down is closed)
-            SelectedTextPanel = new Panel(new Vector2(0, SelectedPanelHeight), skin, Anchor.TopLeft);
+            SelectedTextPanel = new Panel(new Vector2(0, SelectedPanelHeight), PanelSkin.Blank, Anchor.TopLeft);
             SelectedTextPanelParagraph = UserInterface.DefaultParagraph(string.Empty, Anchor.CenterLeft);
             SelectedTextPanelParagraph.UseActualSizeForCollision = false;
             SelectedTextPanelParagraph.UpdateStyle(DefaultParagraphStyle);
@@ -122,7 +121,7 @@ public class DropDown : Entity
             ArrowDownImage.Visible = showArrow;
 
             // create the list component
-            SelectList = new SelectList(new Vector2(0f, size.Y), Anchor.TopCenter, Vector2.Zero, listSkin ?? skin);
+            SelectList = new SelectList(new Vector2(0f, size.Y), Anchor.TopCenter, Vector2.Zero);
 
             // update list offset and space before
             SelectList.SetOffset(new Vector2(0, SelectedPanelHeight));
@@ -139,7 +138,7 @@ public class DropDown : Entity
         // if during serialization create just a temp placeholder
         else
         {
-            SelectList = new SelectList(new Vector2(0f, size.Y), Anchor.TopCenter, Vector2.Zero, listSkin ?? skin);
+            SelectList = new SelectList(new Vector2(0f, size.Y), Anchor.TopCenter, Vector2.Zero);
         }
     }
 

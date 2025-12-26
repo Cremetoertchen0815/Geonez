@@ -43,8 +43,7 @@ public static class SimpleFileMenu
         foreach (var menu in layout.Layout)
         {
             // create dropdown and all its items
-            var dropdown = new DropDown(new Vector2(menu.Width, -1), Anchor.AutoInline, null, PanelSkin.None, skin,
-                false);
+            var dropdown = new DropDown(new Vector2(menu.Width, -1), Anchor.AutoInline, null, false);
             rootPanel.AddChild(dropdown);
             foreach (var item in menu.Items) dropdown.AddItem(item);
             dropdown.AutoSetListHeight = true;

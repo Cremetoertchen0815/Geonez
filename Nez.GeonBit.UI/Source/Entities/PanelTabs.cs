@@ -228,7 +228,7 @@ public class PanelTabs : Entity
     public TabData AddTab(string name, PanelSkin panelSkin = PanelSkin.None)
     {
         var newPanel = new Panel(Vector2.Zero, panelSkin, Anchor.TopCenter);
-        var newButton = new Button(name, ButtonSkin.Default, Anchor.AutoInlineNoBreak, new Vector2(-1, -1));
+        var newButton = new Button(name, Anchor.AutoInlineNoBreak, new Vector2(-1, -1));
         newPanel.Identifier = name;
         return AddTab(newPanel, newButton);
     }

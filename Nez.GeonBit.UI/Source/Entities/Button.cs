@@ -29,13 +29,7 @@ namespace Nez.GeonBit.UI.Entities;
 public enum ButtonSkin
 {
     /// <summary>The default button skin.</summary>
-    Default = 0,
-
-    /// <summary>Alternative button skin.</summary>
-    Alternative = 1,
-
-    /// <summary>Fancy button skin.</summary>
-    Fancy = 2
+    Default = 0
 }
 
 /// <summary>
@@ -90,17 +84,15 @@ public class Button : Entity
     /// <param name="anchor">Position anchor.</param>
     /// <param name="size">Button size (if not defined will use default size).</param>
     /// <param name="offset">Offset from anchor position.</param>
-    public Button(string text, ButtonSkin skin = ButtonSkin.Default, Anchor anchor = Anchor.Auto, Vector2? size = null,
+    public Button(string text, Anchor anchor = Anchor.Auto, Vector2? size = null,
         Vector2? offset = null) :
         base(size, anchor, offset)
     {
         // store style
-        _skin = skin;
+        _skin = ButtonSkin.Default;
 
         // update styles
         UpdateStyle(DefaultStyle);
-
-        MilkFactor = 0.4f;
 
         if (!UserInterface.Active._isDeserializing)
         {
@@ -208,42 +200,32 @@ public class Button : Entity
 
         // get texture based on skin and state
         var data = Resources.ButtonData[(int)_skin];
-
-        if (data.StainedCanvasID < 0)
+        
+        if (data.StainedCanvasID >= 0 && UserInterface.StainedCanvasEnabled)
         {
-            var texture = _customSkin == null ? Resources.ButtonTextures[_skin, state] : _customSkin[(int)state];
-
-            // get frame width
-            var frameSize = _customSkin == null ? new Vector2(data.FrameWidth, data.FrameHeight) : _customFrame;
-
-            // draw the button background with frame
-            if (frameSize.Length() > 0)
-            {
-                var scale = frameSize.Y > 0 ? Scale : 1f;
-                UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1, FillColor,
-                    scale);
-            }
-            // draw the button background without frame (just stretch texture)
-            else
-            {
-                UserInterface.Active.DrawUtils.DrawImage(spriteBatch, texture, _destRect, FillColor);
-            }
+            var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
+            var nuSize = new Vector2(0.95f) * _destRect.Size.ToVector2();
+            var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
+                nuSize.ToPoint());
+            UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, Color.White, 1, srcRect);
         }
+        
+        var texture = _customSkin == null ? Resources.ButtonTextures[_skin, state] : _customSkin[(int)state];
+
+        // get frame width
+        var frameSize = _customSkin == null ? new Vector2(data.FrameWidth, data.FrameHeight) : _customFrame;
+
+        // draw the button background with frame
+        if (frameSize.Length() > 0)
+        {
+            var scale = frameSize.Y > 0 ? Scale : 1f;
+            UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1, FillColor,
+                scale);
+        }
+        // draw the button background without frame (just stretch texture)
         else
         {
-            if (UserInterface.StainedCanvasEnabled)
-            {
-                var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
-                var nuSize = new Vector2(data.FrameWidth, data.FrameHeight) * _destRect.Size.ToVector2();
-                var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
-                    nuSize.ToPoint());
-                UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, FillColor, 1, srcRect);
-                spriteBatch.DrawRect(_destRect, FillColor * MilkFactor);
-            }
-            else
-            {
-                spriteBatch.DrawRect(_destRect, FillColor with { A = 255 });
-            }
+            UserInterface.Active.DrawUtils.DrawImage(spriteBatch, texture, _destRect, FillColor);
         }
 
         // call base draw function

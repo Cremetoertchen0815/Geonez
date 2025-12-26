@@ -117,7 +117,7 @@ public class TextInput : PanelBase
     /// <param name="offset">Offset from anchor position.</param>
     /// <param name="skin">TextInput skin, eg which texture to use.</param>
     public TextInput(bool multiline, Vector2 size, Anchor anchor = Anchor.Auto, Vector2? offset = null,
-        PanelSkin skin = PanelSkin.ListBackground) :
+        PanelSkin skin = PanelSkin.Blank) :
         base(size, skin, anchor, offset)
     {
         // set multiline mode
