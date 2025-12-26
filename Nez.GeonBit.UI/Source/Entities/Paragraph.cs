@@ -22,7 +22,6 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.ExtendedContent.DataTypes;
-using Nez.GeonBit.UI.Exceptions;
 
 namespace Nez.GeonBit.UI.Entities;
 
@@ -503,6 +502,10 @@ public class Paragraph : Entity
             case Anchor.CenterRight:
                 _fontOrigin = new Vector2(size.X, size.Y / 2);
                 _position += new Vector2(_destRect.Width, _destRect.Height / 2);
+                break;
+            case Anchor.AutoInline:
+            case Anchor.AutoInlineNoBreak:
+                _position += _scaledOffset;
                 break;
         }
 
