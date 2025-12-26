@@ -102,8 +102,7 @@ public static class Screen
         set => _graphicsManager.SupportedOrientations = value;
     }
 
-    //MSAA currently not supported by MonoGame Desktop GL
-    public static int AASamples { get; set; } = 16;
+    public static int AASamples { get; set; } = 0;
 
     internal static void Initialize(GraphicsDeviceManager graphicsManager)
     {
