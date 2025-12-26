@@ -144,7 +144,7 @@ public class RenderTarget : GlobalManager
     /// </summary>
     /// <param name="width">Width.</param>
     /// <param name="height">Height.</param>
-    public static RenderTarget2D Create(int width, int height, bool supportAA = true)
+    public static RenderTarget2D Create(int width, int height, bool supportAA = false)
     {
         return Create(width, height, Screen.BackBufferFormat, Screen.PreferredDepthStencilFormat, supportAA);
     }
