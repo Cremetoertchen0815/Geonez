@@ -143,7 +143,7 @@ public class UserInterface : IDisposable
 
     public static bool GamePadModeEnabled = false;
 
-    public static bool StainedCanvasEnabled = true;
+    public static bool StainedCanvasEnabled = false;
 
     /// <summary>
     ///     Supported GamePad Cursor behavior.
