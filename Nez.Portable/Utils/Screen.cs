@@ -104,6 +104,8 @@ public static class Screen
 
     public static int AASamples { get; set; } = 0;
 
+    public static int MaxAASamples { get; internal set; } = 0;
+
     internal static void Initialize(GraphicsDeviceManager graphicsManager)
     {
         _graphicsManager = graphicsManager;

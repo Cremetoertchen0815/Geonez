@@ -108,7 +108,10 @@ public class Core : Game
             graphicsManager.DeviceReset += OnGraphicsDeviceReset;
             graphicsManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             graphicsManager.PreparingDeviceSettings += (_, e) =>
+            {
+                Screen.MaxAASamples = e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount;
                 e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 0;
+            };
             graphicsManager.ApplyChanges();
 
             Screen.Initialize(graphicsManager);
