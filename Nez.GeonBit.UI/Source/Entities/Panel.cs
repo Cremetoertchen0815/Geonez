@@ -256,7 +256,7 @@ public class Panel : PanelBase
     ///     Called after drawing child entities of this entity.
     /// </summary>
     /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
-    protected override void AfterDrawChildren(SpriteBatch spriteBatch)
+    protected override void AfterDrawChildren(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
         // if overflow mode is simply overflow, do nothing.
         if (_overflowMode == PanelOverflowBehavior.Overflow) return;
@@ -272,7 +272,7 @@ public class Panel : PanelBase
             UserInterface.Active.DrawUtils.PopRenderTarget();
 
             // draw the render target itself
-            UserInterface.Active.DrawUtils.StartDraw(spriteBatch, IsDisabled());
+            UserInterface.Active.DrawUtils.StartDraw(spriteBatch, IsDisabled(), screenMatrix);
             spriteBatch.Draw(_renderTarget, GetRenderTargetRect(), Color.White);
             UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
 

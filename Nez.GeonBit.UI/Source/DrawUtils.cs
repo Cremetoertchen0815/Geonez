@@ -581,12 +581,13 @@ public class DrawUtils
     /// </summary>
     /// <param name="spriteBatch">SpriteBatch to draw on.</param>
     /// <param name="isDisabled">If true, will use the greyscale 'disabled' effect.</param>
-    public virtual void StartDraw(SpriteBatch spriteBatch, bool isDisabled)
+    /// <param name="screenMatrix">The matrix that transforms the UI to match on the screen.</param>
+    public virtual void StartDraw(SpriteBatch spriteBatch, bool isDisabled, Matrix screenMatrix)
     {
         // start drawing
         spriteBatch.Begin(SpriteSortMode.Deferred, UserInterface.Active.BlendState, UserInterface.Active.SamplerState,
             DepthStencilState.None, RasterizerState.CullCounterClockwise,
-            isDisabled ? Resources.DisabledEffect : null);
+            isDisabled ? Resources.DisabledEffect : null, screenMatrix);
 
         // update drawing target
         UpdateRenderTarget(spriteBatch);
@@ -596,11 +597,12 @@ public class DrawUtils
     ///     Start drawing on a given SpriteBatch, but only draw colored Silhouette of the texture.
     /// </summary>
     /// <param name="spriteBatch">SpriteBatch to draw on.</param>
-    public virtual void StartDrawSilhouette(SpriteBatch spriteBatch)
+    /// <param name="screenMatrix">The matrix that transforms the UI to match on the screen.</param>
+    public virtual void StartDrawSilhouette(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
         // start drawing silhouette
         spriteBatch.Begin(SpriteSortMode.Deferred, UserInterface.Active.BlendState, UserInterface.Active.SamplerState,
-            DepthStencilState.None, RasterizerState.CullCounterClockwise, Resources.SilhouetteEffect);
+            DepthStencilState.None, RasterizerState.CullCounterClockwise, Resources.SilhouetteEffect, screenMatrix);
 
         // update drawing target
         UpdateRenderTarget(spriteBatch);

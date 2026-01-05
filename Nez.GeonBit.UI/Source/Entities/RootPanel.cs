@@ -52,9 +52,8 @@ public class RootPanel : Panel
 	/// <returns>Rectangle in the size of the whole screen.</returns>
 	public override Rectangle CalcDestRect()
     {
-        var width = UserInterface.Active.ScreenWidth;
-        var height = UserInterface.Active.ScreenHeight;
-        return new Rectangle(0, 0, width, height);
+        var designResolution = UserInterface.Active.DesignResolution;
+        return new Rectangle(0, 0, designResolution.X, designResolution.Y);
     }
 
 	/// <summary>
@@ -66,11 +65,8 @@ public class RootPanel : Panel
         if (IsDirty) UpdateDestinationRects();
     }
 
-	/// <summary>
-	///     Draw this entity and its children.
-	/// </summary>
-	/// <param name="spriteBatch">SpriteBatch to use for drawing.</param>
-	public override void Draw(SpriteBatch spriteBatch)
+	/// <inheritdoc/>
+	public override void Draw(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
         // if not visible skip
         if (!Visible) return;
@@ -85,7 +81,7 @@ public class RootPanel : Panel
         var childrenSorted = GetSortedChildren();
 
         // draw all children
-        foreach (var child in childrenSorted) child.Draw(spriteBatch);
+        foreach (var child in childrenSorted) child.Draw(spriteBatch, screenMatrix);
 
         // do after draw event
         OnAfterDraw(spriteBatch);

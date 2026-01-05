@@ -245,6 +245,11 @@ public class UserInterface : IDisposable
     /// <summary>Screen height.</summary>
     public int ScreenHeight = Screen.Height;
 
+    /// <summary>
+    /// Represents the design resolution of the user interface as opposed to the render target resolution.
+    /// </summary>
+    public Point DesignResolution = new(Screen.Width, Screen.Height);
+
     /// <summary>Draw utils helper. Contain general drawing functionality and handle effects replacement.</summary>
     public DrawUtils DrawUtils;
 
@@ -373,11 +378,6 @@ public class UserInterface : IDisposable
         private get => _LockCursorPosition;
         set => Input.LockMousePosition = _LockCursorPosition = value;
     }
-
-    /// <summary>
-    ///     Optional transformation matrix to apply when drawing with render targets.
-    /// </summary>
-    public Matrix? RenderTargetTransformMatrix = null;
 
     /// <summary>
     ///     If using render targets, should the curser be rendered inside of it?
@@ -779,7 +779,7 @@ public class UserInterface : IDisposable
         }
 
         // draw root panel
-        Root.Draw(spriteBatch);
+        Root.Draw(spriteBatch, Core.Scene.ScreenScaleTransformMatrix);
 
         // draw cursor (unless using render targets and should draw cursor outside of it)
         if (ShowCursor && (IncludeCursorInRenderTarget || !UseRenderTarget)) DrawCursor(spriteBatch);
@@ -799,8 +799,7 @@ public class UserInterface : IDisposable
         if (RenderTarget is { IsDisposed: false })
         {
             // draw render target
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
-                transformMatrix: RenderTargetTransformMatrix);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             spriteBatch.Draw(RenderTarget, screenSpace, Color.White);
             spriteBatch.End();
         }
@@ -810,7 +809,7 @@ public class UserInterface : IDisposable
     }
 
     /// <summary>
-    ///     Get transformed cursoer position for collision detection.
+    ///     Get transformed cursor position for collision detection.
     ///     If have transform matrix and curser is included in render target, will transform cursor position too.
     ///     If don't use transform matrix or drawing cursor outside, will not transform cursor position.
     /// </summary>
@@ -820,15 +819,8 @@ public class UserInterface : IDisposable
         // default add vector
         addVector = addVector ?? Vector2.Zero;
 
-        // return transformed cursor position
-        if (UseRenderTarget && RenderTargetTransformMatrix != null && !IncludeCursorInRenderTarget)
-        {
-            var matrix = Matrix.Invert(RenderTargetTransformMatrix.Value);
-            return Input.TransformCursorPos(matrix) + Vector2.Transform(addVector.Value, matrix);
-        }
-
-        // return raw cursor pos
-        return Input.MousePosition + addVector.Value;
+        var matrix = Matrix.Invert(Core.Scene.ScreenScaleTransformMatrix);
+        return Input.TransformCursorPos(matrix) + Vector2.Transform(addVector.Value, matrix);
     }
 
     /// <summary>

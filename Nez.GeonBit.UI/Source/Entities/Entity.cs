@@ -1235,7 +1235,7 @@ public abstract class Entity
     ///     Draw this entity and its children.
     /// </summary>
     /// <param name="spriteBatch">SpriteBatch to use for drawing.</param>
-    public virtual void Draw(SpriteBatch spriteBatch)
+    public virtual void Draw(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
         // if not visible skip
         if (!Visible) return;
@@ -1251,7 +1251,7 @@ public abstract class Entity
         {
             _background._parent = this;
             _background._indexInParent = 0;
-            _background.Draw(spriteBatch);
+            _background.Draw(spriteBatch, screenMatrix);
             _background._parent = null;
         }
 
@@ -1259,21 +1259,21 @@ public abstract class Entity
         UpdateDestinationRectsIfDirty();
 
         // draw shadow
-        DrawEntityShadow(spriteBatch);
+        DrawEntityShadow(spriteBatch, screenMatrix);
 
         // draw entity outline
-        DrawEntityOutline(spriteBatch);
+        DrawEntityOutline(spriteBatch, screenMatrix);
 
         // draw the entity itself
-        UserInterface.Active.DrawUtils.StartDraw(spriteBatch, _isCurrentlyDisabled);
+        UserInterface.Active.DrawUtils.StartDraw(spriteBatch, _isCurrentlyDisabled, screenMatrix);
         DrawEntity(spriteBatch, DrawPhase.Base);
         UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
 
         // do debug drawing
-        if (DebugDraw) DrawDebugStuff(spriteBatch);
+        if (DebugDraw) DrawDebugStuff(spriteBatch, screenMatrix);
 
         // draw all child entities
-        DrawChildren(spriteBatch);
+        DrawChildren(spriteBatch, screenMatrix);
 
         // do after draw event
         OnAfterDraw(spriteBatch);
@@ -1283,9 +1283,10 @@ public abstract class Entity
     ///     Draw debug stuff for this entity.
     /// </summary>
     /// <param name="spriteBatch">Spritebatch to use for drawing.</param>
-    protected virtual void DrawDebugStuff(SpriteBatch spriteBatch)
+    /// <param name="screenMatrix">The screen matrix.</param>
+    protected virtual void DrawDebugStuff(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
-        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, transformMatrix: screenMatrix);
 
         // first draw whole dest rect
         var destRectCol = new Color(0f, 1f, 0.25f, 0.05f);
@@ -1321,8 +1322,9 @@ public abstract class Entity
     /// <summary>
     ///     Draw all children.
     /// </summary>
-    /// <param name="spriteBatch"></param>
-    protected virtual void DrawChildren(SpriteBatch spriteBatch)
+    /// <param name="spriteBatch">The sprite batch.</param>
+    /// <param name="screenMatrix">The screen matrix.</param>
+    protected virtual void DrawChildren(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
         // do stuff before drawing children
         BeforeDrawChildren(spriteBatch);
@@ -1331,10 +1333,10 @@ public abstract class Entity
         var childrenSorted = GetSortedChildren();
 
         // draw all children
-        foreach (var child in childrenSorted) child.Draw(spriteBatch);
+        foreach (var child in childrenSorted) child.Draw(spriteBatch, screenMatrix);
 
         // do stuff after drawing children
-        AfterDrawChildren(spriteBatch);
+        AfterDrawChildren(spriteBatch, screenMatrix);
     }
 
     /// <summary>
@@ -1385,7 +1387,8 @@ public abstract class Entity
     ///     Called after drawing child entities of this entity.
     /// </summary>
     /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
-    protected virtual void AfterDrawChildren(SpriteBatch spriteBatch)
+    /// <param name="screenMatrix">The screen matrix.</param>
+    protected virtual void AfterDrawChildren(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
     }
 
@@ -1393,7 +1396,8 @@ public abstract class Entity
     ///     Draw entity shadow (if defined shadow).
     /// </summary>
     /// <param name="spriteBatch">Sprite batch to draw on.</param>
-    protected virtual void DrawEntityShadow(SpriteBatch spriteBatch)
+    /// <param name="screenMatrix">The screen matrix.</param>
+    protected virtual void DrawEntityShadow(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
         // store current 'is-dirty' flag, because it changes internally while drawing shadow
         var isDirty = _isDirty;
@@ -1429,7 +1433,7 @@ public abstract class Entity
                 shadowColor.A);
 
         // draw with shadow effect
-        UserInterface.Active.DrawUtils.StartDrawSilhouette(spriteBatch);
+        UserInterface.Active.DrawUtils.StartDrawSilhouette(spriteBatch, screenMatrix);
         DrawEntity(spriteBatch, DrawPhase.Shadow);
         UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
 
@@ -1450,7 +1454,8 @@ public abstract class Entity
     ///     Draw entity outline.
     /// </summary>
     /// <param name="spriteBatch">Sprite batch to draw on.</param>
-    protected virtual void DrawEntityOutline(SpriteBatch spriteBatch)
+    /// <param name="screenMatrix">The screen matrix.</param>
+    protected virtual void DrawEntityOutline(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
         // get outline width and if 0 return
         if (OutlineWidth == 0) return;
@@ -1473,7 +1478,7 @@ public abstract class Entity
         // store entity previous state
         var oldState = _entityState;
 
-        spriteBatch.Begin();
+        spriteBatch.Begin(transformMatrix: screenMatrix);
         spriteBatch.DrawOutline(originalDest, OutlineColor, OutlineWidth);
         spriteBatch.End();
 
@@ -2315,9 +2320,9 @@ public abstract class Entity
     private void SetCursorPosition(Entity entity)
     {
         if (UserInterface.GetCursorMode != UserInterface.CursorMode.Snapping) return;
-        var ptA = Vector2.Transform(entity._destRect.Location.ToVector2(), Core.Scene.ScreenTransformMatrix);
+        var ptA = Vector2.Transform(entity._destRect.Location.ToVector2(), Core.Scene.ScreenSpaceTransformMatrix);
         var ptD = Vector2.Transform((entity._destRect.Location + entity._destRect.Size).ToVector2(),
-            Core.Scene.ScreenTransformMatrix);
+            Core.Scene.ScreenSpaceTransformMatrix);
         var transRect = new Rectangle((int)ptA.X, (int)ptA.Y, (int)(ptD.X - ptA.X), (int)(ptD.Y - ptA.Y));
         if (entity is Slider == false || entity is ProgressBar)
         {

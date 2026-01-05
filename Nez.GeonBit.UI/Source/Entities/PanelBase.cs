@@ -108,17 +108,21 @@ public class PanelBase : Entity
             if (data.StainedCanvasID >= 0 && UserInterface.StainedCanvasEnabled)
             {
                 var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
-                var nuSize = new Vector2(0.95f) * _destRect.Size.ToVector2();
-                var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
-                    nuSize.ToPoint());
-                UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, Color.White, 1, srcRect);
+                var nuSize = _destRect.Size.ToVector2() - new Vector2(10, 10);
+
+                var srcLocation = Vector2.Transform(_destRect.Center.ToVector2() - nuSize * 0.5f,
+                    Core.Scene.ScreenScaleTransformMatrix);
+                var srcSize = Vector2.Transform(nuSize, Core.Scene.ScreenScaleTransformMatrix);
+                UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, Color.White, 1,
+                    new Rectangle(srcLocation.ToPoint(), srcSize.ToPoint()));
             }
 
             var texture = Resources.PanelTextures[_skin];
             var frameSize = new Vector2(data.FrameWidth, data.FrameHeight);
 
             // draw panel
-            UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1f, FillColor, Scale);
+            UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1f, FillColor,
+                Scale);
         }
 
         // call base draw function

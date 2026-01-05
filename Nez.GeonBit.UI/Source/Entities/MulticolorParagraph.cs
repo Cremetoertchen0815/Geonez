@@ -249,7 +249,8 @@ public class MulticolorParagraph : Paragraph
     ///     Draw entity outline. Note: in paragraph its a special case and we implement it inside the DrawEntity function.
     /// </summary>
     /// <param name="spriteBatch">Sprite batch to draw on.</param>
-    protected override void DrawEntityOutline(SpriteBatch spriteBatch)
+    /// <param name="screenMatrix">The screen matrix.</param>
+    protected override void DrawEntityOutline(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
     }
 

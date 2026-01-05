@@ -47,6 +47,14 @@ public class GeonUIManager : GlobalManager, IFinalRenderDelegate
 
     public void OnAddedToScene(Scene scene)
     {
+        var sceneDesignResolution = scene.GetDesignResolution();
+        if (UserInterface.Active.DesignResolution == sceneDesignResolution)
+        {
+            return;
+        }
+        
+        UserInterface.Active.DesignResolution = sceneDesignResolution;
+        UserInterface.Active.Root.MarkAsDirty();
     }
 
     public void OnSceneBackBufferSizeChanged(int newWidth, int newHeight)

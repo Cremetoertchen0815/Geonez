@@ -204,10 +204,11 @@ public class Button : Entity
         if (data.StainedCanvasID >= 0 && UserInterface.StainedCanvasEnabled)
         {
             var tex = UserInterface.Active.GetCanvasTexture(data.StainedCanvasID);
-            var nuSize = new Vector2(0.95f) * _destRect.Size.ToVector2();
-            var srcRect = new Rectangle((_destRect.Center.ToVector2() - nuSize * 0.5f).ToPoint(),
-                nuSize.ToPoint());
-            UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, Color.White, 1, srcRect);
+            var nuSize = _destRect.Size.ToVector2() - new Vector2(10, 10);
+            var srcLocation = Vector2.Transform(_destRect.Center.ToVector2() - nuSize * 0.5f,
+                Core.Scene.ScreenScaleTransformMatrix);
+            var srcSize = Vector2.Transform(nuSize, Core.Scene.ScreenScaleTransformMatrix);
+            UserInterface.Active.DrawUtils.DrawImage(spriteBatch, tex, _destRect, Color.White, 1, new Rectangle(srcLocation.ToPoint(), srcSize.ToPoint()));
         }
         
         var texture = _customSkin == null ? Resources.ButtonTextures[_skin, state] : _customSkin[(int)state];

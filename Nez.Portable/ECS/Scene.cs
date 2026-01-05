@@ -15,7 +15,7 @@ public class Scene
     public enum SceneResolutionPolicy
     {
         /// <summary>
-        ///     Default. RenderTarget matches the sceen size
+        ///     Default. RenderTarget matches the screen size
         /// </summary>
         None,
 
@@ -46,6 +46,13 @@ public class Scene
         ///     Pixel perfect version of ShowAll. Scaling is limited to integer values.
         /// </summary>
         ShowAllPixelPerfect,
+
+        /// <summary>
+        ///     ShowAll with a dynamically scaled up/down RenderTarget, as opposed to having RenderTarget with the fixed size of the design resolution.
+        ///     Especially useful for rendering 3D content which benefits from rendering at resolutions higher/lower than the design resolution.
+        ///     Requires all renderers to respect the scene backbuffer scaling matrix. 
+        /// </summary>
+        ShowAllDynamicScaling,
 
         /// <summary>
         ///     The application takes the height of the design resolution size and modifies the width of the internal
@@ -128,7 +135,15 @@ public class Scene
     /// </summary>
     public SamplerState SamplerState = Core.DefaultSamplerState;
 
-    public Matrix ScreenTransformMatrix = Matrix.Identity;
+    /// <summary>
+    /// Transforms design space to screen space.
+    /// </summary>
+    public Matrix ScreenSpaceTransformMatrix = Matrix.Identity;
+
+    /// <summary>
+    /// Scales design space to screen space (like <see cref="ScreenSpaceTransformMatrix"/> but without the translation accounting for letterboxing).
+    /// </summary>
+    public Matrix ScreenScaleTransformMatrix = Matrix.Identity;
 
 
     public Scene(bool callInitialize = true)
@@ -627,7 +642,7 @@ public class Scene
 #if TRACE
         if (FramerateGraph.Active) FramerateGraph.Instance.Render();
 
-        Graphics.Instance.Batcher.Begin(ScreenTransformMatrix);
+        Graphics.Instance.Batcher.Begin(ScreenSpaceTransformMatrix);
         if (DeltaAnalyzer.Active) DeltaAnalyzer.Instance.Render();
         if (MetricsDisplay.Active) MetricsDisplay.Instance.Render();
         Graphics.Instance.Batcher.End();
@@ -767,6 +782,13 @@ public class Scene
                 rectCalculated = true;
 
                 break;
+            case SceneResolutionPolicy.ShowAllDynamicScaling:
+                resolutionScaleX = resolutionScaleY = Math.Min(resolutionScaleX, resolutionScaleY);
+                
+                // exact design size render texture
+                renderTargetWidth = (int) Math.Ceiling(designSize.X * resolutionScaleX);
+                renderTargetHeight = (int) Math.Ceiling(designSize.Y * resolutionScaleY);
+                break;
             case SceneResolutionPolicy.FixedHeight:
                 resolutionScaleX = resolutionScaleY;
                 designSize.X = Mathf.CeilToInt(screenSize.X / resolutionScaleX);
@@ -834,10 +856,13 @@ public class Scene
                 (screenSize.Y - renderHeight) / 2, renderWidth, renderHeight);
         }
 
-        //AFTERMARKET!!!! create screen transformation matrix
-        ScreenTransformMatrix = Matrix.CreateScale(resolutionScaleX, resolutionScaleY, 1F) *
+        // Create screen transformation matrix
+        ScreenSpaceTransformMatrix = Matrix.CreateScale(resolutionScaleX, resolutionScaleY, 1F) *
                                 Matrix.CreateTranslation(_finalRenderDestinationRect.X, _finalRenderDestinationRect.Y,
                                     0F);
+        
+        // Create screen scale matrix
+        ScreenScaleTransformMatrix = Matrix.CreateScale(resolutionScaleX, resolutionScaleY, 1F);
 
 
         // set some values in the Input class to translate mouse position to our scaled resolution

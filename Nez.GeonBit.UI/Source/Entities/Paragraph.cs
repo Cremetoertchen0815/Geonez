@@ -539,19 +539,12 @@ public class Paragraph : Entity
         }
     }
 
-    /// <summary>
-    ///     Draw entity outline. Note: in paragraph its a special case and we implement it inside the DrawEntity function.
-    /// </summary>
-    /// <param name="spriteBatch">Sprite batch to draw on.</param>
-    protected override void DrawEntityOutline(SpriteBatch spriteBatch)
+    /// <inheritdoc/>
+    protected override void DrawEntityOutline(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
     }
 
-    /// <summary>
-    ///     Draw the entity.
-    /// </summary>
-    /// <param name="spriteBatch">Sprite batch to draw on.</param>
-    /// <param name="phase">The phase we are currently drawing.</param>
+    /// <inheritdoc/>
     protected override void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
     {
         // update processed text if needed
