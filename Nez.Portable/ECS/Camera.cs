@@ -263,7 +263,7 @@ public class Camera : Component
         {
             if (_areMatrixesDirty || Time.Mode == TimeMode.LockedTimestep)
                 UpdateMatrixes();
-            return _transformMatrix;
+            return _transformMatrix * new Matrix2D(Entity.Scene.ScreenScaleTransformMatrix.M11, Entity.Scene.ScreenScaleTransformMatrix.M12, Entity.Scene.ScreenScaleTransformMatrix.M21, Entity.Scene.ScreenScaleTransformMatrix.M22, Entity.Scene.ScreenScaleTransformMatrix.M31, Entity.Scene.ScreenScaleTransformMatrix.M32);
         }
     }
 
