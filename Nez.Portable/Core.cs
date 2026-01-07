@@ -105,6 +105,7 @@ public class Core : Game
                 GraphicsProfile = GraphicsProfile.HiDef,
                 PreferMultiSampling = true
             };
+            graphicsManager.HardwareModeSwitch = false;
             graphicsManager.DeviceReset += OnGraphicsDeviceReset;
             graphicsManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             graphicsManager.PreparingDeviceSettings += (_, e) =>

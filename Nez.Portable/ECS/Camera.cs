@@ -215,20 +215,17 @@ public class Camera : Component
             if (_areBoundsDirty)
             {
                 // top-left and bottom-right are needed by either rotated or non-rotated bounds
-                var topLeft = ScreenToWorldPoint(new Vector2(Core.GraphicsDevice.Viewport.X + _inset.left,
-                    Core.GraphicsDevice.Viewport.Y + _inset.top));
+                var viewport = Entity.Scene.GetDesignResolution();
+                var topLeft = ScreenToWorldPoint(new Vector2(_inset.left, _inset.top));
                 var bottomRight = ScreenToWorldPoint(new Vector2(
-                    Core.GraphicsDevice.Viewport.X + Core.GraphicsDevice.Viewport.Width - _inset.right,
-                    Core.GraphicsDevice.Viewport.Y + Core.GraphicsDevice.Viewport.Height - _inset.bottom));
+                    viewport.X - _inset.right,
+                    viewport.Y - _inset.bottom));
 
                 if (Entity.Transform.Rotation != 0)
                 {
                     // special care for rotated bounds. we need to find our absolute min/max values and create the bounds from that
-                    var topRight = ScreenToWorldPoint(new Vector2(
-                        Core.GraphicsDevice.Viewport.X + Core.GraphicsDevice.Viewport.Width - _inset.right,
-                        Core.GraphicsDevice.Viewport.Y + _inset.top));
-                    var bottomLeft = ScreenToWorldPoint(new Vector2(Core.GraphicsDevice.Viewport.X + _inset.left,
-                        Core.GraphicsDevice.Viewport.Y + Core.GraphicsDevice.Viewport.Height - _inset.bottom));
+                    var topRight = ScreenToWorldPoint(new Vector2(viewport.X - _inset.right, _inset.top));
+                    var bottomLeft = ScreenToWorldPoint(new Vector2(_inset.left, viewport.Y - _inset.bottom));
 
                     var minX = Mathf.MinOf(topLeft.X, bottomRight.X, topRight.X, bottomLeft.X);
                     var maxX = Mathf.MaxOf(topLeft.X, bottomRight.X, topRight.X, bottomLeft.X);
@@ -263,7 +260,10 @@ public class Camera : Component
         {
             if (_areMatrixesDirty || Time.Mode == TimeMode.LockedTimestep)
                 UpdateMatrixes();
-            return _transformMatrix * new Matrix2D(Entity.Scene.ScreenScaleTransformMatrix.M11, Entity.Scene.ScreenScaleTransformMatrix.M12, Entity.Scene.ScreenScaleTransformMatrix.M21, Entity.Scene.ScreenScaleTransformMatrix.M22, Entity.Scene.ScreenScaleTransformMatrix.M31, Entity.Scene.ScreenScaleTransformMatrix.M32);
+            return _transformMatrix * new Matrix2D(Entity.Scene.ScreenScaleTransformMatrix.M11,
+                Entity.Scene.ScreenScaleTransformMatrix.M12, Entity.Scene.ScreenScaleTransformMatrix.M21,
+                Entity.Scene.ScreenScaleTransformMatrix.M22, Entity.Scene.ScreenScaleTransformMatrix.M31,
+                Entity.Scene.ScreenScaleTransformMatrix.M32);
         }
     }
 
