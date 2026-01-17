@@ -1327,7 +1327,7 @@ public abstract class Entity
     protected virtual void DrawChildren(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
         // do stuff before drawing children
-        BeforeDrawChildren(spriteBatch);
+        BeforeDrawChildren(spriteBatch, screenMatrix);
 
         // get sorted children list
         var childrenSorted = GetSortedChildren();
@@ -1379,7 +1379,7 @@ public abstract class Entity
     ///     Called before drawing child entities of this entity.
     /// </summary>
     /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
-    protected virtual void BeforeDrawChildren(SpriteBatch spriteBatch)
+    protected virtual void BeforeDrawChildren(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
     }
 

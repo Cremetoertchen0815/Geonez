@@ -28,22 +28,22 @@ namespace Nez.GeonBit.UI.Entities;
 /// </summary>
 public enum PanelOverflowBehavior
 {
-	/// <summary>
-	///     Entity will be rendered as usual outside the panel boundaries.
-	/// </summary>
-	Overflow,
+    /// <summary>
+    ///     Entity will be rendered as usual outside the panel boundaries.
+    /// </summary>
+    Overflow,
 
-	/// <summary>
-	///     Entities that exceed panel boundaries will be clipped.
-	///     Note: Requires render targets.
-	/// </summary>
-	Clipped,
+    /// <summary>
+    ///     Entities that exceed panel boundaries will be clipped.
+    ///     Note: Requires render targets.
+    /// </summary>
+    Clipped,
 
-	/// <summary>
-	///     Entities that exceed panel on Y axis will create a scrollbar. Exceeding on X axis will be hidden.
-	///     Note: Requires render targets.
-	/// </summary>
-	VerticalScroll
+    /// <summary>
+    ///     Entities that exceed panel on Y axis will create a scrollbar. Exceeding on X axis will be hidden.
+    ///     Note: Requires render targets.
+    /// </summary>
+    VerticalScroll
 }
 
 /// <summary>
@@ -163,18 +163,27 @@ public class Panel : PanelBase
     ///     Get the rectangle used for target texture for this panel.
     /// </summary>
     /// <returns>Destination rect for target texture.</returns>
-    private Rectangle GetRenderTargetRect()
+    private Rectangle GetRenderTargetRect(Matrix? scaleMatrix = null)
     {
         var ret = _destRectInternal;
         ret.Width += GetScrollbarWidth() * 2;
-        return ret;
+        return TransformRectangle(ret, scaleMatrix ?? Matrix.Identity);
+    }
+
+    private Rectangle TransformRectangle(Rectangle rectangle, Matrix transformMatrix)
+    {
+        var topLeft = Vector2.Transform(new Vector2(rectangle.Left, rectangle.Top), transformMatrix);
+        var bottomRight = Vector2.Transform(new Vector2(rectangle.Right, rectangle.Bottom), transformMatrix);
+
+        return new Rectangle((int)topLeft.X, (int)topLeft.Y, (int)(bottomRight.X - topLeft.X),
+            (int)(bottomRight.Y - topLeft.Y));
     }
 
     /// <summary>
     ///     Called before drawing child entities of this entity.
     /// </summary>
     /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
-    protected override void BeforeDrawChildren(SpriteBatch spriteBatch)
+    protected override void BeforeDrawChildren(SpriteBatch spriteBatch, Matrix screenMatrix)
     {
         // if overflow mode is simply overflow, do nothing.
         if (_overflowMode == PanelOverflowBehavior.Overflow)
@@ -184,7 +193,7 @@ public class Panel : PanelBase
         }
 
         // create the render target for this panel
-        var targetRect = GetRenderTargetRect();
+        var targetRect = GetRenderTargetRect(screenMatrix);
         if (_renderTarget == null ||
             _renderTarget.Width != targetRect.Width ||
             _renderTarget.Height != targetRect.Height)
