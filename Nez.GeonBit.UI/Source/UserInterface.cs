@@ -820,7 +820,7 @@ public class UserInterface : IDisposable
         addVector = addVector ?? Vector2.Zero;
 
         var matrix = Matrix.Invert(Core.Scene.ScreenScaleTransformMatrix);
-        return Input.TransformCursorPos(matrix) + Vector2.Transform(addVector.Value, matrix);
+        return Input.TransformCursorPos(matrix) + addVector.Value;
     }
 
     /// <summary>
