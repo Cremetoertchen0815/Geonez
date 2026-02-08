@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Nez.Textures;
@@ -73,6 +74,8 @@ public class RenderTarget : GlobalManager
     /// <param name="depthFormat">Depth format.</param>
     public static RenderTarget2D GetTemporary(int width, int height, DepthFormat depthFormat, bool supportAA = false)
     {
+        width = Math.Max(width, 1);
+        height = Math.Max(height, 1);
         RenderTarget2D tempRenderTarget = null;
         var tempRenderTargetIndex = -1;
         for (var i = 0; i < instance._renderTargetPool.Count; i++)
@@ -172,7 +175,7 @@ public class RenderTarget : GlobalManager
     public static RenderTarget2D Create(int width, int height, SurfaceFormat preferredFormat,
         DepthFormat preferredDepthFormat, bool supportAA = false)
     {
-        return new RenderTarget2D(Core.GraphicsDevice, width, height, false, preferredFormat, preferredDepthFormat,
+        return new RenderTarget2D(Core.GraphicsDevice, Math.Max(width, 1), Math.Max(height, 1), false, preferredFormat, preferredDepthFormat,
             supportAA ? Screen.AASamples : 0, RenderTargetUsage.DiscardContents);
     }
 

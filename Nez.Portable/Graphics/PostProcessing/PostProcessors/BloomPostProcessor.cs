@@ -31,31 +31,46 @@ public class BloomPostProcessor : PostProcessor, IDisposable
     /// <param name="width">width of the image</param>
     /// <param name="height">height of the image</param>
     public void UpdateResolution(int width, int height)
-    {
-        _width = width;
-        _height = height;
+        {
+            // Never allow 0-sized RTs (can occur during live resize/minimize)
+            width = Math.Max(1, width);
+            height = Math.Max(1, height);
 
-        if (_bloomRenderTarget2DMip0 != null) Dispose();
+            _width = width;
+            _height = height;
 
-        _bloomRenderTarget2DMip0 = new RenderTarget2D(_graphicsDev,
-            width,
-            height, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
-        _bloomRenderTarget2DMip1 = new RenderTarget2D(_graphicsDev,
-            width / 2,
-            height / 2, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-        _bloomRenderTarget2DMip2 = new RenderTarget2D(_graphicsDev,
-            width / 4,
-            height / 4, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-        _bloomRenderTarget2DMip3 = new RenderTarget2D(_graphicsDev,
-            width / 8,
-            height / 8, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-        _bloomRenderTarget2DMip4 = new RenderTarget2D(_graphicsDev,
-            width / 16,
-            height / 16, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-        _bloomRenderTarget2DMip5 = new RenderTarget2D(_graphicsDev,
-            width / 32,
-            height / 32, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-    }
+            if (_bloomRenderTarget2DMip0 != null) Dispose();
+
+            int w2 = Math.Max(1, width / 2);
+            int h2 = Math.Max(1, height / 2);
+            int w4 = Math.Max(1, width / 4);
+            int h4 = Math.Max(1, height / 4);
+            int w8 = Math.Max(1, width / 8);
+            int h8 = Math.Max(1, height / 8);
+            int w16 = Math.Max(1, width / 16);
+            int h16 = Math.Max(1, height / 16);
+            int w32 = Math.Max(1, width / 32);
+            int h32 = Math.Max(1, height / 32);
+
+            _bloomRenderTarget2DMip0 = new RenderTarget2D(_graphicsDev,
+                width,
+                height, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
+            _bloomRenderTarget2DMip1 = new RenderTarget2D(_graphicsDev,
+                w2,
+                h2, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            _bloomRenderTarget2DMip2 = new RenderTarget2D(_graphicsDev,
+                w4,
+                h4, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            _bloomRenderTarget2DMip3 = new RenderTarget2D(_graphicsDev,
+                w8,
+                h8, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            _bloomRenderTarget2DMip4 = new RenderTarget2D(_graphicsDev,
+                w16,
+                h16, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            _bloomRenderTarget2DMip5 = new RenderTarget2D(_graphicsDev,
+                w32,
+                h32, false, _renderTargetFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+        }
 
     #region fields & properties
 

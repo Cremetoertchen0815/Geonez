@@ -155,7 +155,7 @@ public class RenderTexture : IDisposable
     /// <param name="preferredDepthFormat">Preferred depth format.</param>
     public RenderTexture(int width, int height, SurfaceFormat preferredFormat, DepthFormat preferredDepthFormat)
     {
-        RenderTarget = new RenderTarget2D(Core.GraphicsDevice, width, height, false, preferredFormat,
+        RenderTarget = new RenderTarget2D(Core.GraphicsDevice, Math.Max(width, 1), Math.Max(height, 1), false, preferredFormat,
             preferredDepthFormat, 0, RenderTargetUsage.PreserveContents);
     }
 

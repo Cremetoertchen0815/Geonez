@@ -694,6 +694,11 @@ public class Scene
         var designSize = _designResolutionSize;
         var screenSize = new Point(Screen.BackbufferWidth, Screen.BackbufferHeight);
         var screenAspectRatio = screenSize.X / (float)screenSize.Y;
+        
+        // During live window resize/minimize some platforms report 0 for a moment.
+        // Do NOT touch render target allocation in that case.
+        if (screenSize.X <= Screen.MinimumBackbufferWidth || screenSize.Y <= Screen.MinimumBackbufferHeight)
+            return;
 
         var renderTargetWidth = screenSize.X;
         var renderTargetHeight = screenSize.Y;

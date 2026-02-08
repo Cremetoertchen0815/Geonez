@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -9,6 +10,8 @@ public static class Screen
     internal static GraphicsDeviceManager _graphicsManager;
 
     private static Vector2? _customSize;
+    public static int MinimumBackbufferWidth { get; private set; }
+    public static int MinimumBackbufferHeight { get; private set; }
 
     public static Point[] AvailableResolutions { get; set; } = GraphicsAdapter.DefaultAdapter.SupportedDisplayModes
         .Select(x => new Point(x.Width, x.Height)).GroupBy(x => x).Select(x => x.First()).OrderBy(x => x.Y)
@@ -54,13 +57,13 @@ public static class Screen
     public static int PreferredBackBufferWidth
     {
         get => _graphicsManager.PreferredBackBufferWidth;
-        set => _graphicsManager.PreferredBackBufferWidth = value;
+        set => _graphicsManager.PreferredBackBufferWidth = Math.Max(value, MinimumBackbufferWidth);
     }
 
     public static int PreferredBackBufferHeight
     {
         get => _graphicsManager.PreferredBackBufferHeight;
-        set => _graphicsManager.PreferredBackBufferHeight = value;
+        set => _graphicsManager.PreferredBackBufferHeight = Math.Max(value, MinimumBackbufferHeight);
     }
 
 
@@ -140,5 +143,21 @@ public static class Screen
         PreferredBackBufferWidth = width;
         PreferredBackBufferHeight = height;
         ApplyChanges();
+    }
+
+    /// <summary>
+    ///     sets the minimum back buffer size and applies changes if necessary
+    /// </summary>
+    /// <param name="width">Width.</param>
+    /// <param name="height">Height.</param>
+    public static void SetMinimumSize(int width, int height)
+    {
+        MinimumBackbufferWidth = width;
+        MinimumBackbufferHeight = height;
+
+        if (PreferredBackBufferWidth < width || PreferredBackBufferHeight < height)
+        {
+            SetSize(PreferredBackBufferWidth, PreferredBackBufferHeight);
+        }
     }
 }
